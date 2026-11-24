@@ -34,7 +34,7 @@
     "gray-matter": "^4.0.3",
     "oxfmt": "0.75.0",
     "oxlint": "1.90.0",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "^4.1.10",
     "wrangler": "^4.123.0"
   },
