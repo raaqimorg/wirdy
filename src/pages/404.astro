@@ -2,6 +2,7 @@
 import Paper from '../layouts/Paper.astro';
 import Footer from '../components/Footer.astro';
 import Mark from '../components/Mark.astro';
+import Tools from '../components/Tools.astro';
 import OccasionCard from '../components/OccasionCard.astro';
 import { countsByOccasion } from '../lib/collection';
 import { OCCASIONS } from '../lib/occasions';
@@ -15,6 +16,7 @@ const description = `لم نجد هذه الصفحة في ${SITE.name}. اختر
 <Paper title={title} description={description} noindex>
   <header class="top">
     <a class="brand" href="/"><Mark /><span>{SITE.name}</span></a>
+    <Tools />
   </header>
   <main class="home">
     <h1 class="hero">لم نجد هذه الصفحة، فاختر قسمًا من أقسام الأذكار</h1>

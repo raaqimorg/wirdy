@@ -10,6 +10,19 @@ oxlint (`.oxlintrc.json`), oxfmt (`.oxfmtrc.json`), and `astro check` enforce mo
 - Prefer CSS to JavaScript. Each page has one inline script (see [`exceptions.md`](exceptions.md)), and it must stay small enough to read at a glance.
 - No page makes a third-party request. Fonts come from `@fontsource` (Amiri, Amiri Quran, and IBM Plex Sans Arabic), and Astro bundles them.
 
+## Motion
+
+The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with springs").
+
+- Animate only `transform` and `opacity`, in CSS. Add no motion library.
+- Move with `--spring`, Apple's spring with no bounce, written as CSS `linear()`. Its duration sets the speed: 472 ms (a 0.35 s spring) for the home cards' emblems, 607 ms (0.45 s) for the banner, 405 ms (0.3 s) for the hover, and 270 ms (0.2 s) for the press to return. Fade with `--ease-out`.
+- Respond on the first frame. Never use an ease-in or an ease-in-out, which start slowly.
+- Grow a shape from 60%, not from nothing. This is Apple's Replace for SF Symbols.
+- Keep a stagger short: 30 ms apart and 150 ms in all on the home cards, and 50 ms and 250 ms on the banner, where each shape enters from its own direction (`enter` in `src/lib/emblems.ts`).
+- Animate nothing out of sight. The «بقية الأقسام» cards do not animate.
+- Keep still what stays. On hover the card stays still and only its emblem grows 6%. A press shrinks the card to 97% at once, on iPhones too (see [`exceptions.md`](exceptions.md)).
+- With reduced motion, the emblem only fades, and nothing scales or moves.
+
 ## Tests
 
 - A rule that matters goes in a test, not in a comment. `src/lib/content.test.ts` checks every content file. `src/build.test.ts` builds the site and checks the HTML that ships.

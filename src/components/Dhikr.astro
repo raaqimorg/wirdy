@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import VariantText from './VariantText.astro';
 import { timesLabel } from '../lib/arabic';
-import { dotGrid } from '../lib/dots';
+import { beadRing } from '../lib/beads';
 import type { Dhikr } from '../lib/schema';
 
 interface Props {
@@ -30,7 +30,7 @@ const suwar = data.quran
 const TIME = { sabah: 'في الصباح', masaa: 'في المساء', both: null };
 const cue = [TIME[data.mode], data.when].filter(Boolean).join('، ');
 
-const grid = data.count > 1 ? dotGrid(data.count) : null;
+const ring = data.count > 1 ? beadRing(data.count) : null;
 
 const { grader, source, ruling } = data.takhrij;
 const sourceLine = [grader === 'الألباني' && grader, source, ruling].filter(Boolean).join(' · ');
@@ -48,14 +48,14 @@ const classes = [
   <div class="item__head">
     {cue && <span class="item__cue">{cue}</span>}
     {
-      grid && (
+      ring && (
         <span class="item__count">
           {timesLabel(data.count)}
-          <span
-            class:list={['dots', grid.fine && 'dots--fine']}
-            style={`--cols: ${grid.cols}; --rows: ${grid.rows}`}
-            aria-hidden="true"
-          />
+          <svg class="beads" viewBox="0 0 32 32" aria-hidden="true">
+            <circle class:list={['beads__string', ring.label && 'is-full']} cx="16" cy="16" r="12" />
+            {ring.beads.map(({ cx, cy }) => <circle cx={cx} cy={cy} r="2.6" />)}
+            {ring.label && <text x="16" y="16">{ring.label}</text>}
+          </svg>
         </span>
       )
     }

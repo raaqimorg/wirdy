@@ -108,9 +108,33 @@ const structuredData = {
         var wird = hour >= 3 && hour < 12 ? "s" : "m";
         var override = location.search.match(/w=([sm])/);
         if (override) wird = override[1];
-        document.documentElement.dataset.wird = wird;
+        var root = document.documentElement;
+        root.dataset.wird = wird;
+        document.addEventListener("touchstart", function () {}, { passive: true });
+
+        var metas = document.querySelectorAll('meta[name="theme-color"]');
+        var paper = {};
+        for (var i = 0; i < metas.length; i++) paper[metas[i].media ? "dark" : "light"] = metas[i].content;
+        function apply(theme) {
+          root.dataset.theme = theme;
+          for (var j = 0; j < metas.length; j++) metas[j].content = paper[theme];
+        }
+        try {
+          var saved = localStorage.getItem("theme");
+          if (saved === "light" || saved === "dark") apply(saved);
+        } catch (error) {}
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest(".theme")) return;
+          var current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          var next = current === "dark" ? "light" : "dark";
+          apply(next);
+          try {
+            localStorage.setItem("theme", next);
+          } catch (error) {}
+        });
       })();
     </script>
+    <noscript><style>.theme { display: none; }</style></noscript>
   </head>
   <body>
     <slot />

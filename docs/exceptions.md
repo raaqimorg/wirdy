@@ -14,6 +14,24 @@ The morning and evening forms of a dhikr differ in a few words (أصبحنا or 
 - The struck form is `aria-hidden` and cannot be selected, so VoiceOver and copying give the form for now only. Each struck word is joined to its word with a no-break space, not `white-space: nowrap`, because Safari does not wrap before a `nowrap` span in right-to-left text and the line runs past the screen.
 - A dhikr for one time only (`mode: "sabah"` or `"masaa"`) always shows, under «في الصباح» or «في المساء», and its text is muted at the other time.
 
+## An empty touch listener turns on the press state on iPhones
+
+A card shrinks to 97% while it is pressed (`.card:active` in `src/styles/paper.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
+
+- Without it, an iPhone tap gives no feedback at all, because `a` turns off the grey tap highlight (`-webkit-tap-highlight-color: transparent`).
+- The listener is `passive`, so it never delays scrolling.
+- The ordinary way is to bring back the grey tap highlight. It is a flat flash on the link's box, not the press of an iOS control.
+
+## A button switches between light and dark
+
+The site follows the device's light or dark mode. The moon or sun button in the top bar (`components/Tools.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
+
+- The ordinary way is to follow the device only, with no button and no script.
+- The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
+- The button has two states. It starts from the device's mode, and a click flips to the other one. There is no way back to "follow the device" short of clearing the site's data.
+- The dark colors appear twice in `src/styles/paper.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. Change both together.
+- Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
+
 ## The `{{morning|evening}}` markers
 
 A dhikr that changes between the morning and the evening is one file with markers, not two files. Two files would drift apart. `src/lib/variants.ts` parses the markers, and it throws on any malformed marker, so a typo fails the build instead of reaching the page. `pairWords` then pairs the two forms of a marker word by word, so a word that both forms share shows once (`components/WordForm.astro`).

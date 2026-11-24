@@ -136,11 +136,20 @@ describe('Dhikr', () => {
     expect(html).toContain('<span class="item__cue">في المساء</span>');
   });
 
-  it('draws the count as dots beside its label', async () => {
+  it('draws the count as a ring of beads beside its label', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
-    expect(html).toMatch(
-      /٣ مرات<span class="dots" style="--cols: 3; --rows: 1" aria-hidden="true">/
-    );
+    const ring = html.match(/٣ مرات<svg class="beads"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>/);
+    expect(ring).not.toBeNull();
+    expect(ring![1].match(/<circle cx=/g)).toHaveLength(3);
+    expect(ring![1]).not.toContain('<text');
+  });
+
+  it('writes a count above ten inside a full ring', async () => {
+    const html = await render({ ...base, count: 100 }, 'سبحان الله');
+    const ring = html.match(/<svg class="beads"[^>]*>([\s\S]*?)<\/svg>/)![1];
+    expect(ring).toContain('class="beads__string is-full"');
+    expect(ring).toContain('>١٠٠</text>');
+    expect(ring.match(/<circle cx=/g)).toBeNull();
   });
 
   it('links the تخريج with its source and its ruling', async () => {

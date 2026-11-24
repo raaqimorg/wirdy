@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import Mark from '../components/Mark.astro';
 import OccasionCard from '../components/OccasionCard.astro';
+import Tools from '../components/Tools.astro';
 import { adhkarLabel } from '../lib/arabic';
 import { adhkarOf, countsByOccasion } from '../lib/collection';
 import { OCCASIONS } from '../lib/occasions';
@@ -33,7 +34,7 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
     <nav class="bar" aria-label="الرجوع">
       <a href="/"><Icon name="back" />كل الأقسام</a>
-      <span class="bar__mark"><Mark /></span>
+      <Tools><span class="bar__mark"><Mark /></span></Tools>
     </nav>
     <header class="banner">
       <div class="banner__in">

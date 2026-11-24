@@ -86,6 +86,37 @@ describe('built site', () => {
     expect(html).toContain('hour >= 3 && hour < 12');
   });
 
+  it('listens for touches, passively, so iOS Safari shows the press state', () => {
+    expect(html).toMatch(
+      /<script>[\s\S]*?addEventListener\("touchstart", function \(\) \{\}, \{ passive: true \}\)[\s\S]*?<\/script>/
+    );
+  });
+
+  it('applies a saved theme before the first paint, and hides the button without script', () => {
+    const head = html.match(/<head>([\s\S]*?)<\/head>/)![1]!;
+    expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\("theme"\)[\s\S]*?<\/script>/);
+    expect(head).toContain('<noscript><style>.theme { display: none; }</style></noscript>');
+  });
+
+  it('puts the theme button and the GitHub link at the top of every page', () => {
+    for (const page of [html, ...Object.values(pages), notFound]) {
+      const top = page.match(/<(header class="top"|nav class="bar")[\s\S]*?<\/(header|nav)>/)![0];
+      expect(top).toContain('<button class="tool theme" type="button" aria-label="تبديل المظهر">');
+      expect(top).toContain(
+        '<a class="tool" href="https://github.com/raaqimorg/wirdy" rel="noopener" aria-label="الشيفرة على GitHub">'
+      );
+    }
+  });
+
+  it('ends every footer with the dedication', () => {
+    for (const page of [html, ...Object.values(pages), notFound]) {
+      const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
+      expect(footer.trim()).toMatch(
+        /<p class="page-footer__dedication">صدقة عن شروق، تقبّلها الله<\/p>$/
+      );
+    }
+  });
+
   it('leaves no unparsed variant markers', () => {
     expect(all).not.toContain('{{');
   });
@@ -387,7 +418,7 @@ describe('built site', () => {
   it('makes no third-party requests', () => {
     const external =
       all.match(
-        /(?:src|href)="https?:\/\/(?!(?:dorar\.net|tanzil\.net|wirdy\.site|lawsofux\.com|github\.com)[/"])[^"]+"/g
+        /(?:src|href)="https?:\/\/(?!(?:dorar\.net|tanzil\.net|wirdy\.site|github\.com)[/"])[^"]+"/g
       ) || [];
     expect(external).toEqual([]);
   });

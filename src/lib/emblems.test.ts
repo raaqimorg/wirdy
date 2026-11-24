@@ -19,3 +19,11 @@ describe('EMBLEMS', () => {
     expect(positions.filter((value) => value < 0 || value > 240)).toEqual([]);
   });
 });
+
+describe('the misbaha emblem', () => {
+  it('strings 33 beads and lights the first 11', () => {
+    const beads = EMBLEMS.mutlaq.filter(({ tag }) => tag === 'circle');
+    expect(beads).toHaveLength(33);
+    expect(beads.filter(({ attrs }) => !('fill-opacity' in attrs))).toHaveLength(11);
+  });
+});
