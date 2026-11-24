@@ -5,7 +5,7 @@ order: 4
 count: 1
 mode: "both"
 quran: true
-when: "ثم ينام على خاتمتها"
+how: "ثم ينام على خاتمتها"
 fadl: "فإنها براءة من الشرك"
 takhrij:
   grader: "الألباني"

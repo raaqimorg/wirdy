@@ -62,10 +62,13 @@ takhrij:
 
 - `title`: the short Arabic name of the dhikr, for its own page, its link, and its sharing card. Use its known name, such as «سيد الاستغفار», or its first words. Each title is used once.
 - `count`: the number that the sound narration states. Use 1 when it states none.
+- `counts`: one number for each phrase, when the narration gives each its own, such as `[33, 33, 34]`. The phrases are the parts of the text between «، ». Leave `count` at 1. The build fails when the numbers and the phrases do not match.
 - `mode`: `sabah` or `masaa` for a dhikr that belongs to one of the two times only. Use `both` everywhere else.
 - `ayat`: `first` shows only the first آية of each سورة, as for المعوذات or a long سورة, and the card adds the line «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one), so the reader reads on to the end. The file keeps the whole text. Use `all`, the default, everywhere else. Only قرآن files may use `first`.
-- `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only: not the source, not the virtue. The card shows it as a line just before the text.
-- `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with the same `group` show under that heading. Use it for one situation inside an occasion, or for alternatives, such as «صيغ التسبيح، تكفي واحدة منها».
+- `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only: not the manner, not the source, not the virtue. The card shows it first, with the count.
+- `how`: what the narration says of the manner, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.
+- `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with the same `group` show under that heading. Use it for one situation inside an occasion, or for alternatives. A page whose adhkar all have a group opens with links to its groups.
+- `form`: the number of an alternative, from 1. Adhkar of one group with the same `form` are said together, and one form is enough. The page shows them in one card, under «الصيغة الأولى» and so on, with the line «تكفي واحدة منها». Each keeps its own file, link, and page.
 - `fadl`: the virtue in the words of the same hadith, short, such as «كفته من كل شيء». The card shows it under the text, muted. Leave it out when the hadith states none. It never brings in a second source.
 - `takhrij.grader`: `البخاري`, `مسلم`, or `الألباني`. It names the reason the dhikr is in (see "What goes in"). The tests refuse any other grader, and an al-Albani ruling that is not صحيح or حسن.
 - `takhrij.source`: the book and the number as dorar.net shows them (الصفحة أو الرقم), in Arabic numerals.
@@ -91,4 +94,4 @@ takhrij:
 
 ## What did not come in
 
-`src/content/unproven/` holds the well-known adhkar that stay out, shown on the «ما لم يثبت» page, so a reader who misses one knows why. They have no share link and no card, so a weak dhikr never travels as an image without its ruling. Each file holds the text as people say it, `what` (which part is not established: the whole dhikr, its count, or its time), the al-Albani ruling with its dorar.net page, and `sound` when a sound form of it is on the site. The tests refuse a ruling there that is not one of weakness.
+`src/content/unproven/` holds the well-known adhkar that stay out, shown on the «ما لم يثبت» page, so a reader who misses one knows why. They have no share link and no card, so a weak dhikr never travels as an image without its ruling. Each file holds the text as people say it, `what` (which part is not established: the whole dhikr, its count, or its time), the al-Albani ruling with its dorar.net page, and `sound` when a sound form of it is on the site. When `sound` names an occasion, the page links to it. A ruling of one word shows as a badge above the text. The tests refuse a ruling there that is not one of weakness.

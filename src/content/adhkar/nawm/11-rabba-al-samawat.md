@@ -5,7 +5,8 @@ order: 11
 count: 1
 mode: "both"
 quran: false
-when: "إذا أراد أن ينام، مضطجعًا على شقه الأيمن"
+when: "إذا أراد أن ينام"
+how: "مضطجعًا على شقه الأيمن"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٧١٣"

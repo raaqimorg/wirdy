@@ -28,7 +28,7 @@ describe('the occasion colors', () => {
     expect(contrast(color!, EGGSHELL)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it.each(COLORS)('keeps the count ring of %s visible on the dark paper', (_, color) => {
+  it.each(COLORS)('keeps %s visible on the dark paper', (_, color) => {
     expect(contrast(color!, PAPER_DARK)).toBeGreaterThanOrEqual(3);
   });
 });

@@ -5,8 +5,9 @@ order: 6
 count: 1
 mode: "both"
 quran: false
-when: "ثم يقول تمام المائة"
-group: "صيغ التسبيح، تكفي واحدة منها"
+how: "ثم يقول تمام المائة"
+group: "صيغ التسبيح"
+form: 1
 fadl: "غُفرت خطاياه وإن كانت مثل زبد البحر"
 takhrij:
   grader: "مسلم"

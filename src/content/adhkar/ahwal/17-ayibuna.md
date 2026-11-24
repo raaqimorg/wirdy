@@ -5,7 +5,8 @@ order: 17
 count: 1
 mode: "both"
 quran: false
-when: "إذا رجع من سفره، قال ما سبق وزاد"
+when: "إذا رجع من سفره"
+how: "قال ما سبق وزاد"
 group: "السفر"
 takhrij:
   grader: "مسلم"

@@ -26,3 +26,7 @@ export function takhrijLine({ grader, source, ruling }: Takhrij): string {
 
   return `قال الألباني في ${where}: ${ruling}`;
 }
+
+export function isOneWord(ruling: string): boolean {
+  return !ruling.includes(' ');
+}

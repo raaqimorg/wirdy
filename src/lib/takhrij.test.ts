@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { takhrijLine } from './takhrij';
+import { isOneWord, takhrijLine } from './takhrij';
 
 const url = 'https://dorar.net/hadith/sharh/1';
 
@@ -87,5 +87,12 @@ describe('takhrijLine', () => {
     expect(
       takhrijLine({ grader: 'البخاري', source: 'صحيح البخاري ٦٣٠٦', ruling: 'صحيح', url })
     ).not.toContain('·');
+  });
+});
+
+describe('isOneWord', () => {
+  it('tells a ruling that fits a badge from a sentence', () => {
+    expect(isOneWord('ضعيف')).toBe(true);
+    expect(isOneWord('صحيح دون قوله: يحيي ويميت')).toBe(false);
   });
 });

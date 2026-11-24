@@ -7,7 +7,8 @@ import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import { adhkarLabel } from '../lib/arabic';
 import { SITE, UNPROVEN } from '../lib/site';
-import { takhrijLine } from '../lib/takhrij';
+import { soundPlace } from '../lib/sound';
+import { isOneWord, takhrijLine } from '../lib/takhrij';
 
 const entries = (await getCollection('unproven')).toSorted((a, b) => a.data.order - b.data.order);
 
@@ -30,19 +31,36 @@ const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشه�
     <main class="content">
       <ol class="list">
         {
-          entries.map(({ data, body }) => (
-            <li class="item is-unproven">
-              <div class="item__head" />
-              <p class="item__lead">{data.what}</p>
-              <p class="dhikr__text">{(body ?? '').trim()}</p>
-              {data.sound && <p class="item__fadl">{data.sound}</p>}
-              <a class="source" href={data.takhrij.url} rel="noopener">
-                <span class="source__label">الحكم</span>
-                <span class="source__value">{takhrijLine(data.takhrij)}</span>
-                <Icon name="out" />
-              </a>
-            </li>
-          ))
+          entries.map(({ data, body }) => {
+            const place = data.sound ? soundPlace(data.sound) : null;
+            return (
+              <li class="item is-unproven">
+                <div class="item__main">
+                  <div class="item__head">
+                    <p class="item__lead">{data.what}</p>
+                    {isOneWord(data.takhrij.ruling) && (
+                      <span class="ruling">{data.takhrij.ruling}</span>
+                    )}
+                  </div>
+                  <p class="dhikr__text">{(body ?? '').trim()}</p>
+                </div>
+                <div class="item__side">
+                  {place && (
+                    <p class="item__fadl item__fadl--sound">
+                      {place.before}<a href={place.path}>{place.name}</a>{place.after}
+                    </p>
+                  )}
+                  {data.sound && !place && <p class="item__fadl">{data.sound}</p>}
+                  <div class="item__foot">
+                    <a class="source" href={data.takhrij.url} rel="noopener">
+                      <span class="source__value">{takhrijLine(data.takhrij)}</span>
+                      <Icon name="out" />
+                    </a>
+                  </div>
+                </div>
+              </li>
+            );
+          })
         }
       </ol>
     </main>

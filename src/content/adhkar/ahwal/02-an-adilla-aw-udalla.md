@@ -5,7 +5,8 @@ order: 2
 count: 1
 mode: "both"
 quran: false
-when: "إذا خرج من بيته، رافعًا طرفه إلى السماء"
+when: "إذا خرج من بيته"
+how: "رافعًا طرفه إلى السماء"
 group: "الخروج من البيت"
 takhrij:
   grader: "الألباني"

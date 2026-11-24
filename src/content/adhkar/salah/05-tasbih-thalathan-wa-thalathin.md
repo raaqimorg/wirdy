@@ -3,10 +3,11 @@ title: "التسبيح ثلاثًا وثلاثين"
 occasion: "salah"
 order: 5
 count: 1
+counts: [33, 33, 33]
 mode: "both"
 quran: false
-when: "يسبّح ويحمد ويكبّر ثلاثًا وثلاثين"
-group: "صيغ التسبيح، تكفي واحدة منها"
+group: "صيغ التسبيح"
+form: 1
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٥٩٧"

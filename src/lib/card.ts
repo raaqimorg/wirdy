@@ -2,8 +2,9 @@ import { createHash } from 'node:crypto';
 import { timesLabel } from './arabic';
 import { EMBLEMS } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
-import { leadOf, suwarOf } from './lead';
+import { fullLeadOf, suwarOf } from './lead';
 import { OCCASIONS } from './occasions';
+import { phrasesOf, type Phrase } from './phrases';
 import type { Dhikr } from './schema';
 import { takhrijLine } from './takhrij';
 import { parseVariants } from './variants';
@@ -23,6 +24,7 @@ export type Card = {
   evening: string | null;
   cut: boolean;
   count: string | null;
+  phrases?: Phrase[];
   takhrij: string;
 };
 
@@ -51,7 +53,7 @@ export function cardOf(data: Dhikr, body: string): Card {
     heading: occasion.heading,
     color: occasion.color,
     title: data.title,
-    lead: [leadOf(data, suwar), suwar && cut && REST].filter(Boolean).join('، '),
+    lead: [fullLeadOf(data, suwar), suwar && cut && REST].filter(Boolean).join('، '),
     quran: data.quran,
     blocks,
     evening:
@@ -59,6 +61,7 @@ export function cardOf(data: Dhikr, body: string): Card {
       excerptClauses(evening, EVENING_LIMIT).text + (letters(evening) > EVENING_LIMIT ? ' …' : ''),
     cut,
     count: data.count > 1 ? timesLabel(data.count) : null,
+    ...(data.counts && { phrases: phrasesOf(text, data.counts) }),
     takhrij: takhrijLine(data.takhrij),
   };
 }

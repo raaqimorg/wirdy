@@ -1,19 +1,14 @@
 ---
-import { SITE, UNPROVEN } from '../lib/site';
+import { SITE } from '../lib/site';
 ---
 
 <footer class="page-footer">
   <p>
-    لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه، والمشهور الذي لم يثبت في صفحة{' '}<a
-      href={UNPROVEN.path}>{UNPROVEN.heading}</a
-    >. الأحكام من{' '}<a
-      href="https://dorar.net/hadith"
-      rel="noopener">الموسوعة الحديثية</a
-    >{' '}في الدرر السنية، والآيات برواية حفص عن عاصم من{' '}<a href="https://tanzil.net/" rel="noopener"
-      >مشروع تنزيل</a
-    >، والتصميم مستوحى من{' '}<span dir="ltr" lang="en">Laws of UX</span>. وجدت خطأً؟{' '}<a
+    من الصحيحين وما صحّحه الألباني أو حسّنه، عن{' '}<a href="https://dorar.net/hadith" rel="noopener"
+      >الدرر</a
+    >{' '}و<a href="https://tanzil.net/" rel="noopener">تنزيل</a>.{' '}<a
       href={`${SITE.repo}/issues/new?template=dhikr-correction.yml`}
-      rel="noopener">أبلغ عنه</a
+      rel="noopener">أبلغ عن خطأ</a
     >.
   </p>
   <p class="page-footer__dedication">صدقة جارية عن شروق، تقبّلها الله</p>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { adhkarLabel, toArabicDigits, timesLabel } from './arabic';
+import { adhkarLabel, formLabel, toArabicDigits, timesLabel } from './arabic';
 
 describe('adhkarLabel', () => {
   it('names a single dhikr in words', () => {
@@ -17,6 +17,17 @@ describe('adhkarLabel', () => {
 
   it('uses the accusative singular above ten', () => {
     expect(adhkarLabel(14)).toBe('١٤ ذكرًا');
+  });
+});
+
+describe('formLabel', () => {
+  it('names each alternative by its order', () => {
+    expect([1, 2, 3, 4].map(formLabel)).toEqual([
+      'الصيغة الأولى',
+      'الصيغة الثانية',
+      'الصيغة الثالثة',
+      'الصيغة الرابعة',
+    ]);
   });
 });
 

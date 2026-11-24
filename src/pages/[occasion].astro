@@ -5,9 +5,10 @@ import Dhikr from '../components/Dhikr.astro';
 import Emblem from '../components/Emblem.astro';
 import Footer from '../components/Footer.astro';
 import OccasionCard from '../components/OccasionCard.astro';
-import { adhkarLabel } from '../lib/arabic';
+import WirdSwitch from '../components/WirdSwitch.astro';
+import { adhkarLabel, formLabel } from '../lib/arabic';
 import { adhkarOf, countsByOccasion } from '../lib/collection';
-import { runsByGroup } from '../lib/groups';
+import { formsOf, groupId, runsByGroup } from '../lib/groups';
 import { slugOf } from '../lib/permalink';
 import { OCCASIONS } from '../lib/occasions';
 import { SITE } from '../lib/site';
@@ -19,8 +20,10 @@ export function getStaticPaths() {
 const { occasion } = Astro.props;
 const entries = await adhkarOf(occasion.id);
 const runs = runsByGroup(entries);
+const hasIndex = runs.length > 1 && runs.every(({ group }) => group);
 const counts = await countsByOccasion();
 const others = OCCASIONS.filter((other) => other.id !== occasion.id);
+const hasQuran = entries.some(({ data }) => data.quran);
 const hasVariants = entries.some((entry) => entry.body?.includes('{{'));
 
 const title = `${occasion.heading} | ${SITE.name}`;
@@ -32,6 +35,7 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
   description={description}
   image={`/opengraph-${occasion.id}.png`}
   crumbs={[{ name: occasion.heading, path: `/${occasion.id}/` }]}
+  faces={hasQuran ? ['naskh', 'quran'] : ['naskh']}
 >
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
     <Bar heading={occasion.heading} />
@@ -40,32 +44,61 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
         <div class="banner__text">
           <h1>{occasion.heading}</h1>
           <p>{adhkarLabel(entries.length)}</p>
-          {
-            hasVariants && (
-              <p class="wird-now">
-                <span class="v-s">
-                  تُعرض صيغة الصباح · <a href="?w=m">اعرض&nbsp;صيغة&nbsp;المساء</a>
-                </span>
-                <span class="v-m">
-                  تُعرض صيغة المساء · <a href="?w=s">اعرض&nbsp;صيغة&nbsp;الصباح</a>
-                </span>
-              </p>
-            )
-          }
+          {hasVariants && <WirdSwitch />}
         </div>
         <div class="banner__graphic"><Emblem occasion={occasion.id} /></div>
       </div>
     </header>
     <main class="content">
       {
+        hasIndex && (
+          <nav class="jump" aria-label="فهرس المجموعات">
+            <ul>
+              {runs.map(({ group }) => (
+                <li>
+                  <a href={`#${groupId(group!)}`}>{group}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+      {
         runs.map(({ group, items }) => (
           <section class:list={['run', group && 'run--group']}>
-            {group && <h2 class="run__title">{group}</h2>}
-            <ol class="list">
-              {items.map((entry) => (
-                <Dhikr data={entry.data} body={entry.body ?? ''} slug={slugOf(entry.id)} />
-              ))}
-            </ol>
+            {group && (
+              <h2 class="run__title" id={groupId(group)}>
+                {group}
+              </h2>
+            )}
+            {items[0]!.data.form ? (
+              <Fragment>
+                <p class="run__note">تكفي واحدة منها</p>
+                <ol class="forms">
+                  {formsOf(items).map(({ form, items: adhkar }) => (
+                    <li class="form">
+                      <h3 class="form__title">{formLabel(form!)}</h3>
+                      <ol>
+                        {adhkar.map(({ id, data, body }) => (
+                          <Dhikr data={data} body={body ?? ''} slug={slugOf(id)} heading="h4" />
+                        ))}
+                      </ol>
+                    </li>
+                  ))}
+                </ol>
+              </Fragment>
+            ) : (
+              <ol class="list">
+                {items.map(({ id, data, body }) => (
+                  <Dhikr
+                    data={data}
+                    body={body ?? ''}
+                    slug={slugOf(id)}
+                    heading={group ? 'h3' : 'h2'}
+                  />
+                ))}
+              </ol>
+            )}
           </section>
         ))
       }

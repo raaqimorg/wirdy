@@ -30,6 +30,12 @@ const pngSize = (file: string) => {
   return [png.readUInt32BE(16), png.readUInt32BE(20)];
 };
 
+const own = (path: string) => readFileSync(join(DIST, path, 'index.html'), 'utf8');
+const facesOf = (page: string) =>
+  [...page.matchAll(/<link rel="preload" href="\/_astro\/([a-z0-9-]+)-normal\./g)].map(
+    ([, name]) => name!
+  );
+
 const petals = (text: string) =>
   (text.match(/<circle cx="[\d.]+" cy="[\d.]+" r="6\.4"/g) || []).map((c) =>
     c.replace(/\s+/g, ' ')
@@ -76,7 +82,7 @@ describe('built site', () => {
     for (const id of OCCASION_IDS) {
       const page = pages[id]!;
       expect(page.match(/<h1>/g)).toHaveLength(1);
-      expect(page).toMatch(/<nav class="bar" aria-label="الرجوع"><a href="\/">/);
+      expect(page).toMatch(/<nav class="bar" aria-label="التنقّل"><a href="\/">/);
       expect(page.match(/class="card /g)).toHaveLength(OCCASION_IDS.length - 1);
       expect(page).not.toContain(`<a class="card o-${id}"`);
     }
@@ -94,6 +100,12 @@ describe('built site', () => {
     expect(html).toContain('hour >= 3 && hour < 12');
   });
 
+  it('switches the form in place, and keeps the choice until the next form is due', () => {
+    expect(html).toContain('sessionStorage.setItem("wird", period() + form)');
+    expect(html).toContain('saved[0] === period() ? saved[1] : null');
+    expect(html).not.toContain('form.hash');
+  });
+
   it('listens for touches, passively, so iOS Safari shows the press state', () => {
     expect(html).toMatch(
       /<script>[\s\S]*?addEventListener\("touchstart", function \(\) \{\}, \{ passive: true \}\)[\s\S]*?<\/script>/
@@ -104,7 +116,7 @@ describe('built site', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/)![1]!;
     expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\("theme"\)[\s\S]*?<\/script>/);
     expect(head).toContain(
-      '<noscript><style>.theme, .wird-now { display: none; }</style></noscript>'
+      '<noscript><style>.theme, .wird-now { display: none !important; }</style></noscript>'
     );
   });
 
@@ -144,16 +156,63 @@ describe('built site', () => {
     }
   });
 
-  it('names the leading form of the morning and evening, with a link to the other', () => {
-    const line = pages['sabah-masaa']!.match(/<p class="wird-now">[\s\S]*?<\/p>/)![0];
-    const text = line
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/\s+/g, ' ');
-    expect(text).toContain('تُعرض صيغة الصباح · اعرض صيغة المساء');
-    expect(text).toContain('تُعرض صيغة المساء · اعرض صيغة الصباح');
-    expect(line).toMatch(/<a href="\?w=m">اعرض( |&nbsp;)صيغة( |&nbsp;)المساء<\/a>/);
-    expect(line).toMatch(/<a href="\?w=s">اعرض( |&nbsp;)صيغة( |&nbsp;)الصباح<\/a>/);
+  it('switches between the morning and the evening form, and marks the one that shows', () => {
+    const page = pages['sabah-masaa']!;
+    const group = page.match(/<div class="wird-now" role="group"[\s\S]*?<\/div>/)![0];
+    expect(group).toContain('<a href="?w=s">الصباح</a>');
+    expect(group).toContain('<a href="?w=m">المساء</a>');
+    expect(page).toMatch(/<script>[\s\S]*?setAttribute\("aria-current"[\s\S]*?<\/script>/);
+  });
+
+  it('describes what did not come in, without counting it as adhkar', () => {
+    const card = html.match(/<a class="card o-unproven"[\s\S]*?<\/a>/)![0];
+    expect(card).toContain('أذكار مشهورة لم تدخل الموقع، مع حكم كل واحد منها');
+    expect(card).not.toMatch(/[٠-٩]/);
+  });
+
+  it('fades the bar title in on scroll, with the timeline apart from the shorthand', () => {
+    expect(css).toContain('animation-timeline:scroll(root)');
+    expect(css).not.toMatch(/animation:[^;}]*scroll\(/);
+  });
+
+  it('lists the groups of a page that has nothing outside a group', () => {
+    for (const id of ['ahwal', 'masjid']) {
+      const groups = [...pages[id]!.matchAll(/<h2 class="run__title" id="([^"]+)"/g)];
+      const jumps = pages[id]!.match(/<nav class="jump"[\s\S]*?<\/nav>/)![0];
+      expect([...jumps.matchAll(/href="#([^"]+)"/g)].map(([, at]) => at)).toEqual(
+        groups.map(([, at]) => at)
+      );
+    }
+  });
+
+  it('lists no groups on a page with adhkar outside a group', () => {
+    for (const id of OCCASION_IDS.filter((other) => !['ahwal', 'masjid'].includes(other))) {
+      expect(pages[id]).not.toContain('class="jump"');
+    }
+  });
+
+  it('shows the forms of tasbih as one choice of four, each phrase with its count', () => {
+    const page = pages['salah']!;
+    expect(page.match(/<li class="form"/g)).toHaveLength(4);
+    expect(page).toContain('تكفي واحدة منها');
+    const counts = page.match(/<span class="phrase__count">\s*<span aria-hidden="true">[٠-٩]+/g)!;
+    expect(counts.map((c) => c.match(/[٠-٩]+$/)![0]).join(' ')).toBe(
+      '٣٣ ٣٣ ٣٣ ٣٣ ٣٣ ٣٤ ١٠ ١٠ ١٠ ٢٥ ٢٥ ٢٥ ٢٥'
+    );
+  });
+
+  it('numbers no card', () => {
+    expect(css).not.toContain('counter(');
+  });
+
+  it('strikes a dhikr of the other time, in a list only', () => {
+    expect(css).toMatch(/\.is-masaa:not\(\.is-alone\) \.dhikr__text[^{]*\{[^}]*line-through/);
+  });
+
+  it('gives each dhikr on an occasion page a heading', () => {
+    for (const id of OCCASION_IDS) {
+      expect(pages[id]!.match(/<h[234] class="vh">/g)).toHaveLength(countOf(id));
+    }
   });
 
   it('names no form on a page whose adhkar have one form', () => {
@@ -187,12 +246,17 @@ describe('built site', () => {
     expect(all).not.toContain('{{');
   });
 
-  it('keeps the word space where a link interrupts a footer sentence', () => {
-    const footer = html.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
-    const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
-    expect(text).toContain('من الموسوعة الحديثية في');
-    expect(text).toContain('من مشروع تنزيل');
-    expect(text).toContain('مستوحى من Laws of UX. وجدت');
+  it('says in one line where the adhkar come from, on every page', () => {
+    for (const page of [html, ...Object.values(pages), notFound]) {
+      const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
+      const text = footer
+        .match(/<p>([\s\S]*?)<\/p>/)![1]!
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ');
+      expect(text.trim()).toBe(
+        'من الصحيحين وما صحّحه الألباني أو حسّنه، عن الدرر وتنزيل. أبلغ عن خطأ.'
+      );
+    }
   });
 
   it('renders every ذكر in the collection once', () => {
@@ -380,7 +444,7 @@ describe('built site', () => {
     expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 2 + expected);
   });
 
-  it('lists what did not come in, each with its weak ruling on dorar.net, linked from home and footer', () => {
+  it('lists what did not come in, each with its weak ruling on dorar.net, linked from home', () => {
     const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
     const files = readdirSync(join(process.cwd(), 'src/content/unproven')).filter((f) =>
       f.endsWith('.md')
@@ -390,10 +454,7 @@ describe('built site', () => {
     expect(
       page.match(/href="https:\/\/dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+"/g)
     ).toHaveLength(files.length);
-    for (const p of [html, ...Object.values(pages), page]) {
-      const footer = p.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
-      expect(footer).toContain('href="/ma-lam-yathbut/"');
-    }
+    expect(html).toContain('href="/ma-lam-yathbut/"');
   });
 
   it('gives «ما لم يثبت» the same bar, leads, and ruling sentences as an occasion page', () => {
@@ -402,11 +463,31 @@ describe('built site', () => {
     expect(bar).toContain('<span class="bar__title" aria-hidden="true">ما لم يثبت</span>');
     expect(bar).toContain('<a class="tool" href="/" aria-label="وِردي، الرئيسية">');
     expect(bar).not.toContain('github.com');
-    expect(page).not.toContain('item__cue');
+    const rulings = page.match(/<span class="ruling">[^<]+<\/span>/g)!;
+    expect(
+      rulings.map((r) => r.replace(/<[^>]+>/g, '')).filter((r) => !/^(ضعيف|موضوع)$/.test(r))
+    ).toEqual([]);
+    expect(page.indexOf('class="ruling"')).toBeLessThan(page.indexOf('class="dhikr__text"'));
     const values = page.match(/<span class="source__value">[^<]*<\/span>/g) ?? [];
     expect(values.length).toBeGreaterThan(0);
     for (const value of values) expect(value).not.toContain('·');
     expect(page).toContain('ضعّفه الألباني في ضعيف أبي داود (');
+  });
+
+  it('leads from each dhikr to the next and the previous in its occasion', () => {
+    const list = contentFiles
+      .filter((f) => f.startsWith('nawm/'))
+      .toSorted()
+      .map((f) => `/${f.replace(/\.md$/, '').replace(/\/\d+-/, '/')}/`);
+    list.forEach((path, index) => {
+      const page = readFileSync(join(DIST, path, 'index.html'), 'utf8');
+      const links = [
+        ...page.match(/<nav class="next"[\s\S]*?<\/nav>/)![0].matchAll(/href="([^"]+)"/g),
+      ];
+      expect(links.map((link) => link[1])).toEqual(
+        [list[index + 1], list[index - 1]].filter(Boolean)
+      );
+    });
   });
 
   it('gives each dhikr a page with its own card, breadcrumbs, and a way to its place', () => {
@@ -427,7 +508,10 @@ describe('built site', () => {
       expect(page).toContain(`href="/${occasion}/#${name}"`);
       const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
       expect(crumbs.itemListElement).toHaveLength(3);
-      expect(page.match(/<nav class="crumbs"[\s\S]*?<\/nav>/)![0].match(/<li/g)).toHaveLength(3);
+      expect(page).not.toContain('class="crumbs"');
+      expect(page).not.toContain('bar__title');
+      expect(page.match(/data-title=/g)).toHaveLength(1);
+      expect(page).toMatch(/<a class="act" href="\/og\/[^"]+" download="wirdy-/);
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
     expect(images.size).toBe(expected);
@@ -435,12 +519,12 @@ describe('built site', () => {
 
   it('shares nothing from «ما لم يثبت»', () => {
     const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
-    expect(page).not.toContain('class="share"');
+    expect(page).not.toContain('data-title=');
   });
 
   it('marks the shared dhikr without script, clear of the bar', () => {
-    expect(css).toMatch(/\.item:target::?after\{/);
-    expect(css).toMatch(/scroll-margin-top:4\.5rem/);
+    expect(css).toMatch(/\.item:target[^{]*\{[^}]*outline:/);
+    expect(css).toMatch(/\.item\{[^}]*scroll-margin-top:4rem/);
   });
 
   it('leaves out sitemap dates that would only repeat the build date', () => {
@@ -464,20 +548,45 @@ describe('built site', () => {
     }
   });
 
+  it('keeps what is named by its content for a year, and asks for a page again on each visit', () => {
+    const headers = readFileSync(join(DIST, '_headers'), 'utf8');
+    for (const path of ['/_astro/*', '/og/*']) {
+      expect(headers).toContain(`${path}\n  Cache-Control: public, max-age=31536000, immutable\n`);
+    }
+    expect(headers.match(/^\/\*\n((?:  .*\n)+)/)![1]).not.toContain('Cache-Control');
+    for (const file of readdirSync(join(DIST, '_astro'))) {
+      expect(file).toMatch(/\.[A-Za-z0-9_-]{8}\.(css|woff2)$/);
+    }
+  });
+
+  it('preloads the faces a page uses, and no others', () => {
+    const ui = [400, 500, 700].map((weight) => `ibm-plex-sans-arabic-arabic-${weight}`);
+    const naskh = 'amiri-arabic-400';
+    const quran = 'amiri-quran-arabic-400';
+    expect(facesOf(html)).toEqual([...ui, naskh]);
+    expect(facesOf(notFound)).toEqual(ui);
+    expect(facesOf(pages['ahwal']!)).toEqual([...ui, naskh]);
+    expect(facesOf(pages['nawm']!)).toEqual([...ui, naskh, quran]);
+    expect(facesOf(own('nawm/ayat-al-kursi'))).toEqual([...ui, quran]);
+    expect(facesOf(own('ahwal/al-karb'))).toEqual([...ui, naskh]);
+  });
+
+  it('keeps short and long pages the same width where a scroll bar takes space', () => {
+    expect(css).toContain('scrollbar-gutter:stable');
+  });
+
   it('asks browsers to keep to HTTPS for a year', () => {
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
     expect(headers).toMatch(/^\/\*\n  Strict-Transport-Security: max-age=31536000\n/);
   });
 
-  it('states what goes in, and where to report a mistake, on every page', () => {
+  it('links its sources and the place to report a mistake, on every page', () => {
     const report = 'https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml';
     for (const page of [html, ...Object.values(pages), notFound]) {
       const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
-      const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
-      expect(text).toContain(
-        'لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه، والمشهور الذي لم يثبت في صفحة ما لم يثبت.'
-      );
-      expect(footer).toContain(`href="${report.replace(/&/g, '&amp;')}"`);
+      for (const href of ['https://dorar.net/hadith', 'https://tanzil.net/', report]) {
+        expect(footer).toContain(`href="${href}"`);
+      }
     }
   });
 
@@ -538,11 +647,12 @@ describe('built site', () => {
     expect(suwar.filter((s) => s.includes('بِسْمِ'))).toEqual([]);
   });
 
-  it('ships every face from this origin', () => {
-    const assets = readdirSync(join(DIST, '_astro'));
-    expect(assets.some((f) => /^amiri-quran-arabic-.*\.woff2$/.test(f))).toBe(true);
-    expect(assets.some((f) => /^amiri-arabic-.*\.woff2$/.test(f))).toBe(true);
-    expect(assets.some((f) => /^ibm-plex-sans-arabic-arabic-.*\.woff2$/.test(f))).toBe(true);
+  it('ships every face from this origin, once', () => {
+    const fonts = readdirSync(join(DIST, '_astro')).filter((f) => !f.endsWith('.css'));
+    expect(fonts).toHaveLength(5);
+    expect(fonts.some((f) => /^amiri-quran-arabic-.*\.woff2$/.test(f))).toBe(true);
+    expect(fonts.some((f) => /^amiri-arabic-.*\.woff2$/.test(f))).toBe(true);
+    expect(fonts.some((f) => /^ibm-plex-sans-arabic-arabic-.*\.woff2$/.test(f))).toBe(true);
   });
 
   it('makes no third-party requests', () => {

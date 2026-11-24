@@ -3,6 +3,8 @@ import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import Dhikr from './Dhikr.astro';
 import type { Dhikr as DhikrData } from '../lib/schema';
 
+type Extra = { heading?: 'h2' | 'h3' | 'h4'; alone?: boolean };
+
 const base: DhikrData = {
   title: 'سيد الاستغفار',
   occasion: 'sabah-masaa',
@@ -19,9 +21,11 @@ const base: DhikrData = {
   },
 };
 
-async function render(data: DhikrData, body: string) {
+async function render(data: DhikrData, body: string, extra: Extra = {}) {
   const container = await AstroContainer.create();
-  return container.renderToString(Dhikr, { props: { data, body, slug: 'sayyid-al-istighfar' } });
+  return container.renderToString(Dhikr, {
+    props: { data, body, slug: 'sayyid-al-istighfar', ...extra },
+  });
 }
 
 describe('Dhikr', () => {
@@ -56,7 +60,8 @@ describe('Dhikr', () => {
 
   it('suppresses the badge when the count is one', async () => {
     const html = await render(base, 'سبحان الله');
-    expect(html).not.toContain('item__count');
+    expect(html).not.toContain('class="beads"');
+    expect(html).not.toContain('item__head');
   });
 
   it('shows an agreeing badge when the count is above one', async () => {
@@ -139,10 +144,12 @@ describe('Dhikr', () => {
 
   it('draws the count as a ring of beads beside its label', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
-    const ring = html.match(/٣ مرات<svg class="beads"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>/);
+    const ring = html.match(
+      /<p class="item__lead">٣ مرات<\/p>\s*<svg class="beads"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>/
+    );
     expect(ring).not.toBeNull();
     expect(ring![1].match(/<circle cx=/g)).toHaveLength(3);
-    expect(ring![1]).not.toContain('<text');
+    expect(ring![1]).toContain('>٣</text>');
   });
 
   it('writes a count above ten inside a full ring', async () => {
@@ -156,7 +163,6 @@ describe('Dhikr', () => {
   it('links the تخريج with its source and its ruling', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('href="https://dorar.net/hadith/sharh/1"');
-    expect(html).toContain('<span class="source__label">التخريج</span>');
     expect(html).toContain('<span class="source__value">صحيح البخاري (١)</span>');
   });
 
@@ -177,11 +183,42 @@ describe('Dhikr', () => {
     expect(html).not.toContain('item__note');
   });
 
-  it('leads into the text with its cue, outside the head row', async () => {
-    const html = await render({ ...base, when: 'عند الخروج من المنزل' }, 'بِسْمِ اللَّهِ');
-    expect(html).toMatch(
-      /<\/div>\s*<p class="item__lead">عند الخروج من المنزل<\/p>\s*<p class="dhikr__text">/
+  it('reads in order: how many and when, how, the text, the virtue, the takhrij', async () => {
+    const html = await render(
+      { ...base, count: 3, when: 'إذا أخذ مضجعه', how: 'متوضئًا', fadl: 'كفته' },
+      'بِسْمِ اللَّهِ'
     );
+    const order = [
+      '<p class="item__lead">٣ مرات، إذا أخذ مضجعه</p>',
+      '<p class="item__how">متوضئًا</p>',
+      '<p class="dhikr__text">',
+      '<p class="item__fadl">كفته</p>',
+      '<a class="source"',
+      '<a class="share"',
+    ].map((part) => html.indexOf(part));
+    expect(order).not.toContain(-1);
+    expect(order).toEqual(order.toSorted((a, b) => a - b));
+  });
+
+  it('shows each phrase with its own count, read aloud in full', async () => {
+    const html = await render({ ...base, counts: [33, 10] }, 'سبحان الله، والله أكبر');
+    expect(html.match(/class="phrase"/g)).toHaveLength(2);
+    expect(html).toMatch(/<span aria-hidden="true">٣٣<\/span>\s*<span class="vh">٣٣ مرة<\/span>/);
+    expect(html).toMatch(/<span aria-hidden="true">١٠<\/span>\s*<span class="vh">١٠ مرات<\/span>/);
+  });
+
+  it('refuses counts that do not match its phrases', async () => {
+    await expect(render({ ...base, counts: [33, 33] }, 'سبحان الله')).rejects.toThrow('2 counts');
+  });
+
+  it('carries its title as a hidden heading in a list, and none on its own page', async () => {
+    const listed = await render(base, 'سبحان الله', { heading: 'h3' });
+    expect(listed).toContain('<h3 class="vh">سيد الاستغفار</h3>');
+    expect(await render(base, 'سبحان الله', { alone: true })).not.toMatch(/<h\d/);
+  });
+
+  it('leaves the share link to its own page when it stands alone', async () => {
+    expect(await render(base, 'سبحان الله', { alone: true })).not.toContain('data-title');
   });
 
   it('omits the lead when there is no cue', async () => {

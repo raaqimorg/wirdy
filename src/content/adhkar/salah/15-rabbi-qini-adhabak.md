@@ -5,7 +5,8 @@ order: 15
 count: 1
 mode: "both"
 quran: false
-when: "إذا صلّى، وأقبل على الناس بوجهه"
+when: "إذا صلّى"
+how: "وأقبل على الناس بوجهه"
 group: "أذكار وأدعية أخرى"
 takhrij:
   grader: "مسلم"

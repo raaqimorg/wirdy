@@ -5,7 +5,8 @@ order: 20
 count: 3
 mode: "both"
 quran: false
-when: "بعد السلام من الوتر، ويرفع صوته بالثالثة"
+when: "بعد السلام من الوتر"
+how: "ويرفع صوته بالثالثة"
 group: "أذكار وأدعية أخرى"
 takhrij:
   grader: "الألباني"

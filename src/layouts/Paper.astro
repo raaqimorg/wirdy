@@ -1,9 +1,9 @@
 ---
-import "@fontsource/amiri/arabic-400.css";
-import "@fontsource/amiri-quran/arabic-400.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
+import naskh from "@fontsource/amiri/files/amiri-arabic-400-normal.woff2?url";
+import quran from "@fontsource/amiri-quran/files/amiri-quran-arabic-400-normal.woff2?url";
+import plex400 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url";
+import plex500 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url";
+import plex700 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url";
 import "../styles/paper.css";
 
 import { SITE } from "../lib/site";
@@ -15,6 +15,7 @@ interface Props {
   imageSize?: [width: number, height: number];
   crumbs?: { name: string; path: string }[];
   noindex?: boolean;
+  faces?: ("naskh" | "quran")[];
 }
 
 const {
@@ -24,7 +25,11 @@ const {
   imageSize: [imageWidth, imageHeight] = [2400, 1260],
   crumbs = [],
   noindex = false,
+  faces = ["naskh"],
 } = Astro.props;
+const FACES = { naskh, quran };
+const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])];
+
 const siteName = SITE.name;
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site);
@@ -81,6 +86,7 @@ const structuredData = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    {preloads.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={pageUrl.href} />}
@@ -114,12 +120,42 @@ const structuredData = {
     {!noindex && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />}
     <script is:inline>
       (function () {
-        var hour = new Date().getHours();
-        var wird = hour >= 3 && hour < 12 ? "s" : "m";
-        var override = location.search.match(/w=([sm])/);
-        if (override) wird = override[1];
         var root = document.documentElement;
-        root.dataset.wird = wird;
+        function period() {
+          var hour = new Date().getHours();
+          return hour >= 3 && hour < 12 ? "s" : "m";
+        }
+        function kept() {
+          try {
+            var saved = sessionStorage.getItem("wird") || "";
+            return saved[0] === period() ? saved[1] : null;
+          } catch (error) {
+            return null;
+          }
+        }
+        function mark() {
+          var forms = document.querySelectorAll(".wird-now a");
+          for (var i = 0; i < forms.length; i++) {
+            if (forms[i].search === `?w=${root.dataset.wird}`) forms[i].setAttribute("aria-current", "true");
+            else forms[i].removeAttribute("aria-current");
+          }
+        }
+        function choose(form) {
+          root.dataset.wird = form;
+          try {
+            sessionStorage.setItem("wird", period() + form);
+          } catch (error) {}
+          mark();
+        }
+        var override = location.search.match(/w=([sm])/);
+        if (override) choose(override[1]);
+        else root.dataset.wird = kept() || period();
+        document.addEventListener("DOMContentLoaded", mark);
+        window.addEventListener("pageshow", function (event) {
+          if (!event.persisted) return;
+          root.dataset.wird = kept() || period();
+          mark();
+        });
         document.addEventListener("touchstart", function () {}, { passive: true });
 
         var metas = document.querySelectorAll('meta[name="theme-color"]');
@@ -163,8 +199,12 @@ const structuredData = {
 
         document.addEventListener("click", function (event) {
           var form = event.target.closest(".wird-now a");
-          if (form) form.hash = location.hash;
-          var share = event.target.closest(".share");
+          if (form && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
+            event.preventDefault();
+            choose(form.search.slice(3));
+            if (location.search) history.replaceState(null, "", location.pathname + location.hash);
+          }
+          var share = event.target.closest("a[data-title]");
           if (!share || event.metaKey || event.ctrlKey || event.shiftKey) return;
           var url = share.href;
           if (navigator.share) {
@@ -188,7 +228,7 @@ const structuredData = {
         });
       })();
     </script>
-    <noscript><style>.theme, .wird-now { display: none; }</style></noscript>
+    <noscript><style>.theme, .wird-now { display: none !important; }</style></noscript>
   </head>
   <body>
     <slot />

@@ -6,13 +6,13 @@ This list is short on purpose. If you find unusual code that is not here, say so
 
 ## One page serves the morning and the evening
 
-The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, so the reader rarely has to switch. A line under the banner says which form leads, and links to the other one with `?w=` («تُعرض صيغة الصباح · اعرض صيغة المساء»). An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/paper.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
+The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, so the reader rarely has to switch. A switch under the title («الصباح»، «المساء») shows either form at once, without loading the page again, and the script marks the one that shows with `aria-current`. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/paper.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
 
-- The script picks the morning from 03:00 to 11:59 local time, and the evening otherwise. `?w=s` or `?w=m` in the URL overrides it. The switch is at noon, not at Asr, because in winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, and 13:38 in London in December). Between Dhuhr and Asr, the next set, the evening, is the right guess.
+- The script picks the morning from 03:00 to 11:59 local time, and the evening otherwise. `?w=s` or `?w=m` in the URL overrides it. The choice is kept in `sessionStorage`, with the form that was due when it was made, so it holds from page to page and ends when the next form is due. Returning to a page with the back button shows the last choice. The switch is at noon, not at Asr, because in winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, and 13:38 in London in December). Between Dhuhr and Asr, the next set, the evening, is the right guess.
 - It is inline, not a module, so the right form leads on the first paint, with no flash.
-- Without JavaScript, the page leads with the morning form, and the line that names the form is hidden (`<noscript>`), because its link would change nothing.
+- Without JavaScript, the page leads with the morning form, and the switch is hidden (`<noscript>`), because it would change nothing.
 - The struck form is `aria-hidden` and cannot be selected, so VoiceOver and copying give the form for now only. Each struck word is joined to its word with a no-break space, not `white-space: nowrap`, because Safari does not wrap before a `nowrap` span in right-to-left text and the line runs past the screen.
-- A dhikr for one time only (`mode: "sabah"` or `"masaa"`) always shows, under «في الصباح» or «في المساء», and its text is muted at the other time.
+- A dhikr for one time only (`mode: "sabah"` or `"masaa"`) always shows, under «في الصباح» or «في المساء». At the other time its text is muted and struck through, like a word of the other form. Its own page shows it plain.
 
 ## An empty touch listener turns on the press state on iPhones
 
@@ -45,12 +45,21 @@ The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alterna
 
 ## A share link opens the device's share sheet
 
-Each dhikr has a link to its own page, drawn as a share icon. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it.
+Each dhikr has a link to its own page, drawn as a share icon in the foot of its card. Its own page has it as a button, next to «احفظ الصورة». The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it.
 
 - The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
 - It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
 - A place in an occasion page is a plain `#slug`, marked with `:target` in CSS. The text after `#` never reaches the server, so only a page of its own can have its own sharing card.
-- The script keeps the `#slug` when the reader switches between the morning and the evening form.
+- The message lies over the foot of the card, so nothing moves under the finger.
+- Switching between the morning and the evening form keeps the `#slug`.
+
+## The bar shows the page title after a scroll
+
+The bar of an occasion page repeats the heading, so the reader knows the page after the heading scrolls away. CSS fades it in with a scroll timeline (`animation-timeline: scroll(root)` in `src/styles/paper.css`), inside `@supports`. The owner asked for it.
+
+- The ordinary way is a title that always shows, next to the same heading. A browser without scroll timelines still does that.
+- The timeline sits in its own rule, apart from the `animation` shorthand. In one rule, the CSS minifier merges the two into a shorthand that browsers refuse. A build test checks it.
+- The bar of a dhikr's own page has no title, because the page is short and its heading stays near.
 
 ## Each dhikr has a card, named by its fingerprint
 

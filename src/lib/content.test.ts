@@ -7,6 +7,7 @@ import { OCCASION_IDS } from './occasions';
 import { dhikrPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
 import { dhikrSchema, unprovenSchema, type Dhikr } from './schema';
+import { phrasesOf } from './phrases';
 import { parseVariants } from './variants';
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
@@ -97,6 +98,32 @@ describe.each(albani)('$path, graded by al-Albani', ({ data }) => {
 
   it('carries no ruling of weakness', () => {
     expect(data.takhrij.ruling).not.toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ/);
+  });
+});
+
+describe.each(entries.filter((entry) => entry.data.counts))(
+  '$path, with a count for each phrase',
+  ({ body, data }) => {
+    it('has one count for each phrase, and no count of the whole', () => {
+      expect(phrasesOf(body.trim(), data.counts!)).toHaveLength(data.counts!.length);
+      expect(data.count).toBe(1);
+    });
+  }
+);
+
+describe('the alternative forms', () => {
+  const forms = entries.filter((entry) => entry.data.form);
+
+  it('are numbered from one, in the order of the page', () => {
+    const numbers = forms
+      .toSorted((a, b) => a.data.order - b.data.order)
+      .map(({ data }) => data.form!);
+    expect([...new Set(numbers)]).toEqual([1, 2, 3, 4]);
+    expect(numbers).toEqual(numbers.toSorted((a, b) => a - b));
+  });
+
+  it('sit under a group heading', () => {
+    expect(forms.filter(({ data }) => !data.group)).toEqual([]);
   });
 });
 

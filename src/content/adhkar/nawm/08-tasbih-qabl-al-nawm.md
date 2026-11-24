@@ -3,9 +3,9 @@ title: "التسبيح عند النوم"
 occasion: "nawm"
 order: 8
 count: 1
+counts: [33, 33, 34]
 mode: "both"
 quran: false
-when: "يسبّح ثلاثًا وثلاثين، ويحمد ثلاثًا وثلاثين، ويكبّر أربعًا وثلاثين"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٣١١٣"

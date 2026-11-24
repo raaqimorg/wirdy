@@ -32,6 +32,15 @@ describe('cardOf', () => {
     });
   });
 
+  it('carries each phrase with its own count', () => {
+    const card = cardOf({ ...base, counts: [33, 34] }, 'سبحان الله، والله أكبر');
+    expect(card.phrases).toEqual([
+      { text: 'سبحان الله', count: 33 },
+      { text: 'والله أكبر', count: 34 },
+    ]);
+    expect(cardOf(base, 'سبحان الله')).not.toHaveProperty('phrases');
+  });
+
   it('shows the morning form, and the evening form under it', () => {
     const card = cardOf(base, '{{أصبحنا|أمسينا}} لله');
     expect(card.blocks).toEqual([['أصبحنا لله']]);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { leadOf, suwarOf } from './lead';
+import { fullLeadOf, leadOf, suwarOf } from './lead';
 import type { Dhikr } from './schema';
 
 const base: Dhikr = {
@@ -38,7 +38,18 @@ describe('leadOf', () => {
     expect(leadOf(data, [['أ']])).toBe('في المساء، إذا أوى إلى فراشه. تُقرأ إلى آخر السورة');
   });
 
+  it('leaves the manner to its own line', () => {
+    expect(leadOf({ ...base, when: 'إذا أخذ مضجعه', how: 'متوضئًا' }, null)).toBe('إذا أخذ مضجعه');
+  });
+
   it('is empty when there is nothing to say', () => {
     expect(leadOf({ ...base, quran: false }, null)).toBe('');
+  });
+});
+
+describe('fullLeadOf', () => {
+  it('adds the manner after the moment, for a card that stands alone', () => {
+    const data: Dhikr = { ...base, when: 'إذا أخذ مضجعه', how: 'متوضئًا', ayat: 'first' };
+    expect(fullLeadOf(data, [['أ']])).toBe('إذا أخذ مضجعه، متوضئًا. تُقرأ إلى آخر السورة');
   });
 });

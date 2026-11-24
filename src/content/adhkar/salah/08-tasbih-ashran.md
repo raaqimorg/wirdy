@@ -3,10 +3,11 @@ title: "التسبيح عشرًا"
 occasion: "salah"
 order: 8
 count: 1
+counts: [10, 10, 10]
 mode: "both"
 quran: false
-when: "أو يسبّح ويحمد ويكبّر عشرًا عشرًا"
-group: "صيغ التسبيح، تكفي واحدة منها"
+group: "صيغ التسبيح"
+form: 3
 fadl: "تدركون من كان قبلكم، وتسبقون من جاء بعدكم"
 takhrij:
   grader: "البخاري"

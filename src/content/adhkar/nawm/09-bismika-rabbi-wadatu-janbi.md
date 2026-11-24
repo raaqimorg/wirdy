@@ -5,7 +5,8 @@ order: 9
 count: 1
 mode: "both"
 quran: false
-when: "إذا أوى إلى فراشه، بعد أن ينفضه بداخلة إزاره"
+when: "إذا أوى إلى فراشه"
+how: "بعد أن ينفضه بداخلة إزاره"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٣٢٠"

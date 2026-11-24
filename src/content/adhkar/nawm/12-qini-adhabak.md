@@ -5,7 +5,7 @@ order: 12
 count: 1
 mode: "both"
 quran: false
-when: "يضع يده اليمنى تحت خدّه"
+how: "يضع يده اليمنى تحت خدّه"
 takhrij:
   grader: "الألباني"
   source: "صحيح أبي داود ٥٠٤٥"

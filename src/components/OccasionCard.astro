@@ -9,15 +9,16 @@ interface Props {
   heading: string;
   color: string;
   count: number;
+  note?: string;
 }
 
-const { id, heading, color, count, href = `/${id}/` } = Astro.props;
+const { id, heading, color, count, note, href = `/${id}/` } = Astro.props;
 ---
 
 <a class={`card o-${id}`} href={href} style={`--c: ${color}; --stage: stage-${id}`}>
   <span class="card__stage"><Emblem occasion={id} /></span>
   <span class="card__body">
     <span class="card__title">{heading}</span>
-    <span class="meta">{adhkarLabel(count)}</span>
+    <span class="meta">{note ?? adhkarLabel(count)}</span>
   </span>
 </a>

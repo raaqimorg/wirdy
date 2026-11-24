@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:f
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import matter from 'gray-matter';
+import { toArabicDigits } from '../../src/lib/arabic.ts';
 import { cardFile, cardOf } from '../../src/lib/card.ts';
 import { EMBLEMS } from '../../src/lib/emblems.ts';
 import { markSvg } from '../../src/lib/mark.ts';
@@ -35,6 +36,20 @@ const emblem = (id) =>
 const ayatOf = (blocks) =>
   blocks.map((ayat) => `<p>﴿ ${ayat.map(escape).join(' <i>۝</i> ')} ﴾</p>`).join('');
 
+const phrasesRows = (phrases) =>
+  phrases
+    .map(
+      ({ text, count }) =>
+        `<p class="phrase"><span>${escape(text)}</span><b>${toArabicDigits(count)}</b></p>`
+    )
+    .join('');
+
+const textOf = (card) => {
+  if (card.quran) return ayatOf(card.blocks);
+  if (card.phrases) return phrasesRows(card.phrases);
+  return `<p>${escape(card.blocks[0][0])}${card.cut ? ' …' : ''}</p>`;
+};
+
 const page = (
   card,
   occasion
@@ -55,6 +70,8 @@ body{font-family:"Plex",sans-serif;font-weight:500;background:${card.color};colo
 .box{flex:1;min-height:0;display:flex;align-items:center}
 .text{width:100%;font-family:"${card.quran ? 'Amiri Quran' : 'Amiri'}";line-height:${card.quran ? 2.15 : 1.85}}
 .text i{font-style:normal;opacity:.75}
+.phrase{display:flex;align-items:center;justify-content:space-between}
+.phrase b{font:700 30px/1 "Plex";min-width:104px;padding:12px 0;text-align:center;border:2px solid #f4f1d0;border-radius:99px}
 .evening{font-family:"Plex";font-size:.5em;line-height:1.6;opacity:.75}
 .evening span{font-family:"Amiri";font-size:1.5em}
 .foot{display:flex;align-items:center;gap:14px;font-size:22px;border-top:2px solid rgb(244 241 208 / .3);padding-top:14px}
@@ -65,7 +82,7 @@ body{font-family:"Plex",sans-serif;font-weight:500;background:${card.color};colo
 </style></head><body>
 <div class="top">${emblem(occasion)}<div>${card.heading}<b>${escape(card.title)}</b></div>${card.count ? `<span class="count">${card.count}</span>` : ''}</div>
 ${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
-<div class="box"><div class="text">${card.quran ? ayatOf(card.blocks) : `<p>${escape(card.blocks[0][0])}${card.cut ? ' …' : ''}</p>`}${card.evening ? `<p class="evening">وفي المساء: <span>${escape(card.evening)}</span></p>` : ''}</div></div>
+<div class="box"><div class="text">${textOf(card)}${card.evening ? `<p class="evening">وفي المساء: <span>${escape(card.evening)}</span></p>` : ''}</div></div>
 <div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="tk">${card.quran ? 'النص من مشروع تنزيل (tanzil.net). ' : ''}${escape(card.takhrij)}</span></div>
 <script>
 const box=document.querySelector('.box'),text=document.querySelector('.text');

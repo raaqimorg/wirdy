@@ -11,6 +11,12 @@ export function adhkarLabel(n: number): string {
   return `${toArabicDigits(n)} ذكرًا`;
 }
 
+const ORDINALS = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة'];
+
+export function formLabel(n: number): string {
+  return `الصيغة ${ORDINALS[n - 1]}`;
+}
+
 export function timesLabel(n: number): string {
   if (n === 2) return 'مرتان';
   if (n >= 3 && n <= 10) return `${toArabicDigits(n)} مرات`;

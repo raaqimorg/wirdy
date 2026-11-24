@@ -5,16 +5,16 @@ import Tools from './Tools.astro';
 import { SITE } from '../lib/site';
 
 interface Props {
-  heading: string;
+  heading?: string;
   back?: { href: string; label: string };
 }
 
 const { heading, back = { href: '/', label: 'كل الأقسام' } } = Astro.props;
 ---
 
-<nav class="bar" aria-label="الرجوع">
+<nav class="bar" aria-label="التنقّل">
   <a href={back.href}><Icon name="back" />{back.label}</a>
-  <span class="bar__title" aria-hidden="true">{heading}</span>
+  {heading && <span class="bar__title" aria-hidden="true">{heading}</span>}
   <Tools github={false}>
     <a class="tool" href="/" aria-label={`${SITE.name}، الرئيسية`}>
       <span class="tool__face bar__mark"><Mark /></span>

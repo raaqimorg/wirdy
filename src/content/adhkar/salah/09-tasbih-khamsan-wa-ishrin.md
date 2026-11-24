@@ -3,10 +3,11 @@ title: "التسبيح خمسًا وعشرين"
 occasion: "salah"
 order: 9
 count: 1
+counts: [25, 25, 25, 25]
 mode: "both"
 quran: false
-when: "أو يسبّح ويحمد ويكبّر ويهلّل خمسًا وعشرين خمسًا وعشرين"
-group: "صيغ التسبيح، تكفي واحدة منها"
+group: "صيغ التسبيح"
+form: 4
 takhrij:
   grader: "الألباني"
   source: "صحيح النسائي ١٣٤٩"

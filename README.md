@@ -36,7 +36,7 @@ If a word, a count, or a ruling is wrong, or an authentic dhikr is missing, [ope
 
 ## Development
 
-Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page and one page for each occasion, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski.
+Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, and one page for each dhikr, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski.
 
 ```bash
 bun install      # dependencies, and the git hooks
@@ -44,7 +44,7 @@ bun run dev      # http://localhost:4321
 bun run ci       # format, lint, types, tests, and the build test
 ```
 
-Each dhikr that changes between the morning and the evening shows both forms: the form for now leads, and the other is muted and struck through. `?w=s` and `?w=m` in the URL lead with the morning or the evening form. Without them, the page picks the morning before noon and the evening after.
+Each dhikr that changes between the morning and the evening shows both forms: the form for now leads, and the other is muted and struck through. A dhikr for the other time is muted and struck through too. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning from 03:00 to 11:59, and the evening otherwise.
 
 [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) covers issues, pull requests, and keeping your email private. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
 
