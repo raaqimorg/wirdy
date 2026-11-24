@@ -50,4 +50,4 @@ Each dhikr that changes between the morning and the evening shows both forms: th
 
 ## License
 
-The code is under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one.
+The code is under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one. The Quran text comes from the [Tanzil Project](https://tanzil.net), under Tanzil's terms, not under MIT: copy it as it is, and do not change it. [`NOTICE`](NOTICE) holds Tanzil's notice.

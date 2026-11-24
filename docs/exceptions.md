@@ -6,17 +6,17 @@ This list is short on purpose. If you find unusual code that is not here, say so
 
 ## One page serves the morning and the evening
 
-The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, and the reader never has to switch. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/paper.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
+The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, so the reader rarely has to switch. A line under the banner says which form leads, and links to the other one with `?w=` («تُعرض صيغة الصباح · اعرض صيغة المساء»). An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/paper.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
 
 - The script picks the morning from 03:00 to 11:59 local time, and the evening otherwise. `?w=s` or `?w=m` in the URL overrides it. The switch is at noon, not at Asr, because in winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, and 13:38 in London in December). Between Dhuhr and Asr, the next set, the evening, is the right guess.
 - It is inline, not a module, so the right form leads on the first paint, with no flash.
-- Without JavaScript, the page leads with the morning form.
+- Without JavaScript, the page leads with the morning form, and the line that names the form is hidden (`<noscript>`), because its link would change nothing.
 - The struck form is `aria-hidden` and cannot be selected, so VoiceOver and copying give the form for now only. Each struck word is joined to its word with a no-break space, not `white-space: nowrap`, because Safari does not wrap before a `nowrap` span in right-to-left text and the line runs past the screen.
 - A dhikr for one time only (`mode: "sabah"` or `"masaa"`) always shows, under «في الصباح» or «في المساء», and its text is muted at the other time.
 
 ## An empty touch listener turns on the press state on iPhones
 
-A card shrinks to 97% while it is pressed (`.card:active` in `src/styles/paper.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
+A card shrinks to 97% while it is pressed (`.card:active` in `src/styles/paper.css`), and every other link and button dims to 60%, so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
 
 - Without it, an iPhone tap gives no feedback at all, because `a` turns off the grey tap highlight (`-webkit-tap-highlight-color: transparent`).
 - The listener is `passive`, so it never delays scrolling.
@@ -28,8 +28,9 @@ The site follows the device's light or dark mode. The moon or sun button in the 
 
 - The ordinary way is to follow the device only, with no button and no script.
 - The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
-- The button has two states. It starts from the device's mode, and a click flips to the other one. There is no way back to "follow the device" short of clearing the site's data.
-- The dark colors appear twice in `src/styles/paper.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. Change both together.
+- The button has two states. It starts from the device's mode, and a click flips to the other one. When a click lands on the device's own mode, the script forgets the saved choice, so the site follows the device again. There is no third «automatic» state.
+- The button is named «الوضع الداكن», and its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
+- The dark colors appear twice in `src/styles/paper.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. Change both together. Each block also sets `--deepen`, which darkens the occasion colors by 22% so they do not glare at night.
 - Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
 
 ## The `{{morning|evening}}` markers
@@ -38,7 +39,9 @@ A dhikr that changes between the morning and the evening is one file with marker
 
 ## The Quran ornaments live in CSS
 
-The brackets ﴿ ﴾, the آية mark ۝, and the سورة divider ۞ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
+The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
+
+- Consecutive سور are parted by an empty gap (`.ayat-sep`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
 ## The icons and the OpenGraph cards come from a headless browser
 

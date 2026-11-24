@@ -1,12 +1,10 @@
 ---
 import Paper from '../layouts/Paper.astro';
+import Bar from '../components/Bar.astro';
 import Dhikr from '../components/Dhikr.astro';
 import Emblem from '../components/Emblem.astro';
 import Footer from '../components/Footer.astro';
-import Icon from '../components/Icon.astro';
-import Mark from '../components/Mark.astro';
 import OccasionCard from '../components/OccasionCard.astro';
-import Tools from '../components/Tools.astro';
 import { adhkarLabel } from '../lib/arabic';
 import { adhkarOf, countsByOccasion } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
@@ -22,6 +20,7 @@ const entries = await adhkarOf(occasion.id);
 const runs = runsByGroup(entries);
 const counts = await countsByOccasion();
 const others = OCCASIONS.filter((other) => other.id !== occasion.id);
+const hasVariants = entries.some((entry) => entry.body?.includes('{{'));
 
 const title = `${occasion.heading} | ${SITE.name}`;
 const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
@@ -34,15 +33,24 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
   section={occasion.heading}
 >
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
-    <nav class="bar" aria-label="الرجوع">
-      <a href="/"><Icon name="back" />كل الأقسام</a>
-      <Tools><span class="bar__mark"><Mark /></span></Tools>
-    </nav>
+    <Bar heading={occasion.heading} />
     <header class="banner">
       <div class="banner__in">
         <div class="banner__text">
           <h1>{occasion.heading}</h1>
           <p>{adhkarLabel(entries.length)}</p>
+          {
+            hasVariants && (
+              <p class="wird-now">
+                <span class="v-s">
+                  تُعرض صيغة الصباح · <a href="?w=m">اعرض&nbsp;صيغة&nbsp;المساء</a>
+                </span>
+                <span class="v-m">
+                  تُعرض صيغة المساء · <a href="?w=s">اعرض&nbsp;صيغة&nbsp;الصباح</a>
+                </span>
+              </p>
+            )
+          }
         </div>
         <div class="banner__graphic"><Emblem occasion={occasion.id} /></div>
       </div>

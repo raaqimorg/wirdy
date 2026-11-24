@@ -115,26 +115,44 @@ const structuredData = {
         var metas = document.querySelectorAll('meta[name="theme-color"]');
         var paper = {};
         for (var i = 0; i < metas.length; i++) paper[metas[i].media ? "dark" : "light"] = metas[i].content;
+        var device = matchMedia("(prefers-color-scheme: dark)");
+        function deviceTheme() {
+          return device.matches ? "dark" : "light";
+        }
+        function current() {
+          return root.dataset.theme || deviceTheme();
+        }
         function apply(theme) {
-          root.dataset.theme = theme;
-          for (var j = 0; j < metas.length; j++) metas[j].content = paper[theme];
+          if (theme) root.dataset.theme = theme;
+          else delete root.dataset.theme;
+          for (var j = 0; j < metas.length; j++) {
+            metas[j].content = paper[theme || (metas[j].media ? "dark" : "light")];
+          }
+        }
+        function announce() {
+          var buttons = document.querySelectorAll(".theme");
+          for (var k = 0; k < buttons.length; k++) buttons[k].setAttribute("aria-pressed", String(current() === "dark"));
         }
         try {
           var saved = localStorage.getItem("theme");
           if (saved === "light" || saved === "dark") apply(saved);
         } catch (error) {}
+        document.addEventListener("DOMContentLoaded", announce);
+        device.addEventListener("change", announce);
         document.addEventListener("click", function (event) {
           if (!event.target.closest(".theme")) return;
-          var current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-          var next = current === "dark" ? "light" : "dark";
-          apply(next);
+          var next = current() === "dark" ? "light" : "dark";
+          var follow = next === deviceTheme();
+          apply(follow ? null : next);
           try {
-            localStorage.setItem("theme", next);
+            if (follow) localStorage.removeItem("theme");
+            else localStorage.setItem("theme", next);
           } catch (error) {}
+          announce();
         });
       })();
     </script>
-    <noscript><style>.theme { display: none; }</style></noscript>
+    <noscript><style>.theme, .wird-now { display: none; }</style></noscript>
   </head>
   <body>
     <slot />

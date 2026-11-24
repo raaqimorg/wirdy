@@ -36,6 +36,7 @@ const head = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-
 @font-face{font-family:"Plex";font-weight:400;src:url("${font('ibm-plex-sans-arabic', 'ibm-plex-sans-arabic-arabic-400-normal.woff2')}") format("woff2")}
 @font-face{font-family:"Plex";font-weight:500;src:url("${font('ibm-plex-sans-arabic', 'ibm-plex-sans-arabic-arabic-500-normal.woff2')}") format("woff2")}
 @font-face{font-family:"Plex";font-weight:700;src:url("${font('ibm-plex-sans-arabic', 'ibm-plex-sans-arabic-arabic-700-normal.woff2')}") format("woff2")}
+@font-face{font-family:"Plex";font-weight:400;unicode-range:U+0000-00FF;src:url("${font('ibm-plex-sans-arabic', 'ibm-plex-sans-arabic-latin-400-normal.woff2')}") format("woff2")}
 @font-face{font-family:"Amiri";src:url("${font('amiri', 'amiri-arabic-400-normal.woff2')}") format("woff2")}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
@@ -59,7 +60,7 @@ body{background:${SITE.paper};color:hsl(200 50% 5%);display:flex;flex-direction:
 .domain{top:${MARGIN + 70}px;color:hsl(200 40% 22%)}
 </style></head><body>
 <div class="brand">${markSvg()}<span class="name">${SITE.name}</span></div>
-<p class="hero">أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكرٍ تخريجُه</p>
+<p class="hero">أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكر تخريجُه</p>
 <div class="tiles">${tiles}</div>
 <div class="domain">wirdy.site</div>
 </body></html>`;

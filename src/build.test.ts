@@ -96,17 +96,75 @@ describe('built site', () => {
   it('applies a saved theme before the first paint, and hides the button without script', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/)![1]!;
     expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\("theme"\)[\s\S]*?<\/script>/);
-    expect(head).toContain('<noscript><style>.theme { display: none; }</style></noscript>');
+    expect(head).toContain(
+      '<noscript><style>.theme, .wird-now { display: none; }</style></noscript>'
+    );
   });
 
-  it('puts the theme button and the GitHub link at the top of every page', () => {
+  it('forgets a saved theme once it matches the device again, and says whether dark is on', () => {
+    const head = html.match(/<head>([\s\S]*?)<\/head>/)![1]!;
+    expect(head).toMatch(/<script>[\s\S]*?localStorage\.removeItem\("theme"\)[\s\S]*?<\/script>/);
+    expect(head).toMatch(/<script>[\s\S]*?setAttribute\("aria-pressed"[\s\S]*?<\/script>/);
+  });
+
+  it('puts the theme button at the top of every page', () => {
     for (const page of [html, ...Object.values(pages), notFound]) {
       const top = page.match(/<(header class="top"|nav class="bar")[\s\S]*?<\/(header|nav)>/)![0];
-      expect(top).toContain('<button class="tool theme" type="button" aria-label="تبديل المظهر">');
       expect(top).toContain(
-        '<a class="tool" href="https://github.com/raaqimorg/wirdy" rel="noopener" aria-label="الشيفرة على GitHub">'
+        '<button class="tool theme" type="button" aria-label="الوضع الداكن" aria-pressed="false">'
       );
     }
+  });
+
+  it('keeps the GitHub link on the home and 404 pages, and out of the reading bar', () => {
+    const github =
+      '<a class="tool" href="https://github.com/raaqimorg/wirdy" rel="noopener" aria-label="الشيفرة على GitHub">';
+    for (const page of [html, notFound]) {
+      expect(page.match(/<header class="top">[\s\S]*?<\/header>/)![0]).toContain(github);
+    }
+    for (const page of Object.values(pages)) {
+      expect(page).not.toContain(github);
+    }
+  });
+
+  it('names the occasion in the bar, and makes the bar mark a link home', () => {
+    for (const { id, heading } of OCCASIONS) {
+      const bar = pages[id]!.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
+      expect(bar).toContain(`<span class="bar__title" aria-hidden="true">${heading}</span>`);
+      expect(bar).toMatch(
+        /<a class="tool" href="\/" aria-label="وِردي، الرئيسية"><span class="tool__face bar__mark"><svg class="mark"/
+      );
+    }
+  });
+
+  it('names the leading form of the morning and evening, with a link to the other', () => {
+    const line = pages['sabah-masaa']!.match(/<p class="wird-now">[\s\S]*?<\/p>/)![0];
+    const text = line
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\s+/g, ' ');
+    expect(text).toContain('تُعرض صيغة الصباح · اعرض صيغة المساء');
+    expect(text).toContain('تُعرض صيغة المساء · اعرض صيغة الصباح');
+    expect(line).toMatch(/<a href="\?w=m">اعرض( |&nbsp;)صيغة( |&nbsp;)المساء<\/a>/);
+    expect(line).toMatch(/<a href="\?w=s">اعرض( |&nbsp;)صيغة( |&nbsp;)الصباح<\/a>/);
+  });
+
+  it('names no form on a page whose adhkar have one form', () => {
+    for (const id of OCCASION_IDS.filter((other) => other !== 'sabah-masaa')) {
+      expect(pages[id]).not.toContain('class="wird-now"');
+    }
+  });
+
+  it('writes no takhrij with a middle dot', () => {
+    const values = all.match(/<span class="source__value">[^<]*<\/span>/g) ?? [];
+    expect(values.length).toBe(expected);
+    for (const value of values) expect(value).not.toContain('·');
+  });
+
+  it('keeps the Tanzil notice in the repository', () => {
+    const notice = readFileSync(join(process.cwd(), 'NOTICE'), 'utf8');
+    expect(notice).toContain('Copyright (C) 2007-2021 Tanzil Project');
+    expect(notice).toContain('CHANGING IT IS NOT ALLOWED');
   });
 
   it('ends every footer with the dedication', () => {
@@ -126,7 +184,7 @@ describe('built site', () => {
     const footer = html.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
     const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(text).toContain('من الموسوعة الحديثية في');
-    expect(text).toContain('من مصحف تنزيل');
+    expect(text).toContain('من مشروع تنزيل');
     expect(text).toContain('مستوحى من Laws of UX. وجدت');
   });
 
@@ -331,6 +389,19 @@ describe('built site', () => {
     }
   });
 
+  it('gives «ما لم يثبت» the same bar, leads, and ruling sentences as an occasion page', () => {
+    const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
+    const bar = page.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
+    expect(bar).toContain('<span class="bar__title" aria-hidden="true">ما لم يثبت</span>');
+    expect(bar).toContain('<a class="tool" href="/" aria-label="وِردي، الرئيسية">');
+    expect(bar).not.toContain('github.com');
+    expect(page).not.toContain('item__cue');
+    const values = page.match(/<span class="source__value">[^<]*<\/span>/g) ?? [];
+    expect(values.length).toBeGreaterThan(0);
+    for (const value of values) expect(value).not.toContain('·');
+    expect(page).toContain('ضعّفه الألباني في ضعيف أبي داود (');
+  });
+
   it('leaves out sitemap dates that would only repeat the build date', () => {
     const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
     expect(sitemap).not.toContain('<lastmod>');
@@ -398,7 +469,7 @@ describe('built site', () => {
     expect(css).toMatch(/\.ayat::?before\{[^}]*content:"﴿"/);
     expect(css).toMatch(/\.ayat::?after\{[^}]*content:"﴾"/);
     expect(css).toMatch(/\.ayah-end::?before\{[^}]*content:"۝"/);
-    expect(css).toMatch(/\.ayat-sep::?before\{[^}]*content:"۞"/);
+    expect(css).not.toContain('۞');
     expect(css).toMatch(/--quran:\s*"Amiri Quran",\s*"Amiri"/);
   });
 

@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+import Mark from './Mark.astro';
+import Tools from './Tools.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  heading: string;
+}
+
+const { heading } = Astro.props;
+---
+
+<nav class="bar" aria-label="الرجوع">
+  <a href="/"><Icon name="back" />كل الأقسام</a>
+  <span class="bar__title" aria-hidden="true">{heading}</span>
+  <Tools github={false}>
+    <a class="tool" href="/" aria-label={`${SITE.name}، الرئيسية`}>
+      <span class="tool__face bar__mark"><Mark /></span>
+    </a>
+  </Tools>
+</nav>

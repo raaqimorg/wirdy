@@ -1,13 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
 import Paper from '../layouts/Paper.astro';
+import Bar from '../components/Bar.astro';
 import Emblem from '../components/Emblem.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
-import Mark from '../components/Mark.astro';
-import Tools from '../components/Tools.astro';
 import { adhkarLabel } from '../lib/arabic';
 import { SITE, UNPROVEN } from '../lib/site';
+import { takhrijLine } from '../lib/takhrij';
 
 const entries = (await getCollection('unproven')).toSorted((a, b) => a.data.order - b.data.order);
 
@@ -17,10 +17,7 @@ const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشه�
 
 <Paper title={title} description={description} section={UNPROVEN.heading}>
   <div class="o-unproven" style={`--c: ${UNPROVEN.color}`}>
-    <nav class="bar" aria-label="الرجوع">
-      <a href="/"><Icon name="back" />كل الأقسام</a>
-      <Tools><span class="bar__mark"><Mark /></span></Tools>
-    </nav>
+    <Bar heading={UNPROVEN.heading} />
     <header class="banner">
       <div class="banner__in">
         <div class="banner__text">
@@ -35,16 +32,13 @@ const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشه�
         {
           entries.map(({ data, body }) => (
             <li class="item is-unproven">
-              <div class="item__head">
-                <span class="item__cue">{data.what}</span>
-              </div>
+              <div class="item__head" />
+              <p class="item__lead">{data.what}</p>
               <p class="dhikr__text">{(body ?? '').trim()}</p>
               {data.sound && <p class="item__fadl">{data.sound}</p>}
               <a class="source" href={data.takhrij.url} rel="noopener">
                 <span class="source__label">الحكم</span>
-                <span class="source__value">
-                  {[data.takhrij.grader, data.takhrij.source, data.takhrij.ruling].join(' · ')}
-                </span>
+                <span class="source__value">{takhrijLine(data.takhrij)}</span>
                 <Icon name="out" />
               </a>
             </li>

@@ -21,7 +21,8 @@ The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "A
 - Keep a stagger short: 30 ms apart and 150 ms in all on the home cards, and 50 ms and 250 ms on the banner, where each shape enters from its own direction (`enter` in `src/lib/emblems.ts`).
 - Animate nothing out of sight. The «بقية الأقسام» cards do not animate.
 - Keep still what stays. On hover the card stays still and only its emblem grows 6%. A press shrinks the card to 97% at once, on iPhones too (see [`exceptions.md`](exceptions.md)).
-- With reduced motion, the emblem only fades, and nothing scales or moves.
+- A press on any other link or button dims it to 60% at once, with no transition.
+- With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the card's label darkens at once instead of the emblem growing, so the pointer still gets an answer.
 
 ## Tests
 

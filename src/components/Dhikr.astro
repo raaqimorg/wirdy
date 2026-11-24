@@ -3,6 +3,7 @@ import Icon from './Icon.astro';
 import VariantText from './VariantText.astro';
 import { timesLabel } from '../lib/arabic';
 import { beadRing } from '../lib/beads';
+import { takhrijLine } from '../lib/takhrij';
 import type { Dhikr } from '../lib/schema';
 
 interface Props {
@@ -29,11 +30,11 @@ const suwar = data.quran
 
 const TIME = { sabah: 'في الصباح', masaa: 'في المساء', both: null };
 const cue = [TIME[data.mode], data.when].filter(Boolean).join('، ');
+const UNTIL_END = suwar && suwar.length > 1 ? 'تُقرأ كل سورة إلى آخرها' : 'تُقرأ إلى آخر السورة';
+const whole = data.quran && data.ayat === 'first' ? UNTIL_END : null;
+const lead = [cue, whole].filter(Boolean).join('. ');
 
 const ring = data.count > 1 ? beadRing(data.count) : null;
-
-const { grader, source, ruling } = data.takhrij;
-const sourceLine = [grader === 'الألباني' && grader, source, ruling].filter(Boolean).join(' · ');
 
 const classes = [
   'item',
@@ -46,7 +47,6 @@ const classes = [
 
 <li class={classes}>
   <div class="item__head">
-    {cue && <span class="item__cue">{cue}</span>}
     {
       ring && (
         <span class="item__count">
@@ -60,11 +60,12 @@ const classes = [
       )
     }
   </div>
+  {lead && <p class="item__lead">{lead}</p>}
   <p class="dhikr__text">{suwar ? suwar.map((ayat, i) => <Fragment>{i > 0 && <span class="ayat-sep" />}<span class="ayat">{ayat.map((ayah, j) => <Fragment>{ayah}{j < ayat.length - 1 && <span class="ayah-end" />}</Fragment>)}</span></Fragment>) : <VariantText text={text} />}</p>
   {data.fadl && <p class="item__fadl">{data.fadl}</p>}
   <a class="source" href={data.takhrij.url} rel="noopener">
     <span class="source__label">التخريج</span>
-    <span class="source__value">{sourceLine}</span>
+    <span class="source__value">{takhrijLine(data.takhrij)}</span>
     <Icon name="out" />
   </a>
 </li>

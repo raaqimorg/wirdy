@@ -97,7 +97,7 @@ describe('Dhikr', () => {
     expect(html).toContain('<span class="ayat">قُلْ أَعُوذُ</span>');
   });
 
-  it('parts consecutive سور with ۞، and does not trail one', async () => {
+  it('parts consecutive سور with a gap, and does not trail one', async () => {
     const html = await render({ ...base, quran: true }, 'أ\n\nب\n\nج');
     expect(html.match(/class="ayat-sep"/g)).toHaveLength(2);
     expect(html).not.toMatch(/ayat-sep[^>]*><\/span>\s*<\/p>/);
@@ -133,7 +133,7 @@ describe('Dhikr', () => {
     const html = await render({ ...base, mode: 'masaa' }, 'سبحان الله');
     expect(html).toContain('is-masaa');
     expect(html).not.toContain('is-sabah');
-    expect(html).toContain('<span class="item__cue">في المساء</span>');
+    expect(html).toContain('<p class="item__lead">في المساء</p>');
   });
 
   it('draws the count as a ring of beads beside its label', async () => {
@@ -156,10 +156,10 @@ describe('Dhikr', () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('href="https://dorar.net/hadith/sharh/1"');
     expect(html).toContain('<span class="source__label">التخريج</span>');
-    expect(html).toContain('<span class="source__value">صحيح البخاري ١ · أخرجه البخاري</span>');
+    expect(html).toContain('<span class="source__value">صحيح البخاري (١)</span>');
   });
 
-  it('names al-Albani in the source line when he is the grader', async () => {
+  it("writes al-Albani's ruling as a sentence when he is the grader", async () => {
     const html = await render(
       {
         ...base,
@@ -167,7 +167,7 @@ describe('Dhikr', () => {
       },
       'سبحان الله'
     );
-    expect(html).toContain('الألباني · صحيح أبي داود ١ · صحيح');
+    expect(html).toContain('<span class="source__value">صحّحه الألباني في صحيح أبي داود (١)</span>');
   });
 
   it('keeps an optional note off the card', async () => {
@@ -176,13 +176,38 @@ describe('Dhikr', () => {
     expect(html).not.toContain('item__note');
   });
 
-  it('puts the cue above the text when there is one', async () => {
+  it('leads into the text with its cue, outside the head row', async () => {
     const html = await render({ ...base, when: 'عند الخروج من المنزل' }, 'بِسْمِ اللَّهِ');
-    expect(html).toMatch(/<span class="item__cue">عند الخروج من المنزل<\/span>[\s\S]*dhikr__text/);
+    expect(html).toMatch(
+      /<\/div>\s*<p class="item__lead">عند الخروج من المنزل<\/p>\s*<p class="dhikr__text">/
+    );
   });
 
-  it('omits the cue when there is none', async () => {
+  it('omits the lead when there is no cue', async () => {
     const html = await render(base, 'سبحان الله');
-    expect(html).not.toContain('item__cue');
+    expect(html).not.toContain('item__lead');
+  });
+
+  it('says to read each سورة to its end when only its first آية shows', async () => {
+    const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\n\nج\nد');
+    expect(html).toContain('<p class="item__lead">تُقرأ كل سورة إلى آخرها</p>');
+  });
+
+  it('says to read to the end of the سورة when there is one', async () => {
+    const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\nج');
+    expect(html).toContain('<p class="item__lead">تُقرأ إلى آخر السورة</p>');
+  });
+
+  it('joins the read-to-the-end line to a cue as its own sentence', async () => {
+    const html = await render(
+      { ...base, quran: true, ayat: 'first', when: 'إذا أوى إلى فراشه' },
+      'أ\nب'
+    );
+    expect(html).toContain('<p class="item__lead">إذا أوى إلى فراشه. تُقرأ إلى آخر السورة</p>');
+  });
+
+  it('adds no read-to-the-end line when every آية shows', async () => {
+    const html = await render({ ...base, quran: true }, 'أ\nب');
+    expect(html).not.toContain('item__lead');
   });
 });
