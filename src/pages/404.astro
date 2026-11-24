@@ -1,0 +1,32 @@
+---
+import Paper from '../layouts/Paper.astro';
+import Footer from '../components/Footer.astro';
+import Mark from '../components/Mark.astro';
+import OccasionCard from '../components/OccasionCard.astro';
+import { countsByOccasion } from '../lib/collection';
+import { OCCASIONS } from '../lib/occasions';
+import { SITE } from '../lib/site';
+
+const counts = await countsByOccasion();
+const title = `الصفحة غير موجودة | ${SITE.name}`;
+const description = `لم نجد هذه الصفحة في ${SITE.name}. اختر قسمًا من أقسام الأذكار.`;
+---
+
+<Paper title={title} description={description} noindex>
+  <header class="top">
+    <a class="brand" href="/"><Mark /><span>{SITE.name}</span></a>
+  </header>
+  <main class="home">
+    <h1 class="hero">لم نجد هذه الصفحة، فاختر قسمًا من أقسام الأذكار</h1>
+    <ul class="grid">
+      {
+        OCCASIONS.map(({ id, heading, color }) => (
+          <li>
+            <OccasionCard id={id} heading={heading} color={color} count={counts[id]} />
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+  <Footer />
+</Paper>

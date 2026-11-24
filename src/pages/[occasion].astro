@@ -21,10 +21,15 @@ const counts = await countsByOccasion();
 const others = OCCASIONS.filter((other) => other.id !== occasion.id);
 
 const title = `${occasion.heading} | ${SITE.name}`;
-const description = `${occasion.heading} مما ثبت عن النبي ﷺ، بالتشكيل، وتحت كل ذكر تخريجه من الدرر السنية.`;
+const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
 ---
 
-<Paper title={title} description={description}>
+<Paper
+  title={title}
+  description={description}
+  image={`/opengraph-${occasion.id}.png`}
+  section={occasion.heading}
+>
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
     <nav class="bar" aria-label="الرجوع">
       <a href="/"><Icon name="back" />كل الأقسام</a>

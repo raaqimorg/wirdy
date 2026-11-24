@@ -22,9 +22,9 @@ A dhikr that changes between the morning and the evening is one file with marker
 
 The brackets ﴿ ﴾, the آية mark ۝, and the سورة divider ۞ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
 
-## The icons and the OpenGraph card come from a headless browser
+## The icons and the OpenGraph cards come from a headless browser
 
 `scripts/icons/build.mjs` and `scripts/opengraph/build.mjs` render HTML in a local Chromium-based browser (`scripts/chromium.mjs`) and save screenshots. `scripts/icons/build.mjs` also writes `favicon.ico` by hand, because the format is a short header and a list of PNGs, and it writes `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift apart.
 
 - The ordinary way is an image library such as `sharp`. That adds a native dependency for two scripts that run only when the mark or the card changes.
-- The OpenGraph card draws the same mark, colors, and emblems as the site, from `src/lib/`, in the site's own fonts from `@fontsource`. Run `bun run opengraph` after you change any of them.
+- The OpenGraph cards draw the same mark, colors, and emblems as the site, from `src/lib/`, in the site's own fonts from `@fontsource`. The home card shows all six occasions. Each occasion card shows its heading, its count, and its emblem on its color, as its page banner does. Run `bun run opengraph` after you change any of them, or after you add or remove a dhikr, because the cards print the count.

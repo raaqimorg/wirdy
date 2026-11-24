@@ -8,9 +8,10 @@ import { OCCASIONS } from '../lib/occasions';
 import { SITE } from '../lib/site';
 
 const counts = await countsByOccasion();
+const title = `أذكار اليوم والليلة | ${SITE.name}`;
 ---
 
-<Paper title={SITE.title} description={SITE.description}>
+<Paper title={title} description={SITE.description}>
   <header class="top">
     <a class="brand" href="/"><Mark /><span>{SITE.name}</span></a>
   </header>

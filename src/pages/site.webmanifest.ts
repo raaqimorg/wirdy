@@ -1,8 +1,10 @@
 import type { APIRoute } from 'astro';
+import { OCCASIONS } from '../lib/occasions';
 import { SITE } from '../lib/site';
 
 export const GET: APIRoute = ({ site }) => {
   const manifest = {
+    id: new URL('/', site).pathname,
     name: SITE.title,
     short_name: SITE.name,
     description: SITE.description,
@@ -18,6 +20,7 @@ export const GET: APIRoute = ({ site }) => {
       { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
       { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
+    shortcuts: OCCASIONS.map(({ id, heading }) => ({ name: heading, url: `/${id}/` })),
   };
   return new Response(JSON.stringify(manifest, null, 2), {
     headers: { 'content-type': 'application/manifest+json; charset=utf-8' },

@@ -2,14 +2,11 @@ import type { APIRoute } from 'astro';
 import { OCCASIONS } from '../lib/occasions';
 
 export const GET: APIRoute = ({ site }) => {
-  const lastmod = new Date().toISOString().slice(0, 10);
   const paths = ['/', ...OCCASIONS.map((occasion) => `/${occasion.id}/`)];
   const urls = paths
     .map(
       (path) => `  <url>
     <loc>${new URL(path, site).href}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>monthly</changefreq>
   </url>`
     )
     .join('\n');

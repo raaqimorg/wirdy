@@ -2,9 +2,11 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'node:child_process';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { OCCASION_IDS } from './lib/occasions';
+import { OCCASIONS, OCCASION_IDS } from './lib/occasions';
+import { adhkarLabel } from './lib/arabic';
 
 let html = '';
+let notFound = '';
 let pages: Record<string, string> = {};
 let all = '';
 let css = '';
@@ -15,6 +17,18 @@ const contentFiles = readdirSync(ADHKAR, { recursive: true, encoding: 'utf8' }).
   f.endsWith('.md')
 );
 const expected = contentFiles.length;
+
+const countOf = (id: string) => contentFiles.filter((f) => f.startsWith(`${id}/`)).length;
+const graphOf = (page: string) =>
+  JSON.parse(page.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]!)[
+    '@graph'
+  ] as { '@type': string; [key: string]: unknown }[];
+const metaOf = (page: string, attr: string, name: string) =>
+  page.match(new RegExp(`<meta ${attr}="${name.replace(/[:+]/g, '\\$&')}" content="([^"]*)"`))?.[1];
+const pngSize = (file: string) => {
+  const png = readFileSync(join(DIST, file));
+  return [png.readUInt32BE(16), png.readUInt32BE(20)];
+};
 
 const petals = (text: string) =>
   (text.match(/<circle cx="[\d.]+" cy="[\d.]+" r="6\.4"/g) || []).map((c) =>
@@ -28,6 +42,7 @@ beforeAll(() => {
     OCCASION_IDS.map((id) => [id, readFileSync(join(DIST, id, 'index.html'), 'utf8')])
   );
   all = [html, ...Object.values(pages)].join('\n');
+  notFound = existsSync(join(DIST, '404.html')) ? readFileSync(join(DIST, '404.html'), 'utf8') : '';
   css = readdirSync(join(DIST, '_astro'))
     .filter((f) => f.endsWith('.css'))
     .map((f) => readFileSync(join(DIST, '_astro', f), 'utf8'))
@@ -117,11 +132,34 @@ describe('built site', () => {
     expect(pages['nawm']).toContain('<title>أذكار النوم | وِردي</title>');
   });
 
+  it('names the home page by its topic first and the brand last', () => {
+    expect(html).toContain('<title>أذكار اليوم والليلة | وِردي</title>');
+  });
+
+  it('describes each occasion page with its count, in a snippet that fits the results page', () => {
+    for (const { id, heading } of OCCASIONS) {
+      const description = metaOf(pages[id]!, 'name', 'description')!;
+      expect(description.startsWith(`${heading}: ${adhkarLabel(countOf(id))} `)).toBe(true);
+      expect(description.length).toBeGreaterThanOrEqual(90);
+      expect(description.length).toBeLessThanOrEqual(160);
+      expect(metaOf(pages[id]!, 'property', 'og:description')).toBe(description);
+    }
+  });
+
   it('points the opengraph card at an absolute image that is actually shipped', () => {
     expect(html).toMatch(
       /<meta property="og:image" content="https:\/\/wirdy\.site\/opengraph\.png"/
     );
     expect(existsSync(join(DIST, 'opengraph.png'))).toBe(true);
+  });
+
+  it('gives each occasion page its own card, the same size as the home card', () => {
+    for (const id of OCCASION_IDS) {
+      const url = `https://wirdy.site/opengraph-${id}.png`;
+      expect(metaOf(pages[id]!, 'property', 'og:image')).toBe(url);
+      expect(metaOf(pages[id]!, 'name', 'twitter:image')).toBe(url);
+      expect(pngSize(`opengraph-${id}.png`)).toEqual([2400, 1260]);
+    }
   });
 
   it('keeps the card at 2x the platform minimum so it stays sharp on retina', () => {
@@ -195,7 +233,18 @@ describe('built site', () => {
       expect(website.inLanguage).toBe('ar');
       expect(webpage.url).toBe(page.match(/<link rel="canonical" href="([^"]+)"/)![1]);
       expect(webpage.name).toBe(page.match(/<title>([^<]+)<\/title>/)![1]);
-      expect(webpage.primaryImageOfPage.url).toBe('https://wirdy.site/opengraph.png');
+      expect(webpage.primaryImageOfPage.url).toBe(metaOf(page, 'property', 'og:image'));
+    }
+  });
+
+  it('gives each occasion page a breadcrumb from the home page, and the home page none', () => {
+    expect(graphOf(html).some((node) => node['@type'] === 'BreadcrumbList')).toBe(false);
+    for (const { id, heading } of OCCASIONS) {
+      const crumbs = graphOf(pages[id]!).find((node) => node['@type'] === 'BreadcrumbList')!;
+      expect(crumbs.itemListElement).toEqual([
+        { '@type': 'ListItem', position: 1, name: 'وِردي', item: 'https://wirdy.site/' },
+        { '@type': 'ListItem', position: 2, name: heading, item: `https://wirdy.site/${id}/` },
+      ]);
     }
   });
 
@@ -215,6 +264,14 @@ describe('built site', () => {
     );
   });
 
+  it('gives the installed app a stable id and a shortcut to each occasion', () => {
+    const manifest = JSON.parse(readFileSync(join(DIST, 'site.webmanifest'), 'utf8'));
+    expect(manifest.id).toBe('/');
+    expect(manifest.shortcuts).toEqual(
+      OCCASIONS.map(({ id, heading }) => ({ name: heading, url: `/${id}/` }))
+    );
+  });
+
   it('ships a sitemap listing the home and every occasion page', () => {
     const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
     expect(sitemap).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
@@ -223,6 +280,44 @@ describe('built site', () => {
       expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
     }
     expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 1);
+  });
+
+  it('leaves out sitemap dates that would only repeat the build date', () => {
+    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+    expect(sitemap).not.toContain('<lastmod>');
+    expect(sitemap).not.toContain('<changefreq>');
+  });
+
+  it('ships a 404 page that search engines skip and that leads to every occasion', () => {
+    expect(notFound).toContain('lang="ar"');
+    expect(notFound).toContain('<title>الصفحة غير موجودة | وِردي</title>');
+    expect(notFound).toContain('<meta name="robots" content="noindex">');
+    expect(notFound).not.toContain('rel="canonical"');
+    expect(notFound).not.toContain('application/ld+json');
+    expect(notFound.match(/<h1[ >]/g)).toHaveLength(1);
+    for (const id of OCCASION_IDS) {
+      expect(notFound).toContain(`<a class="card o-${id}" href="/${id}/"`);
+    }
+    for (const page of [html, ...Object.values(pages)]) {
+      expect(page).not.toContain('name="robots"');
+    }
+  });
+
+  it('asks browsers to keep to HTTPS for a year', () => {
+    const headers = readFileSync(join(DIST, '_headers'), 'utf8');
+    expect(headers).toMatch(/^\/\*\n  Strict-Transport-Security: max-age=31536000\n/);
+  });
+
+  it('states what goes in, and where to report a mistake, on every page', () => {
+    const report = 'https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml';
+    for (const page of [html, ...Object.values(pages), notFound]) {
+      const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
+      const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+      expect(text).toContain(
+        'لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه.'
+      );
+      expect(footer).toContain(`href="${report.replace(/&/g, '&amp;')}"`);
+    }
   });
 
   it('ships a robots.txt that opens the site and points at the sitemap', () => {
@@ -235,7 +330,7 @@ describe('built site', () => {
   it('describes itself in Arabic for the card', () => {
     expect(html).toMatch(/<meta property="og:type" content="website"/);
     expect(html).toMatch(/<meta property="og:locale" content="ar_AR"/);
-    expect(html).toMatch(/<meta property="og:title" content="وِردي: /);
+    expect(html).toMatch(/<meta property="og:title" content="أذكار اليوم والليلة \| وِردي"/);
     expect(html).toMatch(/<meta property="og:description" content="أذكار الصباح والمساء/);
   });
 
@@ -292,7 +387,7 @@ describe('built site', () => {
   it('makes no third-party requests', () => {
     const external =
       all.match(
-        /(?:src|href)="https?:\/\/(?!(?:dorar\.net|tanzil\.net|wirdy\.site|lawsofux\.com)[/"])[^"]+"/g
+        /(?:src|href)="https?:\/\/(?!(?:dorar\.net|tanzil\.net|wirdy\.site|lawsofux\.com|github\.com)[/"])[^"]+"/g
       ) || [];
     expect(external).toEqual([]);
   });

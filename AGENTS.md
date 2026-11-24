@@ -7,8 +7,8 @@ This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Ar
 - `src/content/adhkar/<occasion>/`: one Markdown file for each dhikr. The frontmatter holds the count, the occasion, and the takhrij. The body is the text. [`docs/content.md`](docs/content.md) is the standard every file meets.
 - `src/lib/`: the content schema (`schema.ts`), the morning and evening markers and their word pairs (`variants.ts`), the occasions (`occasions.ts`), Arabic numerals and labels (`arabic.ts`), the count dots (`dots.ts`), the occasion emblems (`emblems.ts`), and the sunflower mark (`mark.ts`). Each one has a test next to it. `collection.ts` reads the collection for the pages, and the build test covers it.
 - `src/components/`, `src/layouts/`, `src/styles/`: the pages. The design follows [Laws of UX](https://lawsofux.com/), and the footer credits it.
-- `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
-- `public/`: the icons and the OpenGraph card. They are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`) or `bun run opengraph`, and do not edit them by hand.
+- `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), the 404 page (`404.astro`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
+- `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`) or `bun run opengraph`, and do not edit them by hand.
 - `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
 - `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), and [`exceptions.md`](docs/exceptions.md).
 
