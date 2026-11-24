@@ -1,4 +1,5 @@
 ---
+title: "رضيت بالله ربًّا عند الأذان"
 occasion: "masjid"
 order: 2
 count: 1

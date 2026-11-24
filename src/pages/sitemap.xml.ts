@@ -1,9 +1,17 @@
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { OCCASIONS } from '../lib/occasions';
+import { dhikrPath, slugOf } from '../lib/permalink';
 import { UNPROVEN } from '../lib/site';
 
-export const GET: APIRoute = ({ site }) => {
-  const paths = ['/', ...OCCASIONS.map((occasion) => `/${occasion.id}/`), UNPROVEN.path];
+export const GET: APIRoute = async ({ site }) => {
+  const adhkar = await getCollection('adhkar');
+  const paths = [
+    '/',
+    ...OCCASIONS.map((occasion) => `/${occasion.id}/`),
+    ...adhkar.map((entry) => dhikrPath(entry.data.occasion, slugOf(entry.id))),
+    UNPROVEN.path,
+  ];
   const urls = paths
     .map(
       (path) => `  <url>

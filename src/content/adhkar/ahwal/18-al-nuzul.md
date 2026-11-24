@@ -1,4 +1,5 @@
 ---
+title: "أعوذ بكلمات الله التامات"
 occasion: "ahwal"
 order: 18
 count: 1

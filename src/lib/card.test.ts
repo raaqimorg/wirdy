@@ -1,0 +1,57 @@
+import { describe, expect, it } from 'vitest';
+import { cardFile, cardOf } from './card';
+import type { Dhikr } from './schema';
+
+const base: Dhikr = {
+  title: 'سيد الاستغفار',
+  occasion: 'sabah-masaa',
+  order: 1,
+  count: 1,
+  mode: 'both',
+  quran: false,
+  ayat: 'all',
+  takhrij: {
+    grader: 'البخاري',
+    source: 'صحيح البخاري ١',
+    ruling: 'صحيح',
+    url: 'https://dorar.net/hadith/sharh/1',
+  },
+};
+
+describe('cardOf', () => {
+  it('carries the moment, the count, and the takhrij with the text', () => {
+    const card = cardOf({ ...base, count: 3, when: 'إذا أمسى' }, 'سبحان الله\n');
+    expect(card).toMatchObject({
+      heading: 'أذكار الصباح والمساء',
+      lead: 'إذا أمسى',
+      count: '٣ مرات',
+      takhrij: 'صحيح البخاري (١)',
+      blocks: [['سبحان الله']],
+      evening: null,
+      cut: false,
+    });
+  });
+
+  it('shows the morning form, and the evening form under it', () => {
+    const card = cardOf(base, '{{أصبحنا|أمسينا}} لله');
+    expect(card.blocks).toEqual([['أصبحنا لله']]);
+    expect(card.evening).toBe('أمسينا لله');
+  });
+
+  it('says that the آيات go on when it stops before the last one', () => {
+    const card = cardOf({ ...base, quran: true }, `${'أ ب '.repeat(60)}\n${'ج د '.repeat(60)}`);
+    expect(card.cut).toBe(true);
+    expect(card.blocks[0]).toHaveLength(1);
+    expect(card.lead).toBe('وتتمة الآيات في الصفحة');
+  });
+});
+
+describe('cardFile', () => {
+  it('names the card after its place and what it says', () => {
+    const card = cardOf(base, 'سبحان الله');
+    const file = cardFile(card, 'sabah-masaa', 'tasbih');
+    expect(file).toMatch(/^og\/sabah-masaa\/tasbih-[0-9a-f]{8}\.png$/);
+    expect(cardFile(card, 'sabah-masaa', 'tasbih')).toBe(file);
+    expect(cardFile(cardOf(base, 'الحمد لله'), 'sabah-masaa', 'tasbih')).not.toBe(file);
+  });
+});

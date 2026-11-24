@@ -1,4 +1,5 @@
 ---
+title: "أعوذ بك من الكفر والفقر"
 occasion: "salah"
 order: 14
 count: 1

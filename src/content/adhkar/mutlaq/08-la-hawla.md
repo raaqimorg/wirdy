@@ -1,4 +1,5 @@
 ---
+title: "لا حول ولا قوة إلا بالله"
 occasion: "mutlaq"
 order: 8
 count: 1

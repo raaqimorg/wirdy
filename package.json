@@ -17,6 +17,7 @@
     "test:scripts": "bun test scripts",
     "test:build": "vitest run --config vitest.build.config.ts",
     "opengraph": "bun scripts/opengraph/build.mjs",
+    "opengraph:adhkar": "bun scripts/opengraph/adhkar.mjs",
     "icons": "bun scripts/icons/build.mjs",
     "deploy": "bun run ci && wrangler pages deploy"
   },

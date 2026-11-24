@@ -1,4 +1,5 @@
 ---
+title: "سبحان الملك القدوس"
 occasion: "salah"
 order: 20
 count: 3

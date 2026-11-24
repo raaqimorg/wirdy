@@ -370,7 +370,7 @@ describe('built site', () => {
       expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
     }
     expect(sitemap).toContain('<loc>https://wirdy.site/ma-lam-yathbut/</loc>');
-    expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 2);
+    expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 2 + expected);
   });
 
   it('lists what did not come in, each with its weak ruling on dorar.net, linked from home and footer', () => {
@@ -400,6 +400,40 @@ describe('built site', () => {
     expect(values.length).toBeGreaterThan(0);
     for (const value of values) expect(value).not.toContain('·');
     expect(page).toContain('ضعّفه الألباني في ضعيف أبي داود (');
+  });
+
+  it('gives each dhikr a page with its own card, breadcrumbs, and a way to its place', () => {
+    const slugs = contentFiles.map((f) => f.replace(/\.md$/, '').replace(/\/\d+-/, '/'));
+    expect(slugs).toHaveLength(expected);
+    const images = new Set<string>();
+    for (const slug of slugs) {
+      const page = readFileSync(join(DIST, slug, 'index.html'), 'utf8');
+      const [occasion, name] = slug.split('/');
+      const image = metaOf(page, 'property', 'og:image')!;
+      images.add(image);
+      expect(existsSync(join(DIST, new URL(image).pathname))).toBe(true);
+      expect(pngSize(new URL(image).pathname)).toEqual([1200, 630]);
+      expect(metaOf(page, 'property', 'og:image:width')).toBe('1200');
+      expect(metaOf(page, 'property', 'og:url')).toBe(`https://wirdy.site/${slug}/`);
+      expect(page).toContain(`<link rel="canonical" href="https://wirdy.site/${slug}/">`);
+      expect(page.match(/<h1>/g)).toHaveLength(1);
+      expect(page).toContain(`href="/${occasion}/#${name}"`);
+      const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
+      expect(crumbs.itemListElement).toHaveLength(3);
+      expect(page.match(/<nav class="crumbs"[\s\S]*?<\/nav>/)![0].match(/<li/g)).toHaveLength(3);
+      expect(pages[occasion!]).toContain(`id="${name}"`);
+    }
+    expect(images.size).toBe(expected);
+  });
+
+  it('shares nothing from «ما لم يثبت»', () => {
+    const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
+    expect(page).not.toContain('class="share"');
+  });
+
+  it('marks the shared dhikr without script, clear of the bar', () => {
+    expect(css).toMatch(/\.item:target::?after\{/);
+    expect(css).toMatch(/scroll-margin-top:4\.5rem/);
   });
 
   it('leaves out sitemap dates that would only repeat the build date', () => {

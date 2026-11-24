@@ -1,4 +1,5 @@
 ---
+title: "آية الكرسي في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 2
 count: 1

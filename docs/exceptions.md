@@ -43,6 +43,24 @@ The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alterna
 
 - Consecutive سور are parted by an empty gap (`.ayat-sep`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
+## A share link opens the device's share sheet
+
+Each dhikr has a link to its own page, drawn as a share icon. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it.
+
+- The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
+- It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
+- A place in an occasion page is a plain `#slug`, marked with `:target` in CSS. The text after `#` never reaches the server, so only a page of its own can have its own sharing card.
+- The script keeps the `#slug` when the reader switches between the morning and the evening form.
+
+## Each dhikr has a card, named by its fingerprint
+
+`scripts/opengraph/adhkar.mjs` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, 1200 by 630. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
+
+- The name changes when the card changes, so an app that cached the old image fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only the cards that changed.
+- Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.
+- A long text stops at the end of a clause, and قرآن at the end of an آية, never inside one (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks, and could end a card on «لا إله».
+- The card carries the moment, the count, and the takhrij, because an image travels without its page. A قرآن card names Tanzil.
+
 ## The icons and the OpenGraph cards come from a headless browser
 
 `scripts/icons/build.mjs` and `scripts/opengraph/build.mjs` render HTML in a local Chromium-based browser (`scripts/chromium.mjs`) and save screenshots. `scripts/icons/build.mjs` also writes `favicon.ico` by hand, because the format is a short header and a list of PNGs, and it writes `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift apart.

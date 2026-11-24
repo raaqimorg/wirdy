@@ -1,10 +1,11 @@
 ---
+title: "رب قني عذابك"
 occasion: "salah"
 order: 15
 count: 1
 mode: "both"
 quran: false
-when: "إذا انصرف من الصلاة مقبلًا على الناس"
+when: "إذا صلّى، وأقبل على الناس بوجهه"
 group: "أذكار وأدعية أخرى"
 takhrij:
   grader: "مسلم"

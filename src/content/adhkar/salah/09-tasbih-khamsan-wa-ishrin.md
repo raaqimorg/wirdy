@@ -1,4 +1,5 @@
 ---
+title: "التسبيح خمسًا وعشرين"
 occasion: "salah"
 order: 9
 count: 1

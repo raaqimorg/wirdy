@@ -1,4 +1,5 @@
 ---
+title: "سورة الكافرون"
 occasion: "nawm"
 order: 4
 count: 1

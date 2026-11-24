@@ -6,13 +6,14 @@ import { SITE } from '../lib/site';
 
 interface Props {
   heading: string;
+  back?: { href: string; label: string };
 }
 
-const { heading } = Astro.props;
+const { heading, back = { href: '/', label: 'كل الأقسام' } } = Astro.props;
 ---
 
 <nav class="bar" aria-label="الرجوع">
-  <a href="/"><Icon name="back" />كل الأقسام</a>
+  <a href={back.href}><Icon name="back" />{back.label}</a>
   <span class="bar__title" aria-hidden="true">{heading}</span>
   <Tools github={false}>
     <a class="tool" href="/" aria-label={`${SITE.name}، الرئيسية`}>

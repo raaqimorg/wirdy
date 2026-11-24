@@ -1,4 +1,5 @@
 ---
+title: "كلمتان خفيفتان على اللسان"
 occasion: "mutlaq"
 order: 4
 count: 1
@@ -7,8 +8,8 @@ quran: false
 fadl: "خفيفتان على اللسان، ثقيلتان في الميزان، حبيبتان إلى الرحمن"
 takhrij:
   grader: "البخاري"
-  source: "صحيح البخاري ٦٤٠٦"
+  source: "صحيح البخاري ٦٦٨٢"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/3021"
+  url: "https://dorar.net/h/78xTy5F6"
 ---
 سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ

@@ -1,4 +1,5 @@
 ---
+title: "الحمد لله الذي عافاني في جسدي"
 occasion: "istiqaz"
 order: 2
 count: 1

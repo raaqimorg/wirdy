@@ -1,4 +1,5 @@
 ---
+title: "اللهم قني عذابك"
 occasion: "nawm"
 order: 12
 count: 1

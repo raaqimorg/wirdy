@@ -8,6 +8,7 @@ import OccasionCard from '../components/OccasionCard.astro';
 import { adhkarLabel } from '../lib/arabic';
 import { adhkarOf, countsByOccasion } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
+import { slugOf } from '../lib/permalink';
 import { OCCASIONS } from '../lib/occasions';
 import { SITE } from '../lib/site';
 
@@ -30,7 +31,7 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
   title={title}
   description={description}
   image={`/opengraph-${occasion.id}.png`}
-  section={occasion.heading}
+  crumbs={[{ name: occasion.heading, path: `/${occasion.id}/` }]}
 >
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
     <Bar heading={occasion.heading} />
@@ -62,7 +63,7 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
             {group && <h2 class="run__title">{group}</h2>}
             <ol class="list">
               {items.map((entry) => (
-                <Dhikr data={entry.data} body={entry.body ?? ''} />
+                <Dhikr data={entry.data} body={entry.body ?? ''} slug={slugOf(entry.id)} />
               ))}
             </ol>
           </section>

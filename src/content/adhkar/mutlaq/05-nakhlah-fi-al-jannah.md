@@ -1,4 +1,5 @@
 ---
+title: "سبحان الله العظيم وبحمده"
 occasion: "mutlaq"
 order: 5
 count: 1

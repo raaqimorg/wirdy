@@ -1,8 +1,11 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative } from 'node:path';
 import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
+import { cardFile, cardOf } from './card';
 import { OCCASION_IDS } from './occasions';
+import { dhikrPath, slugOf } from './permalink';
+import permalinks from './permalinks.json';
 import { dhikrSchema, unprovenSchema, type Dhikr } from './schema';
 import { parseVariants } from './variants';
 
@@ -157,5 +160,58 @@ describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
   it('has a text on one line', () => {
     expect(body.trim().length).toBeGreaterThan(0);
     expect(body.trim()).not.toContain('\n');
+  });
+});
+
+const pathOf = ({ path, data }: (typeof entries)[number]) =>
+  dhikrPath(data.occasion, slugOf(path.replace(/\.md$/, '')));
+
+describe('the permalinks', () => {
+  const current = entries.map(pathOf);
+
+  it('gives each dhikr its own link', () => {
+    expect(new Set(current).size).toBe(current.length);
+  });
+
+  it('lists every link in permalinks.json', () => {
+    expect(current.filter((path) => !permalinks.includes(path))).toEqual([]);
+  });
+
+  it('redirects every link that was ever published and is gone', () => {
+    const file = join(process.cwd(), 'public/_redirects');
+    const redirects = existsSync(file) ? readFileSync(file, 'utf8') : '';
+    const gone = permalinks.filter((path) => !current.includes(path));
+    expect(gone.filter((path) => !redirects.includes(`${path} `))).toEqual([]);
+  });
+
+  it('gives each dhikr its own title', () => {
+    const titles = entries.map((entry) => entry.data.title);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+});
+
+describe('the sharing cards', () => {
+  const og = join(process.cwd(), 'public/og');
+  const drawn = readdirSync(og, { recursive: true, encoding: 'utf8' })
+    .filter((path) => path.endsWith('.png'))
+    .map((path) => `og/${path}`);
+  const wanted = entries.map(({ path, body, data }) =>
+    cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/, '')))
+  );
+
+  it('is drawn for each dhikr as it is now (run bun run opengraph:adhkar)', () => {
+    expect(wanted.filter((file) => !drawn.includes(file))).toEqual([]);
+  });
+
+  it('keeps no card of an older text', () => {
+    expect(drawn.filter((file) => !wanted.includes(file))).toEqual([]);
+  });
+
+  it('ends no text on a negation', () => {
+    const last = entries
+      .map(({ body, data }) => cardOf(data, body))
+      .filter((card) => card.cut)
+      .flatMap((card) => card.blocks.map((block) => block.at(-1)!.split(' ').at(-1)!));
+    expect(last.filter((word) => /^(لَا|لَآ|إِلَّا|إِلَهَ|إِلَـٰهَ|لَمْ|لَنْ|مَا)$/.test(word))).toEqual([]);
   });
 });

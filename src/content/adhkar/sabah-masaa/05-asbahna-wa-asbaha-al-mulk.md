@@ -1,4 +1,5 @@
 ---
+title: "أصبحنا وأصبح الملك لله"
 occasion: "sabah-masaa"
 order: 5
 count: 1

@@ -1,4 +1,5 @@
 ---
+title: "الصلاة على النبي ﷺ بعد الأذان"
 occasion: "masjid"
 order: 3
 count: 1

@@ -4,6 +4,7 @@ import Dhikr from './Dhikr.astro';
 import type { Dhikr as DhikrData } from '../lib/schema';
 
 const base: DhikrData = {
+  title: 'سيد الاستغفار',
   occasion: 'sabah-masaa',
   order: 1,
   count: 1,
@@ -20,7 +21,7 @@ const base: DhikrData = {
 
 async function render(data: DhikrData, body: string) {
   const container = await AstroContainer.create();
-  return container.renderToString(Dhikr, { props: { data, body } });
+  return container.renderToString(Dhikr, { props: { data, body, slug: 'sayyid-al-istighfar' } });
 }
 
 describe('Dhikr', () => {
@@ -209,5 +210,18 @@ describe('Dhikr', () => {
   it('adds no read-to-the-end line when every آية shows', async () => {
     const html = await render({ ...base, quran: true }, 'أ\nب');
     expect(html).not.toContain('item__lead');
+  });
+
+  it('carries its id, and shares the link of its own page', async () => {
+    const html = await render(base, 'سبحان الله');
+    expect(html).toContain('<li class="item" id="sayyid-al-istighfar">');
+    expect(html).toMatch(
+      /<a class="share" href="\/sabah-masaa\/sayyid-al-istighfar\/" data-title="سيد الاستغفار" aria-label="مشاركة: سيد الاستغفار">/
+    );
+  });
+
+  it('has an empty status, next to the link, for saying that it was copied', async () => {
+    const html = await render(base, 'سبحان الله');
+    expect(html).toMatch(/<span class="share__said" role="status"><\/span>\s*<a class="share"/);
   });
 });

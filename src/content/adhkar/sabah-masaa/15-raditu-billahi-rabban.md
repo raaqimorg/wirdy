@@ -1,4 +1,5 @@
 ---
+title: "رضيت بالله ربًّا في الصباح"
 occasion: "sabah-masaa"
 order: 15
 count: 1

@@ -1,4 +1,5 @@
 ---
+title: "التسبيح عشرًا"
 occasion: "salah"
 order: 8
 count: 1

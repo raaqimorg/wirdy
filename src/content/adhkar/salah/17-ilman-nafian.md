@@ -1,4 +1,5 @@
 ---
+title: "اللهم إني أسألك علمًا نافعًا"
 occasion: "salah"
 order: 17
 count: 1

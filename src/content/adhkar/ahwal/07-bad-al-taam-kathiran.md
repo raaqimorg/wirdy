@@ -1,4 +1,5 @@
 ---
+title: "الحمد لله كثيرًا طيبًا مباركًا فيه"
 occasion: "ahwal"
 order: 7
 count: 1

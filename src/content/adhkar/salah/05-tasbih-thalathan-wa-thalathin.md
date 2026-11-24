@@ -1,4 +1,5 @@
 ---
+title: "التسبيح ثلاثًا وثلاثين"
 occasion: "salah"
 order: 5
 count: 1

@@ -41,10 +41,11 @@ A dhikr that belongs to two occasions, such as آية الكرسي, has one file
 
 ## The file
 
-The file name is `<order>-<slug>.md`, for example `01-sayyid-al-istighfar.md`. `src/lib/schema.ts` is the full schema.
+The file name is `<order>-<slug>.md`, for example `01-sayyid-al-istighfar.md`. The slug without the order is the dhikr's permanent id: `nawm/02-ayat-al-kursi.md` has the page `/nawm/ayat-al-kursi/` and the place `/nawm/#ayat-al-kursi`. Changing the order keeps the link. Never rename a slug without a redirect in `public/_redirects`. `src/lib/permalinks.json` lists every link ever published, and the tests refuse a missing one. `src/lib/schema.ts` is the full schema.
 
 ```markdown
 ---
+title: "سيد الاستغفار"
 occasion: "sabah-masaa"
 order: 1
 count: 1
@@ -59,6 +60,7 @@ takhrij:
 اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، ...
 ```
 
+- `title`: the short Arabic name of the dhikr, for its own page, its link, and its sharing card. Use its known name, such as «سيد الاستغفار», or its first words. Each title is used once.
 - `count`: the number that the sound narration states. Use 1 when it states none.
 - `mode`: `sabah` or `masaa` for a dhikr that belongs to one of the two times only. Use `both` everywhere else.
 - `ayat`: `first` shows only the first آية of each سورة, as for المعوذات or a long سورة, and the card adds the line «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one), so the reader reads on to the end. The file keeps the whole text. Use `all`, the default, everywhere else. Only قرآن files may use `first`.
@@ -76,7 +78,7 @@ takhrij:
 
 - Write the text with full tashkil, as the sound narration gives it.
 - Mark the words that change between morning and evening as `{{morning|evening}}`, for example `{{أَصْبَحْنَا|أَمْسَيْنَا}}`. Only `sabah-masaa` files with `mode: "both"` use markers.
-- Write قرآن in the Uthmani text from [Tanzil](https://tanzil.net), one آية on each line, with a blank line between سور. Do not add the بسملة, because it is not a counted آية of these سور. Leave out the ۞ rub al-hizb marks: they are page marks, and the page draws ۞ between سور. Use `ayat: "first"` for a long سورة that the reader knows to read whole, such as السجدة and الملك.
+- Write قرآن in the Uthmani text from [Tanzil](https://tanzil.net), one آية on each line, with a blank line between سور. Do not add the بسملة, because it is not a counted آية of these سور. Download it with Tanzil's «rub el hizb» option off, so it has no ۞, and change nothing else in it (see `NOTICE`). Use `ayat: "first"` for a long سورة that the reader knows to read whole, such as السجدة and الملك.
 - When one hadith gives two texts for two moments, such as on entering and on leaving the mosque, write two files, each with its own `when`.
 
 ## How to check a dhikr
@@ -89,4 +91,4 @@ takhrij:
 
 ## What did not come in
 
-`src/content/unproven/` holds the well-known adhkar that stay out, shown on the «ما لم يثبت» page, so a reader who misses one knows why. Each file holds the text as people say it, `what` (which part is not established: the whole dhikr, its count, or its time), the al-Albani ruling with its dorar.net page, and `sound` when a sound form of it is on the site. The tests refuse a ruling there that is not one of weakness.
+`src/content/unproven/` holds the well-known adhkar that stay out, shown on the «ما لم يثبت» page, so a reader who misses one knows why. They have no share link and no card, so a weak dhikr never travels as an image without its ruling. Each file holds the text as people say it, `what` (which part is not established: the whole dhikr, its count, or its time), the al-Albani ruling with its dorar.net page, and `sound` when a sound form of it is on the site. The tests refuse a ruling there that is not one of weakness.

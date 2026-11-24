@@ -8,6 +8,7 @@ const dorarUrl = z
   });
 
 export const dhikrSchema = z.strictObject({
+  title: z.string().min(1),
   occasion: z.enum(OCCASION_IDS),
   order: z.number().int().positive(),
   count: z.number().int().positive(),

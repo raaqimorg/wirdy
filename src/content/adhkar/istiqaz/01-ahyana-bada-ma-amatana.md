@@ -1,4 +1,5 @@
 ---
+title: "الحمد لله الذي أحيانا"
 occasion: "istiqaz"
 order: 1
 count: 1

@@ -1,4 +1,5 @@
 ---
+title: "التسبيح مع التكبير أربعًا وثلاثين"
 occasion: "salah"
 order: 7
 count: 1

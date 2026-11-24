@@ -1,10 +1,11 @@
 ---
+title: "دعاء السفر"
 occasion: "ahwal"
 order: 16
 count: 1
 mode: "both"
 quran: false
-when: "إذا استوى على راحلته خارجًا إلى سفر، كبّر ثلاثًا ثم قال"
+when: "إذا استوى على بعيره خارجًا إلى سفر، كبّر ثلاثًا ثم قال"
 group: "السفر"
 takhrij:
   grader: "مسلم"

@@ -565,6 +565,7 @@ main.content {
 
 .item {
   min-width: 0;
+  scroll-margin-top: 4.5rem;
   counter-increment: n;
 }
 
@@ -588,6 +589,113 @@ main.content {
   color: color-mix(in oklab, var(--c), var(--ink) var(--number-ink));
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.item:target {
+  position: relative;
+  isolation: isolate;
+}
+
+.item:target::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -0.75rem -0.875rem;
+  background: color-mix(in oklab, var(--c), transparent 82%);
+  border: 2px solid color-mix(in oklab, var(--c), var(--ink) var(--number-ink));
+  border-radius: var(--radius);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .item:target::after {
+    animation: found 1.6s var(--ease-out);
+  }
+}
+
+@keyframes found {
+  from {
+    background: color-mix(in oklab, var(--c), transparent 35%);
+  }
+}
+
+.share {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-block: -0.5rem;
+  margin-inline: auto -0.75rem;
+  color: var(--ink-2);
+}
+
+.item__count ~ .share {
+  margin-inline-start: 0;
+}
+
+.share .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.share:active,
+.keep a:active,
+.crumbs a:active {
+  opacity: 0.6;
+}
+
+.share__said {
+  order: 1;
+  font-size: var(--small);
+}
+
+.share__said:empty {
+  display: none;
+}
+
+@media (hover: hover) {
+  .share:hover {
+    color: var(--ink);
+  }
+}
+
+.list--one .item__head::before {
+  content: none;
+}
+
+.keep {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.keep a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-weight: 500;
+  text-underline-offset: 0.3em;
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+  font-size: var(--small);
+  line-height: 1.6;
+}
+
+.crumbs li:not(:last-child)::after {
+  content: "›";
+  content: "›" / "";
+  margin-inline: 0.5rem;
+}
+
+.crumbs a {
+  padding-block: 0.625rem;
+  text-underline-offset: 0.3em;
 }
 
 .item__lead {

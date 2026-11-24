@@ -1,10 +1,11 @@
 ---
+title: "أعوذ بكلمات الله التامات في المساء"
 occasion: "sabah-masaa"
 order: 13
 count: 3
 mode: "masaa"
 quran: false
-fadl: "لم تضره حُمَة تلك الليلة"
+fadl: "لم يضره حُمَة تلك الليلة"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٦٠٤"

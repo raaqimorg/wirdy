@@ -15,7 +15,7 @@ const title = `${UNPROVEN.heading} | ${SITE.name}`;
 const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشهورة لم تدخل الموقع، لأن الألباني ضعّفها أو ضعّف عددها أو وقتها، ومع كل واحد حكمه من الدرر السنية.`;
 ---
 
-<Paper title={title} description={description} section={UNPROVEN.heading}>
+<Paper title={title} description={description} crumbs={[{ name: UNPROVEN.heading, path: UNPROVEN.path }]}>
   <div class="o-unproven" style={`--c: ${UNPROVEN.color}`}>
     <Bar heading={UNPROVEN.heading} />
     <header class="banner">

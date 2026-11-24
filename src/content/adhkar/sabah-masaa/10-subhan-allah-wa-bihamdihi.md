@@ -1,4 +1,5 @@
 ---
+title: "سبحان الله وبحمده في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 10
 count: 100

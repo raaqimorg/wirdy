@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import Paper from '../../layouts/Paper.astro';
+import Bar from '../../components/Bar.astro';
+import Dhikr from '../../components/Dhikr.astro';
+import Emblem from '../../components/Emblem.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import { cardFile, cardOf } from '../../lib/card';
+import { OCCASIONS } from '../../lib/occasions';
+import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
+import { SITE } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('adhkar');
+  return entries.map((entry) => ({
+    params: { occasion: entry.data.occasion, dhikr: slugOf(entry.id) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data, body = '' } = entry;
+const occasion = OCCASIONS.find(({ id }) => id === data.occasion)!;
+const slug = slugOf(entry.id);
+const card = cardOf(data, body);
+const image = `/${cardFile(card, data.occasion, slug)}`;
+const back = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
+
+const title = `${data.title} | ${occasion.heading} | ${SITE.name}`;
+const description = [card.lead, card.count, data.fadl, card.takhrij].filter(Boolean).join('. ');
+---
+
+<Paper
+  title={title}
+  description={description}
+  image={image}
+  imageSize={[1200, 630]}
+  crumbs={[
+    { name: occasion.heading, path: `/${occasion.id}/` },
+    { name: data.title, path: dhikrPath(data.occasion, slug) },
+  ]}
+>
+  <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
+    <Bar heading={data.title} back={back} />
+    <header class="banner">
+      <div class="banner__in">
+        <div class="banner__text">
+          <nav class="crumbs" aria-label="مسار التنقل">
+            <ol>
+              <li><a href="/">{SITE.name}</a></li>
+              <li><a href={`/${occasion.id}/`}>{occasion.heading}</a></li>
+              <li aria-current="page">{data.title}</li>
+            </ol>
+          </nav>
+          <h1>{data.title}</h1>
+          {
+            card.evening && (
+              <p class="wird-now">
+                <span class="v-s">
+                  تُعرض صيغة الصباح · <a href="?w=m">اعرض&nbsp;صيغة&nbsp;المساء</a>
+                </span>
+                <span class="v-m">
+                  تُعرض صيغة المساء · <a href="?w=s">اعرض&nbsp;صيغة&nbsp;الصباح</a>
+                </span>
+              </p>
+            )
+          }
+        </div>
+        <div class="banner__graphic"><Emblem occasion={occasion.id} /></div>
+      </div>
+    </header>
+    <main class="content">
+      <ol class="list list--one">
+        <Dhikr data={data} body={body} slug={slug} />
+      </ol>
+      <p class="keep">
+        <a href={back.href}>اقرأه في {occasion.heading}</a>
+        <a href={image} download={`wirdy-${slug}.png`}><Icon name="save" />احفظ الصورة</a>
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Paper>

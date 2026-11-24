@@ -1,4 +1,5 @@
 ---
+title: "اللهم بك أصبحنا"
 occasion: "sabah-masaa"
 order: 6
 count: 1
