@@ -112,7 +112,7 @@ describe('built site', () => {
     for (const page of [html, ...Object.values(pages), notFound]) {
       const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
       expect(footer.trim()).toMatch(
-        /<p class="page-footer__dedication">صدقة عن شروق، تقبّلها الله<\/p>$/
+        /<p class="page-footer__dedication">صدقة جارية عن شروق، تقبّلها الله<\/p>$/
       );
     }
   });
@@ -126,7 +126,7 @@ describe('built site', () => {
     const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(text).toContain('من الموسوعة الحديثية في');
     expect(text).toContain('من مصحف تنزيل');
-    expect(text).toContain('من Laws of UX لصاحبه');
+    expect(text).toContain('مستوحى من Laws of UX. وجدت');
   });
 
   it('renders every ذكر in the collection once', () => {
