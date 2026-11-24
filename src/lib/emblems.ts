@@ -1,138 +1,136 @@
 import type { Occasion } from './occasions';
 
-export type Enter = 'grow' | 'rise' | 'up' | 'across' | 'open';
+export type Enter = 'across' | 'fade' | 'grow' | 'turn' | 'up';
 
 export type Shape = {
   tag: 'circle' | 'path' | 'rect';
   attrs: Record<string, string | number>;
-  order: number;
-  enter: Enter;
+  enter?: Enter;
 };
 
 const EGG = '#f4f1d0';
+const EDGE = 240;
+const CENTER = EDGE / 2;
+
+const round = (value: number) => Math.round(value * 10) / 10;
+const times = <T>(count: number, make: (index: number) => T): T[] =>
+  Array.from({ length: count }, (_, index) => make(index));
+
 const egg = (opacity = 1) => ({ fill: EGG, ...(opacity < 1 && { 'fill-opacity': opacity }) });
 const shade = (opacity: number) => ({ fill: '#000', 'fill-opacity': opacity });
-const stroke = (width: number) => ({
+const line = (color: string, width: number, opacity = 1) => ({
   fill: 'none',
-  stroke: EGG,
+  stroke: color,
   'stroke-width': width,
-  'stroke-linecap': 'round',
+  ...(opacity < 1 && { 'stroke-opacity': opacity }),
 });
 
-const shape = (
-  tag: Shape['tag'],
-  attrs: Shape['attrs'],
-  order: number,
-  enter: Enter = 'grow'
-): Shape => ({ tag, attrs, order, enter });
-
-const lash = (d: string, order: number) => shape('path', { d, ...stroke(8) }, order);
-
-const BEADS = 33;
-const LIT = 11;
-
-const misbaha: Shape[] = Array.from({ length: BEADS }, (_, index) => {
-  const angle = ((75 - (index * 330) / (BEADS - 1)) * Math.PI) / 180;
-  return shape(
-    'circle',
-    {
-      cx: (120 + 78 * Math.cos(angle)).toFixed(1),
-      cy: (104 + 78 * Math.sin(angle)).toFixed(1),
-      r: 6.5,
-      ...(index < LIT ? egg() : shade(0.22)),
-    },
-    Math.floor(index / 3) / 2
-  );
+const dark = (tag: Shape['tag'], attrs: Shape['attrs']): Shape => ({ tag, attrs });
+const lit = (tag: Shape['tag'], enter: Enter, attrs: Shape['attrs']): Shape => ({
+  tag,
+  attrs,
+  enter,
 });
 
-const PRAYERS = [
-  { x: 190, top: 128, opacity: 0.35 },
-  { x: 146, top: 108, opacity: 0.55 },
-  { x: 102, top: 84, opacity: 1 },
-  { x: 58, top: 108, opacity: 0.55 },
-  { x: 14, top: 128, opacity: 0.35 },
+const halves: Shape[] = [
+  dark('path', { d: 'M0 122A96 96 0 0 0 192 122Z', ...shade(0.24) }),
+  lit('path', 'up', { d: 'M48 118A96 96 0 0 1 240 118Z', ...egg() }),
+];
+
+const arches: Shape[] = [
+  ...times(5, (index) => {
+    const radius = CENTER - index * 20;
+    const spring = round(CENTER + index * 14.4);
+    return dark('path', {
+      d: `M${CENTER - radius} 240V${spring}A${radius} ${radius} 0 0 1 ${CENTER + radius} ${spring}V240Z`,
+      ...shade(0.15),
+    });
+  }),
+  lit('path', 'up', { d: 'M100 240V194A20 20 0 0 1 140 194V240Z', ...egg() }),
+];
+
+const THIRDS = [0.14, 0.24, 0.36];
+
+const hundred: Shape[] = times(100, (index) => {
+  const place = { cx: 228 - (index % 10) * 24, cy: 12 + Math.floor(index / 10) * 24, r: 10 };
+  return index === 99
+    ? lit('circle', 'grow', { ...place, ...egg() })
+    : dark('circle', { ...place, ...shade(THIRDS[Math.floor(index / 33)]!) });
+});
+
+const night: Shape[] = [
+  dark('circle', { cx: 120, cy: 120, r: 120, ...shade(0.15) }),
+  dark('circle', { cx: 112, cy: 128, r: 100, ...shade(0.15) }),
+  lit('path', 'turn', {
+    d: 'M92.7 56.8A80 80 0 1 0 183.2 147.3A64 64 0 0 1 92.7 56.8Z',
+    ...egg(),
+  }),
+  lit('circle', 'grow', { cx: 168, cy: 72, r: 11, ...egg() }),
+];
+
+const RISE = [0.14, 0.2, 0.28, 0.38, 0.5, 0.68, 1];
+const PIVOT = { x: 9, y: 231 };
+
+const bar = (degrees: number): string => {
+  const angle = (degrees * Math.PI) / 180;
+  const corner = (along: number, off: number) =>
+    `${round(PIVOT.x + along * Math.cos(angle) + off * Math.sin(angle))} ${round(
+      PIVOT.y - along * Math.sin(angle) + off * Math.cos(angle)
+    )}`;
+  return `M${corner(72, -9)}L${corner(231, -9)}L${corner(231, 9)}L${corner(72, 9)}Z`;
+};
+
+const standing: Shape[] = RISE.map((opacity, index) => {
+  const attrs = { d: bar(index * 15), ...egg(opacity) };
+  return index === RISE.length - 1 ? lit('path', 'up', attrs) : dark('path', attrs);
+});
+
+const unbroken: Shape[] = [
+  lit('path', 'fade', {
+    d: 'M10 10H230V230H10V58H182V182H58V106H134V134H106',
+    ...line(EGG, 20),
+  }),
+];
+
+const roads: Shape[] = [
+  ...times(16, (index) => {
+    const x = (index % 4) * 60;
+    const y = Math.floor(index / 4) * 60;
+    return dark('path', {
+      d: `M${x} ${y + 30}A30 30 0 0 0 ${x + 30} ${y}M${x + 30} ${y + 60}A30 30 0 0 1 ${x + 60} ${y + 30}`,
+      ...line('#000', 16, 0.2),
+    });
+  }),
+  lit('path', 'fade', {
+    d: 'M240 30A30 30 0 0 0 210 60A30 30 0 0 1 180 90A30 30 0 0 0 150 120A30 30 0 0 1 120 150A30 30 0 0 0 90 180A30 30 0 0 1 60 210A30 30 0 0 0 30 240',
+    ...line(EGG, 16),
+  }),
+];
+
+const NARRATORS = [20, 86.7, 153.3, 220];
+
+const disc = (x: number, y: number): string =>
+  `M${round(x - 20)} ${y}A20 20 0 0 1 ${round(x + 20)} ${y}A20 20 0 0 1 ${round(x - 20)} ${y}Z`;
+
+const chain = (y: number): string =>
+  [`M20 ${y - 4}H220V${y + 4}H20Z`, ...NARRATORS.map((x) => disc(x, y))].join('');
+
+const chains: Shape[] = [
+  ...[30, 90, 210].map((y) => dark('path', { d: chain(y), ...shade(0.22) })),
+  lit('rect', 'across', { x: 20, y: 146, width: 46, height: 8, ...egg() }),
+  lit('rect', 'across', { x: 153, y: 146, width: 67, height: 8, ...egg() }),
+  ...[20, 153.3, 220].map((cx) => lit('circle', 'grow', { cx, cy: 150, r: 20, ...egg() })),
 ];
 
 export type EmblemName = Occasion | 'unproven';
 
 export const EMBLEMS: Record<EmblemName, Shape[]> = {
-  unproven: [
-    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
-    shape('rect', { x: 80, y: 186, width: 80, height: 12, rx: 6, ...egg() }, 0.5, 'across'),
-    shape('rect', { x: 113, y: 64, width: 14, height: 124, ...egg() }, 1, 'up'),
-    shape('circle', { cx: 120, cy: 58, r: 10, ...egg() }, 1.5),
-    shape('path', { d: 'M44 104L196 80', ...stroke(8) }, 2, 'across'),
-    shape('path', { d: 'M44 104L24 140M44 104L64 140', ...stroke(3), 'stroke-opacity': 0.7 }, 2.5),
-    shape(
-      'path',
-      { d: 'M196 80L176 116M196 80L216 116', ...stroke(3), 'stroke-opacity': 0.7 },
-      2.5
-    ),
-    shape('path', { d: 'M20 140h48a24 24 0 0 1-48 0z', ...egg() }, 3, 'rise'),
-    shape('path', { d: 'M172 116h48a24 24 0 0 1-48 0z', ...egg(0.45) }, 3, 'rise'),
-  ],
-  'sabah-masaa': [
-    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
-    shape('rect', { x: 16, y: 128, width: 208, height: 6, ...egg() }, 0.5, 'across'),
-    shape('path', { d: 'M64 128a56 56 0 0 1 112 0z', ...egg() }, 1, 'rise'),
-    shape('rect', { x: 48, y: 150, width: 144, height: 6, ...egg(0.5) }, 2, 'across'),
-    shape('rect', { x: 72, y: 168, width: 96, height: 6, ...egg(0.35) }, 2.5, 'across'),
-    shape('rect', { x: 96, y: 186, width: 48, height: 6, ...egg(0.2) }, 3, 'across'),
-  ],
-  masjid: [
-    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
-    shape('rect', { x: 28, y: 200, width: 184, height: 8, ...shade(0.22) }, 0, 'across'),
-    shape('rect', { x: 44, y: 136, width: 128, height: 64, ...egg() }, 1, 'up'),
-    shape('path', { d: 'M52 136a56 56 0 0 1 112 0z', ...egg() }, 1.5, 'rise'),
-    shape('path', { d: 'M96 200v-28a12 12 0 0 1 24 0v28z', ...shade(0.35) }, 2.5, 'up'),
-    shape('rect', { x: 184, y: 72, width: 20, height: 128, ...egg(0.8) }, 2, 'up'),
-    shape('path', { d: 'M184 72l10-28 10 28z', ...egg(0.8) }, 3, 'rise'),
-  ],
-  salah: [
-    shape('rect', { x: 8, y: 204, width: 224, height: 10, ...shade(0.22) }, 0, 'across'),
-    ...PRAYERS.map(({ x, top, opacity }, index) =>
-      shape(
-        'path',
-        { d: `M${x} 204V${top}a18 18 0 0 1 36 0V204z`, ...egg(opacity) },
-        1 + index / 2,
-        'up'
-      )
-    ),
-  ],
-  nawm: [
-    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
-    shape('path', { d: 'M120 36a84 84 0 1 0 84 84a66 66 0 0 1-84-84z', ...egg() }, 1, 'rise'),
-    shape('circle', { cx: 172, cy: 62, r: 7, ...egg() }, 2),
-    shape('circle', { cx: 198, cy: 92, r: 4, ...egg() }, 3),
-  ],
-  istiqaz: [
-    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
-    shape('path', { d: 'M24 120q96-76 192 0q-96 76-192 0z', ...egg() }, 1, 'open'),
-    shape('circle', { cx: 120, cy: 120, r: 30, ...shade(0.35) }, 2),
-    shape('circle', { cx: 131, cy: 109, r: 8, ...egg() }, 2.5),
-    lash('M120 68L120 46', 3),
-    lash('M80 76L70 56', 3),
-    lash('M160 76L170 56', 3),
-  ],
-  mutlaq: [
-    ...misbaha,
-    shape('rect', { x: 113, y: 180, width: 14, height: 24, rx: 7, ...egg() }, 5.5, 'up'),
-    shape('path', { d: 'M110 206h20l12 28h-44z', ...egg(0.8) }, 6, 'up'),
-  ],
-  ahwal: [
-    shape('circle', { cx: 196, cy: 44, r: 32, ...egg() }, 0),
-    shape('rect', { x: 88, y: 12, width: 64, height: 64, ...shade(0.2) }, 0.5),
-    shape('path', { d: 'M12 76a32 32 0 0 1 64 0z', ...egg() }, 1, 'up'),
-    shape('path', { d: 'M164 152l32-64 32 64z', ...shade(0.2) }, 0.5, 'up'),
-    shape('path', { d: 'M152 152V88a64 64 0 0 0-64 64z', ...egg() }, 1),
-    shape('circle', { cx: 44, cy: 120, r: 32, ...shade(0.2) }, 1.5),
-    shape('path', { d: 'M164 228v-32a32 32 0 0 1 64 0v32z', ...egg() }, 1, 'up'),
-    shape('path', { d: 'M120 164l32 32-32 32-32-32z', ...shade(0.2) }, 1.5),
-    shape(
-      'path',
-      { d: 'M44 164c18 22 32 36 32 48a32 32 0 0 1-64 0c0-12 14-26 32-48z', ...egg() },
-      2,
-      'rise'
-    ),
-  ],
+  'sabah-masaa': halves,
+  masjid: arches,
+  salah: hundred,
+  nawm: night,
+  istiqaz: standing,
+  mutlaq: unbroken,
+  ahwal: roads,
+  unproven: chains,
 };

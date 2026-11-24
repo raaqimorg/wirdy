@@ -14,15 +14,16 @@ oxlint (`.oxlintrc.json`), oxfmt (`.oxfmtrc.json`), and `astro check` enforce mo
 
 The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with springs").
 
-- Animate only `transform` and `opacity`, in CSS. Add no motion library.
-- Move with `--spring`, Apple's spring with no bounce, written as CSS `linear()`. Its duration sets the speed: 472 ms (a 0.35 s spring) for the home cards' emblems, 607 ms (0.45 s) for the banner, 405 ms (0.3 s) for the hover, and 270 ms (0.2 s) for the press to return. Fade with `--ease-out`.
+- Animate only `transform` and `opacity`, in CSS. Add no motion library. The one exception is the browser's own view transition (below).
+- Move with `--spring`, Apple's spring with no bounce, written as CSS `linear()`. Its duration sets the speed: 607 ms (a 0.45 s spring) for the emblems and for the way from a card to its page, 405 ms (0.3 s) for the hover, and 270 ms (0.2 s) for the press to return. Fade with `--ease-out`.
 - Respond on the first frame. Never use an ease-in or an ease-in-out, which start slowly.
 - Grow a shape from 60%, not from nothing. This is Apple's Replace for SF Symbols.
-- Keep a stagger short: 30 ms apart and 150 ms in all on the home cards, and 50 ms and 250 ms on the banner, where each shape enters from its own direction (`enter` in `src/lib/emblems.ts`).
-- Animate nothing out of sight. The «بقية الأقسام» cards do not animate.
-- Keep still what stays. On hover the card stays still and only its emblem grows 6%. A press shrinks the card to 97% at once, on iPhones too (see [`exceptions.md`](exceptions.md)).
+- Move only what is lit. An emblem fades in as a whole, and its dark shapes stay still. After 180 ms its lit shapes enter, each in its own way (`enter` in `src/lib/emblems.ts`).
+- Animate nothing out of sight. On the home page only the first 3 cards animate, or the first 5 on a wide screen. The «بقية الأقسام» cards do not animate.
+- On hover the card's color brightens and the card grows 2%, as on Laws of UX. A press shrinks the card to 97% at once, on iPhones too (see [`exceptions.md`](exceptions.md)).
 - A press on any other link or button dims it to 60% at once, with no transition.
-- With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the card's label darkens at once instead of the emblem growing, so the pointer still gets an answer.
+- With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the color still brightens, so the pointer gets an answer.
+- A card on the home page and the banner of its page share a `view-transition-name`, so the card grows into the banner. The «بقية الأقسام» cards have none, or they would fly across the page. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.
 
 ## Tests
 

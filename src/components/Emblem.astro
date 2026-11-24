@@ -11,8 +11,6 @@ const { occasion } = Astro.props;
 
 <svg class="emblem" viewBox="0 0 240 240" aria-hidden="true">
   {
-    EMBLEMS[occasion].map(({ tag: Tag, attrs, order, enter }) => (
-      <Tag {...attrs} data-enter={enter} style={`--o: ${order}`} />
-    ))
+    EMBLEMS[occasion].map(({ tag: Tag, attrs, enter }) => <Tag {...attrs} data-enter={enter} />)
   }
 </svg>

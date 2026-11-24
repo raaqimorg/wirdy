@@ -1,29 +1,77 @@
 import { describe, expect, it } from 'vitest';
 import { EMBLEMS } from './emblems';
-import { OCCASION_IDS } from './occasions';
+import type { EmblemName, Shape } from './emblems';
 
-const POSITIONS = ['cx', 'cy', 'x', 'y'];
+const STAGE = 240;
+const NAMES = Object.keys(EMBLEMS) as EmblemName[];
+
+function pathPoints(d: string): { x: number; y: number }[] {
+  const commands = d.match(/[A-Z][^A-Z]*/g) ?? [];
+  let x = 0;
+  let y = 0;
+  return commands.flatMap((command) => {
+    const numbers = (command.slice(1).match(/-?[\d.]+/g) ?? []).map(Number);
+    if (command.startsWith('Z')) return [];
+    if (command.startsWith('H')) x = numbers[0]!;
+    else if (command.startsWith('V')) y = numbers[0]!;
+    else [x, y] = numbers.slice(-2) as [number, number];
+    return [{ x, y }];
+  });
+}
+
+function corners({ tag, attrs }: Shape): number[] {
+  const at = (key: string) => Number(attrs[key]);
+  if (tag === 'circle') {
+    return [at('cx') - at('r'), at('cx') + at('r'), at('cy') - at('r'), at('cy') + at('r')];
+  }
+  if (tag === 'rect') return [at('x'), at('x') + at('width'), at('y'), at('y') + at('height')];
+  return pathPoints(String(attrs.d)).flatMap(({ x, y }) => [x, y]);
+}
+
+const lit = (name: EmblemName) => EMBLEMS[name].filter(({ enter }) => enter);
 
 describe('EMBLEMS', () => {
-  it.each(OCCASION_IDS)('draws an emblem for %s', (occasion) => {
-    expect(EMBLEMS[occasion].length).toBeGreaterThan(0);
+  it.each(NAMES)('keeps every shape of %s inside the 240 unit stage, paths too', (name) => {
+    const values = EMBLEMS[name].flatMap(corners);
+    expect(values.length).toBeGreaterThan(0);
+    expect(values.filter((value) => !(value >= 0 && value <= STAGE))).toEqual([]);
   });
 
-  it('keeps every shape inside the 240 unit stage', () => {
-    const positions = Object.values(EMBLEMS)
-      .flat()
-      .flatMap(({ attrs }) =>
-        POSITIONS.filter((key) => key in attrs).map((key) => Number(attrs[key]))
-      );
-    expect(positions.length).toBeGreaterThan(0);
-    expect(positions.filter((value) => value < 0 || value > 240)).toEqual([]);
+  it.each(NAMES)('writes the paths of %s in absolute commands', (name) => {
+    for (const { attrs } of EMBLEMS[name]) expect(String(attrs.d ?? '')).not.toMatch(/[a-z]/);
+  });
+
+  it.each(NAMES)('draws %s in eggshell and black only', (name) => {
+    for (const { attrs } of EMBLEMS[name]) {
+      const inks = [attrs.fill, attrs.stroke].filter((ink) => ink && ink !== 'none');
+      expect(inks.filter((ink) => ink !== '#f4f1d0' && ink !== '#000')).toEqual([]);
+    }
+  });
+
+  it.each(NAMES)('lights at least one shape of %s in full eggshell', (name) => {
+    expect(lit(name).length).toBeGreaterThan(0);
+    for (const { attrs } of lit(name)) {
+      expect([attrs.fill, attrs.stroke]).toContain('#f4f1d0');
+      expect(attrs).not.toHaveProperty('fill-opacity');
+      expect(attrs).not.toHaveProperty('stroke-opacity');
+    }
   });
 });
 
-describe('the misbaha emblem', () => {
-  it('strings 33 beads and lights the first 11', () => {
-    const beads = EMBLEMS.mutlaq.filter(({ tag }) => tag === 'circle');
-    expect(beads).toHaveLength(33);
-    expect(beads.filter(({ attrs }) => !('fill-opacity' in attrs))).toHaveLength(11);
+describe('the emblem of the adhkar after the prayers', () => {
+  it('draws 33, 33, and 33 dots in three shades, and lights only the hundredth', () => {
+    const shades = EMBLEMS.salah.map(({ attrs }) => attrs['fill-opacity']);
+    expect(shades).toHaveLength(100);
+    expect(new Set(shades.slice(0, 33)).size).toBe(1);
+    expect(new Set(shades.slice(33, 66)).size).toBe(1);
+    expect(new Set(shades.slice(66, 99)).size).toBe(1);
+    expect(new Set(shades.slice(0, 99)).size).toBe(3);
+    expect(lit('salah')).toEqual([EMBLEMS.salah.at(-1)]);
+  });
+});
+
+describe('the emblem of «ما لم يثبت»', () => {
+  it('misses one narrator from the lit chain', () => {
+    expect(lit('unproven').filter(({ tag }) => tag === 'circle')).toHaveLength(3);
   });
 });

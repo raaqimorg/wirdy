@@ -14,7 +14,7 @@ interface Props {
 const { id, heading, color, count, href = `/${id}/` } = Astro.props;
 ---
 
-<a class={`card o-${id}`} href={href} style={`--c: ${color}`}>
+<a class={`card o-${id}`} href={href} style={`--c: ${color}; --stage: stage-${id}`}>
   <span class="card__stage"><Emblem occasion={id} /></span>
   <span class="card__body">
     <span class="card__title">{heading}</span>

@@ -65,6 +65,13 @@ describe('built site', () => {
     expect(html.match(/class="card /g)).toHaveLength(OCCASION_IDS.length + 1);
   });
 
+  it('gives a home card and the banner of its page one view transition name', () => {
+    for (const id of OCCASION_IDS) {
+      expect(html).toContain(`--stage: stage-${id}`);
+      expect(pages[id]).toContain(`view-transition-name: stage-${id}`);
+    }
+  });
+
   it('gives each occasion its own page with one heading and a way back', () => {
     for (const id of OCCASION_IDS) {
       const page = pages[id]!;

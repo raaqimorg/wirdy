@@ -12,5 +12,5 @@ export const UNPROVEN = {
   path: '/ma-lam-yathbut/',
   heading: 'ما لم يثبت',
   lede: 'أذكار مشهورة لم تدخل الموقع، لأن الألباني ضعّفها، أو ضعّف عددها أو وقتها.',
-  color: '#5f6675',
+  color: '#586880',
 } as const;

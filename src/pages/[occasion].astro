@@ -35,7 +35,7 @@ const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما 
 >
   <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
     <Bar heading={occasion.heading} />
-    <header class="banner">
+    <header class="banner" style={`view-transition-name: stage-${occasion.id}`}>
       <div class="banner__in">
         <div class="banner__text">
           <h1>{occasion.heading}</h1>

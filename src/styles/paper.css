@@ -53,7 +53,7 @@
   :root:not([data-theme="light"]) {
     --paper: #060f13;
     --panel: hsl(200 32% 15%);
-    --deepen: 22%;
+    --deepen: 12%;
     --ink: hsl(55 62% 89%);
     --ink-2: hsl(60 10% 72%);
     --ink-3: hsl(200 14% 50%);
@@ -73,7 +73,7 @@
   color-scheme: dark;
   --paper: #060f13;
   --panel: hsl(200 32% 15%);
-  --deepen: 22%;
+  --deepen: 12%;
   --ink: hsl(55 62% 89%);
   --ink-2: hsl(60 10% 72%);
   --ink-3: hsl(200 14% 50%);
@@ -308,24 +308,32 @@ a:focus-visible {
   transition: transform 270ms var(--spring);
 }
 
-.card:active {
-  transform: scale(0.97);
-  transition: transform 60ms var(--ease-out);
-}
-
 .card__stage {
   position: relative;
   display: block;
   aspect-ratio: 3 / 2;
+  overflow: hidden;
   background: color-mix(in oklab, var(--c), black var(--deepen));
+}
+
+.home .card__stage {
+  view-transition-name: var(--stage);
+}
+
+.card__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity 250ms var(--ease-out);
 }
 
 .card__stage .emblem {
   position: absolute;
-  inset: 9% 0;
+  inset: 7.5% 0;
   width: 100%;
-  height: 82%;
-  transition: transform 405ms var(--spring);
+  height: 85%;
 }
 
 .card__body {
@@ -341,57 +349,69 @@ a:focus-visible {
 }
 
 @media (hover: hover) {
-  .card:hover .emblem {
-    transform: scale(1.06);
+  .card:hover .card__stage::before {
+    opacity: 0.14;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+    transition-duration: 405ms;
   }
 }
 
-@media (hover: hover) and (prefers-reduced-motion: reduce) {
-  .card:hover .card__body {
-    background: color-mix(in oklab, var(--panel), var(--ink) 6%);
-  }
+.card:active {
+  transform: scale(0.97);
+  transition: transform 60ms var(--ease-out);
 }
 
 .emblem {
   display: block;
   width: 100%;
   height: 100%;
+  animation: fade 200ms var(--ease-out) both;
 }
 
-.emblem * {
-  animation:
-    grow 472ms var(--spring) both,
-    fade 120ms var(--ease-out) both;
-  animation-delay: min(var(--o, 0) * 30ms, 150ms);
+.emblem [data-enter] {
   transform-box: fill-box;
   transform-origin: center;
+  animation:
+    grow 607ms var(--spring) 180ms both,
+    fade 160ms var(--ease-out) 180ms both;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .banner .emblem * {
-    animation-duration: 607ms, 150ms;
-    animation-delay: min(var(--o, 0) * 50ms, 250ms);
-  }
+.emblem [data-enter="up"] {
+  animation-name: up, fade;
+  transform-origin: bottom;
+}
 
-  .banner .emblem [data-enter="rise"] {
-    animation-name: rise, fade;
-  }
+.emblem [data-enter="across"] {
+  animation-name: across, fade;
+}
 
-  .banner .emblem [data-enter="up"] {
-    animation-name: up, fade;
-    transform-origin: bottom;
-  }
+.emblem [data-enter="turn"] {
+  animation-name: turn, fade;
+}
 
-  .banner .emblem [data-enter="across"] {
-    animation-name: across, fade;
-  }
+.emblem [data-enter="fade"] {
+  animation-name: fade, fade;
+}
 
-  .banner .emblem [data-enter="open"] {
-    animation-name: open, fade;
+@media (max-width: 63.99rem) {
+  .grid > :nth-child(n + 4) .emblem,
+  .grid > :nth-child(n + 4) .emblem [data-enter] {
+    animation: none;
   }
 }
 
-.related .emblem * {
+@media (min-width: 64rem) {
+  .grid > :nth-child(n + 6) .emblem,
+  .grid > :nth-child(n + 6) .emblem [data-enter] {
+    animation: none;
+  }
+}
+
+.related .emblem,
+.related .emblem [data-enter] {
   animation: none;
 }
 
@@ -401,15 +421,9 @@ a:focus-visible {
   }
 }
 
-@keyframes rise {
-  from {
-    transform: translateY(28px);
-  }
-}
-
 @keyframes up {
   from {
-    transform: scaleY(0.4);
+    transform: scaleY(0.1);
   }
 }
 
@@ -419,9 +433,9 @@ a:focus-visible {
   }
 }
 
-@keyframes open {
+@keyframes turn {
   from {
-    transform: scaleY(0.1);
+    transform: rotate(26deg);
   }
 }
 
@@ -930,6 +944,15 @@ main.content {
     gap: 1.25rem;
   }
 
+  .home .grid > :first-child {
+    grid-column: span 2;
+  }
+
+  .home .grid > :first-child .card__stage {
+    flex: 1;
+    aspect-ratio: auto;
+  }
+
   .related .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -988,25 +1011,35 @@ main.content {
   }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 607ms;
+    animation-timing-function: var(--spring);
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    height: 100%;
+    overflow: clip;
+    object-fit: cover;
+    animation-duration: 200ms;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .emblem * {
+  .emblem [data-enter] {
     animation: none;
   }
 
-  .card,
-  .card__stage .emblem {
+  .card {
     transition: none;
   }
 
-  .emblem {
-    animation: fade 200ms var(--ease-out) both;
-  }
-
-  .related .emblem {
-    animation: none;
-  }
-
-  .card:hover .emblem,
+  .card:hover,
   .card:active {
     transform: none;
   }
