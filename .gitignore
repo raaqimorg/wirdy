@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+*.tsbuildinfo
+.env
+.env.*
+.DS_Store
+.idea/
+.claude/*
+!.claude/skills/
+/graft/

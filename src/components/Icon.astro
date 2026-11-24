@@ -1,0 +1,22 @@
+---
+interface Props {
+  name: 'back' | 'out';
+}
+
+const PATHS = {
+  back: 'M1.5 6h9M7 2.5L10.5 6 7 9.5',
+  out: 'M9.5 9.5l-7-7M2.5 8V2.5H8',
+};
+
+const { name } = Astro.props;
+---
+
+<svg class="icon" viewBox="0 0 12 12" aria-hidden="true">
+  <path
+    d={PATHS[name]}
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

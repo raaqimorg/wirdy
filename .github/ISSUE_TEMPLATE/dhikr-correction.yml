@@ -1,0 +1,48 @@
+name: Dhikr correction
+description: A dhikr has a wrong word, count, time, or ruling, or a sound dhikr is missing
+labels: ["📿 content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Wirdy shows only what is in al-Bukhari or Muslim, or what al-Albani grades صحيح or حسن (see [docs/content.md](https://github.com/raaqimorg/wirdy/blob/main/docs/content.md)). A report needs a dorar.net page. Another app or a printed book is useful context, but it is not enough on its own.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is wrong
+      options:
+        - A word or a vowel in the text
+        - The count or the time
+        - The ruling or the source
+        - The dhikr is not authentic and should go
+        - An authentic dhikr is missing
+    validations:
+      required: true
+  - type: input
+    id: dhikr
+    attributes:
+      label: Which dhikr
+      description: Its first words, or its file under src/content/adhkar/.
+      placeholder: "اللَّهُمَّ بِكَ أَصْبَحْنَا"
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What it should be
+      description: The correct text, count, time, or ruling.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: dorar.net page
+      description: The page of the hadith and the ruling (dorar.net/hadith/sharh/... or dorar.net/h/...).
+      placeholder: "https://dorar.net/hadith/sharh/9073"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: For example, other scholars' rulings on the same hadith.

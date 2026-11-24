@@ -1,0 +1,299 @@
+import { describe, it, expect, beforeAll } from 'vitest';
+import { execSync } from 'node:child_process';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { OCCASION_IDS } from './lib/occasions';
+
+let html = '';
+let pages: Record<string, string> = {};
+let all = '';
+let css = '';
+
+const DIST = join(process.cwd(), 'dist');
+const ADHKAR = join(process.cwd(), 'src/content/adhkar');
+const contentFiles = readdirSync(ADHKAR, { recursive: true, encoding: 'utf8' }).filter((f) =>
+  f.endsWith('.md')
+);
+const expected = contentFiles.length;
+
+const petals = (text: string) =>
+  (text.match(/<circle cx="[\d.]+" cy="[\d.]+" r="6\.4"/g) || []).map((c) =>
+    c.replace(/\s+/g, ' ')
+  );
+
+beforeAll(() => {
+  execSync('bun run build', { stdio: 'inherit' });
+  html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  pages = Object.fromEntries(
+    OCCASION_IDS.map((id) => [id, readFileSync(join(DIST, id, 'index.html'), 'utf8')])
+  );
+  all = [html, ...Object.values(pages)].join('\n');
+  css = readdirSync(join(DIST, '_astro'))
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => readFileSync(join(DIST, '_astro', f), 'utf8'))
+    .join('\n');
+});
+
+describe('built site', () => {
+  it('is right-to-left Arabic on every page', () => {
+    for (const page of [html, ...Object.values(pages)]) {
+      expect(page).toContain('lang="ar"');
+      expect(page).toContain('dir="rtl"');
+    }
+  });
+
+  it('opens with six cards, one for each occasion page', () => {
+    for (const id of OCCASION_IDS) {
+      expect(html).toContain(`<a class="card o-${id}" href="/${id}/"`);
+    }
+    expect(html.match(/class="card /g)).toHaveLength(OCCASION_IDS.length);
+  });
+
+  it('gives each occasion its own page with one heading and a way back', () => {
+    for (const id of OCCASION_IDS) {
+      const page = pages[id]!;
+      expect(page.match(/<h1>/g)).toHaveLength(1);
+      expect(page).toMatch(/<nav class="bar" aria-label="الرجوع"><a href="\/">/);
+      expect(page.match(/class="card /g)).toHaveLength(OCCASION_IDS.length - 1);
+      expect(page).not.toContain(`<a class="card o-${id}"`);
+    }
+  });
+
+  it('ships both wird variants, each with the other form struck', () => {
+    const page = pages['sabah-masaa']!;
+    expect(page).toContain('class="v-s"');
+    expect(page).toContain('class="v-m"');
+    expect(page).toMatch(/<span class="alt" aria-hidden="true">/);
+  });
+
+  it('inlines the wird script, and switches to the evening at noon', () => {
+    expect(html).toMatch(/<script>[\s\S]*?dataset\.wird[\s\S]*?<\/script>/);
+    expect(html).toContain('hour >= 3 && hour < 12');
+  });
+
+  it('leaves no unparsed variant markers', () => {
+    expect(all).not.toContain('{{');
+  });
+
+  it('keeps the word space where a link interrupts a footer sentence', () => {
+    const footer = html.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
+    const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+    expect(text).toContain('من الموسوعة الحديثية في');
+    expect(text).toContain('من مصحف تنزيل');
+    expect(text).toContain('من Laws of UX لصاحبه');
+  });
+
+  it('renders every ذكر in the collection once', () => {
+    const items =
+      Object.values(pages)
+        .join('')
+        .match(/<li class="item[ "]/g) || [];
+    expect(items.length).toBe(expected);
+  });
+
+  it('links every ذكر to a dorar.net hadith page', () => {
+    const links =
+      Object.values(pages)
+        .join('')
+        .match(/href="https:\/\/dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+"/g) || [];
+    expect(links.length).toBe(expected);
+  });
+
+  it('declares one canonical URL per page, matching og:url', () => {
+    const urls = { '': html, ...pages };
+    for (const [id, page] of Object.entries(urls)) {
+      const url = `https://wirdy.site/${id ? `${id}/` : ''}`;
+      expect(page.match(/rel="canonical"/g)).toHaveLength(1);
+      expect(page).toContain(`<link rel="canonical" href="${url}"`);
+      expect(page).toContain(`<meta property="og:url" content="${url}"`);
+    }
+  });
+
+  it('gives each page its own title', () => {
+    const titles = [html, ...Object.values(pages)].map(
+      (page) => page.match(/<title>([^<]+)<\/title>/)![1]
+    );
+    expect(new Set(titles).size).toBe(titles.length);
+    expect(pages['nawm']).toContain('<title>أذكار النوم | وِردي</title>');
+  });
+
+  it('points the opengraph card at an absolute image that is actually shipped', () => {
+    expect(html).toMatch(
+      /<meta property="og:image" content="https:\/\/wirdy\.site\/opengraph\.png"/
+    );
+    expect(existsSync(join(DIST, 'opengraph.png'))).toBe(true);
+  });
+
+  it('keeps the card at 2x the platform minimum so it stays sharp on retina', () => {
+    const png = readFileSync(join(DIST, 'opengraph.png'));
+    const width = png.readUInt32BE(16);
+    const height = png.readUInt32BE(20);
+    expect([width, height]).toEqual([2400, 1260]);
+    expect(width / height).toBeCloseTo(1200 / 630, 3);
+    expect(html).toMatch(new RegExp(`<meta property="og:image:width" content="${width}"`));
+    expect(html).toMatch(new RegExp(`<meta property="og:image:height" content="${height}"`));
+  });
+
+  it('declares a raster favicon and a touch icon, and ships every icon it declares', () => {
+    expect(html).toMatch(/<link rel="icon" href="\/favicon\.ico" sizes="any"/);
+    expect(html).toMatch(/<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml"/);
+    expect(html).toMatch(
+      /<link rel="icon" type="image\/png" sizes="32x32" href="\/favicon-32x32\.png"/
+    );
+    expect(html).toMatch(
+      /<link rel="apple-touch-icon" sizes="180x180" href="\/apple-touch-icon\.png"/
+    );
+    expect(html).toMatch(/<meta name="apple-mobile-web-app-title" content="وِردي"/);
+    for (const icon of [
+      'favicon.ico',
+      'favicon.svg',
+      'favicon-32x32.png',
+      'apple-touch-icon.png',
+    ]) {
+      expect(existsSync(join(DIST, icon))).toBe(true);
+    }
+  });
+
+  it('packs favicon.ico at the sizes search engines downscale from', () => {
+    const ico = readFileSync(join(DIST, 'favicon.ico'));
+    expect(ico.readUInt16LE(2)).toBe(1);
+    const count = ico.readUInt16LE(4);
+    expect(Array.from({ length: count }, (_, i) => ico.readUInt8(6 + i * 16))).toEqual([
+      16, 32, 48,
+    ]);
+  });
+
+  it('keeps the touch icon opaque so iOS does not composite it on black', () => {
+    const png = readFileSync(join(DIST, 'apple-touch-icon.png'));
+    expect(png.readUInt8(25)).toBe(2);
+  });
+
+  it('draws the header mark from the same petals as the favicon', () => {
+    const svg = readFileSync(join(DIST, 'favicon.svg'), 'utf8');
+    const mark = html.match(/<svg class="mark"[\s\S]*?<\/svg>/)![0];
+    expect(petals(mark)).toEqual(petals(svg));
+    expect(petals(svg)).toHaveLength(12);
+  });
+
+  it('paints the mobile toolbar with the same paper the page uses, in both schemes', () => {
+    expect(html).toMatch(
+      /<meta name="theme-color" media="\(prefers-color-scheme: dark\)" content="#060f13"/
+    );
+    expect(html).toMatch(/<meta name="theme-color" content="#d6d6cd"/);
+    const source = readFileSync(join(process.cwd(), 'src/styles/paper.css'), 'utf8');
+    expect(source).toContain('--paper: #d6d6cd');
+    expect(source).toContain('--paper: #060f13');
+  });
+
+  it('describes each page to search engines with structured data that matches the head', () => {
+    for (const page of [html, ...Object.values(pages)]) {
+      const block = page.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+      const graph = JSON.parse(block![1]!)['@graph'];
+      const website = graph.find((node: { '@type': string }) => node['@type'] === 'WebSite');
+      const webpage = graph.find((node: { '@type': string }) => node['@type'] === 'WebPage');
+      expect(website.name).toBe('وِردي');
+      expect(website.inLanguage).toBe('ar');
+      expect(webpage.url).toBe(page.match(/<link rel="canonical" href="([^"]+)"/)![1]);
+      expect(webpage.name).toBe(page.match(/<title>([^<]+)<\/title>/)![1]);
+      expect(webpage.primaryImageOfPage.url).toBe('https://wirdy.site/opengraph.png');
+    }
+  });
+
+  it('ships a manifest whose name and icons agree with the rest of the head', () => {
+    expect(html).toMatch(/<link rel="manifest" href="\/site\.webmanifest"/);
+    const manifest = JSON.parse(readFileSync(join(DIST, 'site.webmanifest'), 'utf8'));
+    expect(manifest.short_name).toBe(
+      html.match(/<meta property="og:site_name" content="([^"]+)"/)![1]
+    );
+    expect(manifest.dir).toBe('rtl');
+    expect(manifest.theme_color).toBe('#d6d6cd');
+    for (const icon of manifest.icons) {
+      expect(existsSync(join(DIST, icon.src))).toBe(true);
+    }
+    expect(manifest.icons.some((icon: { purpose: string }) => icon.purpose === 'maskable')).toBe(
+      true
+    );
+  });
+
+  it('ships a sitemap listing the home and every occasion page', () => {
+    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+    expect(sitemap).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+    expect(sitemap).toContain('<loc>https://wirdy.site/</loc>');
+    for (const id of OCCASION_IDS) {
+      expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
+    }
+    expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 1);
+  });
+
+  it('ships a robots.txt that opens the site and points at the sitemap', () => {
+    const robots = readFileSync(join(DIST, 'robots.txt'), 'utf8');
+    expect(robots).toContain('User-agent: *');
+    expect(robots).toContain('Allow: /');
+    expect(robots).toContain('Sitemap: https://wirdy.site/sitemap.xml');
+  });
+
+  it('describes itself in Arabic for the card', () => {
+    expect(html).toMatch(/<meta property="og:type" content="website"/);
+    expect(html).toMatch(/<meta property="og:locale" content="ar_AR"/);
+    expect(html).toMatch(/<meta property="og:title" content="وِردي: /);
+    expect(html).toMatch(/<meta property="og:description" content="أذكار الصباح والمساء/);
+  });
+
+  it('asks for the large twitter card so the image is not cropped to a thumb', () => {
+    expect(html).toMatch(/<meta name="twitter:card" content="summary_large_image"/);
+    expect(html).toMatch(
+      /<meta name="twitter:image" content="https:\/\/wirdy\.site\/opengraph\.png"/
+    );
+  });
+
+  it('brackets every قرآن card and keeps a face that can draw the brackets', () => {
+    const quran = contentFiles.filter((f) =>
+      readFileSync(join(ADHKAR, f), 'utf8').includes('quran: true')
+    ).length;
+    expect(all.match(/class="ayat"/g)?.length).toBeGreaterThanOrEqual(quran);
+    expect(css).toMatch(/\.ayat::?before\{[^}]*content:"﴿"/);
+    expect(css).toMatch(/\.ayat::?after\{[^}]*content:"﴾"/);
+    expect(css).toMatch(/\.ayah-end::?before\{[^}]*content:"۝"/);
+    expect(css).toMatch(/\.ayat-sep::?before\{[^}]*content:"۞"/);
+    expect(css).toMatch(/--quran:\s*"Amiri Quran",\s*"Amiri"/);
+  });
+
+  it('shows the first آية of each of المعوذات, and no more', () => {
+    for (const id of ['sabah-masaa', 'salah', 'nawm']) {
+      const cards = pages[id]!.match(/<p class="dhikr__text">[\s\S]*?<\/p>/g) || [];
+      const card = cards.find((c) => c.includes('ٱلْفَلَقِ'))!;
+      expect(card).toBeDefined();
+      expect(card.match(/class="ayat"/g)).toHaveLength(3);
+      expect(card.match(/class="ayat-sep"/g)).toHaveLength(2);
+      expect(card).not.toContain('ayah-end');
+      expect(card).not.toContain('ٱلْوَسْوَاسِ');
+    }
+  });
+
+  it('keeps آية الكرسي whole', () => {
+    const file = readFileSync(join(ADHKAR, 'nawm/02-ayat-al-kursi.md'), 'utf8').trim();
+    const ending = file.slice(file.lastIndexOf(' ', file.length - 12) + 1);
+    expect(pages['nawm']).toContain(ending);
+  });
+
+  it('opens no سورة with the بسملة', () => {
+    const suwar = all.match(/<span class="ayat">([\s\S]*?)<\/span>/g) || [];
+    expect(suwar.length).toBeGreaterThan(0);
+    expect(suwar.filter((s) => s.includes('بِسْمِ'))).toEqual([]);
+  });
+
+  it('ships every face from this origin', () => {
+    const assets = readdirSync(join(DIST, '_astro'));
+    expect(assets.some((f) => /^amiri-quran-arabic-.*\.woff2$/.test(f))).toBe(true);
+    expect(assets.some((f) => /^amiri-arabic-.*\.woff2$/.test(f))).toBe(true);
+    expect(assets.some((f) => /^ibm-plex-sans-arabic-arabic-.*\.woff2$/.test(f))).toBe(true);
+  });
+
+  it('makes no third-party requests', () => {
+    const external =
+      all.match(
+        /(?:src|href)="https?:\/\/(?!(?:dorar\.net|tanzil\.net|wirdy\.site|lawsofux\.com)[/"])[^"]+"/g
+      ) || [];
+    expect(external).toEqual([]);
+  });
+});

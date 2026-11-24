@@ -1,0 +1,14 @@
+---
+occasion: "salah"
+order: 7
+count: 1
+mode: "both"
+quran: false
+when: "يسبّح ثلاثًا وثلاثين، ويحمد ثلاثًا وثلاثين، ويكبّر أربعًا وثلاثين"
+takhrij:
+  grader: "مسلم"
+  source: "صحيح مسلم ٥٩٦"
+  ruling: "صحيح"
+  url: "https://dorar.net/hadith/sharh/23603"
+---
+سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ

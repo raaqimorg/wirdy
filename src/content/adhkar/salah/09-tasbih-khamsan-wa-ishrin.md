@@ -1,0 +1,14 @@
+---
+occasion: "salah"
+order: 9
+count: 1
+mode: "both"
+quran: false
+when: "يسبّح ويحمد ويكبّر ويهلّل خمسًا وعشرين خمسًا وعشرين"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح النسائي ١٣٤٩"
+  ruling: "صحيح"
+  url: "https://dorar.net/hadith/sharh/35044"
+---
+سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ، وَلَا إِلَهَ إِلَّا اللَّهُ

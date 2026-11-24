@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "semi": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "proseWrap": "preserve",
+  "insertFinalNewline": true,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "**/node_modules",
+    "dist",
+    ".astro",
+    ".wrangler",
+    "graft",
+    "bun.lock",
+    "**/*.svg",
+    "src/content/**/*.md"
+  ],
+  "overrides": [
+    { "files": ["**/*.css"], "options": { "singleQuote": false } },
+    { "files": ["**/*.json"], "options": { "singleQuote": false, "trailingComma": "none" } },
+    { "files": ["**/*.yml", "**/*.yaml"], "options": { "singleQuote": false } },
+    { "files": ["**/*.md"], "options": { "embeddedLanguageFormatting": "off" } }
+  ]
+}

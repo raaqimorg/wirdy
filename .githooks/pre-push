@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+refs="$(cat)"
+if [ -n "$refs" ]; then
+  printf '%s\n' "$refs" | ./scripts/check/commit-identity.sh pre-push
+  printf '%s\n' "$refs" | ./scripts/check/forbidden-terms.sh pre-push
+fi
+bun run lint
+bun run test

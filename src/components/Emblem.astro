@@ -1,0 +1,14 @@
+---
+import { EMBLEMS } from '../lib/emblems';
+import type { Occasion } from '../lib/occasions';
+
+interface Props {
+  occasion: Occasion;
+}
+
+const { occasion } = Astro.props;
+---
+
+<svg class="emblem" viewBox="0 0 240 240" aria-hidden="true">
+  {EMBLEMS[occasion].map(({ tag: Tag, attrs, order }) => <Tag {...attrs} style={`--o: ${order}`} />)}
+</svg>

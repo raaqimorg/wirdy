@@ -1,0 +1,31 @@
+name: Bug report
+description: The page shows or behaves wrong (not the content of a dhikr)
+labels: ["🐛 bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a wrong word, count, or ruling, use the **Dhikr correction** form. For a security vulnerability, see [SECURITY.md](https://github.com/raaqimorg/wirdy/blob/main/.github/SECURITY.md).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what you saw instead. A screenshot helps.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open https://wirdy.site ...
+        2. See ...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Device and browser
+      placeholder: "iPhone 17, Safari"
+    validations:
+      required: true

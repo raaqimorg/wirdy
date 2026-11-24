@@ -1,0 +1,14 @@
+---
+import { pairWords } from '../lib/variants';
+
+interface Props {
+  now: string;
+  other: string;
+}
+
+const { now, other } = Astro.props;
+const NBSP = ' ';
+const words = pairWords(now, other);
+---
+
+{words.map(({ word, alt }, i) => <Fragment>{i > 0 && ' '}{alt ? <span class="pair">{word}{NBSP}<span class="alt" aria-hidden="true">{alt.replaceAll(' ', NBSP)}</span></span> : word}</Fragment>)}

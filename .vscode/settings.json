@@ -1,0 +1,30 @@
+{
+  "editor.rulers": [100],
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.astro": true,
+    "bun.lock": true
+  },
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/graft": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "bun.lock, tsconfig.json, astro.config.mjs, vitest*.config.ts, wrangler.toml, .oxlintrc.json, .oxfmtrc.json",
+    "README.md": "LICENSE",
+    "AGENTS.md": "CLAUDE.md, GEMINI.md",
+    ".gitignore": ".ignore"
+  },
+  "npm.packageManager": "bun"
+}

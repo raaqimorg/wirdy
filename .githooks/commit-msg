@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+./scripts/check/forbidden-terms.sh commit-msg "$1"

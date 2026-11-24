@@ -1,0 +1,41 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import", "node", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true,
+    "node": true
+  },
+  "ignorePatterns": ["dist", ".astro", ".wrangler", "graft"],
+  "rules": {
+    "eqeqeq": "error",
+    "no-console": ["error", { "allow": ["error", "warn"] }],
+    "no-else-return": "error",
+    "no-nested-ternary": "error",
+    "no-param-reassign": "error",
+    "prefer-const": "error",
+    "prefer-template": "error",
+    "import/no-cycle": "error",
+    "import/no-commonjs": "error",
+    "import/no-unassigned-import": "off",
+    "typescript/no-explicit-any": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/ban-ts-comment": "error",
+    "unicorn/prefer-node-protocol": "error"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**"],
+      "rules": { "no-console": "off" }
+    },
+    {
+      "files": ["**/*.test.ts"],
+      "rules": { "typescript/no-non-null-assertion": "off" }
+    }
+  ]
+}

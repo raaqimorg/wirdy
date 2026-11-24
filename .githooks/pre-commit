@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+./scripts/check/commit-identity.sh pre-commit
+./scripts/check/forbidden-terms.sh pre-commit
+bun run format:check

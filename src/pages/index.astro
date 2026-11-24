@@ -1,0 +1,32 @@
+---
+import Paper from '../layouts/Paper.astro';
+import Footer from '../components/Footer.astro';
+import Mark from '../components/Mark.astro';
+import OccasionCard from '../components/OccasionCard.astro';
+import { countsByOccasion } from '../lib/collection';
+import { OCCASIONS } from '../lib/occasions';
+import { SITE } from '../lib/site';
+
+const counts = await countsByOccasion();
+---
+
+<Paper title={SITE.title} description={SITE.description}>
+  <header class="top">
+    <a class="brand" href="/"><Mark /><span>{SITE.name}</span></a>
+  </header>
+  <main class="home">
+    <h1 class="hero">
+      أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكرٍ تخريجُه
+    </h1>
+    <ul class="grid">
+      {
+        OCCASIONS.map(({ id, heading, color }) => (
+          <li>
+            <OccasionCard id={id} heading={heading} color={color} count={counts[id]} />
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+  <Footer />
+</Paper>

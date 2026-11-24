@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import VariantText from './VariantText.astro';
+import { timesLabel } from '../lib/arabic';
+import { dotGrid } from '../lib/dots';
+import type { Dhikr } from '../lib/schema';
+
+interface Props {
+  data: Dhikr;
+  body: string;
+}
+
+const { data, body } = Astro.props;
+
+const text = body.trim();
+
+const suwar = data.quran
+  ? text
+      .split(/\n\s*\n/)
+      .map((surah) =>
+        surah
+          .split('\n')
+          .map((ayah) => ayah.trim())
+          .filter(Boolean)
+      )
+      .filter((surah) => surah.length > 0)
+      .map((ayat) => (data.ayat === 'first' ? ayat.slice(0, 1) : ayat))
+  : null;
+
+const TIME = { sabah: 'في الصباح', masaa: 'في المساء', both: null };
+const cue = [TIME[data.mode], data.when].filter(Boolean).join('، ');
+
+const grid = data.count > 1 ? dotGrid(data.count) : null;
+
+const { grader, source, ruling } = data.takhrij;
+const sourceLine = [grader === 'الألباني' && grader, source, ruling].filter(Boolean).join(' · ');
+
+const classes = [
+  'item',
+  data.quran && 'is-quran',
+  data.mode !== 'both' && `is-${data.mode}`,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<li class={classes}>
+  <div class="item__head">
+    {cue && <span class="item__cue">{cue}</span>}
+    {
+      grid && (
+        <span class="item__count">
+          {timesLabel(data.count)}
+          <span
+            class:list={['dots', grid.fine && 'dots--fine']}
+            style={`--cols: ${grid.cols}; --rows: ${grid.rows}`}
+            aria-hidden="true"
+          />
+        </span>
+      )
+    }
+  </div>
+  <p class="dhikr__text">{suwar ? suwar.map((ayat, i) => <Fragment>{i > 0 && <span class="ayat-sep" />}<span class="ayat">{ayat.map((ayah, j) => <Fragment>{ayah}{j < ayat.length - 1 && <span class="ayah-end" />}</Fragment>)}</span></Fragment>) : <VariantText text={text} />}</p>
+  <a class="source" href={data.takhrij.url} rel="noopener">
+    <span class="source__label">التخريج</span>
+    <span class="source__value">{sourceLine}</span>
+    <Icon name="out" />
+  </a>
+</li>

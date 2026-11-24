@@ -1,0 +1,22 @@
+---
+import Emblem from './Emblem.astro';
+import { adhkarLabel } from '../lib/arabic';
+import type { Occasion } from '../lib/occasions';
+
+interface Props {
+  id: Occasion;
+  heading: string;
+  color: string;
+  count: number;
+}
+
+const { id, heading, color, count } = Astro.props;
+---
+
+<a class={`card o-${id}`} href={`/${id}/`} style={`--c: ${color}`}>
+  <span class="card__stage"><Emblem occasion={id} /></span>
+  <span class="card__body">
+    <span class="card__title">{heading}</span>
+    <span class="meta">{adhkarLabel(count)}</span>
+  </span>
+</a>
