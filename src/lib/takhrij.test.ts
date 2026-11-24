@@ -55,6 +55,17 @@ describe('takhrijLine', () => {
     ).toBe('قال الألباني في السلسلة الصحيحة (٢٥٦٣): إسناده حسن على شرط مسلم');
   });
 
+  it('keeps the name of a ضعيف book away from the verb that accepts the hadith', () => {
+    expect(
+      takhrijLine({
+        grader: 'الألباني',
+        source: 'ضعيف الترمذي ٣٤٦٨',
+        ruling: 'صحيح دون قوله: يحيي ويميت',
+        url,
+      })
+    ).toBe('صحّح الألباني الحديث دون قوله «يحيي ويميت» (ضعيف الترمذي ٣٤٦٨)');
+  });
+
   it('says that al-Albani graded it ضعيف', () => {
     expect(
       takhrijLine({ grader: 'الألباني', source: 'ضعيف أبي داود ٥٠٧٨', ruling: 'ضعيف', url })
