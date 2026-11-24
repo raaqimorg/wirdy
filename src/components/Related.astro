@@ -1,0 +1,15 @@
+---
+import CardGrid from './CardGrid.astro';
+import type { Tile } from '../lib/collection';
+
+interface Props {
+  tiles: Tile[];
+}
+
+const { tiles } = Astro.props;
+---
+
+<nav class="related container" aria-label="بقية الأقسام">
+  <h2 class="related__title">بقية الأقسام</h2>
+  <CardGrid tiles={tiles} variant="compact" />
+</nav>

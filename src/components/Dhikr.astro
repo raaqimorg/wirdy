@@ -1,13 +1,14 @@
 ---
 import BeadRing from './BeadRing.astro';
-import Icon from './Icon.astro';
-import Phrases from './Phrases.astro';
+import Entry from './Entry.astro';
+import Phrase from './Phrase.astro';
+import ShareLink from './ShareLink.astro';
+import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
 import { timesLabel } from '../lib/arabic';
 import { leadOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
 import { phrasesOf } from '../lib/phrases';
-import { takhrijLine } from '../lib/takhrij';
 import type { Dhikr } from '../lib/schema';
 
 interface Props {
@@ -15,60 +16,48 @@ interface Props {
   body: string;
   slug: string;
   heading?: 'h2' | 'h3' | 'h4';
-  alone?: boolean;
+  single?: boolean;
+  nested?: boolean;
 }
 
-const { data, body, slug, heading: Heading, alone = false } = Astro.props;
+const { data, body, slug, heading, single = false, nested = false } = Astro.props;
 
 const text = body.trim();
-
 const suwar = suwarOf(data, text);
 const count = data.count > 1 ? timesLabel(data.count) : null;
 const lead = [count, leadOf(data, suwar)].filter(Boolean).join('، ');
 const phrases = data.counts ? phrasesOf(text, data.counts) : null;
-const path = dhikrPath(data.occasion, slug);
-
-const classes = [
-  'item',
-  alone && 'is-alone',
-  data.quran && 'is-quran',
-  data.mode !== 'both' && `is-${data.mode}`,
-]
-  .filter(Boolean)
-  .join(' ');
 ---
 
-<li class={classes} id={slug}>
-  {Heading && <Heading class="vh">{data.title}</Heading>}
-  <div class="item__main">
-    {
-      lead && (
-        <div class="item__head">
-          <p class="item__lead">{lead}</p>
-          {data.count > 1 && <BeadRing count={data.count} />}
-        </div>
-      )
-    }
-    {data.how && <p class="item__how">{data.how}</p>}
-    <p class="dhikr__text">{suwar && suwar.map((ayat, i) => <Fragment>{i > 0 && <span class="ayat-sep" />}<span class="ayat">{ayat.map((ayah, j) => <Fragment>{ayah}{j < ayat.length - 1 && <span class="ayah-end" />}</Fragment>)}</span></Fragment>)}{phrases && <Phrases phrases={phrases} />}{!suwar && !phrases && <VariantText text={text} />}</p>
-  </div>
-  <div class="item__side">
-    {data.fadl && <p class="item__fadl">{data.fadl}</p>}
-    <div class="item__foot">
-      <a class="source" href={data.takhrij.url} rel="noopener">
-        <span class="source__value">{takhrijLine(data.takhrij)}</span>
-        <Icon name="out" />
-      </a>
-      {
-        !alone && (
-          <Fragment>
-            <span class="share__said" role="status" />
-            <a class="share" href={path} data-title={data.title} aria-label={`مشاركة: ${data.title}`}>
-              <Icon name="share" />
-            </a>
-          </Fragment>
-        )
-      }
-    </div>
-  </div>
-</li>
+<Entry
+  takhrij={data.takhrij}
+  id={slug}
+  title={data.title}
+  heading={heading}
+  lead={lead}
+  how={data.how}
+  layout={single ? 'single' : 'split'}
+  nested={nested}
+  kind={data.quran ? 'quran' : undefined}
+  time={single || data.mode === 'both' ? undefined : data.mode}
+>
+  {data.count > 1 && <BeadRing slot="badge" count={data.count} />}
+  <Fragment>
+    {suwar && suwar.map((ayat) => <Surah ayat={ayat} />)}
+    {phrases && phrases.map((phrase) => <Phrase {...phrase} />)}
+    {!suwar && !phrases && <VariantText text={text} />}
+  </Fragment>
+  {data.fadl && (
+    <p slot="note" class="entry__note">
+      {data.fadl}
+    </p>
+  )}
+  {!single && (
+    <ShareLink
+      slot="actions"
+      variant="icon"
+      href={dhikrPath(data.occasion, slug)}
+      title={data.title}
+    />
+  )}
+</Entry>

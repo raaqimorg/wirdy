@@ -1,0 +1,4 @@
+.mark {
+  width: var(--mark-size, var(--size-mark));
+  height: var(--mark-size, var(--size-mark));
+}

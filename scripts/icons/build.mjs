@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { markSvg } from '../../src/lib/mark.ts';
+import { PALETTE } from '../../src/lib/palette.ts';
 import { screenshot } from '../chromium.mjs';
 
 const PUBLIC = join(import.meta.dirname, '..', '..', 'public');
@@ -13,7 +14,7 @@ const PNG_SIZE = 32;
 const TOUCH_SIZE = 180;
 const MANIFEST_SIZES = [192, 512];
 const TOUCH_INSET = 0.72;
-const TOUCH_BACKGROUND = '#f4f1d0';
+const TOUCH_BACKGROUND = PALETTE.eggshell;
 
 const page = (size, background) => `<!doctype html><html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0}

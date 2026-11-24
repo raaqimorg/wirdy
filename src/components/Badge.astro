@@ -1,0 +1,11 @@
+---
+interface Props {
+  variant?: 'label' | 'count';
+}
+
+const { variant = 'label' } = Astro.props;
+---
+
+<span class:list={['badge', variant === 'count' && 'badge--count']}>
+  <slot />
+</span>

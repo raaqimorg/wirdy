@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EMBLEMS } from './emblems';
 import type { EmblemName, Shape } from './emblems';
+import { PALETTE } from './palette';
 
 const STAGE = 240;
 const NAMES = Object.keys(EMBLEMS) as EmblemName[];
@@ -44,14 +45,14 @@ describe('EMBLEMS', () => {
   it.each(NAMES)('draws %s in eggshell and black only', (name) => {
     for (const { attrs } of EMBLEMS[name]) {
       const inks = [attrs.fill, attrs.stroke].filter((ink) => ink && ink !== 'none');
-      expect(inks.filter((ink) => ink !== '#f4f1d0' && ink !== '#000')).toEqual([]);
+      expect(inks.filter((ink) => ink !== PALETTE.eggshell && ink !== PALETTE.shade)).toEqual([]);
     }
   });
 
   it.each(NAMES)('lights at least one shape of %s in full eggshell', (name) => {
     expect(lit(name).length).toBeGreaterThan(0);
     for (const { attrs } of lit(name)) {
-      expect([attrs.fill, attrs.stroke]).toContain('#f4f1d0');
+      expect([attrs.fill, attrs.stroke]).toContain(PALETTE.eggshell);
       expect(attrs).not.toHaveProperty('fill-opacity');
       expect(attrs).not.toHaveProperty('stroke-opacity');
     }

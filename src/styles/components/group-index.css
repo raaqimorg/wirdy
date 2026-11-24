@@ -1,0 +1,21 @@
+.group-index {
+  margin-top: var(--space-5);
+}
+
+.group-index__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.group-index__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch);
+  padding-inline: var(--space-4);
+  background: var(--color-panel);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-note);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}

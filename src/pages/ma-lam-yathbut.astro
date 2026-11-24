@@ -1,69 +1,29 @@
 ---
-import { getCollection } from 'astro:content';
-import Paper from '../layouts/Paper.astro';
-import Bar from '../components/Bar.astro';
-import Emblem from '../components/Emblem.astro';
-import Footer from '../components/Footer.astro';
-import Icon from '../components/Icon.astro';
+import EntryList from '../components/EntryList.astro';
+import Unproven from '../components/Unproven.astro';
+import Section from '../layouts/Section.astro';
 import { adhkarLabel } from '../lib/arabic';
-import { SITE, UNPROVEN } from '../lib/site';
-import { soundPlace } from '../lib/sound';
-import { isOneWord, takhrijLine } from '../lib/takhrij';
+import { unprovenEntries } from '../lib/collection';
+import { UNPROVEN } from '../lib/site';
 
-const entries = (await getCollection('unproven')).toSorted((a, b) => a.data.order - b.data.order);
+const { heading, color, lede, path } = UNPROVEN;
+const entries = await unprovenEntries();
 
-const title = `${UNPROVEN.heading} | ${SITE.name}`;
-const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشهورة لم تدخل الموقع، لأن الألباني ضعّفها أو ضعّف عددها أو وقتها، ومع كل واحد حكمه من الدرر السنية.`;
+const description = `${heading}: ${adhkarLabel(entries.length)} مشهورة لم تدخل الموقع، لأن الألباني ضعّفها أو ضعّف عددها أو وقتها، ومع كل واحد حكمه من الدرر السنية.`;
 ---
 
-<Paper title={title} description={description} crumbs={[{ name: UNPROVEN.heading, path: UNPROVEN.path }]}>
-  <div class="o-unproven" style={`--c: ${UNPROVEN.color}`}>
-    <Bar heading={UNPROVEN.heading} />
-    <header class="banner" style="view-transition-name: stage-unproven">
-      <div class="banner__in">
-        <div class="banner__text">
-          <h1>{UNPROVEN.heading}</h1>
-          <p>{UNPROVEN.lede}</p>
-        </div>
-        <div class="banner__graphic"><Emblem occasion="unproven" /></div>
-      </div>
-    </header>
-    <main class="content">
-      <ol class="list">
-        {
-          entries.map(({ data, body }) => {
-            const place = data.sound ? soundPlace(data.sound) : null;
-            return (
-              <li class="item is-unproven">
-                <div class="item__main">
-                  <div class="item__head">
-                    <p class="item__lead">{data.what}</p>
-                    {isOneWord(data.takhrij.ruling) && (
-                      <span class="ruling">{data.takhrij.ruling}</span>
-                    )}
-                  </div>
-                  <p class="dhikr__text">{(body ?? '').trim()}</p>
-                </div>
-                <div class="item__side">
-                  {place && (
-                    <p class="item__fadl item__fadl--sound">
-                      {place.before}<a href={place.path}>{place.name}</a>{place.after}
-                    </p>
-                  )}
-                  {data.sound && !place && <p class="item__fadl">{data.sound}</p>}
-                  <div class="item__foot">
-                    <a class="source" href={data.takhrij.url} rel="noopener">
-                      <span class="source__value">{takhrijLine(data.takhrij)}</span>
-                      <Icon name="out" />
-                    </a>
-                  </div>
-                </div>
-              </li>
-            );
-          })
-        }
-      </ol>
-    </main>
-    <Footer />
-  </div>
-</Paper>
+<Section
+  title={heading}
+  description={description}
+  crumbs={[{ name: heading, path }]}
+  emblem="unproven"
+  color={color}
+  heading={heading}
+  lede={lede}
+>
+  <EntryList>
+    {entries.map(({ data, body = '' }) => (
+      <Unproven data={data} body={body} />
+    ))}
+  </EntryList>
+</Section>

@@ -36,7 +36,7 @@ If a word, a count, or a ruling is wrong, or an authentic dhikr is missing, [ope
 
 ## Development
 
-Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, and one page for each dhikr, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski.
+Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, and one page for each dhikr, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski, and [`docs/design-system.md`](docs/design-system.md) says how the code holds it.
 
 ```bash
 bun install      # dependencies, and the git hooks

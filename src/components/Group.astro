@@ -1,0 +1,36 @@
+---
+import Choices from './Choices.astro';
+import Dhikr from './Dhikr.astro';
+import EntryList from './EntryList.astro';
+import type { AdhkarEntry } from '../lib/collection';
+import { groupId } from '../lib/groups';
+import { slugOf } from '../lib/permalink';
+
+interface Props {
+  title?: string;
+  entries: AdhkarEntry[];
+}
+
+const { title, entries } = Astro.props;
+const isChoice = entries[0]?.data.form !== undefined;
+---
+
+<section class:list={['group', title && 'group--titled']}>
+  {title && (
+    <h2 class="group__title" id={groupId(title)}>
+      {title}
+    </h2>
+  )}
+  {isChoice ? (
+    <Fragment>
+      <p class="group__note">تكفي واحدة منها</p>
+      <Choices entries={entries} />
+    </Fragment>
+  ) : (
+    <EntryList variant={title ? 'titled' : 'plain'}>
+      {entries.map(({ id, data, body = '' }) => (
+        <Dhikr data={data} body={body} slug={slugOf(id)} heading={title ? 'h3' : 'h2'} />
+      ))}
+    </EntryList>
+  )}
+</section>

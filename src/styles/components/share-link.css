@@ -1,0 +1,44 @@
+.share-link {
+  --icon-size: var(--size-icon-medium);
+
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--size-touch);
+  height: var(--size-touch);
+  margin-inline-end: calc(var(--space-3) * -1);
+  color: var(--color-ink-muted);
+}
+
+.share-link:focus-visible {
+  outline-offset: var(--ring-inset-deep);
+}
+
+@media (hover: hover) {
+  .share-link:hover {
+    color: var(--color-ink);
+  }
+}
+
+.share-link__status {
+  position: absolute;
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+}
+
+.share-link__status--over {
+  inset-inline-end: var(--space-13);
+  z-index: var(--layer-raised);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-panel);
+  background: var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+}
+
+.share-link__status--under {
+  top: calc(100% + var(--space-1));
+}
+
+.share-link__status:empty {
+  display: none;
+}

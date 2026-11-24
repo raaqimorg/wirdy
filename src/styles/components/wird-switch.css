@@ -1,0 +1,30 @@
+.wird-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(var(--size-option), 1fr));
+  margin-top: var(--space-3);
+  padding: var(--space-track);
+  background: var(--color-track);
+  border-radius: var(--radius-pill);
+}
+
+.wird-switch__option {
+  display: grid;
+  place-items: center;
+  min-height: var(--size-touch);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-note);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+
+.wird-switch__option:focus-visible {
+  outline-color: var(--color-eggshell);
+}
+
+:root:not([data-wird="m"]) .wird-switch__option[data-wird-form="s"],
+:root[data-wird="m"] .wird-switch__option[data-wird-form="m"] {
+  background: var(--color-eggshell);
+  color: var(--tone-deep);
+  font-weight: var(--weight-bold);
+}

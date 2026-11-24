@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  variant: 'panel' | 'glass' | 'eggshell';
+  href?: string;
+  [attribute: string]: unknown;
+}
+
+const { label, variant, href, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class={`icon-button icon-button--${variant}`}
+  href={href}
+  type={href ? undefined : 'button'}
+  aria-label={label}
+  {...rest}
+>
+  <span class="icon-button__face">
+    <slot />
+  </span>
+</Tag>

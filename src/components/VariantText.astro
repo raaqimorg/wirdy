@@ -10,12 +10,17 @@ const { text } = Astro.props;
 const segments = parseVariants(text);
 ---
 
-{
-  segments.map((segment) =>
-    segment.type === 'text' ? (
-      segment.value
-    ) : (
-      <Fragment><span class="v-s"><WordForm now={segment.sabah} other={segment.masaa} /></span><span class="v-m"><WordForm now={segment.masaa} other={segment.sabah} /></span></Fragment>
-    ),
+{segments.map((segment) =>
+  segment.type === 'text' ? (
+    segment.value
+  ) : (
+    <Fragment>
+      <span class="variant-text variant-text--sabah">
+        <WordForm now={segment.sabah} other={segment.masaa} />
+      </span>
+      <span class="variant-text variant-text--masaa">
+        <WordForm now={segment.masaa} other={segment.sabah} />
+      </span>
+    </Fragment>
   )
-}
+)}

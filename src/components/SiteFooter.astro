@@ -1,0 +1,24 @@
+---
+import { SITE } from '../lib/site';
+
+const REPORT = `${SITE.repo}/issues/new?template=dhikr-correction.yml`;
+---
+
+<footer class="site-footer">
+  <p class="site-footer__line">
+    من الصحيحين وما صحّحه الألباني أو حسّنه، عن{' '}
+    <a class="site-footer__link" href="https://dorar.net/hadith" rel="noopener">
+      الدرر
+    </a>{' '}
+    و
+    <a class="site-footer__link" href="https://tanzil.net/" rel="noopener">
+      تنزيل
+    </a>
+    .{' '}
+    <a class="site-footer__link" href={REPORT} rel="noopener">
+      أبلغ عن خطأ
+    </a>
+    .
+  </p>
+  <p class="site-footer__line site-footer__line--dedication">صدقة جارية عن شروق، تقبّلها الله</p>
+</footer>

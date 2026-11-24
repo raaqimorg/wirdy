@@ -1,0 +1,16 @@
+---
+interface Props {
+  ayat: string[];
+}
+
+const { ayat } = Astro.props;
+---
+
+<span class="surah">
+  {ayat.map((ayah, i) => (
+    <Fragment>
+      {i > 0 && <span class="surah__ayah-end" />}
+      {ayah}
+    </Fragment>
+  ))}
+</span>

@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import IconButton from './IconButton.astro';
+import Mark from './Mark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import Tools from './Tools.astro';
+import { SITE } from '../lib/site';
+---
+
+<header class="site-header container">
+  <a class="site-header__brand" href="/">
+    <Mark />
+    <span>{SITE.name}</span>
+  </a>
+  <Tools>
+    <ThemeToggle variant="panel" />
+    <IconButton label="الشيفرة على GitHub" variant="panel" href={SITE.repo} rel="noopener">
+      <Icon name="github" />
+    </IconButton>
+  </Tools>
+</header>

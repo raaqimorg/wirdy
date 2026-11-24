@@ -11,4 +11,19 @@ const NBSP = ' ';
 const words = pairWords(now, other);
 ---
 
-{words.map(({ word, alt }, i) => <Fragment>{i > 0 && ' '}{alt ? <span class="pair">{word}{NBSP}<span class="alt" aria-hidden="true">{alt.replaceAll(' ', NBSP)}</span></span> : word}</Fragment>)}
+{words.map(({ word, alt }, i) => (
+  <Fragment>
+    {i > 0 && ' '}
+    {alt ? (
+      <span>
+        {word}
+        {NBSP}
+        <span class="word-form__other" aria-hidden="true">
+          {alt.replaceAll(' ', NBSP)}
+        </span>
+      </span>
+    ) : (
+      word
+    )}
+  </Fragment>
+))}

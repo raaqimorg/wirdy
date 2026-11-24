@@ -1,0 +1,21 @@
+.entry-list {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+@media (min-width: 64rem) {
+  .entry-list {
+    gap: var(--space-5);
+    margin-top: var(--space-10);
+  }
+
+  .entry-list--single {
+    max-width: var(--size-reading);
+    margin-top: var(--space-8);
+  }
+}
+
+.entry-list--titled {
+  margin-top: var(--space-4);
+}

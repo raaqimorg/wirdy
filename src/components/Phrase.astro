@@ -1,0 +1,17 @@
+---
+import Badge from './Badge.astro';
+import { timesLabel, toArabicDigits } from '../lib/arabic';
+import type { Phrase } from '../lib/phrases';
+
+type Props = Phrase;
+
+const { text, count } = Astro.props;
+---
+
+<span class="phrase">
+  <span>{text}</span>
+  <Badge variant="count">
+    <span aria-hidden="true">{toArabicDigits(count)}</span>
+    <span class="visually-hidden">{timesLabel(count)}</span>
+  </Badge>
+</span>

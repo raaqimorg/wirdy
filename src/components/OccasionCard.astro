@@ -1,24 +1,27 @@
 ---
 import Emblem from './Emblem.astro';
-import { adhkarLabel } from '../lib/arabic';
-import type { EmblemName } from '../lib/emblems';
+import type { Tile } from '../lib/collection';
 
 interface Props {
-  id: EmblemName;
-  href?: string;
-  heading: string;
-  color: string;
-  count: number;
-  note?: string;
+  tile: Tile;
+  variant: 'lead' | 'row' | 'compact';
+  motion: 'always' | 'wide-only' | 'still';
 }
 
-const { id, heading, color, count, note, href = `/${id}/` } = Astro.props;
+const { tile, variant, motion } = Astro.props;
+const { id, heading, color, note, href } = tile;
 ---
 
-<a class={`card o-${id}`} href={href} style={`--c: ${color}; --stage: stage-${id}`}>
-  <span class="card__stage"><Emblem occasion={id} /></span>
-  <span class="card__body">
-    <span class="card__title">{heading}</span>
-    <span class="meta">{note ?? adhkarLabel(count)}</span>
+<a
+  class={`occasion-card occasion-card--${variant} tone`}
+  href={href}
+  style={`--tone: ${color}; --stage: stage-${id}`}
+>
+  <span class="occasion-card__stage">
+    <Emblem name={id} motion={motion} class="occasion-card__emblem" />
+  </span>
+  <span class="occasion-card__body">
+    <span class="occasion-card__title">{heading}</span>
+    <span class="occasion-card__note">{note}</span>
   </span>
 </a>

@@ -1,0 +1,17 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--size-button);
+  background: var(--color-panel);
+  border-radius: var(--radius-card);
+  font-size: var(--text-note);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+}
+
+.button--primary {
+  color: var(--color-eggshell);
+  background: var(--tone-fill);
+}

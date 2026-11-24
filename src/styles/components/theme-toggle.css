@@ -1,0 +1,7 @@
+.theme-toggle__moon {
+  display: var(--theme-moon);
+}
+
+.theme-toggle__sun {
+  display: var(--theme-sun);
+}

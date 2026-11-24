@@ -1,18 +1,29 @@
-import { getCollection } from 'astro:content';
-import type { Occasion } from './occasions';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { adhkarLabel } from './arabic';
+import type { EmblemName } from './emblems';
+import { OCCASIONS, type Occasion } from './occasions';
 
-export async function adhkarOf(occasion: Occasion) {
+export type AdhkarEntry = CollectionEntry<'adhkar'>;
+
+export type Tile = { id: EmblemName; heading: string; color: string; note: string; href: string };
+
+export async function adhkarOf(occasion: Occasion): Promise<AdhkarEntry[]> {
   const entries = await getCollection('adhkar');
   return entries
     .filter((entry) => entry.data.occasion === occasion)
     .toSorted((a, b) => a.data.order - b.data.order);
 }
 
-export async function countsByOccasion(): Promise<Record<Occasion, number>> {
-  const entries = await getCollection('adhkar');
-  const counts = {} as Record<Occasion, number>;
-  for (const entry of entries) {
-    counts[entry.data.occasion] = (counts[entry.data.occasion] ?? 0) + 1;
-  }
-  return counts;
+export async function unprovenEntries(): Promise<CollectionEntry<'unproven'>[]> {
+  const entries = await getCollection('unproven');
+  return entries.toSorted((a, b) => a.data.order - b.data.order);
+}
+
+export async function occasionTiles(): Promise<Tile[]> {
+  return Promise.all(
+    OCCASIONS.map(async ({ id, heading, color }) => {
+      const { length } = await adhkarOf(id);
+      return { id, heading, color, note: adhkarLabel(length), href: `/${id}/` };
+    })
+  );
 }

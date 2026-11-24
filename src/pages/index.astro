@@ -1,47 +1,17 @@
 ---
-import Paper from '../layouts/Paper.astro';
-import Footer from '../components/Footer.astro';
-import Mark from '../components/Mark.astro';
-import Tools from '../components/Tools.astro';
-import OccasionCard from '../components/OccasionCard.astro';
-import { getCollection } from 'astro:content';
-import { countsByOccasion } from '../lib/collection';
-import { OCCASIONS } from '../lib/occasions';
+import CardGrid from '../components/CardGrid.astro';
+import Hero from '../components/Hero.astro';
+import Home from '../layouts/Home.astro';
+import { occasionTiles } from '../lib/collection';
 import { SITE, UNPROVEN } from '../lib/site';
 
-const counts = await countsByOccasion();
-const unproven = (await getCollection('unproven')).length;
-const title = `أذكار اليوم والليلة | ${SITE.name}`;
+const { heading, color, note, path: href } = UNPROVEN;
+const tiles = [...(await occasionTiles()), { id: 'unproven' as const, heading, color, note, href }];
 ---
 
-<Paper title={title} description={SITE.description}>
-  <header class="top">
-    <a class="brand" href="/"><Mark /><span>{SITE.name}</span></a>
-    <Tools />
-  </header>
-  <main class="home">
-    <h1 class="hero">
-      أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكر تخريجُه
-    </h1>
-    <ul class="grid">
-      {
-        OCCASIONS.map(({ id, heading, color }) => (
-          <li>
-            <OccasionCard id={id} heading={heading} color={color} count={counts[id]} />
-          </li>
-        ))
-      }
-      <li>
-        <OccasionCard
-          id="unproven"
-          heading={UNPROVEN.heading}
-          color={UNPROVEN.color}
-          count={unproven}
-          note={UNPROVEN.note}
-          href={UNPROVEN.path}
-        />
-      </li>
-    </ul>
-  </main>
-  <Footer />
-</Paper>
+<Home title="أذكار اليوم والليلة" description={SITE.description}>
+  <Hero>
+    أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salawat">ﷺ</span>، ومع كل ذكر تخريجُه
+  </Hero>
+  <CardGrid tiles={tiles} variant="featured" />
+</Home>

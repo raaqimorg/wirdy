@@ -1,0 +1,206 @@
+:root {
+  color-scheme: light dark;
+
+  --color-paper: #d6d6cd;
+  --color-panel: hsl(60 10% 92%);
+  --color-ink: hsl(200 50% 5%);
+  --color-ink-muted: hsl(200 40% 22%);
+  --color-ink-faint: hsl(200 12% 46%);
+  --color-line: hsl(200 30% 20% / 0.35);
+  --color-line-soft: color-mix(in oklab, var(--color-line), transparent 55%);
+  --color-eggshell: #f4f1d0;
+  --color-sound: color-mix(in oklab, #1b764a, var(--color-ink) 20%);
+  --color-brighten: white;
+  --color-glass: rgb(255 255 255 / 0.16);
+  --color-glass-hover: rgb(255 255 255 / 0.26);
+  --color-track: rgb(0 0 0 / 0.24);
+  --tone-shade: 0%;
+  --tone-ink: 30%;
+
+  --font-ui: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-naskh: "Amiri", "Geeza Pro", serif;
+  --font-quran: "Amiri Quran", "Amiri", serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  --text-bead: 11px;
+  --text-small: 0.8125rem;
+  --text-note: 0.9375rem;
+  --text-body: 1.0625rem;
+  --text-title-1: 1.333rem;
+  --text-title-2: 1.777rem;
+  --text-title-3: 2.369rem;
+  --text-title-4: 3.157rem;
+  --text-title-fluid: clamp(1.75rem, 9.7vw, var(--text-title-3));
+  --text-reading-1: 1.25rem;
+  --text-reading-2: 1.5rem;
+  --text-reading-3: 1.75rem;
+  --text-reading-4: 2rem;
+  --text-reading-5: 2.25rem;
+
+  --leading-tight: 1.3;
+  --leading-heading: 1.35;
+  --leading-title: 1.45;
+  --leading-snug: 1.5;
+  --leading-body: 1.6;
+  --leading-relaxed: 1.7;
+  --leading-loose: 1.8;
+  --leading-reading-small: 1.9;
+  --leading-reading: 2.05;
+  --leading-quran: 2.5;
+
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-4-5: 1.125rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-9: 2.25rem;
+  --space-10: 2.5rem;
+  --space-13: 3.25rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-18: 4.5rem;
+  --space-gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
+  --space-track: 3px;
+  --space-badge-block: 0.2rem;
+  --space-badge-inline: 0.7rem;
+  --space-badge-inline-count: 0.6rem;
+
+  --size-page: 76rem;
+  --size-reading: 46rem;
+  --size-footer: 44rem;
+  --size-hero: 24em;
+  --size-touch: 2.75rem;
+  --size-button: 3rem;
+  --size-face: 2rem;
+  --size-mark: 1.75rem;
+  --size-mark-small: 1.5rem;
+  --size-icon: 0.75em;
+  --size-icon-medium: 1rem;
+  --size-icon-large: 1.125rem;
+  --size-card: 17rem;
+  --size-thumb: 6rem;
+  --size-thumb-small: 5rem;
+  --size-thumb-fluid: 25vw;
+  --size-option: 5.5rem;
+  --size-action: 9rem;
+  --size-action-wide: 13rem;
+  --size-side: 18rem;
+  --size-label: 3.5rem;
+  --size-banner: 15rem;
+  --size-graphic-fluid: clamp(4.5rem, 24vw, 6.5rem);
+  --size-graphic-small: 6.5rem;
+  --size-graphic: 12rem;
+
+  --radius-focus: 4px;
+  --radius-card: 0.8rem;
+  --radius-pill: 99px;
+  --radius-round: 50%;
+
+  --border-hairline: 1px;
+  --border-ring: 2px;
+  --border-mark: 3px;
+  --ring-gap: 0.25em;
+  --ring-gap-small: 2px;
+  --ring-inset: -2px;
+  --ring-inset-deep: -4px;
+  --underline-gap: 0.3em;
+  --underline-gap-wide: 0.35em;
+  --strike: 0.06em;
+
+  --layer-raised: 1;
+  --layer-bar: 5;
+
+  --opacity-pressed: 0.6;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --spring: linear(
+    0,
+    0.049,
+    0.158,
+    0.286,
+    0.412,
+    0.527,
+    0.625,
+    0.707,
+    0.773,
+    0.826,
+    0.867,
+    0.9,
+    0.924,
+    0.943,
+    0.958,
+    0.968,
+    0.977,
+    0.983,
+    0.987,
+    0.991,
+    0.993,
+    0.995,
+    0.996,
+    0.997,
+    1
+  );
+  --duration-press: 60ms;
+  --duration-enter-fade: 160ms;
+  --duration-enter-delay: 180ms;
+  --duration-fade: 200ms;
+  --duration-brighten: 250ms;
+  --duration-release: 270ms;
+  --duration-hover: 405ms;
+  --duration-enter: 607ms;
+  --duration-found: 1.6s;
+
+  --theme-moon: block;
+  --theme-sun: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper: #060f13;
+    --color-panel: hsl(200 32% 15%);
+    --color-ink: hsl(55 62% 89%);
+    --color-ink-muted: hsl(60 10% 72%);
+    --color-ink-faint: hsl(200 14% 50%);
+    --color-line: hsl(60 10% 82% / 0.3);
+    --tone-shade: 12%;
+    --tone-ink: 45%;
+    --theme-moon: none;
+    --theme-sun: block;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-paper: #060f13;
+  --color-panel: hsl(200 32% 15%);
+  --color-ink: hsl(55 62% 89%);
+  --color-ink-muted: hsl(60 10% 72%);
+  --color-ink-faint: hsl(200 14% 50%);
+  --color-line: hsl(60 10% 82% / 0.3);
+  --tone-shade: 12%;
+  --tone-ink: 45%;
+  --theme-moon: none;
+  --theme-sun: block;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+.tone {
+  --tone-fill: color-mix(in oklab, var(--tone), black var(--tone-shade));
+  --tone-text: color-mix(in oklab, var(--tone), var(--color-ink) var(--tone-ink));
+  --tone-deep: color-mix(in oklab, var(--tone), black 35%);
+  --tone-wash: color-mix(in oklab, var(--tone), var(--color-panel) 82%);
+  --tone-flash: color-mix(in oklab, var(--tone), var(--color-panel) 40%);
+}

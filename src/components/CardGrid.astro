@@ -1,0 +1,31 @@
+---
+import OccasionCard from './OccasionCard.astro';
+import type { Tile } from '../lib/collection';
+
+interface Props {
+  tiles: Tile[];
+  variant: 'featured' | 'compact';
+}
+
+const { tiles, variant } = Astro.props;
+
+const ANIMATED = 3;
+const ANIMATED_WIDE = 5;
+
+const motionOf = (index: number) => {
+  if (variant === 'compact' || index >= ANIMATED_WIDE) return 'still';
+  return index < ANIMATED ? 'always' : 'wide-only';
+};
+const cardOf = (index: number) => {
+  if (variant === 'compact') return 'compact';
+  return index === 0 ? 'lead' : 'row';
+};
+---
+
+<ul class={`card-grid card-grid--${variant}`}>
+  {tiles.map((tile, index) => (
+    <li>
+      <OccasionCard tile={tile} variant={cardOf(index)} motion={motionOf(index)} />
+    </li>
+  ))}
+</ul>

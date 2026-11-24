@@ -1,0 +1,36 @@
+.choices {
+  margin-top: var(--space-4);
+  overflow: hidden;
+  background: var(--color-panel);
+  border-radius: var(--radius-card);
+}
+
+.choices__item {
+  padding: var(--space-4) 0 var(--space-1);
+}
+
+.choices__item + .choices__item {
+  border-top: var(--border-hairline) solid var(--color-line-soft);
+}
+
+.choices__item:has(:target) {
+  background: var(--tone-wash);
+  outline: var(--border-ring) solid var(--tone-text);
+}
+
+.choices__title {
+  padding-inline: var(--space-4-5);
+  color: var(--tone-text);
+  font-size: var(--text-note);
+  font-weight: var(--weight-bold);
+}
+
+@media (min-width: 64rem) {
+  .choices__item {
+    padding-top: var(--space-6);
+  }
+
+  .choices__title {
+    padding-inline: var(--space-8);
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "extends": "stylelint-config-standard",
+  "reportNeedlessDisables": true,
+  "rules": {
+    "alpha-value-notation": null,
+    "color-function-alias-notation": null,
+    "color-function-notation": null,
+    "color-named": "never",
+    "color-no-hex": true,
+    "custom-property-empty-line-before": null,
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": ["consecutive-duplicates-with-different-values"]
+      }
+    ],
+    "declaration-no-important": true,
+    "declaration-property-unit-disallowed-list": {
+      "/^(margin|padding|gap|row-gap|column-gap|inset|top|bottom|left|right|scroll-margin|scroll-padding)/": [
+        "rem",
+        "px"
+      ],
+      "/(width|height|size|radius|basis|offset|thickness)$/": ["rem", "px"],
+      "/^(border|outline|font|flex|grid|text)/": ["rem", "px"],
+      "/^(transition|animation)(-duration|-delay)?$/": ["ms", "s"],
+      "/^--/": ["rem", "px", "ms", "s"]
+    },
+    "declaration-property-value-disallowed-list": {
+      "/^(line-height|font-weight|z-index)$/": ["/^[0-9]/", "/^(bold|normal|bolder|lighter)$/"],
+      "font": ["/./"],
+      "font-family": ["/^(?!var\\()/"],
+      "border-radius": ["/[1-9]/"]
+    },
+    "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "color-mix", "cubic-bezier"],
+    "hue-degree-notation": null,
+    "import-notation": "string",
+    "media-feature-name-value-allowed-list": {
+      "min-width": ["64rem"],
+      "max-width": ["40rem", "63.99rem"]
+    },
+    "media-feature-range-notation": "prefix",
+    "no-descending-specificity": null,
+    "property-no-vendor-prefix": [
+      true,
+      {
+        "ignoreProperties": ["/user-select$/", "/text-size-adjust$/"]
+      }
+    ],
+    "selector-class-pattern": [
+      "^[a-z]+(-[a-z]+)*(__[a-z]+(-[a-z]+)*)?(--[a-z]+(-[a-z]+)*)?$",
+      {
+        "message": "Name a class block__element--modifier"
+      }
+    ],
+    "selector-max-id": 0,
+    "value-keyword-case": [
+      "lower",
+      {
+        "camelCaseSvgKeywords": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/styles/tokens.css"],
+      "rules": {
+        "color-no-hex": null,
+        "color-named": null,
+        "function-disallowed-list": null,
+        "declaration-property-unit-disallowed-list": null
+      }
+    },
+    {
+      "files": ["src/styles/fonts.css"],
+      "rules": {
+        "declaration-property-value-disallowed-list": null
+      }
+    },
+    {
+      "files": ["src/styles/utilities.css"],
+      "rules": {
+        "declaration-property-unit-disallowed-list": null
+      }
+    }
+  ]
+}

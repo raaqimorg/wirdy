@@ -1,17 +1,15 @@
 ---
-import Paper from '../../layouts/Paper.astro';
-import Bar from '../../components/Bar.astro';
 import Dhikr from '../../components/Dhikr.astro';
-import Emblem from '../../components/Emblem.astro';
-import Footer from '../../components/Footer.astro';
-import Icon from '../../components/Icon.astro';
+import DhikrActions from '../../components/DhikrActions.astro';
+import EntryList from '../../components/EntryList.astro';
+import Neighbours from '../../components/Neighbours.astro';
 import WirdSwitch from '../../components/WirdSwitch.astro';
+import Section from '../../layouts/Section.astro';
 import { cardFile, cardOf } from '../../lib/card';
 import { adhkarOf } from '../../lib/collection';
 import { OCCASIONS } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
 import { phrasesLabel } from '../../lib/phrases';
-import { SITE } from '../../lib/site';
 
 export async function getStaticPaths() {
   const lists = await Promise.all(OCCASIONS.map(({ id }) => adhkarOf(id)));
@@ -27,14 +25,14 @@ const { entry, previous, next } = Astro.props;
 const { data, body = '' } = entry;
 const occasion = OCCASIONS.find(({ id }) => id === data.occasion)!;
 const slug = slugOf(entry.id);
+const path = dhikrPath(data.occasion, slug);
 const card = cardOf(data, body);
 const image = `/${cardFile(card, data.occasion, slug)}`;
 const back = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
 
-const title = `${data.title} | ${occasion.heading} | ${SITE.name}`;
 const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
 const description = [card.lead, count, data.fadl, card.takhrij].filter(Boolean).join('. ');
-const neighbours = [
+const links = [
   { label: 'التالي', entry: next },
   { label: 'السابق', entry: previous },
 ].flatMap(({ label, entry: neighbour }) =>
@@ -50,52 +48,26 @@ const neighbours = [
 );
 ---
 
-<Paper
-  title={title}
+<Section
+  title={`${data.title} | ${occasion.heading}`}
   description={description}
   image={image}
   imageSize={[1200, 630]}
   faces={data.quran ? ['quran'] : ['naskh']}
   crumbs={[
     { name: occasion.heading, path: `/${occasion.id}/` },
-    { name: data.title, path: dhikrPath(data.occasion, slug) },
+    { name: data.title, path },
   ]}
+  emblem={occasion.id}
+  color={occasion.color}
+  heading={data.title}
+  back={back}
+  single
 >
-  <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
-    <Bar back={back} />
-    <header class="banner banner--one">
-      <div class="banner__in">
-        <div class="banner__text">
-          <h1>{data.title}</h1>
-          {card.evening && <WirdSwitch />}
-        </div>
-        <div class="banner__graphic"><Emblem occasion={occasion.id} /></div>
-      </div>
-    </header>
-    <main class="content content--one">
-      <ol class="list">
-        <Dhikr data={data} body={body} slug={slug} alone />
-      </ol>
-      <p class="acts">
-        <span class="share__said" role="status"></span>
-        <a class="act act--main" href={dhikrPath(data.occasion, slug)} data-title={data.title}>
-          <Icon name="share" />مشاركة
-        </a>
-        <a class="act" href={image} download={`wirdy-${slug}.png`}>
-          <Icon name="save" />احفظ الصورة
-        </a>
-      </p>
-      <nav class="next" aria-label="التالي والسابق">
-        {
-          neighbours.map(({ label, title: name, href }) => (
-            <a href={href}>
-              <span class="next__label">{label}</span>
-              <span>{name}</span>
-            </a>
-          ))
-        }
-      </nav>
-    </main>
-    <Footer />
-  </div>
-</Paper>
+  {card.evening && <WirdSwitch slot="banner" />}
+  <EntryList variant="single">
+    <Dhikr data={data} body={body} slug={slug} single />
+  </EntryList>
+  <DhikrActions href={path} title={data.title} image={image} file={`wirdy-${slug}.png`} />
+  <Neighbours links={links} />
+</Section>

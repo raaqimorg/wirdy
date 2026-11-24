@@ -1,0 +1,14 @@
+.dhikr-actions {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-action), 100%), 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+@media (min-width: 64rem) {
+  .dhikr-actions {
+    grid-template-columns: repeat(2, var(--size-action-wide));
+    max-width: var(--size-reading);
+  }
+}

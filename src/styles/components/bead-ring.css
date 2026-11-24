@@ -1,0 +1,33 @@
+.bead-ring {
+  flex: none;
+  width: var(--size-touch);
+  height: var(--size-touch);
+  color: var(--tone-text);
+  fill: currentColor;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bead-ring__string {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.35;
+  stroke-width: 1;
+}
+
+.bead-ring__count {
+  font-family: var(--font-ui);
+  font-size: var(--text-bead);
+  font-weight: var(--weight-bold);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.bead-ring--full .bead-ring__string {
+  fill: var(--tone-fill);
+  stroke-opacity: 1;
+}
+
+.bead-ring--full .bead-ring__count {
+  fill: var(--color-eggshell);
+}

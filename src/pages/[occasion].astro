@@ -1,120 +1,46 @@
 ---
-import Paper from '../layouts/Paper.astro';
-import Bar from '../components/Bar.astro';
-import Dhikr from '../components/Dhikr.astro';
-import Emblem from '../components/Emblem.astro';
-import Footer from '../components/Footer.astro';
-import OccasionCard from '../components/OccasionCard.astro';
+import Group from '../components/Group.astro';
+import GroupIndex from '../components/GroupIndex.astro';
+import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
-import { adhkarLabel, formLabel } from '../lib/arabic';
-import { adhkarOf, countsByOccasion } from '../lib/collection';
-import { formsOf, groupId, runsByGroup } from '../lib/groups';
-import { slugOf } from '../lib/permalink';
+import Section from '../layouts/Section.astro';
+import { adhkarLabel } from '../lib/arabic';
+import { adhkarOf, occasionTiles } from '../lib/collection';
+import { runsByGroup } from '../lib/groups';
 import { OCCASIONS } from '../lib/occasions';
-import { SITE } from '../lib/site';
 
 export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
 }
 
-const { occasion } = Astro.props;
-const entries = await adhkarOf(occasion.id);
+const { id, heading, color } = Astro.props.occasion;
+const entries = await adhkarOf(id);
 const runs = runsByGroup(entries);
-const hasIndex = runs.length > 1 && runs.every(({ group }) => group);
-const counts = await countsByOccasion();
-const others = OCCASIONS.filter((other) => other.id !== occasion.id);
+const groups = runs.flatMap(({ group }) => group ?? []);
+const hasIndex = runs.length > 1 && groups.length === runs.length;
+const others = (await occasionTiles()).filter((tile) => tile.id !== id);
 const hasQuran = entries.some(({ data }) => data.quran);
 const hasVariants = entries.some((entry) => entry.body?.includes('{{'));
 
-const title = `${occasion.heading} | ${SITE.name}`;
-const description = `${occasion.heading}: ${adhkarLabel(entries.length)} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
+const label = adhkarLabel(entries.length);
+const description = `${heading}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
 ---
 
-<Paper
-  title={title}
+<Section
+  title={heading}
   description={description}
-  image={`/opengraph-${occasion.id}.png`}
-  crumbs={[{ name: occasion.heading, path: `/${occasion.id}/` }]}
+  image={`/opengraph-${id}.png`}
+  crumbs={[{ name: heading, path: `/${id}/` }]}
   faces={hasQuran ? ['naskh', 'quran'] : ['naskh']}
+  emblem={id}
+  color={color}
+  heading={heading}
+  lede={label}
 >
-  <div class={`o-${occasion.id}`} style={`--c: ${occasion.color}`}>
-    <Bar heading={occasion.heading} />
-    <header class="banner" style={`view-transition-name: stage-${occasion.id}`}>
-      <div class="banner__in">
-        <div class="banner__text">
-          <h1>{occasion.heading}</h1>
-          <p>{adhkarLabel(entries.length)}</p>
-          {hasVariants && <WirdSwitch />}
-        </div>
-        <div class="banner__graphic"><Emblem occasion={occasion.id} /></div>
-      </div>
-    </header>
-    <main class="content">
-      {
-        hasIndex && (
-          <nav class="jump" aria-label="فهرس المجموعات">
-            <ul>
-              {runs.map(({ group }) => (
-                <li>
-                  <a href={`#${groupId(group!)}`}>{group}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )
-      }
-      {
-        runs.map(({ group, items }) => (
-          <section class:list={['run', group && 'run--group']}>
-            {group && (
-              <h2 class="run__title" id={groupId(group)}>
-                {group}
-              </h2>
-            )}
-            {items[0]!.data.form ? (
-              <Fragment>
-                <p class="run__note">تكفي واحدة منها</p>
-                <ol class="forms">
-                  {formsOf(items).map(({ form, items: adhkar }) => (
-                    <li class="form">
-                      <h3 class="form__title">{formLabel(form!)}</h3>
-                      <ol>
-                        {adhkar.map(({ id, data, body }) => (
-                          <Dhikr data={data} body={body ?? ''} slug={slugOf(id)} heading="h4" />
-                        ))}
-                      </ol>
-                    </li>
-                  ))}
-                </ol>
-              </Fragment>
-            ) : (
-              <ol class="list">
-                {items.map(({ id, data, body }) => (
-                  <Dhikr
-                    data={data}
-                    body={body ?? ''}
-                    slug={slugOf(id)}
-                    heading={group ? 'h3' : 'h2'}
-                  />
-                ))}
-              </ol>
-            )}
-          </section>
-        ))
-      }
-    </main>
-    <nav class="related content" aria-label="بقية الأقسام">
-      <h2>بقية الأقسام</h2>
-      <ul class="grid">
-        {
-          others.map(({ id, heading, color }) => (
-            <li>
-              <OccasionCard id={id} heading={heading} color={color} count={counts[id]} />
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-    <Footer />
-  </div>
-</Paper>
+  {hasVariants && <WirdSwitch slot="banner" />}
+  {hasIndex && <GroupIndex groups={groups} />}
+  {runs.map(({ group, items }) => (
+    <Group title={group} entries={items} />
+  ))}
+  <Related slot="after" tiles={others} />
+</Section>

@@ -1,0 +1,21 @@
+---
+import { groupId } from '../lib/groups';
+
+interface Props {
+  groups: string[];
+}
+
+const { groups } = Astro.props;
+---
+
+<nav class="group-index" aria-label="فهرس المجموعات">
+  <ul class="group-index__list">
+    {groups.map((group) => (
+      <li>
+        <a class="group-index__link" href={`#${groupId(group)}`}>
+          {group}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

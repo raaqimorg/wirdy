@@ -1,0 +1,16 @@
+---
+import Paper from './Paper.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import type { ComponentProps } from 'astro/types';
+
+type Props = ComponentProps<typeof Paper>;
+---
+
+<Paper {...Astro.props}>
+  <SiteHeader />
+  <main class="container">
+    <slot />
+  </main>
+  <SiteFooter />
+</Paper>

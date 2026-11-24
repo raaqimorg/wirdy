@@ -6,7 +6,7 @@ This list is short on purpose. If you find unusual code that is not here, say so
 
 ## One page serves the morning and the evening
 
-The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, so the reader rarely has to switch. A switch under the title («الصباح»، «المساء») shows either form at once, without loading the page again, and the script marks the one that shows with `aria-current`. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/paper.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
+The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page shows both, so the reader rarely has to switch. A switch under the title («الصباح»، «المساء») shows either form at once, without loading the page again, and the script marks the one that shows with `aria-current`. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS leads with the form for now (`src/styles/components/variant-text.css`). Each word of that form is followed by its other form, muted and struck through, so the reader sees the other wording and the eye skips it.
 
 - The script picks the morning from 03:00 to 11:59 local time, and the evening otherwise. `?w=s` or `?w=m` in the URL overrides it. The choice is kept in `sessionStorage`, with the form that was due when it was made, so it holds from page to page and ends when the next form is due. Returning to a page with the back button shows the last choice. The switch is at noon, not at Asr, because in winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, and 13:38 in London in December). Between Dhuhr and Asr, the next set, the evening, is the right guess.
 - It is inline, not a module, so the right form leads on the first paint, with no flash.
@@ -16,7 +16,7 @@ The morning and evening forms of a dhikr differ in a few words (أصبحنا or 
 
 ## An empty touch listener turns on the press state on iPhones
 
-A card shrinks to 97% while it is pressed (`.card:active` in `src/styles/paper.css`), and every other link and button dims to 60%, so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
+A card shrinks to 97% while it is pressed (`src/styles/components/occasion-card.css`), and every other link and button dims to 60% (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
 
 - Without it, an iPhone tap gives no feedback at all, because `a` turns off the grey tap highlight (`-webkit-tap-highlight-color: transparent`).
 - The listener is `passive`, so it never delays scrolling.
@@ -24,13 +24,13 @@ A card shrinks to 97% while it is pressed (`.card:active` in `src/styles/paper.c
 
 ## A button switches between light and dark
 
-The site follows the device's light or dark mode. The moon or sun button in the top bar (`components/Tools.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
+The site follows the device's light or dark mode. The moon or sun button in the top bar (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
 
 - The ordinary way is to follow the device only, with no button and no script.
 - The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
 - The button has two states. It starts from the device's mode, and a click flips to the other one. When a click lands on the device's own mode, the script forgets the saved choice, so the site follows the device again. There is no third «automatic» state.
 - The button is named «الوضع الداكن», and its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
-- The dark colors appear twice in `src/styles/paper.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. Change both together. Each block also sets `--deepen`, which darkens the occasion colors by 12% so they do not glare at night.
+- The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 12% so they do not glare at night.
 - Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
 
 ## The `{{morning|evening}}` markers
@@ -41,7 +41,7 @@ A dhikr that changes between the morning and the evening is one file with marker
 
 The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
 
-- Consecutive سور are parted by an empty gap (`.ayat-sep`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
+- Consecutive سور are parted by an empty gap (`src/styles/components/surah.css`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
 ## A share link opens the device's share sheet
 
@@ -55,7 +55,7 @@ Each dhikr has a link to its own page, drawn as a share icon in the foot of its 
 
 ## The bar shows the page title after a scroll
 
-The bar of an occasion page repeats the heading, so the reader knows the page after the heading scrolls away. CSS fades it in with a scroll timeline (`animation-timeline: scroll(root)` in `src/styles/paper.css`), inside `@supports`. The owner asked for it.
+The bar of an occasion page repeats the heading, so the reader knows the page after the heading scrolls away. CSS fades it in with a scroll timeline (`animation-timeline: scroll(root)` in `src/styles/components/bar.css`), inside `@supports`. The owner asked for it.
 
 - The ordinary way is a title that always shows, next to the same heading. A browser without scroll timelines still does that.
 - The timeline sits in its own rule, apart from the `animation` shorthand. In one rule, the CSS minifier merges the two into a shorthand that browsers refuse. A build test checks it.

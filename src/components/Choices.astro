@@ -1,0 +1,26 @@
+---
+import Dhikr from './Dhikr.astro';
+import { formLabel } from '../lib/arabic';
+import type { AdhkarEntry } from '../lib/collection';
+import { formsOf } from '../lib/groups';
+import { slugOf } from '../lib/permalink';
+
+interface Props {
+  entries: AdhkarEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ol class="choices">
+  {formsOf(entries).map(({ form, items }) => (
+    <li class="choices__item">
+      <h3 class="choices__title">{formLabel(form!)}</h3>
+      <ol>
+        {items.map(({ id, data, body = '' }) => (
+          <Dhikr data={data} body={body} slug={slugOf(id)} heading="h4" nested />
+        ))}
+      </ol>
+    </li>
+  ))}
+</ol>

@@ -1,0 +1,22 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import ShareLink from './ShareLink.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  image: string;
+  file: string;
+}
+
+const { href, title, image, file } = Astro.props;
+---
+
+<p class="dhikr-actions">
+  <ShareLink variant="button" href={href} title={title} />
+  <Button href={image} download={file}>
+    <Icon name="save" />
+    احفظ الصورة
+  </Button>
+</p>

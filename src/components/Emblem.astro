@@ -1,16 +1,21 @@
 ---
-import { EMBLEMS } from '../lib/emblems';
-import type { EmblemName } from '../lib/emblems';
+import { EMBLEMS, type EmblemName } from '../lib/emblems';
 
 interface Props {
-  occasion: EmblemName;
+  name: EmblemName;
+  motion?: 'always' | 'wide-only' | 'still';
+  class?: string;
 }
 
-const { occasion } = Astro.props;
+const { name, motion = 'always', class: className } = Astro.props;
 ---
 
-<svg class="emblem" viewBox="0 0 240 240" aria-hidden="true">
-  {
-    EMBLEMS[occasion].map(({ tag: Tag, attrs, enter }) => <Tag {...attrs} data-enter={enter} />)
-  }
+<svg
+  class:list={['emblem', motion !== 'always' && `emblem--${motion}`, className]}
+  viewBox="0 0 240 240"
+  aria-hidden="true"
+>
+  {EMBLEMS[name].map(({ tag: Tag, attrs, enter }) => (
+    <Tag {...attrs} data-enter={enter} />
+  ))}
 </svg>

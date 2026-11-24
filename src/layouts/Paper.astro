@@ -1,12 +1,12 @@
 ---
-import naskh from "@fontsource/amiri/files/amiri-arabic-400-normal.woff2?url";
-import quran from "@fontsource/amiri-quran/files/amiri-quran-arabic-400-normal.woff2?url";
-import plex400 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url";
-import plex500 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url";
-import plex700 from "@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url";
-import "../styles/paper.css";
-
-import { SITE } from "../lib/site";
+import naskh from '@fontsource/amiri/files/amiri-arabic-400-normal.woff2?url';
+import quran from '@fontsource/amiri-quran/files/amiri-quran-arabic-400-normal.woff2?url';
+import plex400 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url';
+import plex500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url';
+import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url';
+import '../styles/index.css';
+import { PALETTE } from '../lib/palette';
+import { SITE } from '../lib/site';
 
 interface Props {
   title: string;
@@ -15,50 +15,51 @@ interface Props {
   imageSize?: [width: number, height: number];
   crumbs?: { name: string; path: string }[];
   noindex?: boolean;
-  faces?: ("naskh" | "quran")[];
+  faces?: ('naskh' | 'quran')[];
 }
 
 const {
-  title,
+  title: topic,
   description,
-  image = "/opengraph.png",
+  image = '/opengraph.png',
   imageSize: [imageWidth, imageHeight] = [2400, 1260],
   crumbs = [],
   noindex = false,
-  faces = ["naskh"],
+  faces = ['naskh'],
 } = Astro.props;
 const FACES = { naskh, quran };
 const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])];
 
 const siteName = SITE.name;
+const title = `${topic} | ${siteName}`;
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
-const siteUrl = new URL("/", Astro.site).href;
-const siteId = new URL("/#website", Astro.site).href;
+const siteUrl = new URL('/', Astro.site).href;
+const siteId = new URL('/#website', Astro.site).href;
 
 const structuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
+  '@context': 'https://schema.org',
+  '@graph': [
     {
-      "@type": "WebSite",
-      "@id": siteId,
+      '@type': 'WebSite',
+      '@id': siteId,
       url: siteUrl,
       name: siteName,
       alternateName: SITE.title,
       description: SITE.description,
-      inLanguage: "ar",
+      inLanguage: 'ar',
     },
     {
-      "@type": "WebPage",
-      "@id": pageUrl.href,
+      '@type': 'WebPage',
+      '@id': pageUrl.href,
       url: pageUrl.href,
       name: title,
       description,
-      inLanguage: "ar",
-      isPartOf: { "@id": siteId },
+      inLanguage: 'ar',
+      isPartOf: { '@id': siteId },
       primaryImageOfPage: {
-        "@type": "ImageObject",
+        '@type': 'ImageObject',
         url: ogImage.href,
         width: imageWidth,
         height: imageHeight,
@@ -67,13 +68,15 @@ const structuredData = {
     ...(crumbs.length > 0
       ? [
           {
-            "@type": "BreadcrumbList",
-            itemListElement: [{ name: siteName, path: "/" }, ...crumbs].map(({ name, path }, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name,
-              item: new URL(path, Astro.site).href,
-            })),
+            '@type': 'BreadcrumbList',
+            itemListElement: [{ name: siteName, path: '/' }, ...crumbs].map(
+              ({ name, path }, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                name,
+                item: new URL(path, Astro.site).href,
+              })
+            ),
           },
         ]
       : []),
@@ -86,18 +89,24 @@ const structuredData = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    {preloads.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+    {preloads.map((href) => (
+      <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+    ))}
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={pageUrl.href} />}
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <link rel="canonical" href={pageUrl.href} />
+    )}
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="apple-mobile-web-app-title" content={siteName} />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={SITE.paperDark} />
-    <meta name="theme-color" content={SITE.paper} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={PALETTE.paperDark} />
+    <meta name="theme-color" content={PALETTE.paper} />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={pageUrl.href} />
@@ -117,53 +126,57 @@ const structuredData = {
     <meta name="twitter:image" content={ogImage.href} />
     <meta name="twitter:image:alt" content={title} />
 
-    {!noindex && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />}
+    {!noindex && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    )}
     <script is:inline>
       (function () {
         var root = document.documentElement;
         function period() {
           var hour = new Date().getHours();
-          return hour >= 3 && hour < 12 ? "s" : "m";
+          return hour >= 3 && hour < 12 ? 's' : 'm';
         }
         function kept() {
           try {
-            var saved = sessionStorage.getItem("wird") || "";
+            var saved = sessionStorage.getItem('wird') || '';
             return saved[0] === period() ? saved[1] : null;
           } catch (error) {
             return null;
           }
         }
         function mark() {
-          var forms = document.querySelectorAll(".wird-now a");
+          var forms = document.querySelectorAll('[data-wird-form]');
           for (var i = 0; i < forms.length; i++) {
-            if (forms[i].search === `?w=${root.dataset.wird}`) forms[i].setAttribute("aria-current", "true");
-            else forms[i].removeAttribute("aria-current");
+            if (forms[i].dataset.wirdForm === root.dataset.wird)
+              forms[i].setAttribute('aria-current', 'true');
+            else forms[i].removeAttribute('aria-current');
           }
         }
         function choose(form) {
           root.dataset.wird = form;
           try {
-            sessionStorage.setItem("wird", period() + form);
+            sessionStorage.setItem('wird', period() + form);
           } catch (error) {}
           mark();
         }
         var override = location.search.match(/w=([sm])/);
         if (override) choose(override[1]);
         else root.dataset.wird = kept() || period();
-        document.addEventListener("DOMContentLoaded", mark);
-        window.addEventListener("pageshow", function (event) {
+        document.addEventListener('DOMContentLoaded', mark);
+        window.addEventListener('pageshow', function (event) {
           if (!event.persisted) return;
           root.dataset.wird = kept() || period();
           mark();
         });
-        document.addEventListener("touchstart", function () {}, { passive: true });
+        document.addEventListener('touchstart', function () {}, { passive: true });
 
         var metas = document.querySelectorAll('meta[name="theme-color"]');
         var paper = {};
-        for (var i = 0; i < metas.length; i++) paper[metas[i].media ? "dark" : "light"] = metas[i].content;
-        var device = matchMedia("(prefers-color-scheme: dark)");
+        for (var i = 0; i < metas.length; i++)
+          paper[metas[i].media ? 'dark' : 'light'] = metas[i].content;
+        var device = matchMedia('(prefers-color-scheme: dark)');
         function deviceTheme() {
-          return device.matches ? "dark" : "light";
+          return device.matches ? 'dark' : 'light';
         }
         function current() {
           return root.dataset.theme || deviceTheme();
@@ -172,52 +185,53 @@ const structuredData = {
           if (theme) root.dataset.theme = theme;
           else delete root.dataset.theme;
           for (var j = 0; j < metas.length; j++) {
-            metas[j].content = paper[theme || (metas[j].media ? "dark" : "light")];
+            metas[j].content = paper[theme || (metas[j].media ? 'dark' : 'light')];
           }
         }
         function announce() {
-          var buttons = document.querySelectorAll(".theme");
-          for (var k = 0; k < buttons.length; k++) buttons[k].setAttribute("aria-pressed", String(current() === "dark"));
+          var buttons = document.querySelectorAll('[data-theme-toggle]');
+          for (var k = 0; k < buttons.length; k++)
+            buttons[k].setAttribute('aria-pressed', String(current() === 'dark'));
         }
         try {
-          var saved = localStorage.getItem("theme");
-          if (saved === "light" || saved === "dark") apply(saved);
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') apply(saved);
         } catch (error) {}
-        document.addEventListener("DOMContentLoaded", announce);
-        device.addEventListener("change", announce);
-        document.addEventListener("click", function (event) {
-          if (!event.target.closest(".theme")) return;
-          var next = current() === "dark" ? "light" : "dark";
+        document.addEventListener('DOMContentLoaded', announce);
+        device.addEventListener('change', announce);
+        document.addEventListener('click', function (event) {
+          if (!event.target.closest('[data-theme-toggle]')) return;
+          var next = current() === 'dark' ? 'light' : 'dark';
           var follow = next === deviceTheme();
           apply(follow ? null : next);
           try {
-            if (follow) localStorage.removeItem("theme");
-            else localStorage.setItem("theme", next);
+            if (follow) localStorage.removeItem('theme');
+            else localStorage.setItem('theme', next);
           } catch (error) {}
           announce();
         });
 
-        document.addEventListener("click", function (event) {
-          var form = event.target.closest(".wird-now a");
+        document.addEventListener('click', function (event) {
+          var form = event.target.closest('[data-wird-form]');
           if (form && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
             event.preventDefault();
-            choose(form.search.slice(3));
-            if (location.search) history.replaceState(null, "", location.pathname + location.hash);
+            choose(form.dataset.wirdForm);
+            if (location.search) history.replaceState(null, '', location.pathname + location.hash);
           }
-          var share = event.target.closest("a[data-title]");
+          var share = event.target.closest('[data-share-title]');
           if (!share || event.metaKey || event.ctrlKey || event.shiftKey) return;
           var url = share.href;
           if (navigator.share) {
             event.preventDefault();
-            navigator.share({ title: share.dataset.title, url: url }).catch(function () {});
+            navigator.share({ title: share.dataset.shareTitle, url: url }).catch(function () {});
           } else if (navigator.clipboard) {
             event.preventDefault();
             navigator.clipboard.writeText(url).then(
               function () {
-                var said = share.previousElementSibling;
-                said.textContent = "نُسخ الرابط";
+                var said = share.parentElement.querySelector('[data-share-status]');
+                said.textContent = 'نُسخ الرابط';
                 setTimeout(function () {
-                  said.textContent = "";
+                  said.textContent = '';
                 }, 2500);
               },
               function () {
@@ -228,7 +242,14 @@ const structuredData = {
         });
       })();
     </script>
-    <noscript><style>.theme, .wird-now { display: none !important; }</style></noscript>
+    <noscript>
+      <style>
+        [data-theme-toggle],
+        [data-wird-switch] {
+          display: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
     <slot />

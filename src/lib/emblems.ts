@@ -1,4 +1,5 @@
 import type { Occasion } from './occasions';
+import { PALETTE } from './palette';
 
 export type Enter = 'across' | 'fade' | 'grow' | 'turn' | 'up';
 
@@ -8,7 +9,7 @@ export type Shape = {
   enter?: Enter;
 };
 
-const EGG = '#f4f1d0';
+const EGG = PALETTE.eggshell;
 const EDGE = 240;
 const CENTER = EDGE / 2;
 
@@ -17,7 +18,7 @@ const times = <T>(count: number, make: (index: number) => T): T[] =>
   Array.from({ length: count }, (_, index) => make(index));
 
 const egg = (opacity = 1) => ({ fill: EGG, ...(opacity < 1 && { 'fill-opacity': opacity }) });
-const shade = (opacity: number) => ({ fill: '#000', 'fill-opacity': opacity });
+const shade = (opacity: number) => ({ fill: PALETTE.shade, 'fill-opacity': opacity });
 const line = (color: string, width: number, opacity = 1) => ({
   fill: 'none',
   stroke: color,
@@ -98,7 +99,7 @@ const roads: Shape[] = [
     const y = Math.floor(index / 4) * 60;
     return dark('path', {
       d: `M${x} ${y + 30}A30 30 0 0 0 ${x + 30} ${y}M${x + 30} ${y + 60}A30 30 0 0 1 ${x + 60} ${y + 30}`,
-      ...line('#000', 16, 0.2),
+      ...line(PALETTE.shade, 16, 0.2),
     });
   }),
   lit('path', 'fade', {

@@ -1,0 +1,11 @@
+---
+interface Props {
+  variant?: 'plain' | 'titled' | 'single';
+}
+
+const { variant = 'plain' } = Astro.props;
+---
+
+<ol class:list={['entry-list', variant !== 'plain' && `entry-list--${variant}`]}>
+  <slot />
+</ol>

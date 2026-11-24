@@ -1,0 +1,32 @@
+.surah {
+  display: block;
+}
+
+.surah + .surah {
+  margin-top: var(--space-3);
+}
+
+.surah::before,
+.surah::after,
+.surah__ayah-end {
+  color: var(--color-ink-muted);
+}
+
+.surah::before {
+  content: "﴿";
+  content: "﴿" / "";
+}
+
+.surah::after {
+  content: "﴾";
+  content: "﴾" / "";
+}
+
+.surah__ayah-end {
+  margin: 0 0.2em;
+}
+
+.surah__ayah-end::before {
+  content: "۝";
+  content: "۝" / "";
+}

@@ -1,0 +1,26 @@
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--size-card), 100%), 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 40rem) {
+  .card-grid--featured {
+    gap: var(--space-2-5);
+  }
+
+  .card-grid--compact {
+    gap: var(--space-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .card-grid--featured > :first-child {
+    grid-column: span 2;
+  }
+}

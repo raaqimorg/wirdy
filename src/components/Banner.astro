@@ -1,0 +1,29 @@
+---
+import Emblem from './Emblem.astro';
+import type { EmblemName } from '../lib/emblems';
+
+interface Props {
+  emblem: EmblemName;
+  title: string;
+  lede?: string;
+  single?: boolean;
+}
+
+const { emblem, title, lede, single = false } = Astro.props;
+---
+
+<header
+  class:list={['banner', single && 'banner--single']}
+  style={single ? undefined : `view-transition-name: stage-${emblem}`}
+>
+  <div class="banner__inner">
+    <div>
+      <h1 class="banner__title">{title}</h1>
+      {lede && <p class="banner__lede">{lede}</p>}
+      <slot />
+    </div>
+    <div class="banner__graphic">
+      <Emblem name={emblem} />
+    </div>
+  </div>
+</header>

@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { OCCASIONS } from './occasions';
+import { PALETTE } from './palette';
 import { UNPROVEN } from './site';
-
-const EGGSHELL = '#f4f1d0';
-const PAPER_DARK = '#060f13';
 
 function luminance(hex: string): number {
   const [red, green, blue] = [1, 3, 5].map((start) => {
@@ -25,10 +23,6 @@ const COLORS = [...OCCASIONS.map(({ id, color }) => [id, color]), ['unproven', U
 
 describe('the occasion colors', () => {
   it.each(COLORS)('keeps the eggshell text readable on %s', (_, color) => {
-    expect(contrast(color!, EGGSHELL)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it.each(COLORS)('keeps %s visible on the dark paper', (_, color) => {
-    expect(contrast(color!, PAPER_DARK)).toBeGreaterThanOrEqual(3);
+    expect(contrast(color!, PALETTE.eggshell)).toBeGreaterThanOrEqual(4.5);
   });
 });

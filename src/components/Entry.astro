@@ -1,0 +1,51 @@
+---
+import Takhrij from './Takhrij.astro';
+import type { Dhikr } from '../lib/schema';
+
+interface Props {
+  takhrij: Dhikr['takhrij'];
+  id?: string;
+  title?: string;
+  heading?: 'h2' | 'h3' | 'h4';
+  lead?: string;
+  how?: string;
+  layout: 'split' | 'single';
+  nested?: boolean;
+  kind?: 'quran' | 'unproven';
+  time?: 'sabah' | 'masaa';
+}
+
+const { takhrij, id, title, heading: Heading, lead, how, layout, nested, kind, time } = Astro.props;
+---
+
+<li
+  class:list={[
+    'entry',
+    `entry--${layout}`,
+    nested && 'entry--nested',
+    kind && `entry--${kind}`,
+    time && `entry--${time}`,
+  ]}
+  id={id}
+>
+  {Heading && <Heading class="visually-hidden">{title}</Heading>}
+  <div class="entry__main">
+    {lead && (
+      <div class="entry__head">
+        <p class="entry__lead">{lead}</p>
+        <slot name="badge" />
+      </div>
+    )}
+    {how && <p class="entry__how">{how}</p>}
+    <p class="entry__text">
+      <slot />
+    </p>
+  </div>
+  <div class="entry__side">
+    <slot name="note" />
+    <div class="entry__foot">
+      <Takhrij takhrij={takhrij} />
+      <slot name="actions" />
+    </div>
+  </div>
+</li>

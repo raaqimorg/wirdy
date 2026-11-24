@@ -1,0 +1,8 @@
+.variant-text--masaa,
+:root[data-wird="m"] .variant-text--sabah {
+  display: none;
+}
+
+:root[data-wird="m"] .variant-text--masaa {
+  display: inline;
+}

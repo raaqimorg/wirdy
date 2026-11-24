@@ -1,0 +1,14 @@
+.group--titled {
+  margin-top: var(--space-10);
+}
+
+.group__title {
+  scroll-margin-top: var(--space-16);
+  font-size: var(--text-title-1);
+}
+
+.group__note {
+  color: var(--color-ink-muted);
+  font-size: var(--text-note);
+  font-weight: var(--weight-medium);
+}

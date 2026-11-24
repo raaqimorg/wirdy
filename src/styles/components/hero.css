@@ -1,0 +1,15 @@
+.hero {
+  max-width: var(--size-hero);
+  margin-block: var(--space-10);
+  font-size: var(--text-title-2);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    margin-block: var(--space-18) var(--space-14);
+    font-size: var(--text-title-3);
+  }
+}

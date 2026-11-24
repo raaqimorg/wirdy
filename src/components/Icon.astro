@@ -1,24 +1,23 @@
 ---
+import { ICONS, type IconName } from '../lib/icons';
+
 interface Props {
-  name: 'back' | 'out' | 'share' | 'save';
+  name: IconName;
+  class?: string;
 }
 
-const PATHS = {
-  back: 'M1.5 6h9M7 2.5L10.5 6 7 9.5',
-  out: 'M9.5 9.5l-7-7M2.5 8V2.5H8',
-  share: 'M6 7.5v-6M3.5 3.5L6 1l2.5 2.5M2 6.5V11h8V6.5',
-  save: 'M6 1v6M3.5 5L6 7.5 8.5 5M2 8v3h8V8',
-};
-
-const { name } = Astro.props;
+const { name, class: className } = Astro.props;
+const { size, stroke, paths, disc } = ICONS[name];
 ---
 
-<svg class="icon" viewBox="0 0 12 12" aria-hidden="true">
-  <path
-    d={PATHS[name]}
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.6"
-    stroke-linecap="round"
-    stroke-linejoin="round"></path>
+<svg
+  class:list={['icon', stroke && 'icon--line', className]}
+  viewBox={`0 0 ${size} ${size}`}
+  stroke-width={stroke}
+  aria-hidden="true"
+>
+  {disc && <circle cx={size / 2} cy={size / 2} r={disc} />}
+  {paths.map((d) => (
+    <path d={d} />
+  ))}
 </svg>

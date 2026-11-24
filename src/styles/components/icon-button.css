@@ -1,0 +1,64 @@
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: var(--size-touch);
+  height: var(--size-touch);
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-button__face {
+  --icon-size: var(--size-icon-large);
+  --mark-size: var(--size-mark-small);
+
+  display: grid;
+  place-items: center;
+  width: var(--size-face);
+  height: var(--size-face);
+  border-radius: var(--radius-round);
+}
+
+.icon-button--panel .icon-button__face {
+  color: var(--color-ink-muted);
+  background: var(--color-panel);
+}
+
+.icon-button--glass .icon-button__face {
+  background: var(--color-glass);
+}
+
+.icon-button--eggshell .icon-button__face {
+  background: var(--color-eggshell);
+}
+
+.icon-button:focus-visible {
+  outline: none;
+}
+
+.icon-button:focus-visible .icon-button__face {
+  outline: var(--border-ring) solid currentColor;
+  outline-offset: var(--ring-gap-small);
+}
+
+.icon-button:active {
+  opacity: 1;
+}
+
+.icon-button:active .icon-button__face {
+  opacity: var(--opacity-pressed);
+}
+
+@media (hover: hover) {
+  .icon-button--panel:hover .icon-button__face {
+    color: var(--color-ink);
+  }
+
+  .icon-button--glass:hover .icon-button__face {
+    background: var(--color-glass-hover);
+  }
+}

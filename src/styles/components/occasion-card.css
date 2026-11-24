@@ -1,0 +1,133 @@
+.occasion-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-panel);
+  border-radius: var(--radius-card);
+  text-decoration: none;
+  transition: transform var(--duration-release) var(--spring);
+}
+
+.occasion-card__stage {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--tone-fill);
+}
+
+.occasion-card__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-brighten);
+  opacity: 0;
+  transition: opacity var(--duration-brighten) var(--ease-out);
+}
+
+.occasion-card__emblem {
+  position: absolute;
+  inset: 7.5% 0;
+  width: 100%;
+  height: 85%;
+}
+
+.occasion-card__body {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-0-5);
+  padding: var(--space-4);
+}
+
+.occasion-card__title {
+  font-size: var(--text-title-1);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+}
+
+.occasion-card__note {
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+}
+
+.occasion-card--lead .occasion-card__stage,
+.occasion-card--row .occasion-card__stage {
+  view-transition-name: var(--stage);
+}
+
+@media (hover: hover) {
+  .occasion-card:hover .occasion-card__stage::before {
+    opacity: 0.14;
+  }
+
+  .occasion-card:hover {
+    transform: scale(1.02);
+    transition-duration: var(--duration-hover);
+  }
+}
+
+.occasion-card:active {
+  opacity: 1;
+  transform: scale(0.97);
+  transition: transform var(--duration-press) var(--ease-out);
+}
+
+@media (max-width: 40rem) {
+  .occasion-card--lead .occasion-card__stage {
+    aspect-ratio: 2 / 1;
+  }
+
+  .occasion-card--row,
+  .occasion-card--compact {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .occasion-card--row .occasion-card__stage {
+    flex: none;
+    width: min(var(--size-thumb), var(--size-thumb-fluid));
+    min-height: var(--size-thumb);
+    aspect-ratio: auto;
+  }
+
+  .occasion-card--compact .occasion-card__stage {
+    flex: none;
+    width: min(var(--size-thumb-small), var(--size-thumb-fluid));
+    min-height: var(--size-thumb-small);
+    aspect-ratio: auto;
+  }
+
+  .occasion-card--row .occasion-card__body,
+  .occasion-card--compact .occasion-card__body {
+    align-content: center;
+    padding-block: var(--space-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  .occasion-card--lead .occasion-card__stage {
+    flex: 1;
+    aspect-ratio: auto;
+  }
+
+  .occasion-card--compact .occasion-card__title {
+    font-size: var(--text-body);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .occasion-card {
+    transition: none;
+  }
+
+  .occasion-card:hover,
+  .occasion-card:active {
+    transform: none;
+  }
+
+  .occasion-card:active {
+    opacity: 0.85;
+  }
+}

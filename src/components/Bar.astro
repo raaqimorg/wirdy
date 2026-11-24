@@ -1,6 +1,8 @@
 ---
 import Icon from './Icon.astro';
+import IconButton from './IconButton.astro';
 import Mark from './Mark.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import Tools from './Tools.astro';
 import { SITE } from '../lib/site';
 
@@ -13,11 +15,19 @@ const { heading, back = { href: '/', label: 'كل الأقسام' } } = Astro.pr
 ---
 
 <nav class="bar" aria-label="التنقّل">
-  <a href={back.href}><Icon name="back" />{back.label}</a>
-  {heading && <span class="bar__title" aria-hidden="true">{heading}</span>}
-  <Tools github={false}>
-    <a class="tool" href="/" aria-label={`${SITE.name}، الرئيسية`}>
-      <span class="tool__face bar__mark"><Mark /></span>
-    </a>
+  <a class="bar__back" href={back.href}>
+    <Icon name="back" />
+    {back.label}
+  </a>
+  {heading && (
+    <span class="bar__title" aria-hidden="true">
+      {heading}
+    </span>
+  )}
+  <Tools>
+    <ThemeToggle variant="glass" />
+    <IconButton label={`${SITE.name}، الرئيسية`} variant="eggshell" href="/">
+      <Mark />
+    </IconButton>
   </Tools>
 </nav>

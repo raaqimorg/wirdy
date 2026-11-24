@@ -1,8 +1,11 @@
 ---
 import { PETALS } from '../lib/mark';
+import { PALETTE } from '../lib/palette';
 ---
 
 <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
-  {PETALS.map(({ cx, cy }) => <circle cx={cx} cy={cy} r="6.4" fill="#e0a526" />)}
-  <circle cx="32" cy="32" r="12.5" fill="#ad4c0b"></circle>
+  {PETALS.map(({ cx, cy }) => (
+    <circle cx={cx} cy={cy} r="6.4" fill={PALETTE.petal} />
+  ))}
+  <circle cx="32" cy="32" r="12.5" fill={PALETTE.disc}></circle>
 </svg>

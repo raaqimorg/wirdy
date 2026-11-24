@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+import IconButton from './IconButton.astro';
+
+interface Props {
+  variant: 'panel' | 'glass';
+}
+
+const { variant } = Astro.props;
+---
+
+<IconButton label="الوضع الداكن" variant={variant} aria-pressed="false" data-theme-toggle>
+  <Icon name="moon" class="theme-toggle__moon" />
+  <Icon name="sun" class="theme-toggle__sun" />
+</IconButton>

@@ -1,0 +1,18 @@
+.badge {
+  flex: none;
+  padding: var(--space-badge-block) var(--space-badge-inline);
+  color: var(--color-eggshell);
+  background: var(--tone-fill);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-small);
+  font-weight: var(--weight-bold);
+}
+
+.badge--count {
+  min-width: var(--size-touch);
+  padding-inline: var(--space-badge-inline-count);
+  font-family: var(--font-ui);
+  font-size: var(--text-note);
+  line-height: var(--leading-snug);
+  text-align: center;
+}
