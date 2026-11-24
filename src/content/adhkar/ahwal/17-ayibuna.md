@@ -1,0 +1,15 @@
+---
+occasion: "ahwal"
+order: 17
+count: 1
+mode: "both"
+quran: false
+when: "إذا رجع من سفره، قال ما سبق وزاد"
+group: "السفر"
+takhrij:
+  grader: "مسلم"
+  source: "صحيح مسلم ١٣٤٢"
+  ruling: "صحيح"
+  url: "https://dorar.net/h/B0GBrjAg"
+---
+آيِبُونَ تَائِبُونَ عَابِدُونَ، لِرَبِّنَا حَامِدُونَ

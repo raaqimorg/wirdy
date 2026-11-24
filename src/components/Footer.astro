@@ -1,10 +1,12 @@
 ---
-import { SITE } from '../lib/site';
+import { SITE, UNPROVEN } from '../lib/site';
 ---
 
 <footer class="page-footer">
   <p>
-    لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه. الأحكام من{' '}<a
+    لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه، والمشهور الذي لم يثبت في صفحة{' '}<a
+      href={UNPROVEN.path}>{UNPROVEN.heading}</a
+    >. الأحكام من{' '}<a
       href="https://dorar.net/hadith"
       rel="noopener">الموسوعة الحديثية</a
     >{' '}في الدرر السنية، والآيات برواية حفص عن عاصم من{' '}<a href="https://tanzil.net/" rel="noopener"

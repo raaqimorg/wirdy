@@ -61,6 +61,7 @@ const classes = [
     }
   </div>
   <p class="dhikr__text">{suwar ? suwar.map((ayat, i) => <Fragment>{i > 0 && <span class="ayat-sep" />}<span class="ayat">{ayat.map((ayah, j) => <Fragment>{ayah}{j < ayat.length - 1 && <span class="ayah-end" />}</Fragment>)}</span></Fragment>) : <VariantText text={text} />}</p>
+  {data.fadl && <p class="item__fadl">{data.fadl}</p>}
   <a class="source" href={data.takhrij.url} rel="noopener">
     <span class="source__label">التخريج</span>
     <span class="source__value">{sourceLine}</span>

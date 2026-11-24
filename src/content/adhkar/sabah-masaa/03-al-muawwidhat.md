@@ -5,11 +5,12 @@ count: 3
 mode: "both"
 quran: true
 ayat: "first"
+fadl: "تكفيك من كل شيء"
 takhrij:
   grader: "الألباني"
   source: "صحيح أبي داود ٥٠٨٢"
   ruling: "حسن"
-  url: "https://dorar.net/hadith/sharh/28804"
+  url: "https://dorar.net/h/xgBR2fIt"
 ---
 قُلْ هُوَ ٱللَّهُ أَحَدٌ
 ٱللَّهُ ٱلصَّمَدُ

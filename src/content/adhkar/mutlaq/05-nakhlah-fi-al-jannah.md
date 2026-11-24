@@ -4,6 +4,7 @@ order: 5
 count: 1
 mode: "both"
 quran: false
+fadl: "غُرست له نخلة في الجنة"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٤٦٥"

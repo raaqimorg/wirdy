@@ -53,7 +53,24 @@ const PRAYERS = [
   { x: 14, top: 128, opacity: 0.35 },
 ];
 
-export const EMBLEMS: Record<Occasion, Shape[]> = {
+export type EmblemName = Occasion | 'unproven';
+
+export const EMBLEMS: Record<EmblemName, Shape[]> = {
+  unproven: [
+    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
+    shape('rect', { x: 80, y: 186, width: 80, height: 12, rx: 6, ...egg() }, 0.5, 'across'),
+    shape('rect', { x: 113, y: 64, width: 14, height: 124, ...egg() }, 1, 'up'),
+    shape('circle', { cx: 120, cy: 58, r: 10, ...egg() }, 1.5),
+    shape('path', { d: 'M44 104L196 80', ...stroke(8) }, 2, 'across'),
+    shape('path', { d: 'M44 104L24 140M44 104L64 140', ...stroke(3), 'stroke-opacity': 0.7 }, 2.5),
+    shape(
+      'path',
+      { d: 'M196 80L176 116M196 80L216 116', ...stroke(3), 'stroke-opacity': 0.7 },
+      2.5
+    ),
+    shape('path', { d: 'M20 140h48a24 24 0 0 1-48 0z', ...egg() }, 3, 'rise'),
+    shape('path', { d: 'M172 116h48a24 24 0 0 1-48 0z', ...egg(0.45) }, 3, 'rise'),
+  ],
   'sabah-masaa': [
     shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
     shape('rect', { x: 16, y: 128, width: 208, height: 6, ...egg() }, 0.5, 'across'),
@@ -61,6 +78,15 @@ export const EMBLEMS: Record<Occasion, Shape[]> = {
     shape('rect', { x: 48, y: 150, width: 144, height: 6, ...egg(0.5) }, 2, 'across'),
     shape('rect', { x: 72, y: 168, width: 96, height: 6, ...egg(0.35) }, 2.5, 'across'),
     shape('rect', { x: 96, y: 186, width: 48, height: 6, ...egg(0.2) }, 3, 'across'),
+  ],
+  masjid: [
+    shape('circle', { cx: 120, cy: 120, r: 112, ...shade(0.1) }, 0),
+    shape('rect', { x: 28, y: 200, width: 184, height: 8, ...shade(0.22) }, 0, 'across'),
+    shape('rect', { x: 44, y: 136, width: 128, height: 64, ...egg() }, 1, 'up'),
+    shape('path', { d: 'M52 136a56 56 0 0 1 112 0z', ...egg() }, 1.5, 'rise'),
+    shape('path', { d: 'M96 200v-28a12 12 0 0 1 24 0v28z', ...shade(0.35) }, 2.5, 'up'),
+    shape('rect', { x: 184, y: 72, width: 20, height: 128, ...egg(0.8) }, 2, 'up'),
+    shape('path', { d: 'M184 72l10-28 10 28z', ...egg(0.8) }, 3, 'rise'),
   ],
   salah: [
     shape('rect', { x: 8, y: 204, width: 224, height: 10, ...shade(0.22) }, 0, 'across'),

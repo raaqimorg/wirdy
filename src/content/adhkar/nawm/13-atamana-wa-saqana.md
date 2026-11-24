@@ -1,0 +1,14 @@
+---
+occasion: "nawm"
+order: 13
+count: 1
+mode: "both"
+quran: false
+when: "إذا أوى إلى فراشه"
+takhrij:
+  grader: "مسلم"
+  source: "صحيح مسلم ٢٧١٥"
+  ruling: "صحيح"
+  url: "https://dorar.net/h/spXxAcD2"
+---
+الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُؤْوِيَ

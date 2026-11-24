@@ -4,6 +4,7 @@ order: 8
 count: 1
 mode: "both"
 quran: false
+fadl: "كنز من كنوز الجنة"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٣٨٤"

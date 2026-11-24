@@ -53,7 +53,7 @@ body{background:${SITE.paper};color:hsl(200 50% 5%);display:flex;flex-direction:
 .name{font-size:200px;font-weight:700;line-height:1.1}
 .hero{margin-top:56px;font-size:84px;line-height:1.5;white-space:nowrap}
 .salla{font-family:"Amiri",serif}
-.tiles{margin-top:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:36px}
+.tiles{margin-top:auto;display:grid;grid-template-columns:repeat(${OCCASIONS.length},1fr);gap:36px}
 .tile{aspect-ratio:1;border-radius:26px;display:grid;place-items:center;padding:44px}
 .tile svg{height:100%}
 .domain{top:${MARGIN + 70}px;color:hsl(200 40% 22%)}

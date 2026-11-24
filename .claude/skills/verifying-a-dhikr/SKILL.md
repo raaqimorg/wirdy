@@ -19,9 +19,10 @@ For each file:
 
 1. Open its `takhrij.url`. If it is a search page, find the hadith's own `/hadith/sharh/<id>` or `/h/<id>` page, and use that.
 2. Compare the body with the hadith text, phrase by phrase. Ignore differences in tashkil that dorar.net leaves out, and report every other difference.
-3. Check that the page states the `count` and the time (`mode`, `when`, the occasion). If it states none, the `count` is 1.
+3. Check that the page itself states the occasion and the time: the folder, `mode`, and `when`. A page that proves the text but not the moment is the wrong page, even when another hadith gives that moment. Find the hadith that does, and cite it. Then check the `count`. If the page states none, the `count` is 1.
 4. Check the grade: the book is al-Bukhari or Muslim, or the scholar is al-Albani and the ruling is صحيح or حسن. Copy the book, the number, and the ruling into `takhrij`.
 5. Search dorar.net for the hadith's first words. If another major grader weakens it, or al-Albani has a second ruling, record it in `note`, with its source.
+6. Where the wording differs between narrations, or the takhrij is an al-Albani book rather than the primary collection, check the wording in the books themselves on [Turath](https://app.turath.io) or [al-Maktaba al-Shamela](https://shamela.ws). Open their search pages in the same browser tab. Turath's page never finishes loading, so read it with a script (`document.body.innerText`) after a few seconds.
 
 ## Report
 

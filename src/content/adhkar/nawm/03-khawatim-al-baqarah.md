@@ -5,6 +5,7 @@ count: 1
 mode: "both"
 quran: true
 when: "في الليل"
+fadl: "من قرأ بالآيتين من آخر سورة البقرة في ليلة كفتاه"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٥٠٠٩"

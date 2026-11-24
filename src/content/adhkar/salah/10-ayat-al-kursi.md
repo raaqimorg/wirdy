@@ -4,6 +4,9 @@ order: 10
 count: 1
 mode: "both"
 quran: true
+when: "دبر كل صلاة مكتوبة"
+group: "أذكار وأدعية أخرى"
+fadl: "لم يمنعه من دخول الجنة إلا أن يموت"
 takhrij:
   grader: "الألباني"
   source: "صحيح الجامع ٦٤٦٤"

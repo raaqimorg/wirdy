@@ -10,7 +10,7 @@ takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٥٠١٧"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/61481"
+  url: "https://dorar.net/h/mFKNy0y3"
 ---
 قُلْ هُوَ ٱللَّهُ أَحَدٌ
 ٱللَّهُ ٱلصَّمَدُ

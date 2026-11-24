@@ -4,6 +4,7 @@ order: 1
 count: 1
 mode: "both"
 quran: false
+fadl: "من قالها من النهار موقنًا بها فمات من يومه قبل أن يمسي، فهو من أهل الجنة"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٣٠٦"

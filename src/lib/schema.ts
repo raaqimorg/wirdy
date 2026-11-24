@@ -15,6 +15,8 @@ export const dhikrSchema = z.strictObject({
   quran: z.boolean().default(false),
   ayat: z.enum(['all', 'first']).default('all'),
   when: z.string().min(1).optional(),
+  group: z.string().min(1).optional(),
+  fadl: z.string().min(1).optional(),
   takhrij: z.strictObject({
     grader: z.enum(['البخاري', 'مسلم', 'الألباني']),
     source: z.string().min(1),
@@ -25,3 +27,17 @@ export const dhikrSchema = z.strictObject({
 });
 
 export type Dhikr = z.infer<typeof dhikrSchema>;
+
+export const unprovenSchema = z.strictObject({
+  order: z.number().int().positive(),
+  what: z.string().min(1),
+  takhrij: z.strictObject({
+    grader: z.literal('الألباني'),
+    source: z.string().min(1),
+    ruling: z.string().min(1),
+    url: dorarUrl,
+  }),
+  sound: z.string().min(1).optional(),
+});
+
+export type Unproven = z.infer<typeof unprovenSchema>;

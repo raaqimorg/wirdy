@@ -3,7 +3,7 @@ import { basename, dirname, join, relative } from 'node:path';
 import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
 import { OCCASION_IDS } from './occasions';
-import { dhikrSchema, type Dhikr } from './schema';
+import { dhikrSchema, unprovenSchema, type Dhikr } from './schema';
 import { parseVariants } from './variants';
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
@@ -122,4 +122,40 @@ it('reads every file under the adhkar folder', () => {
     path.endsWith('.md')
   );
   expect(entries.map((entry) => relative(ROOT, join(ROOT, entry.path)))).toEqual(files.toSorted());
+});
+
+const UNPROVEN = join(process.cwd(), 'src/content/unproven');
+
+const unproven = readdirSync(UNPROVEN, { encoding: 'utf8' })
+  .filter((path) => path.endsWith('.md'))
+  .toSorted()
+  .map((path) => {
+    const file = matter(readFileSync(join(UNPROVEN, path), 'utf8'));
+    return { path, raw: file.data, body: file.content };
+  });
+
+it('lists at least one dhikr that did not come in', () => {
+  expect(unproven.length).toBeGreaterThan(0);
+});
+
+describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
+  const data = unprovenSchema.parse(raw);
+
+  it('has valid frontmatter', () => {
+    expect(unprovenSchema.safeParse(raw).error?.issues).toBeUndefined();
+  });
+
+  it('starts its file name with its order', () => {
+    const order = String(data.order).padStart(2, '0');
+    expect(path).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`));
+  });
+
+  it('carries a ruling of weakness', () => {
+    expect(data.takhrij.ruling).toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ|باطل|دون/);
+  });
+
+  it('has a text on one line', () => {
+    expect(body.trim().length).toBeGreaterThan(0);
+    expect(body.trim()).not.toContain('\n');
+  });
 });

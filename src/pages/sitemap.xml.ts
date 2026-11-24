@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
 import { OCCASIONS } from '../lib/occasions';
+import { UNPROVEN } from '../lib/site';
 
 export const GET: APIRoute = ({ site }) => {
-  const paths = ['/', ...OCCASIONS.map((occasion) => `/${occasion.id}/`)];
+  const paths = ['/', ...OCCASIONS.map((occasion) => `/${occasion.id}/`), UNPROVEN.path];
   const urls = paths
     .map(
       (path) => `  <url>

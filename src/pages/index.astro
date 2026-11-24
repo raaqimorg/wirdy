@@ -4,11 +4,13 @@ import Footer from '../components/Footer.astro';
 import Mark from '../components/Mark.astro';
 import Tools from '../components/Tools.astro';
 import OccasionCard from '../components/OccasionCard.astro';
+import { getCollection } from 'astro:content';
 import { countsByOccasion } from '../lib/collection';
 import { OCCASIONS } from '../lib/occasions';
-import { SITE } from '../lib/site';
+import { SITE, UNPROVEN } from '../lib/site';
 
 const counts = await countsByOccasion();
+const unproven = (await getCollection('unproven')).length;
 const title = `أذكار اليوم والليلة | ${SITE.name}`;
 ---
 
@@ -29,6 +31,15 @@ const title = `أذكار اليوم والليلة | ${SITE.name}`;
           </li>
         ))
       }
+      <li>
+        <OccasionCard
+          id="unproven"
+          heading={UNPROVEN.heading}
+          color={UNPROVEN.color}
+          count={unproven}
+          href={UNPROVEN.path}
+        />
+      </li>
     </ul>
   </main>
   <Footer />

@@ -4,6 +4,7 @@ order: 4
 count: 1
 mode: "both"
 quran: false
+fadl: "خفيفتان على اللسان، ثقيلتان في الميزان، حبيبتان إلى الرحمن"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٤٠٦"

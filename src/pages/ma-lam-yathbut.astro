@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Paper from '../layouts/Paper.astro';
+import Emblem from '../components/Emblem.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import Mark from '../components/Mark.astro';
+import Tools from '../components/Tools.astro';
+import { adhkarLabel } from '../lib/arabic';
+import { SITE, UNPROVEN } from '../lib/site';
+
+const entries = (await getCollection('unproven')).toSorted((a, b) => a.data.order - b.data.order);
+
+const title = `${UNPROVEN.heading} | ${SITE.name}`;
+const description = `${UNPROVEN.heading}: ${adhkarLabel(entries.length)} مشهورة لم تدخل الموقع، لأن الألباني ضعّفها أو ضعّف عددها أو وقتها، ومع كل واحد حكمه من الدرر السنية.`;
+---
+
+<Paper title={title} description={description} section={UNPROVEN.heading}>
+  <div class="o-unproven" style={`--c: ${UNPROVEN.color}`}>
+    <nav class="bar" aria-label="الرجوع">
+      <a href="/"><Icon name="back" />كل الأقسام</a>
+      <Tools><span class="bar__mark"><Mark /></span></Tools>
+    </nav>
+    <header class="banner">
+      <div class="banner__in">
+        <div class="banner__text">
+          <h1>{UNPROVEN.heading}</h1>
+          <p>{UNPROVEN.lede}</p>
+        </div>
+        <div class="banner__graphic"><Emblem occasion="unproven" /></div>
+      </div>
+    </header>
+    <main class="content">
+      <ol class="list">
+        {
+          entries.map(({ data, body }) => (
+            <li class="item is-unproven">
+              <div class="item__head">
+                <span class="item__cue">{data.what}</span>
+              </div>
+              <p class="dhikr__text">{(body ?? '').trim()}</p>
+              {data.sound && <p class="item__fadl">{data.sound}</p>}
+              <a class="source" href={data.takhrij.url} rel="noopener">
+                <span class="source__label">الحكم</span>
+                <span class="source__value">
+                  {[data.takhrij.grader, data.takhrij.source, data.takhrij.ruling].join(' · ')}
+                </span>
+                <Icon name="out" />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </main>
+    <Footer />
+  </div>
+</Paper>

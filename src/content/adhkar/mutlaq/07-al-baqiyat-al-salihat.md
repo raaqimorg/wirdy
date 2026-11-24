@@ -4,6 +4,7 @@ order: 7
 count: 1
 mode: "both"
 quran: false
+fadl: "أحبّ إليّ مما طلعت عليه الشمس"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٦٩٥"

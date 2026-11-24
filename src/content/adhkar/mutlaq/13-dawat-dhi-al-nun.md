@@ -4,6 +4,7 @@ order: 13
 count: 1
 mode: "both"
 quran: false
+fadl: "لم يدعُ بها رجل مسلم في شيء قط إلا استجاب الله له"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٥٠٥"

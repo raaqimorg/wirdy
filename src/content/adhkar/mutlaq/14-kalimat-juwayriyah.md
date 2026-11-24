@@ -4,11 +4,12 @@ order: 14
 count: 3
 mode: "both"
 quran: false
+fadl: "لو وُزنت بما قلتِ منذ اليوم لوزنتهن"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٧٢٦"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/72033"
+  url: "https://dorar.net/h/DheNVFvt"
 note: "وفي رواية ثانية عند مسلم تكرار «سبحان الله» قبل كل جملة."
 ---
 سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ

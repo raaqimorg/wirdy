@@ -5,6 +5,7 @@ count: 100
 mode: "both"
 quran: false
 when: "في اليوم"
+fadl: "كانت له عدل عشر رقاب، وكانت له حرزًا من الشيطان يومه ذلك حتى يمسي"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٤٠٣"

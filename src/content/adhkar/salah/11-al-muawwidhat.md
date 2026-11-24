@@ -5,11 +5,12 @@ count: 1
 mode: "both"
 quran: true
 ayat: "first"
+group: "أذكار وأدعية أخرى"
 takhrij:
   grader: "الألباني"
   source: "صحيح أبي داود ١٥٢٣"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/83302"
+  url: "https://dorar.net/h/M9KOVbZq"
 note: "في بعض الروايات «المعوذتين» (الفلق والناس)، وفي بعضها «المعوذات»، ويدخل فيها الإخلاص عند كثير من العلماء."
 ---
 قُلْ هُوَ ٱللَّهُ أَحَدٌ

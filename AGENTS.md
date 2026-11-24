@@ -1,13 +1,14 @@
 # Wirdy Agent Guidelines
 
-This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Arabic site of the daily adhkar that are authentic from the Prophet ﷺ: a home page of six occasions, and one page for each occasion. Under each dhikr is its takhrij, linked to dorar.net. Astro builds the pages, and Cloudflare Pages serves them. There is no server, no client framework, and one small inline script.
+This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Arabic site of the daily adhkar that are authentic from the Prophet ﷺ: a home page of seven occasions, one page for each occasion, and a page of the well-known adhkar that did not come in («ما لم يثبت»). Under each dhikr is its takhrij, linked to dorar.net. Astro builds the pages, and Cloudflare Pages serves them. There is no server, no client framework, and one small inline script.
 
 ## Layout
 
-- `src/content/adhkar/<occasion>/`: one Markdown file for each dhikr. The frontmatter holds the count, the occasion, and the takhrij. The body is the text. [`docs/content.md`](docs/content.md) is the standard every file meets.
-- `src/lib/`: the content schema (`schema.ts`), the morning and evening markers and their word pairs (`variants.ts`), the occasions (`occasions.ts`), Arabic numerals and labels (`arabic.ts`), the count's ring of beads (`beads.ts`), the occasion emblems (`emblems.ts`), and the sunflower mark (`mark.ts`). Each one has a test next to it. `collection.ts` reads the collection for the pages, and the build test covers it.
+- `src/content/adhkar/<occasion>/`: one Markdown file for each dhikr. The frontmatter holds the count, the occasion, the takhrij, and optionally a `group` heading and its `fadl`. The body is the text. [`docs/content.md`](docs/content.md) is the standard every file meets.
+- `src/content/unproven/`: the well-known adhkar that stay out, each with its al-Albani ruling, shown on the «ما لم يثبت» page.
+- `src/lib/`: the content schema (`schema.ts`), the morning and evening markers and their word pairs (`variants.ts`), the occasions (`occasions.ts`), the grouping of a page into headed runs (`groups.ts`), Arabic numerals and labels (`arabic.ts`), the count's ring of beads (`beads.ts`), the occasion emblems (`emblems.ts`), and the sunflower mark (`mark.ts`). Each one has a test next to it. `collection.ts` reads the collection for the pages, and the build test covers it.
 - `src/components/`, `src/layouts/`, `src/styles/`: the pages. The design follows [Laws of UX](https://lawsofux.com/), and the footer credits it.
-- `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), the 404 page (`404.astro`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
+- `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), the «ما لم يثبت» page (`ma-lam-yathbut.astro`), the 404 page (`404.astro`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
 - `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`) or `bun run opengraph`, and do not edit them by hand.
 - `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
 - `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), and [`exceptions.md`](docs/exceptions.md).
@@ -40,7 +41,7 @@ bun run test         # the unit and content tests only
 ## Agent workflow
 
 - When the user asks for a review, use the `reviewing` skill (`.claude/skills/reviewing/SKILL.md`).
-- To check or add a dhikr, use the `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`). Use the user's browser for dorar.net, because the site can block scripted requests.
+- To check or add a dhikr, use the `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`). Use the user's browser for dorar.net, because the site can block scripted requests. Cross-check wording on Turath or al-Maktaba al-Shamela where narrations differ.
 - Commits: see [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md), "Keeping your email private". The hooks refuse any author, committer, or trailer email except the one in `wirdy.allowedEmail`. Do not add a `Co-authored-by:` trailer.
 - Run `bun run ci` before you say a change is done. Report each failure from its output.
 - Update `README.md` and `docs/` in the same change when you change what they describe.

@@ -57,11 +57,12 @@ describe('built site', () => {
     }
   });
 
-  it('opens with six cards, one for each occasion page', () => {
+  it('opens with a card for each occasion page, and one for what did not come in', () => {
     for (const id of OCCASION_IDS) {
       expect(html).toContain(`<a class="card o-${id}" href="/${id}/"`);
     }
-    expect(html.match(/class="card /g)).toHaveLength(OCCASION_IDS.length);
+    expect(html).toContain('<a class="card o-unproven" href="/ma-lam-yathbut/"');
+    expect(html.match(/class="card /g)).toHaveLength(OCCASION_IDS.length + 1);
   });
 
   it('gives each occasion its own page with one heading and a way back', () => {
@@ -303,14 +304,31 @@ describe('built site', () => {
     );
   });
 
-  it('ships a sitemap listing the home and every occasion page', () => {
+  it('ships a sitemap listing the home, every occasion page, and what did not come in', () => {
     const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
     expect(sitemap).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
     expect(sitemap).toContain('<loc>https://wirdy.site/</loc>');
     for (const id of OCCASION_IDS) {
       expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
     }
-    expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 1);
+    expect(sitemap).toContain('<loc>https://wirdy.site/ma-lam-yathbut/</loc>');
+    expect(sitemap.match(/<loc>/g)).toHaveLength(OCCASION_IDS.length + 2);
+  });
+
+  it('lists what did not come in, each with its weak ruling on dorar.net, linked from home and footer', () => {
+    const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
+    const files = readdirSync(join(process.cwd(), 'src/content/unproven')).filter((f) =>
+      f.endsWith('.md')
+    );
+    expect(page.match(/<h1>/g)).toHaveLength(1);
+    expect(page.match(/<li class="item is-unproven"/g)).toHaveLength(files.length);
+    expect(
+      page.match(/href="https:\/\/dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+"/g)
+    ).toHaveLength(files.length);
+    for (const p of [html, ...Object.values(pages), page]) {
+      const footer = p.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
+      expect(footer).toContain('href="/ma-lam-yathbut/"');
+    }
   });
 
   it('leaves out sitemap dates that would only repeat the build date', () => {
@@ -345,7 +363,7 @@ describe('built site', () => {
       const footer = page.match(/<footer class="page-footer">([\s\S]*?)<\/footer>/)![1]!;
       const text = footer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
       expect(text).toContain(
-        'لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه.'
+        'لا يدخل الموقع إلا ما في صحيحي البخاري ومسلم، أو ما صححه الألباني أو حسّنه، والمشهور الذي لم يثبت في صفحة ما لم يثبت.'
       );
       expect(footer).toContain(`href="${report.replace(/&/g, '&amp;')}"`);
     }

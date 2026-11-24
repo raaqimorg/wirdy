@@ -482,13 +482,34 @@ a:focus-visible {
 
 main.content {
   max-width: 46rem;
+  counter-reset: n;
 }
 
 .list {
   display: grid;
   gap: 2.5rem;
   margin-top: 2.5rem;
-  counter-reset: n;
+}
+
+.run--group {
+  margin-top: 3.5rem;
+}
+
+.run__title {
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--c);
+  font-size: var(--step-1);
+}
+
+.run__title + .list {
+  margin-top: 1.75rem;
+}
+
+.item__fadl {
+  margin-top: 0.75rem;
+  color: var(--ink-2);
+  font-size: var(--small);
+  line-height: 1.8;
 }
 
 .item {
@@ -722,7 +743,7 @@ main.content {
   }
 
   .related .grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .related .card__title {
