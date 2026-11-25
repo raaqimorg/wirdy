@@ -8,7 +8,7 @@ const COLORS = [...OCCASIONS.map(({ id, color }) => [id, color]), ['unproven', U
 
 describe('the occasion colors', () => {
   it.each(COLORS)('keeps the eggshell text readable on %s', (_, color) => {
-    expect(contrast(color!, PALETTE.eggshell)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(color, PALETTE.eggshell)).toBeGreaterThanOrEqual(4.5);
   });
 
   it('keeps neighbours on the list at least 100 degrees apart', () => {

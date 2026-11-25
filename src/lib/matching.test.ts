@@ -1,5 +1,8 @@
+import { Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { missingPhrases, normalize, phrasesIn, spanOf, spansOf } from './matching';
+import { missingPhrases, normalize, phrasesIn, spanOf as spanOption, spansOf } from './matching';
+
+const spanOf = (text: string, words: string) => Option.getOrUndefined(spanOption(text, words));
 
 describe('normalize', () => {
   it('drops tashkil and punctuation, and writes the wasla as a plain alif', () => {

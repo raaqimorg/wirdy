@@ -1,51 +1,64 @@
+import { Array, Data, Effect, Option } from 'effect';
+
+export type Form = 'sabah' | 'masaa';
+
 export type Segment =
-  | { type: 'text'; value: string }
-  | { type: 'variant'; sabah: string; masaa: string };
+  | { readonly type: 'text'; readonly value: string }
+  | { readonly type: 'variant'; readonly sabah: string; readonly masaa: string };
 
-const MARKER = /\{\{([^{}|]*)\|([^{}|]*)\}\}/g;
+export class MalformedMarker extends Data.TaggedError('MalformedMarker')<{
+  readonly message: string;
+}> {}
 
-export function parseVariants(input: string): Segment[] {
-  const segments: Segment[] = [];
-  let last = 0;
+const MARKER = /\{\{([^{}|]*)\|([^{}|]*)\}\}/gu;
+const STRAY = /\{\{|\}\}|\|/u;
 
-  for (const match of input.matchAll(MARKER)) {
-    const before = input.slice(last, match.index);
-    assertClean(before, input);
-    if (before) segments.push({ type: 'text', value: before });
-    segments.push({ type: 'variant', sabah: match[1]!, masaa: match[2]! });
-    last = match.index + match[0].length;
-  }
+const textSegment = (value: string, whole: string) =>
+  Option.match(Option.fromNullishOr(STRAY.exec(value)), {
+    onNone: () => Effect.succeed(value === '' ? [] : [{ type: 'text' as const, value }]),
+    onSome: ([stray]) =>
+      Effect.fail(
+        new MalformedMarker({
+          message: `Malformed variant marker: unexpected "${stray}" in ${JSON.stringify(whole)}`,
+        })
+      ),
+  });
 
-  const tail = input.slice(last);
-  assertClean(tail, input);
-  if (tail) segments.push({ type: 'text', value: tail });
+export const parseVariants = (
+  input: string
+): Effect.Effect<ReadonlyArray<Segment>, MalformedMarker> =>
+  Effect.gen(function* () {
+    const segments: Segment[] = [];
+    let last = 0;
+    for (const match of input.matchAll(MARKER)) {
+      segments.push(...(yield* textSegment(input.slice(last, match.index), input)), {
+        type: 'variant',
+        sabah: match[1] ?? '',
+        masaa: match[2] ?? '',
+      });
+      last = match.index + match[0].length;
+    }
+    segments.push(...(yield* textSegment(input.slice(last), input)));
+    return segments;
+  });
 
-  return segments;
-}
+export const formOf = (input: string, form: Form): Effect.Effect<string, MalformedMarker> =>
+  Effect.map(parseVariants(input), (segments) =>
+    segments.map((segment) => (segment.type === 'text' ? segment.value : segment[form])).join('')
+  );
 
-export function formOf(input: string, form: 'sabah' | 'masaa'): string {
-  return parseVariants(input)
-    .map((segment) => (segment.type === 'text' ? segment.value : segment[form]))
-    .join('');
-}
+export const textFormsOf = (input: string): Effect.Effect<ReadonlyArray<string>, MalformedMarker> =>
+  Effect.map(Effect.all([formOf(input, 'sabah'), formOf(input, 'masaa')]), Array.dedupe);
 
-export type Word = { word: string; alt?: string };
+export const hasVariants = (input: string): boolean => input.includes('{{');
 
-export function pairWords(now: string, other: string): Word[] {
+export type Word = { readonly word: string; readonly alt?: string };
+
+export function pairWords(now: string, other: string): ReadonlyArray<Word> {
   const mine = now.split(' ');
   const theirs = other.split(' ');
   if (mine.length !== theirs.length) return [{ word: now, alt: other }];
-  return mine.map((word, index) => {
-    const alt = theirs[index]!;
-    return alt === word ? { word } : { word, alt };
-  });
-}
-
-function assertClean(text: string, whole: string): void {
-  const stray = text.match(/\{\{|\}\}|\|/);
-  if (stray) {
-    throw new Error(
-      `Malformed variant marker: unexpected "${stray[0]}" in ${JSON.stringify(whole)}`
-    );
-  }
+  return Array.map(Array.zip(mine, theirs), ([word, alt]) =>
+    alt === word ? { word } : { word, alt }
+  );
 }

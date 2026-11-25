@@ -1,32 +1,29 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import matter from 'gray-matter';
+import { Console, Effect, FileSystem, Path } from 'effect';
 import { toArabicDigits } from '../../src/lib/arabic.ts';
 import { cardFile, cardOf, type Card } from '../../src/lib/card.ts';
 import { markSvg } from '../../src/lib/mark.ts';
 import type { Occasion } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
-import { slugOf } from '../../src/lib/permalink.ts';
 import type { Phrase } from '../../src/lib/phrases.ts';
-import { dhikrSchema } from '../../src/lib/schema.ts';
+import { readAdhkar } from '../../src/lib/records.ts';
 import { SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
+import { run } from '../run.ts';
 import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-const publicDir = join(root, 'public');
-const content = join(root, 'src', 'content', 'adhkar');
+const ENTITIES: Readonly<Record<string, string>> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
 
-const ENTITIES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
+const escape = (text: string) => text.replaceAll(/[&<>]/gu, (c) => ENTITIES[c] ?? c);
 
-const escape = (text: string) => text.replace(/[&<>]/g, (c) => ENTITIES[c]);
+const ayatOf = (blocks: Card['blocks']) =>
+  blocks
+    .map((ayat) => `<p>﴿ ${ayat.map((ayah) => escape(ayah)).join(' <i>۝</i> ')} ﴾</p>`)
+    .join('');
 
-const ayatOf = (blocks: string[][]) =>
-  blocks.map((ayat) => `<p>﴿ ${ayat.map(escape).join(' <i>۝</i> ')} ﴾</p>`).join('');
-
-const phrasesRows = (phrases: Phrase[]) =>
+const phrasesRows = (phrases: ReadonlyArray<Phrase>) =>
   phrases
     .map(
       ({ text, count }) =>
@@ -37,7 +34,7 @@ const phrasesRows = (phrases: Phrase[]) =>
 const textOf = (card: Card) => {
   if (card.quran) return ayatOf(card.blocks);
   if (card.phrases) return phrasesRows(card.phrases);
-  return `<p>${escape(card.blocks[0][0])}${card.cut ? ' …' : ''}</p>`;
+  return `<p>${escape(card.blocks[0]?.[0] ?? '')}${card.cut ? ' …' : ''}</p>`;
 };
 
 const leading = (card: Card) => {
@@ -81,9 +78,9 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 .foot .site{direction:ltr}
 .foot .source{margin-inline-start:auto;text-align:left}
 </style></head><body class="unfit">
-<div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}${card.context ? ` <span class="context">${escape(card.context)}</span>` : ''}</p></div>${card.count ? `<p class="count">${card.count}</p>` : ''}</div>
+<div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}${card.context !== null && card.context !== '' ? ` <span class="context">${escape(card.context)}</span>` : ''}</p></div>${card.count !== null && card.count !== '' ? `<p class="count">${card.count}</p>` : ''}</div>
 <div class="main">${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
-<div class="box"><div class="text">${textOf(card)}${card.evening ? `<p class="evening"><b>وفي المساء:</b> ${escape(card.evening)}</p>` : ''}</div></div></div>
+<div class="box"><div class="text">${textOf(card)}${card.evening !== null && card.evening !== '' ? `<p class="evening"><b>وفي المساء:</b> ${escape(card.evening)}</p>` : ''}</div></div></div>
 <div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="source">${escape(card.takhrij)}${card.quran ? '. النص: tanzil.net' : ''}</span></div>
 <script>
 const [band,names,title,box,text,foot]=['.top','.names','.title','.box','.text','.foot'].map((name)=>document.querySelector(name));
@@ -103,29 +100,36 @@ document.fonts.ready.then(()=>{
 });
 </script></body></html>`;
 
-const entries = readdirSync(content, { recursive: true, encoding: 'utf8' })
-  .filter((path) => path.endsWith('.md'))
-  .toSorted()
-  .map((path) => {
-    const file = matter(readFileSync(join(content, path), 'utf8'));
-    const data = dhikrSchema.parse(file.data);
-    const card = cardOf(data, file.content);
-    const slug = slugOf(path.replace(/\.md$/, ''));
-    return { card, occasion: data.occasion, file: cardFile(card, data.occasion, slug) };
-  });
+const program = Effect.gen(function* () {
+  const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
+  const publicDir = path.join(root, 'public');
 
-const wanted = new Set(entries.map(({ file }) => file));
-const ogDir = join(publicDir, 'og');
-if (existsSync(ogDir)) {
-  for (const path of readdirSync(ogDir, { recursive: true, encoding: 'utf8' })) {
-    if (path.endsWith('.png') && !wanted.has(`og/${path}`)) rmSync(join(ogDir, path));
+  const entries = yield* Effect.forEach(yield* readAdhkar, ({ id, data, body }) =>
+    Effect.map(cardOf(data, body), (card) => ({
+      card,
+      occasion: data.occasion,
+      file: cardFile(card, data.occasion, id.slice(data.occasion.length + 1)),
+    }))
+  );
+
+  const wanted = new Set(entries.map(({ file }) => file));
+  const ogDir = path.join(publicDir, 'og');
+  if (yield* fs.exists(ogDir)) {
+    for (const file of yield* fs.readDirectory(ogDir, { recursive: true })) {
+      if (file.endsWith('.png') && !wanted.has(`og/${file}`)) {
+        yield* fs.remove(path.join(ogDir, file));
+      }
+    }
   }
-}
 
-for (const { card, occasion, file } of entries) {
-  const out = join(publicDir, file);
-  if (existsSync(out)) continue;
-  mkdirSync(dirname(out), { recursive: true });
-  screenshot({ html: page(card, occasion), width: WIDTH, height: HEIGHT, scale: 2, out });
-  console.log(file);
-}
+  for (const { card, occasion, file } of entries) {
+    const out = path.join(publicDir, file);
+    if (yield* fs.exists(out)) continue;
+    yield* fs.makeDirectory(path.dirname(out), { recursive: true });
+    yield* screenshot({ html: page(card, occasion), width: WIDTH, height: HEIGHT, scale: 2, out });
+    yield* Console.log(file);
+  }
+});
+
+run(program);

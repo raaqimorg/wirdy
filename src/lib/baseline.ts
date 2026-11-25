@@ -1,35 +1,39 @@
+import { Effect, Record } from 'effect';
 import { wholeFingerprint } from './fingerprint';
 import type { Proof } from './proof';
 import type { Dhikr } from './schema';
+import type { MalformedMarker } from './variants';
 import { statusOf } from './verification';
 
-export type Entry = { id: string; data: Dhikr; body: string };
+export type Entry = { readonly id: string; readonly data: Dhikr; readonly body: string };
 
-export function baselineProblems(
-  entries: Entry[],
-  proofs: Record<string, Proof>,
-  pending: Record<string, string>
-): string[] {
-  const ids = new Set(entries.map(({ id }) => id));
+export const baselineProblems = (
+  entries: ReadonlyArray<Entry>,
+  proofs: Readonly<Record<string, Proof>>,
+  pending: Readonly<Record<string, string>>
+): Effect.Effect<ReadonlyArray<string>, MalformedMarker> =>
+  Effect.gen(function* () {
+    const ids = new Set(entries.map(({ id }) => id));
 
-  const ofDhikr = entries.flatMap(({ id, data, body }) => {
-    const { state } = statusOf(data, body, proofs[id]);
-    const listed = pending[id];
-    if (state === 'proven') {
-      return listed ? [`${id} is proven and must leave the pending list`] : [];
-    }
-    if (!listed) return [`${id} is ${state} and not pending`];
-    return listed === wholeFingerprint(data, body)
-      ? []
-      : [`${id} changed while pending and must be proven`];
+    const ofDhikr = yield* Effect.forEach(entries, ({ id, data, body }) =>
+      Effect.map(statusOf(data, body, Record.get(proofs, id)), ({ state }) => {
+        const listed = pending[id];
+        if (state === 'proven') {
+          return listed === undefined ? [] : [`${id} is proven and must leave the pending list`];
+        }
+        if (listed === undefined) return [`${id} is ${state} and not pending`];
+        return listed === wholeFingerprint(data, body)
+          ? []
+          : [`${id} changed while pending and must be proven`];
+      })
+    );
+
+    const orphanRecords = Record.keys(proofs)
+      .filter((id) => !ids.has(id))
+      .map((id) => `${id} has a record but no dhikr`);
+    const orphanPending = Record.keys(pending)
+      .filter((id) => !ids.has(id))
+      .map((id) => `${id} is pending but no dhikr`);
+
+    return [...ofDhikr.flat(), ...orphanRecords, ...orphanPending];
   });
-
-  const orphanRecords = Object.keys(proofs)
-    .filter((id) => !ids.has(id))
-    .map((id) => `${id} has a record but no dhikr`);
-  const orphanPending = Object.keys(pending)
-    .filter((id) => !ids.has(id))
-    .map((id) => `${id} is pending but no dhikr`);
-
-  return [...ofDhikr, ...orphanRecords, ...orphanPending];
-}

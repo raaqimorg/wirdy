@@ -3,7 +3,7 @@ import { PETALS } from '../lib/mark';
 import { PALETTE } from '../lib/palette';
 
 interface Props {
-  inks?: 'own' | 'stage';
+  inks?: 'own' | 'stage' | undefined;
 }
 
 const { inks = 'own' } = Astro.props;

@@ -1,5 +1,6 @@
+import { Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { fold, match, ranges, rowOf, windowOf } from './search';
+import { fold, match as matchOption, ranges, rowOf, windowOf } from './search';
 
 const words = 'رَضِيتُ بِاللَّهِ';
 
@@ -14,10 +15,12 @@ describe('fold', () => {
 
   it('writes every form of alif, and ى, ة, ؤ, and ئ, as one letter each', () => {
     expect(fold('\u0623\u0625\u0622\u0671\u0649\u0629\u0624\u0626').out).toBe(
-      '\u0627\u0627\u0627\u0627\u064a\u0647\u0648\u064a'
+      '\u0627\u0627\u0627\u0627\u064A\u0647\u0648\u064A'
     );
   });
 });
+
+const match = (...args: Parameters<typeof matchOption>) => Option.getOrNull(matchOption(...args));
 
 describe('match', () => {
   const rows = [

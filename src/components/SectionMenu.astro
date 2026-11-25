@@ -2,6 +2,7 @@
 import Emblem from './Emblem.astro';
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
+import { Effect } from 'effect';
 import { sectionTiles } from '../lib/collection';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const { heading } = Astro.props;
-const tiles = await sectionTiles();
+const tiles = await Effect.runPromise(sectionTiles);
 const here = Astro.url.pathname;
 const groups = [
   tiles.filter(({ id }) => id !== 'unproven'),

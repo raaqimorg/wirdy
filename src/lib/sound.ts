@@ -1,22 +1,28 @@
+import { Array, Option } from 'effect';
 import { OCCASIONS, type Occasion } from './occasions';
 
-export type SoundPlace = { before: string; name: string; path: string; after: string };
+export type SoundPlace = {
+  readonly before: string;
+  readonly name: string;
+  readonly path: string;
+  readonly after: string;
+};
 
-const NAMES: [name: string, occasion: Occasion][] = [
-  ...OCCASIONS.map(({ heading, id }): [string, Occasion] => [heading, id]),
+const NAMES: ReadonlyArray<readonly [name: string, occasion: Occasion]> = [
+  ...Array.map(OCCASIONS, ({ heading, id }) => [heading, id] as const),
   ['الأذكار العامة', 'mutlaq'],
 ];
 
-export function soundPlace(sound: string): SoundPlace | null {
-  for (const [name, occasion] of NAMES) {
+export function soundPlace(sound: string): Option.Option<SoundPlace> {
+  return Array.findFirst(NAMES, ([name, occasion]) => {
     const at = sound.indexOf(name);
-    if (at === -1) continue;
-    return {
-      before: sound.slice(0, at),
-      name,
-      path: `/${occasion}/`,
-      after: sound.slice(at + name.length),
-    };
-  }
-  return null;
+    return at === -1
+      ? Option.none()
+      : Option.some({
+          before: sound.slice(0, at),
+          name,
+          path: `/${occasion}/`,
+          after: sound.slice(at + name.length),
+        });
+  });
 }

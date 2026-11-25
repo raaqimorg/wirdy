@@ -1,48 +1,64 @@
-import { z } from 'zod';
+import { Effect, Schema } from 'effect';
+import type { SchemaAST } from 'effect';
 import { OCCASION_IDS } from './occasions';
 
-const dorarUrl = z
-  .url()
-  .refine((url) => /^https:\/\/dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+$/.test(url), {
-    message: 'must be a dorar.net hadith page, not a search',
-  });
+export const STRICT: SchemaAST.ParseOptions = { onExcessProperty: 'error', errors: 'all' };
 
-export const dhikrSchema = z.strictObject({
-  title: z.string().min(1),
-  context: z.string().min(1).optional(),
-  occasion: z.enum(OCCASION_IDS),
-  order: z.number().int().positive(),
-  count: z.number().int().positive(),
-  counts: z.array(z.number().int().positive()).min(2).optional(),
-  mode: z.enum(['both', 'sabah', 'masaa']).default('both'),
-  quran: z.boolean().default(false),
-  ayat: z.enum(['all', 'first', 'fold']).default('all'),
-  when: z.string().min(1).optional(),
-  how: z.string().min(1).optional(),
-  group: z.string().min(1).optional(),
-  form: z.number().int().min(1).max(4).optional(),
-  fadl: z.string().min(1).optional(),
-  takhrij: z.strictObject({
-    grader: z.enum(['البخاري', 'مسلم', 'الألباني']),
-    source: z.string().min(1),
-    ruling: z.string().min(1),
+const DORAR = /^https:\/\/dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+$/u;
+
+const text = Schema.NonEmptyString;
+const positive = Schema.Int.check(Schema.isGreaterThan(0));
+
+const dorarUrl = Schema.String.check(
+  Schema.isPattern(DORAR, { message: 'must be a dorar.net hadith page, not a search' })
+);
+
+const withDefault = <const L extends string | boolean>(literals: Schema.Codec<L>, value: L) =>
+  literals.pipe(Schema.withDecodingDefaultKey(Effect.succeed(value)));
+
+export const MODES = ['both', 'sabah', 'masaa'] as const;
+export const FORMS = [1, 2, 3, 4] as const;
+
+export const dhikrSchema = Schema.Struct({
+  title: text,
+  context: Schema.optionalKey(text),
+  occasion: Schema.Literals(OCCASION_IDS),
+  order: positive,
+  count: positive,
+  counts: Schema.optionalKey(Schema.Array(positive).check(Schema.isMinLength(2))),
+  mode: withDefault(Schema.Literals(MODES), 'both'),
+  quran: withDefault(Schema.Boolean, false),
+  ayat: withDefault(Schema.Literals(['all', 'first', 'fold']), 'all'),
+  when: Schema.optionalKey(text),
+  how: Schema.optionalKey(text),
+  group: Schema.optionalKey(text),
+  form: Schema.optionalKey(Schema.Literals(FORMS)),
+  fadl: Schema.optionalKey(text),
+  takhrij: Schema.Struct({
+    grader: Schema.Literals(['البخاري', 'مسلم', 'الألباني']),
+    source: text,
+    ruling: text,
     url: dorarUrl,
   }),
-  note: z.string().min(1).optional(),
+  note: Schema.optionalKey(text),
 });
 
-export type Dhikr = z.infer<typeof dhikrSchema>;
+export type Dhikr = typeof dhikrSchema.Type;
+export type Mode = Dhikr['mode'];
+export type Takhrij = Dhikr['takhrij'];
 
-export const unprovenSchema = z.strictObject({
-  order: z.number().int().positive(),
-  what: z.string().min(1),
-  takhrij: z.strictObject({
-    grader: z.literal('الألباني'),
-    source: z.string().min(1),
-    ruling: z.string().min(1),
+export const unprovenSchema = Schema.Struct({
+  order: positive,
+  what: text,
+  takhrij: Schema.Struct({
+    grader: Schema.Literal('الألباني'),
+    source: text,
+    ruling: text,
     url: dorarUrl,
   }),
-  sound: z.string().min(1).optional(),
+  sound: Schema.optionalKey(text),
 });
 
-export type Unproven = z.infer<typeof unprovenSchema>;
+export type Unproven = typeof unprovenSchema.Type;
+
+export const decodeDhikr = Schema.decodeUnknownEffect(dhikrSchema, STRICT);

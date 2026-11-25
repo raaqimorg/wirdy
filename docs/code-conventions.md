@@ -6,7 +6,7 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 
 - Astro components render. Logic that can be a plain function goes in `src/lib/`, with a test next to it.
 - Validate content once, at the schema (`src/lib/schema.ts`). After that, trust the types.
-- A build-time error is better than a wrong page. If content is malformed, throw during the build, as `parseVariants` does.
+- A build-time error is better than a wrong page. If content is malformed, fail with a tagged error, as `parseVariants` does. The page runs the Effect, so the build stops.
 - Prefer CSS to JavaScript. Each page has one inline script (see [`exceptions.md`](exceptions.md)), and it must stay small enough to read at a glance. Search has one module script, `src/scripts/search.ts`, which imports `src/lib/search.ts` (see [`exceptions.md`](exceptions.md)).
 - No page makes a third-party request. Fonts come from `@fontsource` (Amiri, Amiri Quran, and IBM Plex Sans Arabic), and Astro bundles them. `src/styles/fonts.css` declares them, as WOFF2 only.
 - Nothing moves while a page loads, except the animations below. `src/layouts/Paper.astro` preloads the faces that a page uses (`faces`), and the browser keeps them for a year, so they are ready before the first paint. On a first visit the text shows at once in the device's face, and the site's face replaces it when it arrives.
@@ -14,13 +14,23 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 
 ## TypeScript
 
-`tsconfig.json` extends Astro's strict config, and oxlint refuses `any`.
+`tsconfig.json` extends Astro's `strictest` config, and adds `noPropertyAccessFromIndexSignature`, `noUncheckedSideEffectImports`, and `erasableSyntaxOnly`. Its plugin is the Effect language service, which an editor runs. `bun run lint` runs oxlint with type information (`--type-aware`), with the `pedantic` category and the type-aware rules on (`no-floating-promises`, `strict-boolean-expressions`, `switch-exhaustiveness-check`, `no-unsafe-*`, and others). Four rules are off, each for a reason:
+
+- `prefer-readonly-parameter-types`: the DOM, Astro, and Effect types are not deeply readonly, so no parameter of theirs could pass.
+- `consistent-return`: Effect asks for `return yield*` on a branch that fails, and this rule refuses it.
+- `import/max-dependencies`: a page imports one module for each concern, and a count says nothing about that.
+- In tests only, `no-conditional-in-test` and the `no-unsafe-*` rules: a test reads raw `JSON.parse` output and loops over the content.
 
 - Use `type`, not `interface`. An Astro component's `interface Props` is the one exception, because Astro reads it.
 - Do not use `enum`. Use an `as const` array and the union derived from it, as `OCCASIONS` and `Occasion` do in `src/lib/occasions.ts`.
 - Use a discriminated union for a value that has kinds: a source is `present` or `absent` (`src/lib/proof.ts`).
-- Check outside data with a zod schema where it enters: a content file (`schema.ts`), a proof (`proof.ts`). Trust the type after that.
-- Prefer a check that narrows to a cast. Keep a cast for the DOM, where the element is known.
+- Check outside data with an Effect `Schema` where it enters: a content file (`schema.ts`), a proof (`proof.ts`), a capture (`capture.ts`), the search index (`search.ts`), and the arguments of a script. Trust the type after that.
+- Write the code with Effect (see [`exceptions.md`](exceptions.md#the-code-is-written-with-effect)). A function that can fail returns an `Effect` with a `Data.TaggedError`, and never throws. A value that can be absent is an `Option`, not `null` or `undefined`. A function that cannot fail and has nothing absent stays a plain function.
+- Read and write files with the `FileSystem` and `Path` services, run a process with `ChildProcess`, and print with `Console`. A script ends with `run(program)` from `scripts/run.ts`, which provides the Node services.
+- Run an Effect only at the edge: an Astro page or component (`Effect.runSync`, `Effect.runPromise`), a `<script>`, a script's `run`, or a test.
+- Keep a value that is saved or hashed in its JSON shape (`Card`, `SearchRow`, a proof). Its fingerprint must not change when the code changes.
+- Prefer `Array.get`, `Array.head`, and `Option` to an index with `!`. Do not use the non-null assertion outside tests.
+- Prefer a check that narrows to a cast. In the DOM, check an element with `instanceof`, as `element` in `src/scripts/search.ts` does.
 - Import a type with `import type`, and a Node module with `node:`.
 - Use named exports. A default export is only for a file a tool reads, such as `astro.config.ts`.
 

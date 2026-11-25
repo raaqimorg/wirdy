@@ -5,17 +5,17 @@ import { takhrijLine } from '../lib/takhrij';
 
 interface Props {
   takhrij: Dhikr['takhrij'];
-  id?: string;
-  title?: string;
-  heading?: 'h2' | 'h3' | 'h4';
-  lead?: string;
-  how?: string;
-  fadl?: string;
-  sound?: boolean;
+  id?: string | undefined;
+  title?: string | undefined;
+  heading?: 'h2' | 'h3' | 'h4' | undefined;
+  lead?: string | undefined;
+  how?: string | undefined;
+  fadl?: string | undefined;
+  sound?: boolean | undefined;
   layout: 'split' | 'single';
-  nested?: boolean;
-  kind?: 'quran' | 'unproven';
-  time?: 'sabah' | 'masaa';
+  nested?: boolean | undefined;
+  kind?: 'quran' | 'unproven' | undefined;
+  time?: 'sabah' | 'masaa' | undefined;
 }
 
 const {

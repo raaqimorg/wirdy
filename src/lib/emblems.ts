@@ -1,12 +1,13 @@
+import { Array as Arr, Option } from 'effect';
 import type { Occasion } from './occasions';
 import { PALETTE } from './palette';
 
 export type Enter = 'across' | 'fade' | 'grow' | 'turn' | 'up';
 
 export type Shape = {
-  tag: 'circle' | 'path' | 'rect';
-  attrs: Record<string, string | number>;
-  enter?: Enter;
+  readonly tag: 'circle' | 'path' | 'rect';
+  readonly attrs: Readonly<Record<string, string | number>>;
+  readonly enter?: Enter;
 };
 
 const EGG = PALETTE.eggshell;
@@ -14,7 +15,7 @@ const EDGE = 240;
 const CENTER = EDGE / 2;
 
 const round = (value: number) => Math.round(value * 10) / 10;
-const times = <T>(count: number, make: (index: number) => T): T[] =>
+const times = <T>(count: number, make: (index: number) => T): ReadonlyArray<T> =>
   Array.from({ length: count }, (_, index) => make(index));
 
 const egg = (opacity = 1) => ({ fill: EGG, ...(opacity < 1 && { 'fill-opacity': opacity }) });
@@ -33,12 +34,12 @@ const lit = (tag: Shape['tag'], enter: Enter, attrs: Shape['attrs']): Shape => (
   enter,
 });
 
-const halves: Shape[] = [
+const halves: ReadonlyArray<Shape> = [
   dark('path', { d: 'M0 122A96 96 0 0 0 192 122Z', ...shade(0.24) }),
   lit('path', 'up', { d: 'M48 118A96 96 0 0 1 240 118Z', ...egg() }),
 ];
 
-const arches: Shape[] = [
+const arches: ReadonlyArray<Shape> = [
   ...times(5, (index) => {
     const radius = CENTER - index * 20;
     const spring = round(CENTER + index * 14.4);
@@ -50,7 +51,7 @@ const arches: Shape[] = [
   lit('path', 'up', { d: 'M100 240V194A20 20 0 0 1 140 194V240Z', ...egg() }),
 ];
 
-const mat: Shape[] = [
+const mat: ReadonlyArray<Shape> = [
   dark('rect', { x: 56, y: 12, width: 128, height: 216, rx: 4, ...shade(0.16) }),
   dark('rect', { x: 72, y: 28, width: 96, height: 184, rx: 2, ...line(PALETTE.shade, 6, 0.2) }),
   ...times(4, (index) =>
@@ -59,13 +60,15 @@ const mat: Shape[] = [
   lit('path', 'up', { d: 'M88 116V84A32 32 0 0 1 152 84V116Z', ...egg() }),
 ];
 
-const THIRDS = [0.14, 0.24, 0.36];
+const THIRDS = [0.14, 0.24, 0.36] as const;
+const thirdOf = (index: number): number =>
+  Option.getOrElse(Arr.get(THIRDS, Math.floor(index / 33)), () => THIRDS[2]);
 
-const hundred: Shape[] = times(100, (index) => {
+const hundred: ReadonlyArray<Shape> = times(100, (index) => {
   const place = { cx: 228 - (index % 10) * 24, cy: 12 + Math.floor(index / 10) * 24, r: 10 };
   return index === 99
     ? lit('circle', 'grow', { ...place, ...egg() })
-    : dark('circle', { ...place, ...shade(THIRDS[Math.floor(index / 33)]!) });
+    : dark('circle', { ...place, ...shade(thirdOf(index)) });
 });
 
 const STARS = [
@@ -80,7 +83,7 @@ const STARS = [
   [64, 84, 2.5],
 ] as const;
 
-const sky: Shape[] = [
+const sky: ReadonlyArray<Shape> = [
   dark('path', { d: 'M0 240V208Q120 176 240 208V240Z', ...shade(0.24) }),
   ...STARS.map(([cx, cy, r]) => dark('circle', { cx, cy, r, ...egg(0.55) })),
   lit('path', 'turn', {
@@ -101,7 +104,7 @@ const ray = (index: number): string => {
   return `M${point(60)}L${point(length)}`;
 };
 
-const light: Shape[] = [
+const light: ReadonlyArray<Shape> = [
   ...times(9, (index) =>
     dark('path', {
       d: ray(index),
@@ -112,14 +115,14 @@ const light: Shape[] = [
   lit('path', 'up', { d: 'M76 240A44 44 0 0 1 164 240Z', ...egg() }),
 ];
 
-const unbroken: Shape[] = [
+const unbroken: ReadonlyArray<Shape> = [
   lit('path', 'fade', {
     d: 'M10 10H230V230H10V58H182V182H58V106H134V134H106',
     ...line(EGG, 20),
   }),
 ];
 
-const roads: Shape[] = [
+const roads: ReadonlyArray<Shape> = [
   ...times(16, (index) => {
     const x = (index % 4) * 60;
     const y = Math.floor(index / 4) * 60;
@@ -134,7 +137,7 @@ const roads: Shape[] = [
   }),
 ];
 
-const NARRATORS = [20, 86.7, 153.3, 220];
+const NARRATORS = [20, 86.7, 153.3, 220] as const;
 
 const disc = (x: number, y: number): string =>
   `M${round(x - 20)} ${y}A20 20 0 0 1 ${round(x + 20)} ${y}A20 20 0 0 1 ${round(x - 20)} ${y}Z`;
@@ -142,7 +145,7 @@ const disc = (x: number, y: number): string =>
 const chain = (y: number): string =>
   [`M20 ${y - 4}H220V${y + 4}H20Z`, ...NARRATORS.map((x) => disc(x, y))].join('');
 
-const chains: Shape[] = [
+const chains: ReadonlyArray<Shape> = [
   ...[30, 90, 210].map((y) => dark('path', { d: chain(y), ...shade(0.22) })),
   lit('rect', 'across', { x: 20, y: 146, width: 46, height: 8, ...egg() }),
   lit('rect', 'across', { x: 153, y: 146, width: 67, height: 8, ...egg() }),
@@ -151,7 +154,7 @@ const chains: Shape[] = [
 
 export type EmblemName = Occasion | 'unproven';
 
-export const EMBLEMS: Record<EmblemName, Shape[]> = {
+export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   'sabah-masaa': halves,
   masjid: arches,
   'fi-al-salah': mat,

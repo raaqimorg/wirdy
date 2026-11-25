@@ -3,7 +3,7 @@ import CardGrid from './CardGrid.astro';
 import type { Tile } from '../lib/collection';
 
 interface Props {
-  tiles: Tile[];
+  tiles: ReadonlyArray<Tile>;
 }
 
 const { tiles } = Astro.props;

@@ -1,26 +1,25 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { proofSchema, type Proof } from '../../src/lib/proof.ts';
-import { RECORDS } from '../../src/lib/records.ts';
+import { Console, Effect, Schema } from 'effect';
+import { argumentsOf, run, today, UsageError } from '../run.ts';
+import { readProof, writeProof } from './record.ts';
 
-const [id, site, ...searches] = process.argv.slice(2);
+const program = Effect.gen(function* () {
+  const [id, site, ...searches] = yield* argumentsOf(
+    Schema.TupleWithRest(Schema.Tuple([Schema.String, Schema.Literals(['hdith', 'sunnah'])]), [
+      Schema.String,
+    ]).check(Schema.isMinLength(4)),
+    'bun run verification:absent <id> <hdith or sunnah> "<search>" "<search>"'
+  );
+  const proof = yield* readProof(id);
+  const absent = { state: 'absent', site, date: yield* today, searches };
+  const held = proof.sources.findIndex((source) => source.site === site);
+  if (proof.sources[held]?.state === 'present') {
+    return yield* new UsageError({ message: `${id} has a page of ${site}` });
+  }
+  const sources: unknown[] = [...proof.sources];
+  sources[held === -1 ? sources.length : held] = absent;
 
-if (searches.length < 2) {
-  console.error('usage: bun run verification:absent <id> <hdith or sunnah> "<search>" "<search>"');
-  process.exit(1);
-}
+  yield* writeProof(id, { ...proof, sources });
+  yield* Console.log(`${id}: ${site} does not have it`);
+});
 
-const path = join(RECORDS, `${id}.json`);
-const proof: Proof = JSON.parse(readFileSync(path, 'utf8'));
-const date = new Date().toISOString().slice(0, 10);
-const absent = { state: 'absent', site, date, searches };
-const held = proof.sources.findIndex((source) => source.site === site);
-if (held !== -1 && proof.sources[held].state === 'present') {
-  console.error(`${id} has a page of ${site}`);
-  process.exit(1);
-}
-const sources: unknown[] = [...proof.sources];
-sources[held === -1 ? sources.length : held] = absent;
-
-writeFileSync(path, `${JSON.stringify(proofSchema.parse({ ...proof, sources }), null, 2)}\n`);
-console.log(`${id}: ${site} does not have it`);
+run(program);

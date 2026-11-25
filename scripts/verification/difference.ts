@@ -1,32 +1,35 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { Console, Effect, Option, Schema } from 'effect';
 import { normalize, spanOf } from '../../src/lib/matching.ts';
-import { proofSchema, type Proof } from '../../src/lib/proof.ts';
-import { RECORDS } from '../../src/lib/records.ts';
+import { argumentsOf, run, UsageError } from '../run.ts';
+import { readProof, writeProof } from './record.ts';
 
-const [id, site, phrase, reason, at, words] = process.argv.slice(2);
-
-if (!words) {
-  console.error(
-    'usage: bun run verification:difference <id> <site> "<phrase>" <reason> <source> "<words in the source>"'
+const program = Effect.gen(function* () {
+  const [id, site, phrase, reason, at, words] = yield* argumentsOf(
+    Schema.Tuple([
+      Schema.String,
+      Schema.String,
+      Schema.String,
+      Schema.String,
+      Schema.NumberFromString,
+      Schema.String,
+    ]),
+    'bun run verification:difference <id> <site> "<phrase>" <reason> <source> "<words in the source>"'
   );
-  process.exit(1);
-}
 
-const path = join(RECORDS, `${id}.json`);
-const proof: Proof = JSON.parse(readFileSync(path, 'utf8'));
-const source = Number(at);
-const page = proof.sources[source];
-const text = page?.state === 'present' ? spanOf(page.text, words) : undefined;
-if (text === undefined) {
-  console.error(`source ${source} does not have these words`);
-  process.exit(1);
-}
+  const proof = yield* readProof(id);
+  const page = proof.sources[at];
+  const text = page?.state === 'present' ? spanOf(page.text, words) : Option.none();
+  if (Option.isNone(text)) {
+    return yield* new UsageError({ message: `source ${String(at)} does not have these words` });
+  }
 
-const kept = proof.differences.filter(
-  (other) => other.site !== site || normalize(other.phrase) !== normalize(phrase)
-);
-const differences = [...kept, { site, phrase, reason, shown: { source, text } }];
+  const kept = proof.differences.filter(
+    (other) => other.site !== site || normalize(other.phrase) !== normalize(phrase)
+  );
+  const differences = [...kept, { site, phrase, reason, shown: { source: at, text: text.value } }];
 
-writeFileSync(path, `${JSON.stringify(proofSchema.parse({ ...proof, differences }), null, 2)}\n`);
-console.log(`${id}: ${site} differs at «${phrase}»`);
+  yield* writeProof(id, { ...proof, differences });
+  yield* Console.log(`${id}: ${site} differs at «${phrase}»`);
+});
+
+run(program);

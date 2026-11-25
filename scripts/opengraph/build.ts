@@ -1,11 +1,12 @@
-import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { Console, Effect, FileSystem } from 'effect';
 import { adhkarLabel } from '../../src/lib/arabic.ts';
 import { markSvg } from '../../src/lib/mark.ts';
-import { OCCASIONS } from '../../src/lib/occasions.ts';
+import { OCCASIONS, type Section } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import { SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
+import { run } from '../run.ts';
 import { amiri, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 2400;
@@ -15,8 +16,12 @@ const MARGIN = 132;
 const outDir = process.argv[2] ?? join(root, 'public');
 const ADHKAR = join(root, 'src', 'content', 'adhkar');
 
-const count = (id: string) =>
-  readdirSync(join(ADHKAR, id)).filter((file) => file.endsWith('.md')).length;
+const countOf = (id: string) =>
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem;
+    return (yield* fs.readDirectory(join(ADHKAR, id))).filter((file) => file.endsWith('.md'))
+      .length;
+  });
 
 const head = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
 ${plexArabic(400)}
@@ -50,7 +55,7 @@ body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-directio
 <div class="tiles">${tiles}</div>
 </body></html>`;
 
-const occasion = ({ id, heading, color }: (typeof OCCASIONS)[number]) => `${head}
+const occasion = ({ id, heading, color }: Section, count: number) => `${head}
 body{background:${color};color:${PALETTE.eggshell};display:grid;
   grid-template-columns:minmax(0,1fr) 820px;grid-template-rows:auto 1fr;column-gap:96px}
 .brand{grid-column:1/-1;display:flex;align-items:center;gap:36px}
@@ -64,17 +69,26 @@ body{background:${color};color:${PALETTE.eggshell};display:grid;
 .emblem svg{width:100%;height:100%}
 </style></head><body>
 <div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
-<div class="text"><p class="heading">${heading}</p><p class="count">${adhkarLabel(count(id))}</p></div>
+<div class="text"><p class="heading">${heading}</p><p class="count">${adhkarLabel(count)}</p></div>
 <div class="emblem">${emblemSvg(id)}</div>
 </body></html>`;
 
-const cards = [
-  { file: 'opengraph.png', html: home },
-  ...OCCASIONS.map((o) => ({ file: `opengraph-${o.id}.png`, html: occasion(o) })),
-];
+const program = Effect.gen(function* () {
+  const cards = [
+    { file: 'opengraph.png', html: home },
+    ...(yield* Effect.forEach(OCCASIONS, (section) =>
+      Effect.map(countOf(section.id), (count) => ({
+        file: `opengraph-${section.id}.png`,
+        html: occasion(section, count),
+      }))
+    )),
+  ];
 
-for (const { file, html } of cards) {
-  const out = join(outDir, file);
-  screenshot({ html, width: WIDTH, height: HEIGHT, out });
-  console.log(out);
-}
+  for (const { file, html } of cards) {
+    const out = join(outDir, file);
+    yield* screenshot({ html, width: WIDTH, height: HEIGHT, out });
+    yield* Console.log(out);
+  }
+});
+
+run(program);

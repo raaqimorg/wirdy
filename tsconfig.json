@@ -1,8 +1,13 @@
 {
-  "extends": "astro/tsconfigs/strict",
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
-    "types": ["node", "bun"]
+    "types": ["node", "bun"],
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": true,
+    "allowJs": false,
+    "plugins": [{ "name": "@effect/language-service" }]
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "graft"]
+  "exclude": ["dist", "graft", "scripts/verification/capture.js"]
 }

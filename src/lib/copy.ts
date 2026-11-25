@@ -1,36 +1,61 @@
+import { Array, Effect, Option } from 'effect';
 import { timesLabel } from './arabic';
-import { foldOf, leadOf, REST, suwarOf } from './lead';
-import { phrasesOf } from './phrases';
+import { foldOf, leadOf, REST, suwarOf, type Suwar } from './lead';
+import { phrasesOf, type PhraseCountMismatch } from './phrases';
 import type { Dhikr } from './schema';
 import { takhrijLine } from './takhrij';
-import { formOf } from './variants';
+import { formOf, hasVariants, type Form, type MalformedMarker } from './variants';
 
-export type Copy = { sabah: string; masaa: string | null };
+export type Copy = { readonly sabah: string; readonly masaa: Option.Option<string> };
 
-function shownOf(data: Dhikr, text: string): string[][] | null {
-  const suwar = suwarOf(data, text);
-  if (!suwar || data.ayat !== 'fold') return suwar;
-  return suwar.map((ayat) => foldOf(ayat).shown);
+const nonEmpty = (text: string): Option.Option<string> =>
+  text === '' ? Option.none() : Option.some(text);
+
+function shownOf(data: Dhikr, suwar: Suwar): Suwar {
+  return data.ayat === 'fold' ? Array.map(suwar, (ayat) => foldOf(ayat).shown) : suwar;
 }
 
-function wordsOf(data: Dhikr, text: string, form: 'sabah' | 'masaa'): string {
-  const suwar = shownOf(data, text);
-  if (suwar) return suwar.map((ayat) => ayat.join('\n')).join('\n\n');
-  if (data.counts) {
-    return phrasesOf(text, data.counts)
-      .map((phrase) => `${phrase.text} (${timesLabel(phrase.count)})`)
-      .join('\n');
-  }
-  return formOf(text, form);
-}
+const wordsOf = (
+  data: Dhikr,
+  text: string,
+  form: Form
+): Effect.Effect<string, MalformedMarker | PhraseCountMismatch> =>
+  Option.match(suwarOf(data, text), {
+    onSome: (suwar) =>
+      Effect.succeed(
+        shownOf(data, suwar)
+          .map((ayat) => ayat.join('\n'))
+          .join('\n\n')
+      ),
+    onNone: () =>
+      data.counts === undefined
+        ? formOf(text, form)
+        : Effect.map(phrasesOf(text, data.counts), (phrases) =>
+            phrases.map((phrase) => `${phrase.text} (${timesLabel(phrase.count)})`).join('\n')
+          ),
+  });
 
-export function copyOf(data: Dhikr, body: string): Copy {
-  const text = body.trim();
-  const count = data.count > 1 ? timesLabel(data.count) : null;
-  const suwar = suwarOf(data, text);
-  const folded = data.ayat === 'fold' && (suwar ?? []).some((ayat) => foldOf(ayat).rest.length > 0);
-  const lead = [count, leadOf(data, suwar)].filter(Boolean).join('، ');
-  const source = [lead, folded && REST, takhrijLine(data.takhrij)].filter(Boolean).join('\n');
-  const whole = (form: 'sabah' | 'masaa') => `${wordsOf(data, text, form)}\n\n${source}`;
-  return { sabah: whole('sabah'), masaa: text.includes('{{') ? whole('masaa') : null };
-}
+export const copyOf = (
+  data: Dhikr,
+  body: string
+): Effect.Effect<Copy, MalformedMarker | PhraseCountMismatch> =>
+  Effect.gen(function* () {
+    const text = body.trim();
+    const count = data.count > 1 ? Option.some(timesLabel(data.count)) : Option.none();
+    const suwar = suwarOf(data, text);
+    const folded =
+      data.ayat === 'fold' &&
+      Option.exists(suwar, (all) => all.some((ayat) => foldOf(ayat).rest.length > 0));
+    const lead = Array.getSomes([count, nonEmpty(leadOf(data, suwar))]).join('، ');
+    const source = Array.getSomes([
+      nonEmpty(lead),
+      folded ? Option.some(REST) : Option.none(),
+      Option.some(takhrijLine(data.takhrij)),
+    ]).join('\n');
+    const whole = (form: Form) =>
+      Effect.map(wordsOf(data, text, form), (words) => `${words}\n\n${source}`);
+    return {
+      sabah: yield* whole('sabah'),
+      masaa: hasVariants(text) ? Option.some(yield* whole('masaa')) : Option.none(),
+    };
+  });

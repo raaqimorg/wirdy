@@ -69,6 +69,6 @@ describe('the tone of a section', () => {
   });
 
   it('steps through the arc by the whole number nearest the golden ratio', () => {
-    expect([5, 8, 13].map(strideFor)).toEqual([2, 3, 5]);
+    expect([5, 8, 13].map((count) => strideFor(count))).toEqual([2, 3, 5]);
   });
 });

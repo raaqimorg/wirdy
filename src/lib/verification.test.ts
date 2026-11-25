@@ -1,8 +1,11 @@
+import { Effect, Option, type Types } from 'effect';
 import { describe, expect, it } from 'vitest';
 import { claimsOf, fingerprintOf } from './fingerprint';
 import type { Proof } from './proof';
 import type { Dhikr } from './schema';
 import { statusOf } from './verification';
+
+type Record = Types.DeepMutable<Proof>;
 
 type Present = Extract<Proof['sources'][number], { state: 'present' }>;
 
@@ -78,7 +81,7 @@ const pagesWith = (text: string): Proof['sources'] => [
 
 const SOURCES = pagesWith(WORDS);
 
-function proofOf(data: Dhikr, body: string, sources = SOURCES): Proof {
+function proofOf(data: Dhikr, body: string, sources = SOURCES): Record {
   const everywhere = sources.flatMap((source, index) =>
     source.state === 'present' ? [{ source: index, text: source.text }] : []
   );
@@ -88,11 +91,17 @@ function proofOf(data: Dhikr, body: string, sources = SOURCES): Proof {
       { fingerprint: fingerprintOf(claim, data, body), spans: everywhere },
     ])
   );
-  return { sources, claims, differences: [], rulings: [] };
+  return {
+    sources: sources as Record['sources'],
+    claims: claims,
+    differences: [],
+    rulings: [],
+  };
 }
 
 const valid = proofOf(dhikr, BODY);
-const status = (proof: Proof, data = dhikr, body = BODY) => statusOf(data, body, proof);
+const status = (proof: Proof, data = dhikr, body = BODY) =>
+  Effect.runSync(statusOf(data, body, Option.some(proof)));
 const withSources = (...sources: Proof['sources']) => proofOf(dhikr, BODY, sources);
 
 const countSpan = (text: string) => ({
@@ -108,7 +117,7 @@ const spanless = (proof: Proof, at: number): Proof => ({
   claims: Object.fromEntries(
     Object.entries(proof.claims).map(([claim, held]) => [
       claim,
-      { ...held!, spans: held!.spans.filter(({ source }) => source !== at) },
+      { ...held, spans: held.spans.filter(({ source }) => source !== at) },
     ])
   ),
 });
@@ -122,7 +131,10 @@ describe('statusOf', () => {
   });
 
   it('is unproven with no record', () => {
-    expect(statusOf(dhikr, BODY)).toEqual({ state: 'unproven', problems: ['has no record'] });
+    expect(Effect.runSync(statusOf(dhikr, BODY, Option.none()))).toEqual({
+      state: 'unproven',
+      problems: ['has no record'],
+    });
   });
 
   it('is changed, and names the claim, when a fingerprint expires', () => {

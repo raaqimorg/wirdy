@@ -31,7 +31,7 @@ button.addEventListener('click', () => {
     },
     { once: true }
   );
-  document.execCommand('copy');
+  document.execCommand('copy'); // oxlint-disable-line typescript/no-deprecated -- the one way to copy from a page script without a permission prompt
 });
 document.body.append(button);
 
@@ -51,16 +51,18 @@ async function read() {
         url: new URL(path, location.origin).href,
         capturedAt: new Date().toISOString().slice(0, 10),
         title: path.startsWith('/urn/')
-          ? page.querySelector('.crumbs').textContent.replaceAll(/\s+/g, ' ').trim()
+          ? page.querySelector('.crumbs').textContent.replaceAll(/\s+/gu, ' ').trim()
           : page.title,
         text: block.textContent,
       });
     } else {
       failures.push({ path, status: 'no hadith block' });
     }
-    await new Promise((resolve) => setTimeout(resolve, PAUSE));
+    await new Promise((resolve) => {
+      setTimeout(resolve, PAUSE);
+    });
   }
   button.textContent = `wirdy: ${captures.length}`;
 }
 
-read();
+await read();

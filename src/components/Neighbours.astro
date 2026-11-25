@@ -1,6 +1,6 @@
 ---
 interface Props {
-  links: { label: string; title: string; context?: string; href: string }[];
+  links: { label: string; title: string; context?: string | undefined; href: string }[];
 }
 
 const { links } = Astro.props;

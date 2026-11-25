@@ -1,35 +1,42 @@
-import { readAdhkar, readPending, readProofs } from '../../src/lib/records.ts';
+import { Console, Data, Effect, Record, Schema } from 'effect';
 import { baselineProblems } from '../../src/lib/baseline.ts';
+import { readAdhkar, readPending, readProofs } from '../../src/lib/records.ts';
 import { statusOf, type Status } from '../../src/lib/verification.ts';
+import { argumentsOf, run, UsageError } from '../run.ts';
 
-const [only] = process.argv.slice(2);
-const entries = readAdhkar();
-const proofs = readProofs();
-const pending = readPending();
+class BaselineBroken extends Data.TaggedError('BaselineBroken')<{ readonly message: string }> {}
 
-const states = entries.map(({ id, data, body }) => ({
-  id,
-  ...statusOf(data, body, proofs[id]),
-}));
+const program = Effect.gen(function* () {
+  const [only] = yield* argumentsOf(
+    Schema.Tuple([Schema.optionalKey(Schema.String)]),
+    'bun run verification [id]'
+  );
+  const entries = yield* readAdhkar;
+  const proofs = yield* readProofs;
+  const pending = yield* readPending;
 
-if (only) {
-  const found = states.find(({ id }) => id === only);
-  if (!found) {
-    console.error(`no dhikr has the id ${only}`);
-    process.exit(1);
+  const states = yield* Effect.forEach(entries, ({ id, data, body }) =>
+    Effect.map(statusOf(data, body, Record.get(proofs, id)), (status) => ({ id, ...status }))
+  );
+
+  if (only !== undefined) {
+    const found = states.find(({ id }) => id === only);
+    if (found === undefined)
+      return yield* new UsageError({ message: `no dhikr has the id ${only}` });
+    yield* Console.log([`${only}: ${found.state}`, ...found.problems].join('\n  '));
+    return;
   }
-  console.log([`${only}: ${found.state}`, ...found.problems].join('\n  '));
-} else {
-  const count = (state: Status['state']) => states.filter((dhikr) => dhikr.state === state).length;
-  console.log(
-    `${count('proven')} proven, ${count('changed')} changed, ${count('unproven')} unproven, ${Object.keys(pending).length} pending`
+
+  const count = (state: Status['state']) =>
+    String(states.filter((dhikr) => dhikr.state === state).length);
+  yield* Console.log(
+    `${count('proven')} proven, ${count('changed')} changed, ${count('unproven')} unproven, ${String(Record.size(pending))} pending`
   );
   for (const { id, state, problems } of states) {
-    if (state !== 'proven') console.log(`${id}: ${state} (${problems.join('; ')})`);
+    if (state !== 'proven') yield* Console.log(`${id}: ${state} (${problems.join('; ')})`);
   }
-  const broken = baselineProblems(entries, proofs, pending);
-  if (broken.length > 0) {
-    console.error(broken.join('\n'));
-    process.exit(1);
-  }
-}
+  const broken = yield* baselineProblems(entries, proofs, pending);
+  if (broken.length > 0) return yield* new BaselineBroken({ message: broken.join('\n') });
+});
+
+run(program);

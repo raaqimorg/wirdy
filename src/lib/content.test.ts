@@ -1,16 +1,26 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, relative } from 'node:path';
+import { Effect, Exit, Schema } from 'effect';
 import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
-import { cardFile, cardOf } from './card';
+import { cardFile, cardOf as cardEffect } from './card';
 import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
 import { dhikrPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
-import { dhikrSchema, unprovenSchema, type Dhikr } from './schema';
-import { phrasesOf } from './phrases';
+import { dhikrSchema, STRICT, unprovenSchema, type Dhikr } from './schema';
+import { phrasesOf as phrasesEffect } from './phrases';
 import { fullTitle } from './title';
-import { parseVariants } from './variants';
+import { parseVariants as variantsEffect } from './variants';
+
+const cardOf = (data: Dhikr, body: string) => Effect.runSync(cardEffect(data, body));
+const phrasesOf = (text: string, counts: ReadonlyArray<number>) =>
+  Effect.runSync(phrasesEffect(text, counts));
+const parseVariants = (text: string) => Effect.runSync(variantsEffect(text));
+const issuesOf = (schema: Schema.Decoder<unknown>, raw: unknown) => {
+  const exit = Effect.runSyncExit(Schema.decodeUnknownEffect(schema, STRICT)(raw));
+  return Exit.isSuccess(exit) ? undefined : String(exit.cause);
+};
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
 
@@ -19,7 +29,12 @@ const entries = readdirSync(ROOT, { recursive: true, encoding: 'utf8' })
   .toSorted()
   .map((path) => {
     const file = matter(readFileSync(join(ROOT, path), 'utf8'));
-    return { path, raw: file.data, body: file.content, data: dhikrSchema.parse(file.data) };
+    return {
+      path,
+      raw: file.data,
+      body: file.content,
+      data: Schema.decodeUnknownSync(dhikrSchema, STRICT)(file.data),
+    };
   });
 
 const quran = entries.filter((entry) => entry.data.quran);
@@ -50,7 +65,7 @@ describe('the group links', () => {
   });
 
   it('are lowercase Latin words joined by hyphens', () => {
-    for (const slug of Object.values(GROUP_SLUGS)) expect(slug).toMatch(/^[a-z][a-z0-9-]*$/);
+    for (const slug of Object.values(GROUP_SLUGS)) expect(slug).toMatch(/^[a-z][a-z0-9-]*$/u);
   });
 
   it('name no group that the content does not have', () => {
@@ -63,14 +78,14 @@ describe('the group links', () => {
       (group) => GROUP_SLUGS[group]
     );
     expect(new Set(slugs).size).toBe(slugs.length);
-    const adhkar = new Set(onPage.map(({ path }) => slugOf(path.replace(/\.md$/, ''))));
+    const adhkar = new Set(onPage.map(({ path }) => slugOf(path.replace(/\.md$/u, ''))));
     expect(slugs.filter((slug) => adhkar.has(slug!))).toEqual([]);
   });
 });
 
 describe.each(entries)('$path', ({ path, raw, body, data }) => {
   it('has valid frontmatter', () => {
-    expect(dhikrSchema.safeParse(raw).error?.issues).toBeUndefined();
+    expect(issuesOf(dhikrSchema, raw)).toBeUndefined();
   });
 
   it('sits in the folder of its occasion', () => {
@@ -83,7 +98,7 @@ describe.each(entries)('$path', ({ path, raw, body, data }) => {
 
   it('starts its file name with its order', () => {
     const order = String(data.order).padStart(2, '0');
-    expect(basename(path)).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`));
+    expect(basename(path)).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`, 'u'));
   });
 
   it('has a text', () => {
@@ -125,11 +140,11 @@ describe.each(oneTimeOnly)('$path, for one time only', ({ body }) => {
 
 describe.each(albani)('$path, graded by al-Albani', ({ data }) => {
   it('carries a ruling of صحيح or حسن', () => {
-    expect(data.takhrij.ruling).toMatch(/صحيح|حسن/);
+    expect(data.takhrij.ruling).toMatch(/صحيح|حسن/u);
   });
 
   it('carries no ruling of weakness', () => {
-    expect(data.takhrij.ruling).not.toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ/);
+    expect(data.takhrij.ruling).not.toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ/u);
   });
 });
 
@@ -155,7 +170,7 @@ describe('the alternative forms', () => {
   });
 
   it('sit under a group heading', () => {
-    expect(forms.filter(({ data }) => !data.group)).toEqual([]);
+    expect(forms.filter(({ data }) => data.group === undefined || data.group === '')).toEqual([]);
   });
 });
 
@@ -165,13 +180,13 @@ describe.each(quran)('$path, as قرآن', ({ body }) => {
   });
 
   it('opens no سورة with the بسملة', () => {
-    expect(body).not.toMatch(/^بِسْمِ ٱللَّهِ/m);
+    expect(body).not.toMatch(/^بِسْمِ ٱللَّهِ/mu);
   });
 });
 
 describe.each(prose)('$path, as a hadith text', ({ body, data }) => {
   it('keeps to one paragraph', () => {
-    expect(body.trim()).not.toMatch(/\n\s*\n/);
+    expect(body.trim()).not.toMatch(/\n\s*\n/u);
   });
 
   it('shows its whole text', () => {
@@ -201,19 +216,19 @@ it('lists at least one dhikr that did not come in', () => {
 });
 
 describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
-  const data = unprovenSchema.parse(raw);
+  const data = Schema.decodeUnknownSync(unprovenSchema, STRICT)(raw);
 
   it('has valid frontmatter', () => {
-    expect(unprovenSchema.safeParse(raw).error?.issues).toBeUndefined();
+    expect(issuesOf(unprovenSchema, raw)).toBeUndefined();
   });
 
   it('starts its file name with its order', () => {
     const order = String(data.order).padStart(2, '0');
-    expect(path).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`));
+    expect(path).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`, 'u'));
   });
 
   it('carries a ruling of weakness', () => {
-    expect(data.takhrij.ruling).toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ|باطل|دون/);
+    expect(data.takhrij.ruling).toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ|باطل|دون/u);
   });
 
   it('has a text on one line', () => {
@@ -223,10 +238,10 @@ describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
 });
 
 const pathOf = ({ path, data }: (typeof entries)[number]) =>
-  dhikrPath(data.occasion, slugOf(path.replace(/\.md$/, '')));
+  dhikrPath(data.occasion, slugOf(path.replace(/\.md$/u, '')));
 
 describe('the permalinks', () => {
-  const current = entries.map(pathOf);
+  const current = entries.map((entry) => pathOf(entry));
 
   it('gives each dhikr its own link', () => {
     expect(new Set(current).size).toBe(current.length);
@@ -255,7 +270,7 @@ describe('the sharing cards', () => {
     .filter((path) => path.endsWith('.png'))
     .map((path) => `og/${path}`);
   const wanted = entries.map(({ path, body, data }) =>
-    cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/, '')))
+    cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/u, '')))
   );
 
   it('is drawn for each dhikr as it is now (run bun run opengraph:adhkar)', () => {
@@ -271,6 +286,6 @@ describe('the sharing cards', () => {
       .map(({ body, data }) => cardOf(data, body))
       .filter((card) => card.cut)
       .flatMap((card) => card.blocks.map((block) => block.at(-1)!.split(' ').at(-1)!));
-    expect(last.filter((word) => /^(لَا|لَآ|إِلَّا|إِلَهَ|إِلَـٰهَ|لَمْ|لَنْ|مَا)$/.test(word))).toEqual([]);
+    expect(last.filter((word) => /^(لَا|لَآ|إِلَّا|إِلَهَ|إِلَـٰهَ|لَمْ|لَنْ|مَا)$/u.test(word))).toEqual([]);
   });
 });

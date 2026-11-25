@@ -1,8 +1,18 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { Effect, Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { captureOfMarkdown, sourceOf, type Capture } from './capture';
+import {
+  captureOfMarkdown as markdownCapture,
+  sourceOf as sourceEffect,
+  type Capture,
+} from './capture';
 import { normalize } from './matching';
+
+const sourceOf = (capture: Capture, number?: string) =>
+  Effect.runSync(sourceEffect(capture, Option.fromUndefinedOr(number)));
+const captureOfMarkdown = (markdown: string, date: string) =>
+  Effect.runSync(markdownCapture(markdown, date));
 
 const fixture = (name: string) =>
   readFileSync(join(process.cwd(), 'src/lib/fixtures', name), 'utf8');

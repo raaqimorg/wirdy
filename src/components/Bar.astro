@@ -6,8 +6,8 @@ import SectionMenu from './SectionMenu.astro';
 import { SITE } from '../lib/site';
 
 interface Props {
-  heading?: string;
-  back?: { href: string; label: string };
+  heading?: string | undefined;
+  back?: { href: string; label: string } | undefined;
 }
 
 const { heading, back } = Astro.props;

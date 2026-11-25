@@ -1,3 +1,5 @@
+import { Array } from 'effect';
+
 export const LIGHTNESS = 0.52;
 export const CHROMA = 0.086;
 export const NIGHT = 0.9;
@@ -8,7 +10,7 @@ export const INVERSE_GOLDEN = (3 - Math.sqrt(5)) / 2;
 const NEUTRAL_CHROMA = 0.025;
 const NEUTRAL_HUE = 250;
 
-type Triple = [number, number, number];
+type Triple = readonly [number, number, number];
 
 const toLinear = (channel: number) =>
   channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
@@ -37,10 +39,11 @@ export function hexFromOklch(lightness: number, chroma: number, hue: number): st
   return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 }
 
+const channelAt = (hex: string, start: number) =>
+  toLinear(Number.parseInt(hex.slice(start, start + 2), 16) / 255);
+
 export function hueOf(hex: string): number {
-  const [red, green, blue] = [1, 3, 5].map((start) =>
-    toLinear(Number.parseInt(hex.slice(start, start + 2), 16) / 255)
-  ) as Triple;
+  const [red, green, blue] = [channelAt(hex, 1), channelAt(hex, 3), channelAt(hex, 5)];
   const l = Math.cbrt(0.4122214708 * red + 0.5363769773 * green + 0.0514459929 * blue);
   const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue);
   const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue);
@@ -56,12 +59,12 @@ const commonDivisor = (one: number, other: number): number =>
 
 export function strideFor(count: number): number {
   const ideal = count * INVERSE_GOLDEN;
-  const strides = Array.from({ length: count }, (_, stride) => stride).filter(
-    (stride) => stride > 0 && commonDivisor(count, stride) === 1
+  const strides = Array.filter(
+    Array.range(1, Math.max(1, count - 1)),
+    (stride) => stride < count && commonDivisor(count, stride) === 1
   );
-  return strides.reduce(
-    (best, stride) => (Math.abs(stride - ideal) < Math.abs(best - ideal) ? stride : best),
-    1
+  return Array.reduce(strides, 1, (best, stride) =>
+    Math.abs(stride - ideal) < Math.abs(best - ideal) ? stride : best
   );
 }
 
@@ -71,18 +74,13 @@ export function hueAt(index: number, count: number): number {
 }
 
 function luminance(hex: string): number {
-  const [red, green, blue] = [1, 3, 5].map((start) =>
-    toLinear(Number.parseInt(hex.slice(start, start + 2), 16) / 255)
-  ) as Triple;
+  const [red, green, blue] = [channelAt(hex, 1), channelAt(hex, 3), channelAt(hex, 5)];
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
 export function contrast(one: string, other: string): number {
-  const [dark, light] = [luminance(one), luminance(other)].toSorted((a, b) => a - b) as [
-    number,
-    number,
-  ];
-  return (light + 0.05) / (dark + 0.05);
+  const [first, second] = [luminance(one), luminance(other)];
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
 }
 
 export const toneOf = (index: number, count: number) =>

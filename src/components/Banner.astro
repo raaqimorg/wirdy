@@ -5,9 +5,9 @@ import type { EmblemName } from '../lib/emblems';
 interface Props {
   emblem: EmblemName;
   title: string;
-  context?: string;
-  lede?: string;
-  single?: boolean;
+  context?: string | undefined;
+  lede?: string | undefined;
+  single?: boolean | undefined;
 }
 
 const { emblem, title, context, lede, single = false } = Astro.props;

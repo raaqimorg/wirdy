@@ -12,13 +12,13 @@ import { SITE } from '../lib/site';
 interface Props {
   title: string;
   description: string;
-  image?: string;
-  imageSize?: [width: number, height: number];
-  crumbs?: { name: string; path: string }[];
-  noindex?: boolean;
-  faces?: ('naskh' | 'quran')[];
-  tone?: string;
-  search?: boolean;
+  image?: string | undefined;
+  imageSize?: [width: number, height: number] | undefined;
+  crumbs?: { name: string; path: string }[] | undefined;
+  noindex?: boolean | undefined;
+  faces?: ('naskh' | 'quran')[] | undefined;
+  tone?: string | undefined;
+  search?: boolean | undefined;
 }
 
 const {
@@ -136,22 +136,22 @@ const structuredData = {
     )}
     <script is:inline>
       (function () {
-        var root = document.documentElement;
+        const root = document.documentElement;
         function period() {
-          var hour = new Date().getHours();
+          const hour = new Date().getHours();
           return hour >= 3 && hour < 12 ? 's' : 'm';
         }
         function kept() {
           try {
-            var saved = sessionStorage.getItem('wird') || '';
+            const saved = sessionStorage.getItem('wird') || '';
             return saved[0] === period() ? saved[1] : null;
           } catch (error) {
             return null;
           }
         }
         function mark() {
-          var forms = document.querySelectorAll('[data-wird-form]');
-          for (var i = 0; i < forms.length; i++) {
+          const forms = document.querySelectorAll('[data-wird-form]');
+          for (let i = 0; i < forms.length; i += 1) {
             if (forms[i].dataset.wirdForm === root.dataset.wird)
               forms[i].setAttribute('aria-current', 'true');
             else forms[i].removeAttribute('aria-current');
@@ -164,7 +164,7 @@ const structuredData = {
           } catch (error) {}
           mark();
         }
-        var override = location.search.match(/w=([sm])/);
+        const override = location.search.match(/w=([sm])/u);
         if (override) choose(override[1]);
         else root.dataset.wird = kept() || period();
         document.addEventListener('DOMContentLoaded', mark);
@@ -175,11 +175,11 @@ const structuredData = {
         });
         document.addEventListener('touchstart', function () {}, { passive: true });
 
-        var metas = document.querySelectorAll('meta[name="theme-color"]');
-        var paper = {};
-        for (var i = 0; i < metas.length; i++)
+        const metas = document.querySelectorAll('meta[name="theme-color"]');
+        const paper = {};
+        for (let i = 0; i < metas.length; i += 1)
           paper[metas[i].media ? 'dark' : 'light'] = metas[i].content;
-        var device = matchMedia('(prefers-color-scheme: dark)');
+        const device = matchMedia('(prefers-color-scheme: dark)');
         function deviceTheme() {
           return device.matches ? 'dark' : 'light';
         }
@@ -189,25 +189,25 @@ const structuredData = {
         function apply(theme) {
           if (theme) root.dataset.theme = theme;
           else delete root.dataset.theme;
-          for (var j = 0; j < metas.length; j++) {
+          for (let j = 0; j < metas.length; j += 1) {
             metas[j].content = paper[theme || (metas[j].media ? 'dark' : 'light')];
           }
         }
         function announce() {
-          var buttons = document.querySelectorAll('[data-theme-toggle]');
-          for (var k = 0; k < buttons.length; k++)
+          const buttons = document.querySelectorAll('[data-theme-toggle]');
+          for (let k = 0; k < buttons.length; k += 1)
             buttons[k].setAttribute('aria-pressed', String(current() === 'dark'));
         }
         try {
-          var saved = localStorage.getItem('theme');
+          const saved = localStorage.getItem('theme');
           if (saved === 'light' || saved === 'dark') apply(saved);
         } catch (error) {}
         document.addEventListener('DOMContentLoaded', announce);
         device.addEventListener('change', announce);
         document.addEventListener('click', function (event) {
           if (!event.target.closest('[data-theme-toggle]')) return;
-          var next = current() === 'dark' ? 'light' : 'dark';
-          var follow = next === deviceTheme();
+          const next = current() === 'dark' ? 'light' : 'dark';
+          const follow = next === deviceTheme();
           apply(follow ? null : next);
           try {
             if (follow) localStorage.removeItem('theme');
@@ -217,7 +217,7 @@ const structuredData = {
         });
 
         function say(from, words) {
-          var said = from.parentElement.querySelector('[data-status]');
+          const said = from.parentElement.querySelector('[data-status]');
           said.textContent = words;
           clearTimeout(said.clearing);
           said.clearing = setTimeout(function () {
@@ -225,30 +225,30 @@ const structuredData = {
           }, 2500);
         }
         document.addEventListener('click', function (event) {
-          var form = event.target.closest('[data-wird-form]');
+          const form = event.target.closest('[data-wird-form]');
           if (form && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
             event.preventDefault();
             choose(form.dataset.wirdForm);
             if (location.search) history.replaceState(null, '', location.pathname + location.hash);
           }
-          var copy = event.target.closest('[data-copy]');
+          const copy = event.target.closest('[data-copy]');
           if (copy) {
-            var evening = root.dataset.wird === 'm' && copy.dataset.copyMasaa;
-            var done = navigator.clipboard
+            const evening = root.dataset.wird === 'm' && copy.dataset.copyMasaa;
+            const done = navigator.clipboard
               ? navigator.clipboard.writeText(evening || copy.dataset.copy)
-              : Promise.reject();
+              : Promise.reject(new Error('no clipboard'));
             done.then(
               function () {
-                say(copy, 'نُسخ الذكر');
+                return say(copy, 'نُسخ الذكر');
               },
               function () {
                 say(copy, 'تعذّر النسخ');
               }
             );
           }
-          var share = event.target.closest('[data-share-title]');
+          const share = event.target.closest('[data-share-title]');
           if (!share || event.metaKey || event.ctrlKey || event.shiftKey) return;
-          var url = share.href;
+          const url = share.href;
           if (navigator.share) {
             event.preventDefault();
             navigator.share({ title: share.dataset.shareTitle, url: url }).catch(function () {});
@@ -256,7 +256,7 @@ const structuredData = {
             event.preventDefault();
             navigator.clipboard.writeText(url).then(
               function () {
-                say(share, 'نُسخ الرابط');
+                return say(share, 'نُسخ الرابط');
               },
               function () {
                 location.href = url;

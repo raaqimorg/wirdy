@@ -1,26 +1,27 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { sourceOf, type Capture } from '../../src/lib/capture.ts';
-import { proofSchema, type Proof } from '../../src/lib/proof.ts';
-import { RECORDS } from '../../src/lib/records.ts';
+import { Array, Console, Effect, Option, Schema } from 'effect';
+import { decodeCaptures, sourceOf } from '../../src/lib/capture.ts';
+import { readJson } from '../../src/lib/records.ts';
+import { argumentsOf, run, UsageError } from '../run.ts';
+import { readProof, writeProof } from './record.ts';
 
-const [id, from, url] = process.argv.slice(2);
+const program = Effect.gen(function* () {
+  const [id, from, url] = yield* argumentsOf(
+    Schema.Tuple([Schema.String, Schema.String, Schema.String]),
+    'bun run verification:ruling <id> <file> <dorar.net url in the file>'
+  );
 
-if (!url) {
-  console.error('usage: bun run verification:ruling <id> <file> <dorar.net url in the file>');
-  process.exit(1);
-}
+  const proof = yield* readProof(id);
+  const captures = Array.ensure(yield* Effect.flatMap(readJson(from), decodeCaptures));
+  const capture = Array.findFirst(captures, (page) => page.url === url);
+  if (Option.isNone(capture)) return yield* new UsageError({ message: `no capture of ${url}` });
+  const { grader, book, number, ruling } = yield* sourceOf(capture.value);
+  const rulings = [
+    ...proof.rulings.filter((other) => other.url !== url),
+    { grader, book, number, ruling, url },
+  ];
 
-const path = join(RECORDS, `${id}.json`);
-const proof: Proof = JSON.parse(readFileSync(path, 'utf8'));
-const captures: Capture[] = [JSON.parse(readFileSync(from, 'utf8'))].flat();
-const capture = captures.find((page) => page.url === url);
-if (!capture) throw new Error(`no capture of ${url}`);
-const { grader, book, number, ruling } = sourceOf(capture);
-const rulings = [
-  ...proof.rulings.filter((other) => other.url !== url),
-  { grader, book, number, ruling, url },
-];
+  yield* writeProof(id, { ...proof, rulings });
+  yield* Console.log(`${id}: ${grader ?? ''}, ${book} ${number}: ${ruling ?? ''}`);
+});
 
-writeFileSync(path, `${JSON.stringify(proofSchema.parse({ ...proof, rulings }), null, 2)}\n`);
-console.log(`${id}: ${grader}, ${book} ${number}: ${ruling}`);
+run(program);

@@ -1,4 +1,5 @@
 ---
+import { Effect } from 'effect';
 import Dhikr from '../../components/Dhikr.astro';
 import DhikrActions from '../../components/DhikrActions.astro';
 import EntryList from '../../components/EntryList.astro';
@@ -8,13 +9,13 @@ import Section from '../../layouts/Section.astro';
 import { cardFile, cardOf } from '../../lib/card';
 import { copyOf } from '../../lib/copy';
 import { adhkarOf } from '../../lib/collection';
-import { OCCASIONS } from '../../lib/occasions';
+import { OCCASIONS, sectionOf } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
 import { phrasesLabel } from '../../lib/phrases';
 import { fullTitle } from '../../lib/title';
 
 export async function getStaticPaths() {
-  const lists = await Promise.all(OCCASIONS.map(({ id }) => adhkarOf(id)));
+  const lists = await Effect.runPromise(Effect.forEach(OCCASIONS, ({ id }) => adhkarOf(id)));
   return lists.flatMap((list) =>
     list.map((entry, index) => ({
       params: { occasion: entry.data.occasion, dhikr: slugOf(entry.id) },
@@ -25,22 +26,25 @@ export async function getStaticPaths() {
 
 const { entry, previous, next } = Astro.props;
 const { data, body = '' } = entry;
-const occasion = OCCASIONS.find(({ id }) => id === data.occasion)!;
+const occasion = sectionOf(data.occasion);
 const slug = slugOf(entry.id);
 const path = dhikrPath(data.occasion, slug);
-const card = cardOf(data, body);
+const card = Effect.runSync(cardOf(data, body));
 const image = `/${cardFile(card, data.occasion, slug)}`;
 const back = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
 const title = fullTitle(data);
 
 const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
-const description = [card.lead, count, data.fadl, card.takhrij].filter(Boolean).join('. ');
+const description = [card.lead, count, data.fadl, card.takhrij]
+  .filter((part) => part !== undefined && part !== null && part !== '')
+  .join('. ');
 const links = [
   { label: 'التالي', entry: next },
   { label: 'السابق', entry: previous },
 ].flatMap(({ label, entry: neighbour }) =>
-  neighbour
-    ? [
+  neighbour === undefined
+    ? []
+    : [
         {
           label,
           title: neighbour.data.title,
@@ -48,7 +52,6 @@ const links = [
           href: dhikrPath(data.occasion, slugOf(neighbour.id)),
         },
       ]
-    : []
 );
 ---
 
@@ -68,7 +71,7 @@ const links = [
   back={back}
   single
 >
-  {card.evening && <WirdSwitch slot="banner" />}
+  {card.evening !== null && <WirdSwitch slot="banner" />}
   <EntryList variant="single">
     <Dhikr data={data} body={body} slug={slug} single />
   </EntryList>
@@ -77,7 +80,7 @@ const links = [
     title={title}
     image={image}
     file={`wirdy-${slug}.png`}
-    copy={copyOf(data, body)}
+    copy={Effect.runSync(copyOf(data, body))}
   />
   <Neighbours links={links} />
 </Section>

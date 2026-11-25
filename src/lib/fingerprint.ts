@@ -3,9 +3,16 @@ import type { Dhikr } from './schema';
 
 export type Claim = 'text' | 'count' | 'moment' | 'manner' | 'fadl' | 'takhrij';
 
-export const CLAIMS: Claim[] = ['text', 'count', 'moment', 'manner', 'fadl', 'takhrij'];
+export const CLAIMS: ReadonlyArray<Claim> = [
+  'text',
+  'count',
+  'moment',
+  'manner',
+  'fadl',
+  'takhrij',
+];
 
-const provenBy: Record<Claim, (data: Dhikr, body: string) => object> = {
+const provenBy: Readonly<Record<Claim, (data: Dhikr, body: string) => object>> = {
   text: ({ quran }, body) => ({ body: body.normalize('NFC').trim(), quran }),
   count: ({ count, counts }) => ({ count, counts }),
   moment: ({ occasion, mode, when, context }) => ({ occasion, mode, when, context }),
@@ -26,8 +33,16 @@ export function wholeFingerprint(data: Dhikr, body: string): string {
   return hash(CLAIMS.map((claim) => fingerprintOf(claim, data, body)));
 }
 
-export function claimsOf({ count, counts, occasion, when, context, how, fadl }: Dhikr): Claim[] {
-  const made: Record<Claim, boolean> = {
+export function claimsOf({
+  count,
+  counts,
+  occasion,
+  when,
+  context,
+  how,
+  fadl,
+}: Dhikr): ReadonlyArray<Claim> {
+  const made: Readonly<Record<Claim, boolean>> = {
     text: true,
     count: count > 1 || counts !== undefined,
     moment: occasion !== 'mutlaq' || when !== undefined || context !== undefined,

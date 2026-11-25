@@ -1,47 +1,78 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { captureOfMarkdown, sourceOf, type Capture } from '../../src/lib/capture.ts';
-import { proofSchema, type Proof } from '../../src/lib/proof.ts';
-import { readAdhkar, RECORDS } from '../../src/lib/records.ts';
+import { Array, Console, Data, Effect, Option, Schema } from 'effect';
+import {
+  captureOfMarkdown,
+  decodeCaptures,
+  sourceOf,
+  type Capture,
+} from '../../src/lib/capture.ts';
+import { readAdhkar, readJson } from '../../src/lib/records.ts';
+import { argumentsOf, run, today, UsageError } from '../run.ts';
+import { readProofOrEmpty, writeProof } from './record.ts';
 
-const { values, positionals } = parseArgs({
-  allowPositionals: true,
-  options: { number: { type: 'string' } },
-});
-const [id, from, url] = positionals;
+class FetchFailed extends Data.TaggedError('FetchFailed')<{ readonly message: string }> {}
 
-if (!id || !from || !readAdhkar().some((dhikr) => dhikr.id === id)) {
-  console.error(
-    'usage: bun run verification:import <id> <file or hdith.com url> [url in the file]'
+const USAGE =
+  'bun run verification:import <id> <file or hdith.com url> [url in the file] [--number <n>]';
+
+const fetchMarkdown = (from: string) =>
+  Effect.gen(function* () {
+    const url = `${from.replace(/\.md$/u, '')}.md`;
+    const failed = (cause: unknown) => new FetchFailed({ message: `${url}: ${String(cause)}` });
+    const response = yield* Effect.tryPromise({ try: () => fetch(url), catch: failed });
+    if (!response.ok) return yield* failed(`answered ${String(response.status)}`);
+    return yield* Effect.tryPromise({ try: () => response.text(), catch: failed });
+  });
+
+const readCapture = (from: string, url: Option.Option<string>) =>
+  Effect.gen(function* () {
+    if (from.startsWith('https://hdith.com/')) {
+      return yield* captureOfMarkdown(yield* fetchMarkdown(from), yield* today);
+    }
+    const captures = Array.ensure(yield* Effect.flatMap(readJson(from), decodeCaptures));
+    const found: ReadonlyArray<Capture> = Option.match(url, {
+      onNone: () => captures,
+      onSome: (wanted) => captures.filter((capture) => capture.url === wanted),
+    });
+    const [only, ...rest] = found;
+    if (only === undefined || rest.length > 0) {
+      return yield* new UsageError({
+        message: `${String(found.length)} captures match; name one url`,
+      });
+    }
+    return only;
+  });
+
+const program = Effect.gen(function* () {
+  const { values, positionals } = yield* Effect.try({
+    try: () => parseArgs({ allowPositionals: true, options: { number: { type: 'string' } } }),
+    catch: () => new UsageError({ message: `usage: ${USAGE}` }),
+  });
+  const [id, from, url] = yield* argumentsOf(
+    Schema.Tuple([Schema.String, Schema.String, Schema.optionalKey(Schema.String)]),
+    USAGE,
+    positionals
   );
-  process.exit(1);
-}
-
-async function readCapture(): Promise<Capture> {
-  if (from.startsWith('https://hdith.com/')) {
-    const response = await fetch(`${from.replace(/\.md$/, '')}.md`);
-    if (!response.ok) throw new Error(`${from} answered ${response.status}`);
-    return captureOfMarkdown(await response.text(), new Date().toISOString().slice(0, 10));
+  if (!(yield* readAdhkar).some((dhikr) => dhikr.id === id)) {
+    return yield* new UsageError({ message: `usage: ${USAGE}` });
   }
-  const captures: Capture[] = [JSON.parse(readFileSync(from, 'utf8'))].flat();
-  const found = url ? captures.filter((capture) => capture.url === url) : captures;
-  if (found.length !== 1) throw new Error(`${found.length} captures match; name one url`);
-  return found[0];
-}
 
-const path = join(RECORDS, `${id}.json`);
-const proof: Proof = existsSync(path)
-  ? JSON.parse(readFileSync(path, 'utf8'))
-  : { sources: [], claims: {}, differences: [], rulings: [] };
+  const proof = yield* readProofOrEmpty(id);
+  const source = yield* sourceOf(
+    yield* readCapture(from, Option.fromUndefinedOr(url)),
+    Option.fromUndefinedOr(values.number)
+  );
+  const held = proof.sources.findIndex(
+    (other) => other.state === 'present' && other.url === source.url
+  );
+  const index = held === -1 ? proof.sources.length : held;
+  const sources = [...proof.sources];
+  sources[index] = source;
 
-const source = sourceOf(await readCapture(), values.number);
-const held = proof.sources.findIndex(
-  (other) => other.state === 'present' && other.url === source.url
-);
-const index = held === -1 ? proof.sources.length : held;
-proof.sources[index] = source;
+  yield* writeProof(id, { ...proof, sources });
+  yield* Console.log(
+    `${id}: source ${String(index)} is ${source.site}, ${source.book} ${source.number}`
+  );
+});
 
-mkdirSync(dirname(path), { recursive: true });
-writeFileSync(path, `${JSON.stringify(proofSchema.parse(proof), null, 2)}\n`);
-console.log(`${id}: source ${index} is ${source.site}, ${source.book} ${source.number}`);
+run(program);

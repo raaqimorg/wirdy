@@ -11,7 +11,7 @@ This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Ar
 - `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), a page for each dhikr (`[occasion]/[dhikr].astro`), the «ما لم يثبت» page (`ma-lam-yathbut.astro`), the search page (`bahth.astro`), the 404 page (`404.astro`), the search index (`search/[version].json.ts`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
 - `src/scripts/`: the module script of search (`search.ts`), shared by the search page and the search sheet.
 - `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`), `bun run opengraph`, or `bun run opengraph:adhkar` (one card for each dhikr, in `public/og/`), and do not edit them by hand.
-- `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
+- `scripts/`: the icon and OpenGraph generators (headless Chromium), `scripts/check/`, the git guards, and `run.ts`, which runs each script as an Effect program with the Node services.
 - `verification/`: one JSON record for each proven dhikr, with the text of the pages that prove it, and `pending.json`, the adhkar that are not proven yet. The site does not read it. [`docs/content.md`](docs/content.md), "The proof", has the rules.
 - `docs/`: [`README.md`](docs/README.md) is the index, with one line for each doc and when to read it. It lists [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`naming.md`](docs/naming.md), [`testing.md`](docs/testing.md), [`design-system.md`](docs/design-system.md), [`exceptions.md`](docs/exceptions.md), [`development.md`](docs/development.md), [`writing.md`](docs/writing.md), and [`emblem-ideas.md`](docs/emblem-ideas.md).
 
@@ -37,7 +37,7 @@ bun run verification # which adhkar are proven, and what the others lack (add an
 
 ## Keep it boring
 
-- This is a static site of text. Code must look like what an experienced Astro developer expects.
+- This is a static site of text. Code must look like what an experienced Astro developer expects, written with Effect ([`docs/exceptions.md`](docs/exceptions.md#the-code-is-written-with-effect), [`docs/code-conventions.md`](docs/code-conventions.md#typescript)).
 - Ship HTML and CSS. Add client JavaScript only when CSS cannot do the job, and keep it inline and small. Search is the one exception (see [`docs/exceptions.md`](docs/exceptions.md)). No page makes a third-party request, and a build test enforces it.
 - Treat anything unusual as a warning sign. If a request would add unusual code, do not build it yet. Say plainly that it is unusual and why, and show the normal way. Then wait for the user's decision.
 - Read [`docs/exceptions.md`](docs/exceptions.md) before you build. Anything it does not list must be standard. When the user approves an unusual approach, add its entry there in the same change.

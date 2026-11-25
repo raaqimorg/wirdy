@@ -1,25 +1,34 @@
+import type { FORMS } from './schema';
+
 const ARABIC_INDIC = '٠١٢٣٤٥٦٧٨٩';
 
 export function toArabicDigits(n: number): string {
-  return String(n).replace(/\d/g, (d) => ARABIC_INDIC[Number(d)]!);
+  return String(n).replaceAll(/\d/gu, (digit) => ARABIC_INDIC.charAt(Number(digit)));
 }
+
+const isFew = (n: number) => n >= 3 && n <= 10;
 
 export function adhkarLabel(n: number): string {
   if (n === 1) return 'ذكر واحد';
   if (n === 2) return 'ذكران';
-  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} أذكار`;
+  if (isFew(n)) return `${toArabicDigits(n)} أذكار`;
   return `${toArabicDigits(n)} ذكرًا`;
 }
 
-const ORDINALS = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة'];
+const ORDINALS: Readonly<Record<(typeof FORMS)[number], string>> = {
+  1: 'الأولى',
+  2: 'الثانية',
+  3: 'الثالثة',
+  4: 'الرابعة',
+};
 
-export function formLabel(n: number): string {
-  return `الصيغة ${ORDINALS[n - 1]}`;
+export function formLabel(n: (typeof FORMS)[number]): string {
+  return `الصيغة ${ORDINALS[n]}`;
 }
 
 export function timesUnit(n: number): string {
   if (n === 2) return 'مرتان';
-  return n >= 3 && n <= 10 ? 'مرات' : 'مرة';
+  return isFew(n) ? 'مرات' : 'مرة';
 }
 
 export function timesLabel(n: number): string {
@@ -30,13 +39,13 @@ export function timesLabel(n: number): string {
 export function ayatLabel(n: number): string {
   if (n === 1) return 'آية واحدة';
   if (n === 2) return 'آيتان';
-  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} آيات`;
+  if (isFew(n)) return `${toArabicDigits(n)} آيات`;
   return `${toArabicDigits(n)} آية`;
 }
 
 export function resultsLabel(n: number): string {
   if (n === 1) return 'نتيجة واحدة';
   if (n === 2) return 'نتيجتان';
-  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} نتائج`;
+  if (isFew(n)) return `${toArabicDigits(n)} نتائج`;
   return `${toArabicDigits(n)} نتيجة`;
 }

@@ -3,7 +3,7 @@ import OccasionCard from './OccasionCard.astro';
 import type { Tile } from '../lib/collection';
 
 interface Props {
-  tiles: Tile[];
+  tiles: ReadonlyArray<Tile>;
   variant: 'featured' | 'compact' | 'browse';
 }
 

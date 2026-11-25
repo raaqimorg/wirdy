@@ -2,22 +2,24 @@
 import Choices from './Choices.astro';
 import Dhikr from './Dhikr.astro';
 import EntryList from './EntryList.astro';
+import { Effect } from 'effect';
 import type { AdhkarEntry } from '../lib/collection';
 import { groupId } from '../lib/groups';
 import { slugOf } from '../lib/permalink';
 
 interface Props {
-  title?: string;
-  entries: AdhkarEntry[];
+  title?: string | undefined;
+  entries: ReadonlyArray<AdhkarEntry>;
 }
 
 const { title, entries } = Astro.props;
 const isChoice = entries[0]?.data.form !== undefined;
+const id = title === undefined ? undefined : Effect.runSync(groupId(title));
 ---
 
 <section class:list={['group', title && 'group--titled']}>
   {title && (
-    <h2 class="group__title" id={groupId(title)}>
+    <h2 class="group__title" id={id}>
       {title}
     </h2>
   )}
@@ -28,8 +30,13 @@ const isChoice = entries[0]?.data.form !== undefined;
     </Fragment>
   ) : (
     <EntryList variant={title ? 'titled' : 'plain'}>
-      {entries.map(({ id, data, body = '' }) => (
-        <Dhikr data={data} body={body} slug={slugOf(id)} heading={title ? 'h3' : 'h2'} />
+      {entries.map((entry) => (
+        <Dhikr
+          data={entry.data}
+          body={entry.body ?? ''}
+          slug={slugOf(entry.id)}
+          heading={title ? 'h3' : 'h2'}
+        />
       ))}
     </EntryList>
   )}

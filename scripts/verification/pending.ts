@@ -1,16 +1,29 @@
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { Array, Console, Effect, FileSystem, Order } from 'effect';
 import { wholeFingerprint } from '../../src/lib/fingerprint.ts';
 import { PENDING, readAdhkar, RECORDS } from '../../src/lib/records.ts';
+import { run, UsageError } from '../run.ts';
 
-if (existsSync(PENDING)) {
-  console.error('verification/pending.json exists, and it only shrinks');
-  process.exit(1);
-}
+const byId = Order.mapInput(Order.String, ([id]: readonly [string, string]) => id);
 
-const entries = readAdhkar()
-  .map(({ id, data, body }) => [id, wholeFingerprint(data, body)] as const)
-  .toSorted(([a], [b]) => (a < b ? -1 : 1));
+const program = Effect.gen(function* () {
+  const fs = yield* FileSystem.FileSystem;
+  if (yield* fs.exists(PENDING)) {
+    return yield* new UsageError({
+      message: 'verification/pending.json exists, and it only shrinks',
+    });
+  }
 
-mkdirSync(RECORDS, { recursive: true });
-writeFileSync(PENDING, `${JSON.stringify(Object.fromEntries(entries), null, 2)}\n`);
-console.log(`${entries.length} pending`);
+  const entries = Array.sort(
+    Array.map(yield* readAdhkar, ({ id, data, body }): readonly [string, string] => [
+      id,
+      wholeFingerprint(data, body),
+    ]),
+    byId
+  );
+
+  yield* fs.makeDirectory(RECORDS, { recursive: true });
+  yield* fs.writeFileString(PENDING, `${JSON.stringify(Object.fromEntries(entries), null, 2)}\n`);
+  yield* Console.log(`${String(entries.length)} pending`);
+});
+
+run(program);

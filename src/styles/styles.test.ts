@@ -10,32 +10,34 @@ const COMPONENTS = join(process.cwd(), 'src/components');
 
 const read = (file: string) => readFileSync(join(STYLES, file), 'utf8');
 const pascal = (name: string) =>
-  name.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase());
+  name.replaceAll(/(^|-)([a-z])/gu, (_, __, c: string) => c.toUpperCase());
 
 const blocks = readdirSync(join(STYLES, 'components')).map((file) => file.replace('.css', ''));
 const sheets = ['tokens.css', 'base.css', 'utilities.css', 'fonts.css'];
-const everything = [...sheets, ...blocks.map((block) => `components/${block}.css`)].map(read);
+const everything = [...sheets, ...blocks.map((block) => `components/${block}.css`)].map((file) =>
+  read(file)
+);
 const all = everything.join('\n');
 const tokens = read('tokens.css');
 
 const declarations = (block: string) =>
-  [...block.matchAll(/(--[\w-]+): ([^;]+);/g)].map(([, name, value]) => `${name}: ${value}`);
+  [...block.matchAll(/(--[\w-]+): ([^;]+);/gu)].map(([, name, value]) => `${name}: ${value}`);
 const dark = {
-  device: tokens.match(/:root:not\(\[data-theme="light"\]\) \{([^}]*)\}/)![1]!,
-  chosen: tokens.match(/:root\[data-theme="dark"\] \{([^}]*)\}/)![1]!,
+  device: tokens.match(/:root:not\(\[data-theme="light"\]\) \{([^}]*)\}/u)![1]!,
+  chosen: tokens.match(/:root\[data-theme="dark"\] \{([^}]*)\}/u)![1]!,
 };
-const light = tokens.match(/^:root \{([\s\S]*?)^\}/m)![1]!;
+const light = tokens.match(/^:root \{([\s\S]*?)^\}/mu)![1]!;
 
 describe('the tokens', () => {
   it('are all defined', () => {
-    const used = new Set([...all.matchAll(/var\((--[\w-]+)/g)].map(([, name]) => name!));
-    const defined = new Set([...all.matchAll(/^\s*(--[\w-]+):/gm)].map(([, name]) => name!));
+    const used = new Set([...all.matchAll(/var\((--[\w-]+)/gu)].map(([, name]) => name!));
+    const defined = new Set([...all.matchAll(/^\s*(--[\w-]+):/gmu)].map(([, name]) => name!));
     const inline = new Set(['--tone']);
     expect([...used].filter((name) => !defined.has(name) && !inline.has(name))).toEqual([]);
   });
 
   it('are all used', () => {
-    const defined = [...all.matchAll(/^\s*(--[\w-]+):/gm)].map(([, name]) => name!);
+    const defined = [...all.matchAll(/^\s*(--[\w-]+):/gmu)].map(([, name]) => name!);
     expect(
       defined.filter((name) => !all.includes(`var(${name})`) && !all.includes(`var(${name},`))
     ).toEqual([]);
@@ -72,7 +74,7 @@ describe('the tokens', () => {
 
 describe('the component styles', () => {
   it('are each imported once', () => {
-    const imports = [...read('index.css').matchAll(/"\.\/components\/([\w-]+)\.css"/g)];
+    const imports = [...read('index.css').matchAll(/"\.\/components\/([\w-]+)\.css"/gu)];
     expect(imports.map(([, name]) => name!).toSorted()).toEqual(blocks.toSorted());
   });
 
@@ -81,9 +83,9 @@ describe('the component styles', () => {
   });
 
   it.each(blocks)('%s styles only its own block', (block) => {
-    const css = read(`components/${block}.css`).replace(/@keyframes[\s\S]*?\n\}/g, '');
-    const names = [...css.matchAll(/\.([a-z][\w-]*)/g)].map(([, name]) => name!);
-    const own = new RegExp(`^${block}(__|--|$)`);
+    const css = read(`components/${block}.css`).replaceAll(/@keyframes[\s\S]*?\n\}/gu, '');
+    const names = [...css.matchAll(/\.([a-z][\w-]*)/gu)].map(([, name]) => name!);
+    const own = new RegExp(`^${block}(__|--|$)`, 'u');
     expect(names.filter((name) => !own.test(name))).toEqual([]);
   });
 });

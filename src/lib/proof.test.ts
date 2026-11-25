@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { proofSchema } from './proof';
+import { Effect, Exit } from 'effect';
+import { decodeProof } from './proof';
 
 const dorar = {
   state: 'present',
@@ -40,7 +41,7 @@ const proof = (...sources: object[]) => ({
   rulings: [],
 });
 
-const accepts = (value: object) => proofSchema.safeParse(value).success;
+const accepts = (value: object) => Exit.isSuccess(Effect.runSyncExit(decodeProof(value)));
 
 describe('the record of a dhikr', () => {
   it('holds pages that were read, and pages that were not found', () => {

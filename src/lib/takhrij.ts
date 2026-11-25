@@ -1,30 +1,39 @@
-import type { Dhikr } from './schema';
+import { Option, Record } from 'effect';
+import type { Takhrij } from './schema';
 
-type Takhrij = Dhikr['takhrij'];
+const VERB: Readonly<Record<string, string>> = { صحيح: 'صحّح', حسن: 'حسّن', ضعيف: 'ضعّف' };
+const NUMBERED = /^(.+) ([٠-٩]+(?:\/[٠-٩]+)?)$/u;
+const EXCEPT = /^(صحيح|حسن) دون (قوله|زيادة): (.+)$/u;
 
-const VERB: Record<string, string> = { صحيح: 'صحّح', حسن: 'حسّن', ضعيف: 'ضعّف' };
-const NUMBERED = /^(.+) ([٠-٩]+(?:\/[٠-٩]+)?)$/;
-const EXCEPT = /^(صحيح|حسن) دون (قوله|زيادة): (.+)$/;
+type Except = { readonly verb: string; readonly what: string; readonly words: string };
 
 function cite(source: string): string {
-  const match = source.match(NUMBERED);
-  return match ? `${match[1]} (${match[2]})` : source;
+  const match = NUMBERED.exec(source);
+  return match ? `${match[1] ?? ''} (${match[2] ?? ''})` : source;
 }
+
+const exceptOf = (ruling: string): Option.Option<Except> =>
+  Option.flatMap(
+    Option.fromNullishOr(EXCEPT.exec(ruling)),
+    ([, kind = '', what = '', words = '']) =>
+      Option.map(Record.get(VERB, kind), (verb) => ({ verb, what, words }))
+  );
 
 export function takhrijLine({ grader, source, ruling }: Takhrij): string {
   const where = cite(source);
   if (grader !== 'الألباني') return where;
 
-  const verb = VERB[ruling];
-  if (verb) return `${verb}ه الألباني في ${where}`;
-
-  const except = ruling.match(EXCEPT);
-  if (except && source.startsWith('ضعيف')) {
-    return `${VERB[except[1]!]} الألباني الحديث دون ${except[2]} «${except[3]}» (${source})`;
-  }
-  if (except) return `${VERB[except[1]!]}ه الألباني في ${where} دون ${except[2]} «${except[3]}»`;
-
-  return `قال الألباني في ${where}: ${ruling}`;
+  return Option.match(Record.get(VERB, ruling), {
+    onSome: (verb) => `${verb}ه الألباني في ${where}`,
+    onNone: () =>
+      Option.match(exceptOf(ruling), {
+        onSome: ({ verb, what, words }) =>
+          source.startsWith('ضعيف')
+            ? `${verb} الألباني الحديث دون ${what} «${words}» (${source})`
+            : `${verb}ه الألباني في ${where} دون ${what} «${words}»`,
+        onNone: () => `قال الألباني في ${where}: ${ruling}`,
+      }),
+  });
 }
 
 export function isOneWord(ruling: string): boolean {

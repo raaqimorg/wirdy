@@ -18,7 +18,7 @@ describe('the sunflower mark', () => {
 
   it('writes a standalone SVG with every petal and the disc', () => {
     const svg = markSvg();
-    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 64 64">/);
-    expect(svg.match(/<circle /g)).toHaveLength(13);
+    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 64 64">/u);
+    expect(svg.match(/<circle /gu)).toHaveLength(13);
   });
 });

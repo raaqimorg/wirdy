@@ -1,5 +1,6 @@
+import { Effect } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { cardFile, cardOf } from './card';
+import { cardFile, cardOf as cardEffect } from './card';
 import type { Dhikr } from './schema';
 
 const base: Dhikr = {
@@ -17,6 +18,8 @@ const base: Dhikr = {
     url: 'https://dorar.net/hadith/sharh/1',
   },
 };
+
+const cardOf = (data: Dhikr, body: string) => Effect.runSync(cardEffect(data, body));
 
 describe('cardOf', () => {
   it('carries the moment, the count, and the takhrij with the text', () => {
@@ -84,7 +87,7 @@ describe('cardFile', () => {
   it('names the card after its place and what it says', () => {
     const card = cardOf(base, 'سبحان الله');
     const file = cardFile(card, 'sabah-masaa', 'tasbih');
-    expect(file).toMatch(/^og\/sabah-masaa\/tasbih-[0-9a-f]{8}\.png$/);
+    expect(file).toMatch(/^og\/sabah-masaa\/tasbih-[0-9a-f]{8}\.png$/u);
     expect(cardFile(card, 'sabah-masaa', 'tasbih')).toBe(file);
     expect(cardFile(cardOf(base, 'الحمد لله'), 'sabah-masaa', 'tasbih')).not.toBe(file);
   });

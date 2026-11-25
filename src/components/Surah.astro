@@ -3,8 +3,8 @@ import Icon from './Icon.astro';
 import { ayatLabel } from '../lib/arabic';
 
 interface Props {
-  ayat: string[];
-  rest?: string[];
+  ayat: ReadonlyArray<string>;
+  rest?: ReadonlyArray<string> | undefined;
 }
 
 const { ayat, rest = [] } = Astro.props;

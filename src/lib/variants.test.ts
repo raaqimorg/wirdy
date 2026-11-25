@@ -1,5 +1,14 @@
+import { Effect } from 'effect';
 import { describe, it, expect } from 'vitest';
-import { formOf, pairWords, parseVariants } from './variants';
+import {
+  formOf as formEffect,
+  pairWords,
+  parseVariants as variantsEffect,
+  type Form,
+} from './variants';
+
+const parseVariants = (input: string) => Effect.runSync(variantsEffect(input));
+const formOf = (input: string, form: Form) => Effect.runSync(formEffect(input, form));
 
 describe('formOf', () => {
   it('reads a text in one form, with no marker left', () => {
@@ -65,22 +74,22 @@ describe('parseVariants', () => {
   });
 
   it('rejects an unclosed marker', () => {
-    expect(() => parseVariants('{{أصبحنا|أمسينا')).toThrow(/Malformed variant marker/);
+    expect(() => parseVariants('{{أصبحنا|أمسينا')).toThrow(/Malformed variant marker/u);
   });
 
   it('rejects a stray closer', () => {
-    expect(() => parseVariants('أصبحنا}} ثم')).toThrow(/Malformed variant marker/);
+    expect(() => parseVariants('أصبحنا}} ثم')).toThrow(/Malformed variant marker/u);
   });
 
   it('rejects a bare pipe outside a marker', () => {
-    expect(() => parseVariants('أصبحنا | أمسينا')).toThrow(/Malformed variant marker/);
+    expect(() => parseVariants('أصبحنا | أمسينا')).toThrow(/Malformed variant marker/u);
   });
 
   it('rejects three sides', () => {
-    expect(() => parseVariants('{{a|b|c}}')).toThrow(/Malformed variant marker/);
+    expect(() => parseVariants('{{a|b|c}}')).toThrow(/Malformed variant marker/u);
   });
 
   it('rejects nesting', () => {
-    expect(() => parseVariants('{{a{{b|c}}|d}}')).toThrow(/Malformed variant marker/);
+    expect(() => parseVariants('{{a{{b|c}}|d}}')).toThrow(/Malformed variant marker/u);
   });
 });

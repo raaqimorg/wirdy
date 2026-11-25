@@ -31,6 +31,7 @@ This doc says what to test, where a test goes, and which suite runs it. Read it 
 
 - Name each test as a full sentence about the behavior: `it('opens no سورة with the بسملة')`, not `it('basmalah test')`.
 - Use `it.each` for one rule over many inputs.
+- Run an Effect at the edge of the test, in a small helper next to the imports: `Effect.runSync` for a pure Effect, and `Effect.runPromise` with `NodeServices.layer` for one that reads files (`proofs.test.ts`). Expect a failure with `toThrow`, and turn an `Option` into a value with `Option.getOrNull`.
 - Never weaken a test to make it pass. Fix the code or the content.
 
 ## When to add one

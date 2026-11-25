@@ -32,7 +32,7 @@ const changed = (data: Dhikr, body = BODY) => {
 
 describe('fingerprintOf', () => {
   it('is 16 hex characters', () => {
-    expect(fingerprintOf('text', dhikr, BODY)).toMatch(/^[0-9a-f]{16}$/);
+    expect(fingerprintOf('text', dhikr, BODY)).toMatch(/^[0-9a-f]{16}$/u);
   });
 
   it('expires the text when only tashkil changes', () => {
@@ -76,7 +76,9 @@ describe('fingerprintOf', () => {
   });
 
   it('does not change when an optional field is absent or undefined', () => {
-    expect(changed({ ...dhikr, when: undefined, counts: undefined })).toEqual([]);
+    expect(changed({ ...dhikr, when: undefined, counts: undefined } as unknown as Dhikr)).toEqual(
+      []
+    );
   });
 
   it('does not depend on the order of the fields', () => {

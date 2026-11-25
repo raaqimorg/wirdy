@@ -33,9 +33,20 @@ The site follows the device's light or dark mode. The small «المظهر» but
 - The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 10% (the night step of the tone rule in [`design-system.md`](design-system.md)) so they do not glare at night.
 - Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
 
+## The code is written with Effect
+
+Every TypeScript module uses [Effect](https://effect.website): `Effect` for work that can fail, `Option` for a value that can be absent, `Schema` for outside data, and the `FileSystem`, `Path`, and `ChildProcess` services in the scripts. The owner asked for it, to make the code as strict as it can be.
+
+- The ordinary way for an Astro site is plain TypeScript, with zod at the schema and `throw` on bad content.
+- Astro reads a collection's schema only as zod. `src/content.config.ts` wraps each Effect `Schema` in `z.unknown().transform(...)`, so the Effect schema is the one source, and zod is only the bridge.
+- The decoders refuse unknown fields (`STRICT` in `src/lib/schema.ts`), as zod's `strictObject` did. A record decodes to the same JSON, key for key, so its fingerprints and the sharing cards do not change.
+- Search runs in the browser, so its module script carries the Effect runtime and `Schema`. It is about 30 KB gzipped, against about 2 KB before. `components/SearchSheet.astro` loads it on every page but `/bahth/`, and the browser keeps it for a year.
+- Two files stay plain JavaScript. The inline script in `src/layouts/Paper.astro` must run before the first paint, so it cannot import a module. `scripts/verification/capture.js` is pasted into the browser on dorar.net or sunnah.com, so it cannot import a module either.
+- A test runs the Effect at its edge (`Effect.runSync`, or `Effect.runPromise` with the Node services), so its assertions stay plain ([`testing.md`](testing.md#how-to-write-one)).
+
 ## The `{{morning|evening}}` markers
 
-A dhikr that changes between the morning and the evening is one file with markers, not two files. Two files would drift apart. `src/lib/variants.ts` parses the markers, and it throws on any malformed marker, so a typo fails the build instead of reaching the page. `pairWords` then pairs the two forms of a marker word by word, so a word that both forms share shows once (`components/WordForm.astro`).
+A dhikr that changes between the morning and the evening is one file with markers, not two files. Two files would drift apart. `src/lib/variants.ts` parses the markers, and it fails with `MalformedMarker` on any malformed marker, so a typo fails the build instead of reaching the page. `pairWords` then pairs the two forms of a marker word by word, so a word that both forms share shows once (`components/WordForm.astro`).
 
 ## The Quran ornaments live in CSS
 

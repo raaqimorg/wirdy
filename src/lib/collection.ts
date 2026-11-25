@@ -1,92 +1,128 @@
 import { createHash } from 'node:crypto';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Array, Effect, Option, Order } from 'effect';
 import { adhkarLabel } from './arabic';
-import { foldOf, suwarOf } from './lead';
 import type { EmblemName } from './emblems';
+import { foldOf, suwarOf } from './lead';
 import { OCCASIONS, type Occasion } from './occasions';
 import { dhikrAnchor, slugOf } from './permalink';
+import type { Dhikr } from './schema';
 import { UNPROVEN } from './site';
+import type { SearchRow } from './search';
 import { fullTitle } from './title';
-import { formOf } from './variants';
+import { formOf, hasVariants, type MalformedMarker } from './variants';
+
+export type { SearchRow } from './search';
 
 export type AdhkarEntry = CollectionEntry<'adhkar'>;
+export type UnprovenEntry = CollectionEntry<'unproven'>;
 
-export type Tile = { id: EmblemName; heading: string; color: string; note: string; href: string };
-
-export async function adhkarOf(occasion: Occasion): Promise<AdhkarEntry[]> {
-  const entries = await getCollection('adhkar');
-  return entries
-    .filter((entry) => entry.data.occasion === occasion)
-    .toSorted((a, b) => a.data.order - b.data.order);
-}
-
-export async function unprovenEntries(): Promise<CollectionEntry<'unproven'>[]> {
-  const entries = await getCollection('unproven');
-  return entries.toSorted((a, b) => a.data.order - b.data.order);
-}
-
-export async function occasionTiles(): Promise<Tile[]> {
-  return Promise.all(
-    OCCASIONS.map(async ({ id, heading, color }) => {
-      const { length } = await adhkarOf(id);
-      return { id, heading, color, note: adhkarLabel(length), href: `/${id}/` };
-    })
-  );
-}
-
-export async function sectionTiles(): Promise<Tile[]> {
-  const { heading, color, note, path: href } = UNPROVEN;
-  return [...(await occasionTiles()), { id: 'unproven', heading, color, note, href }];
-}
-
-export type SearchRow = {
-  title: string;
-  words: string;
-  also?: string;
-  heading: string;
-  color: string;
-  emblem: EmblemName;
-  group?: string;
-  ruling?: string;
-  href: string;
+export type Tile = {
+  readonly id: EmblemName;
+  readonly heading: string;
+  readonly color: string;
+  readonly note: string;
+  readonly href: string;
 };
 
-function shownAyat(data: AdhkarEntry['data'], text: string): string {
-  const suwar = suwarOf(data, text) ?? [];
+const byOrder = Order.mapInput(
+  Order.Number,
+  (entry: { readonly data: { readonly order: number } }) => entry.data.order
+);
+
+export const bodyOf = (entry: { readonly body?: string | undefined }): string => entry.body ?? '';
+
+export const adhkarOf = (occasion: Occasion): Effect.Effect<ReadonlyArray<AdhkarEntry>> =>
+  Effect.map(
+    Effect.promise(() => getCollection('adhkar')),
+    (entries) =>
+      Array.sort(
+        entries.filter((entry) => entry.data.occasion === occasion),
+        byOrder
+      )
+  );
+
+export const unprovenEntries: Effect.Effect<ReadonlyArray<UnprovenEntry>> = Effect.map(
+  Effect.promise(() => getCollection('unproven')),
+  (entries) => Array.sort(entries, byOrder)
+);
+
+export const occasionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
+  OCCASIONS,
+  ({ id, heading, color }) =>
+    Effect.map(adhkarOf(id), ({ length }) => ({
+      id,
+      heading,
+      color,
+      note: adhkarLabel(length),
+      href: `/${id}/`,
+    })),
+  { concurrency: 'unbounded' }
+);
+
+export const sectionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.map(
+  occasionTiles,
+  (tiles) => {
+    const { heading, color, note, path: href } = UNPROVEN;
+    return [...tiles, { id: 'unproven', heading, color, note, href }];
+  }
+);
+
+function shownAyat(data: Dhikr, text: string): string {
+  const suwar = Option.getOrElse(suwarOf(data, text), () => []);
   return suwar.flatMap((ayat) => (data.ayat === 'fold' ? foldOf(ayat).shown : ayat)).join(' ');
 }
 
-export async function searchRows(): Promise<SearchRow[]> {
-  const lists = await Promise.all(OCCASIONS.map(({ id }) => adhkarOf(id)));
-  const adhkar = OCCASIONS.flatMap(({ id: emblem, heading, color }, index) =>
-    lists[index]!.map(({ id, data, body = '' }) => {
-      const text = body.trim();
-      return {
-        title: fullTitle(data),
-        words: data.quran ? shownAyat(data, text) : formOf(text, 'sabah'),
-        also: text.includes('{{') ? formOf(text, 'masaa') : undefined,
-        heading,
-        color,
-        emblem,
-        group: data.group,
-        href: dhikrAnchor(data.occasion, slugOf(id)),
-      };
-    })
-  );
-  const unproven = (await unprovenEntries()).map(({ id, data, body = '' }) => ({
-    title: data.what,
-    words: body.trim(),
-    heading: UNPROVEN.heading,
-    color: UNPROVEN.color,
-    emblem: 'unproven' as const,
-    ruling: data.takhrij.ruling,
-    href: `${UNPROVEN.path}#${slugOf(id)}`,
-  }));
-  return [...adhkar, ...unproven];
-}
+const adhkarRow = (
+  { heading, color, id: emblem }: (typeof OCCASIONS)[number],
+  { id, data, body }: AdhkarEntry
+): Effect.Effect<SearchRow, MalformedMarker> =>
+  Effect.gen(function* () {
+    const text = bodyOf({ body }).trim();
+    const words = data.quran ? shownAyat(data, text) : yield* formOf(text, 'sabah');
+    const also = hasVariants(text) ? Option.some(yield* formOf(text, 'masaa')) : Option.none();
+    return {
+      title: fullTitle(data),
+      words,
+      ...Option.match(also, { onNone: () => ({}), onSome: (evening) => ({ also: evening }) }),
+      heading,
+      color,
+      emblem,
+      ...(data.group !== undefined && { group: data.group }),
+      href: dhikrAnchor(data.occasion, slugOf(id)),
+    };
+  });
 
-export async function searchIndex(): Promise<{ rows: SearchRow[]; version: string; path: string }> {
-  const rows = await searchRows();
-  const version = createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
-  return { rows, version, path: `/search/${version}.json` };
-}
+export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker> = Effect.gen(
+  function* () {
+    const adhkar = yield* Effect.forEach(OCCASIONS, (occasion) =>
+      Effect.flatMap(adhkarOf(occasion.id), (entries) =>
+        Effect.forEach(entries, (entry) => adhkarRow(occasion, entry))
+      )
+    );
+    const unproven = Array.map(yield* unprovenEntries, ({ id, data, body }): SearchRow => ({
+      title: data.what,
+      words: bodyOf({ body }).trim(),
+      heading: UNPROVEN.heading,
+      color: UNPROVEN.color,
+      emblem: 'unproven',
+      ruling: data.takhrij.ruling,
+      href: `${UNPROVEN.path}#${slugOf(id)}`,
+    }));
+    return [...adhkar.flat(), ...unproven];
+  }
+);
+
+export type SearchIndex = {
+  readonly rows: ReadonlyArray<SearchRow>;
+  readonly version: string;
+  readonly path: string;
+};
+
+export const searchIndex: Effect.Effect<SearchIndex, MalformedMarker> = Effect.map(
+  searchRows,
+  (rows) => {
+    const version = createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
+    return { rows, version, path: `/search/${version}.json` };
+  }
+);

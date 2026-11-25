@@ -1,10 +1,11 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "oxc", "import", "node", "vitest"],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "node", "vitest", "promise"],
   "categories": {
     "correctness": "error",
     "suspicious": "error",
-    "perf": "error"
+    "perf": "error",
+    "pedantic": "error"
   },
   "env": {
     "browser": true,
@@ -14,28 +15,108 @@
   "ignorePatterns": ["dist", ".astro", ".wrangler", "graft"],
   "rules": {
     "eqeqeq": "error",
-    "no-console": ["error", { "allow": ["error", "warn"] }],
+    "no-console": "error",
     "no-else-return": "error",
     "no-nested-ternary": "error",
-    "no-param-reassign": "error",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true
+      }
+    ],
+    "no-var": "error",
     "prefer-const": "error",
     "prefer-template": "error",
+    "no-implicit-coercion": "error",
+    "no-plusplus": "error",
     "import/no-cycle": "error",
     "import/no-commonjs": "error",
+    "import/no-default-export": "error",
+    "import/no-namespace": "off",
     "import/no-unassigned-import": "off",
+    "import/max-dependencies": "off",
+    "max-lines": "off",
+    "max-lines-per-function": "off",
+    "max-depth": "off",
+    "max-classes-per-file": "off",
+    "no-inline-comments": "error",
     "typescript/no-explicit-any": "error",
     "typescript/consistent-type-imports": "error",
+    "typescript/consistent-type-definitions": ["error", "type"],
     "typescript/ban-ts-comment": "error",
-    "unicorn/prefer-node-protocol": "error"
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-unsafe-type-assertion": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/await-thenable": "error",
+    "typescript/return-await": "error",
+    "typescript/only-throw-error": "error",
+    "typescript/strict-boolean-expressions": "error",
+    "typescript/switch-exhaustiveness-check": "error",
+    "typescript/no-unnecessary-condition": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "typescript/no-unnecessary-type-arguments": "error",
+    "typescript/no-unnecessary-template-expression": "error",
+    "typescript/no-unnecessary-boolean-literal-compare": "error",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
+    "typescript/no-base-to-string": "error",
+    "typescript/restrict-template-expressions": "error",
+    "typescript/restrict-plus-operands": "error",
+    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/prefer-optional-chain": "error",
+    "typescript/prefer-readonly": "error",
+    "typescript/prefer-readonly-parameter-types": "off",
+    "typescript/require-array-sort-compare": "error",
+    "typescript/no-deprecated": "error",
+    "typescript/no-confusing-void-expression": "error",
+    "typescript/use-unknown-in-catch-callback-variable": "error",
+    "unicorn/prefer-node-protocol": "error",
+    "unicorn/no-array-for-each": "error",
+    "unicorn/prefer-spread": "error",
+    "consistent-return": "off",
+    "typescript/consistent-return": "off"
   },
   "overrides": [
     {
-      "files": ["scripts/**"],
-      "rules": { "no-console": "off" }
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "typescript/no-non-null-assertion": "off",
+        "typescript/no-unsafe-type-assertion": "off",
+        "vitest/no-conditional-in-test": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/no-unsafe-member-access": "off",
+        "typescript/no-unsafe-call": "off",
+        "typescript/no-unsafe-argument": "off",
+        "typescript/no-unsafe-return": "off"
+      }
     },
     {
-      "files": ["**/*.test.ts"],
-      "rules": { "typescript/no-non-null-assertion": "off" }
+      "files": ["**/*.astro"],
+      "rules": {
+        "typescript/consistent-type-definitions": "off"
+      }
+    },
+    {
+      "files": ["astro.config.ts", "vitest.config.ts", "vitest.build.config.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["scripts/verification/capture.js"],
+      "rules": {
+        "no-console": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/no-unsafe-member-access": "off",
+        "typescript/no-unsafe-call": "off",
+        "typescript/no-unsafe-argument": "off",
+        "typescript/no-unsafe-return": "off",
+        "typescript/strict-boolean-expressions": "off"
+      }
     }
   ]
 }

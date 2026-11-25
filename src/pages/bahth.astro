@@ -1,4 +1,5 @@
 ---
+import { Effect } from 'effect';
 import Search from '../components/Search.astro';
 import Home from '../layouts/Home.astro';
 import { searchRows, sectionTiles } from '../lib/collection';
@@ -6,11 +7,19 @@ import { SITE } from '../lib/site';
 ---
 
 <Home title="البحث" description={SITE.description} noindex faces={['naskh']} search={false}>
-  <Search tiles={await sectionTiles()} rows={await searchRows()} />
+  <Search
+    tiles={await Effect.runPromise(sectionTiles)}
+    rows={await Effect.runPromise(searchRows)}
+  />
 </Home>
 
 <script>
-  import { mountSearch } from '../scripts/search';
+  import { Effect } from 'effect';
+  import { element, mountSearch } from '../scripts/search';
 
-  mountSearch(document.querySelector<HTMLElement>('[data-search]')!, { restore: true });
+  Effect.runSync(
+    Effect.flatMap(element(document, '[data-search]', HTMLElement), (root) =>
+      mountSearch(root, { restore: true })
+    )
+  );
 </script>

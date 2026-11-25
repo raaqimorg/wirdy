@@ -1,8 +1,12 @@
+import { Effect } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { baselineProblems, type Entry } from './baseline';
+import { baselineProblems as problemsEffect, type Entry } from './baseline';
 import { claimsOf, fingerprintOf, wholeFingerprint } from './fingerprint';
 import type { Proof } from './proof';
 import type { Dhikr } from './schema';
+
+const baselineProblems = (...args: Parameters<typeof problemsEffect>) =>
+  Effect.runSync(problemsEffect(...args));
 
 const BODY = 'سُبْحَانَ اللَّهِ';
 

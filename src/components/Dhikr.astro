@@ -5,6 +5,7 @@ import Icon from './Icon.astro';
 import Phrase from './Phrase.astro';
 import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
+import { Effect, Option } from 'effect';
 import { timesUnit, toArabicDigits } from '../lib/arabic';
 import { copyOf } from '../lib/copy';
 import { foldOf, leadOf, suwarOf } from '../lib/lead';
@@ -17,23 +18,27 @@ interface Props {
   data: Dhikr;
   body: string;
   slug: string;
-  heading?: 'h2' | 'h3' | 'h4';
-  single?: boolean;
-  nested?: boolean;
+  heading?: 'h2' | 'h3' | 'h4' | undefined;
+  single?: boolean | undefined;
+  nested?: boolean | undefined;
 }
 
 const { data, body, slug, heading, single = false, nested = false } = Astro.props;
 
 const text = body.trim();
 const suwar = suwarOf(data, text);
-const folds = suwar?.map((ayat) =>
-  data.ayat === 'fold' ? foldOf(ayat) : { shown: ayat, rest: [] }
+const folds = Option.getOrElse(
+  Option.map(suwar, (all) =>
+    all.map((ayat) => (data.ayat === 'fold' ? foldOf(ayat) : { shown: ayat, rest: [] }))
+  ),
+  () => []
 );
-const unit = data.count > 1 ? timesUnit(data.count) : null;
-const lead = [unit, leadOf(data, suwar)].filter(Boolean).join('، ');
-const copy = copyOf(data, body);
+const unit = data.count > 1 ? [timesUnit(data.count)] : [];
+const lead = [...unit, leadOf(data, suwar)].filter((part) => part !== '').join('، ');
+const copy = Effect.runSync(copyOf(data, body));
 const path = dhikrPath(data.occasion, slug);
-const phrases = data.counts ? phrasesOf(text, data.counts) : null;
+const phrases = data.counts === undefined ? [] : Effect.runSync(phrasesOf(text, data.counts));
+const plain = Option.isNone(suwar) && data.counts === undefined;
 const title = fullTitle(data);
 ---
 
@@ -57,9 +62,13 @@ const title = fullTitle(data);
     </span>
   )}
   <Fragment>
-    {folds && folds.map(({ shown, rest }) => <Surah ayat={shown} rest={rest} />)}
-    {phrases && phrases.map((phrase) => <Phrase {...phrase} />)}
-    {!suwar && !phrases && <VariantText text={text} />}
+    {folds.map(({ shown, rest }) => (
+      <Surah ayat={shown} rest={rest} />
+    ))}
+    {phrases.map((phrase) => (
+      <Phrase {...phrase} />
+    ))}
+    {plain && <VariantText text={text} />}
   </Fragment>
   {!single && (
     <div slot="actions" class="entry__acts">
@@ -69,7 +78,7 @@ const title = fullTitle(data);
         type="button"
         aria-label={`نسخ: ${title}`}
         data-copy={copy.sabah}
-        data-copy-masaa={copy.masaa}
+        data-copy-masaa={Option.getOrUndefined(copy.masaa)}
       >
         <Icon name="copy" />
         <span class="entry__act-label">نسخ</span>

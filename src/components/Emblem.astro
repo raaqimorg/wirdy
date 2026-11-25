@@ -3,8 +3,8 @@ import { EMBLEMS, type EmblemName } from '../lib/emblems';
 
 interface Props {
   name: EmblemName;
-  motion?: 'always' | 'wide-only' | 'still';
-  class?: string;
+  motion?: 'always' | 'wide-only' | 'still' | undefined;
+  class?: string | undefined;
 }
 
 const { name, motion = 'always', class: className } = Astro.props;

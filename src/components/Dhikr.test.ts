@@ -31,43 +31,47 @@ async function render(data: DhikrData, body: string, extra: Extra = {}) {
 
 const textOf = (html: string) =>
   html
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
+    .replaceAll(/<[^>]+>/gu, '')
+    .replaceAll(/\s+/gu, ' ')
     .trim();
-const leadOf = (html: string) => textOf(html.match(/<p class="entry__lead">([\s\S]*?)<\/p>/)![1]!);
+const leadOf = (html: string) => textOf(html.match(/<p class="entry__lead">([\s\S]*?)<\/p>/u)![1]!);
 
 describe('Dhikr', () => {
   it('renders each form with the other form struck after it', async () => {
     const html = await render(base, '{{أَصْبَحْنَا|أَمْسَيْنَا}} بِكَ');
     expect(html).toContain(
-      '<span class="variant-text variant-text--sabah"><span>أَصْبَحْنَا\u00a0<span class="word-form__other" aria-hidden="true">أَمْسَيْنَا</span></span></span>'
+      '<span class="variant-text variant-text--sabah"><span>أَصْبَحْنَا\u00A0<span class="word-form__other" aria-hidden="true">أَمْسَيْنَا</span></span></span>'
     );
     expect(html).toContain(
-      '<span class="variant-text variant-text--masaa"><span>أَمْسَيْنَا\u00a0<span class="word-form__other" aria-hidden="true">أَصْبَحْنَا</span></span></span>'
+      '<span class="variant-text variant-text--masaa"><span>أَمْسَيْنَا\u00A0<span class="word-form__other" aria-hidden="true">أَصْبَحْنَا</span></span></span>'
     );
   });
 
   it('keeps the two variant spans adjacent with no stray whitespace', async () => {
     const html = await render(base, '{{أ|ب}}');
-    expect(html).toMatch(/<\/span><\/span><\/span><span class="variant-text variant-text--masaa">/);
+    expect(html).toMatch(
+      /<\/span><\/span><\/span><span class="variant-text variant-text--masaa">/u
+    );
   });
 
   it('strikes each word that differs, right after its own word', async () => {
     const html = await render(base, '{{هَذَا الْيَوْمِ|هَذِهِ اللَّيْلَةِ}}');
-    const morning = html.match(
-      /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/
-    )![1];
-    expect(morning.replace(/<[^>]+>/g, '')).toBe('هَذَا\u00a0هَذِهِ الْيَوْمِ\u00a0اللَّيْلَةِ');
-    expect(morning.match(/class="word-form__other"/g)).toHaveLength(2);
+    const morning =
+      html.match(
+        /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/u
+      )?.[1] ?? '';
+    expect(morning.replaceAll(/<[^>]+>/gu, '')).toBe('هَذَا\u00A0هَذِهِ الْيَوْمِ\u00A0اللَّيْلَةِ');
+    expect(morning.match(/class="word-form__other"/gu)).toHaveLength(2);
   });
 
   it('shows a word that both forms share once, with nothing struck', async () => {
     const html = await render(base, '{{رَبِّ أَسْأَلُكَ|رَبِّ أَعُوذُ}}');
-    const morning = html.match(
-      /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/
-    )![1];
-    expect(morning.match(/رَبِّ/g)).toHaveLength(1);
-    expect(morning.match(/class="word-form__other"/g)).toHaveLength(1);
+    const morning =
+      html.match(
+        /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/u
+      )?.[1] ?? '';
+    expect(morning.match(/رَبِّ/gu)).toHaveLength(1);
+    expect(morning.match(/class="word-form__other"/gu)).toHaveLength(1);
   });
 
   it('suppresses the badge when the count is one', async () => {
@@ -86,9 +90,9 @@ describe('Dhikr', () => {
   it.each([3, 10, 100])('shows a count of %i once, as the number in the ring', async (count) => {
     const html = await render({ ...base, count }, 'سبحان الله');
     const seen = html
-      .replace(/<span class="visually-hidden">[\s\S]*?<\/span>/g, '')
-      .replace(/<a class="takhrij"[\s\S]*/, '');
-    expect(textOf(seen).match(/[٠-٩]+/g)).toEqual([toArabicDigits(count)]);
+      .replaceAll(/<span class="visually-hidden">[\s\S]*?<\/span>/gu, '')
+      .replace(/<a class="takhrij"[\s\S]*/u, '');
+    expect(textOf(seen).match(/[٠-٩]+/gu)).toEqual([toArabicDigits(count)]);
   });
 
   it('says the dual without a hidden number, because the word holds it', async () => {
@@ -126,8 +130,8 @@ describe('Dhikr', () => {
 
   it('gives each سورة its own element, one after the other', async () => {
     const html = await render({ ...base, quran: true }, 'أ\n\nب\n\nج');
-    expect(html.match(/class="surah"/g)).toHaveLength(3);
-    expect(html).toMatch(/<\/div>\s*<div class="surah">ب<\/div>\s*<div class="surah">/);
+    expect(html.match(/class="surah"/gu)).toHaveLength(3);
+    expect(html).toMatch(/<\/div>\s*<div class="surah">ب<\/div>\s*<div class="surah">/u);
   });
 
   it('folds the rest of a long سورة behind a button that says how many آيات remain', async () => {
@@ -137,21 +141,21 @@ describe('Dhikr', () => {
       [ayah, ayah, ayah, ayah, ayah].join('\n')
     );
     expect(html).toContain('<div class="surah surah--fold">');
-    expect(html.match(/<details class="surah__rest">/g)).toHaveLength(1);
+    expect(html.match(/<details class="surah__rest">/gu)).toHaveLength(1);
     expect(html).toContain(
       `<summary class="surah__more"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">طيّ</span><svg class="icon icon--line surah__chevron"`
     );
-    expect(html.split('<details')[0]!.match(new RegExp(ayah, 'g'))).toHaveLength(2);
+    expect(html.split('<details')[0]!.match(new RegExp(ayah, 'gu'))).toHaveLength(2);
     expect(
-      html.split('<details')[1]!.split('</details>')[0]!.match(new RegExp(ayah, 'g'))
+      html.split('<details')[1]!.split('</details>')[0]!.match(new RegExp(ayah, 'gu'))
     ).toHaveLength(3);
   });
 
   it('closes each آية inside a سورة with ۝ but not the last', async () => {
     const html = await render({ ...base, quran: true }, 'أ\nب\nج\nد');
-    expect(html.match(/class="surah"/g)).toHaveLength(1);
-    expect(html.match(/class="surah__ayah-end"/g)).toHaveLength(3);
-    expect(html).toMatch(/<div class="surah">أ<span class="surah__ayah-end"><\/span>ب/);
+    expect(html.match(/class="surah"/gu)).toHaveLength(1);
+    expect(html.match(/class="surah__ayah-end"/gu)).toHaveLength(3);
+    expect(html).toMatch(/<div class="surah">أ<span class="surah__ayah-end"><\/span>ب/u);
   });
 
   it('leaves a single آية unmarked', async () => {
@@ -181,18 +185,19 @@ describe('Dhikr', () => {
   it('leads with the count as a ring of beads, before its unit', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
     const ring = html.match(
-      /<svg class="bead-ring"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>\s*<p class="entry__lead">\s*<span class="visually-hidden">\s*٣\s*<\/span>\s*مرات\s*<\/p>/
+      /<svg class="bead-ring"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>\s*<p class="entry__lead">\s*<span class="visually-hidden">\s*٣\s*<\/span>\s*مرات\s*<\/p>/u
     );
     expect(ring).not.toBeNull();
-    expect(ring![1].match(/<circle cx=/g)).toHaveLength(3);
-    expect(ring![1]).toContain('>٣</text>');
+    expect((ring?.[1] ?? '').match(/<circle cx=/gu)).toHaveLength(3);
+    expect(ring?.[1] ?? '').toContain('>٣</text>');
   });
 
   it('writes a count above ten inside a full ring', async () => {
     const html = await render({ ...base, count: 100 }, 'سبحان الله');
-    const ring = html.match(/<svg class="bead-ring bead-ring--full"[^>]*>([\s\S]*?)<\/svg>/)![1];
+    const ring =
+      html.match(/<svg class="bead-ring bead-ring--full"[^>]*>([\s\S]*?)<\/svg>/u)?.[1] ?? '';
     expect(ring).toContain('>١٠٠</text>');
-    expect(ring.match(/<circle cx=/g)).toBeNull();
+    expect(ring.match(/<circle cx=/gu)).toBeNull();
   });
 
   it('links the تخريج with its source and its ruling', async () => {
@@ -240,12 +245,12 @@ describe('Dhikr', () => {
 
   it('shows each phrase with its own count, read aloud in full', async () => {
     const html = await render({ ...base, counts: [33, 10] }, 'سبحان الله، والله أكبر');
-    expect(html.match(/class="phrase"/g)).toHaveLength(2);
+    expect(html.match(/class="phrase"/gu)).toHaveLength(2);
     expect(html).toMatch(
-      /<span aria-hidden="true">٣٣<\/span>\s*<span class="visually-hidden">٣٣ مرة<\/span>/
+      /<span aria-hidden="true">٣٣<\/span>\s*<span class="visually-hidden">٣٣ مرة<\/span>/u
     );
     expect(html).toMatch(
-      /<span aria-hidden="true">١٠<\/span>\s*<span class="visually-hidden">١٠ مرات<\/span>/
+      /<span aria-hidden="true">١٠<\/span>\s*<span class="visually-hidden">١٠ مرات<\/span>/u
     );
   });
 
@@ -256,7 +261,7 @@ describe('Dhikr', () => {
   it('carries its title as a hidden heading in a list, and none on its own page', async () => {
     const listed = await render(base, 'سبحان الله', { heading: 'h3' });
     expect(listed).toContain('<h3 class="visually-hidden">سيد الاستغفار</h3>');
-    expect(await render(base, 'سبحان الله', { single: true })).not.toMatch(/<h\d/);
+    expect(await render(base, 'سبحان الله', { single: true })).not.toMatch(/<h\d/u);
   });
 
   it('leaves the buttons to its own page when it stands alone', async () => {
@@ -297,10 +302,10 @@ describe('Dhikr', () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('<li class="entry entry--split" id="sayyid-al-istighfar">');
     expect(html).toMatch(
-      /<button class="entry__act" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">[\s\S]*?<span class="entry__act-label">نسخ<\/span>/
+      /<button class="entry__act" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">[\s\S]*?<span class="entry__act-label">نسخ<\/span>/u
     );
     expect(html).toMatch(
-      /<a class="entry__act" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">\s*<span class="entry__act-label">صفحة الذكر<\/span>/
+      /<a class="entry__act" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">\s*<span class="entry__act-label">صفحة الذكر<\/span>/u
     );
     expect(html).not.toContain('data-share-title');
   });
@@ -315,7 +320,7 @@ describe('Dhikr', () => {
   it('has an empty status, next to the buttons, for saying that it was copied', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="entry__act"/
+      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="entry__act"/u
     );
   });
 });

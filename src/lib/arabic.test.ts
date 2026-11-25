@@ -30,7 +30,7 @@ describe('adhkarLabel', () => {
 
 describe('formLabel', () => {
   it('names each alternative by its order', () => {
-    expect([1, 2, 3, 4].map(formLabel)).toEqual([
+    expect(([1, 2, 3, 4] as const).map((n) => formLabel(n))).toEqual([
       'الصيغة الأولى',
       'الصيغة الثانية',
       'الصيغة الثالثة',
@@ -55,7 +55,7 @@ describe('toArabicDigits', () => {
 
 describe('timesUnit', () => {
   it('names the unit of a count without its number', () => {
-    expect([1, 2, 3, 10, 11, 100].map(timesUnit)).toEqual([
+    expect([1, 2, 3, 10, 11, 100].map((n) => timesUnit(n))).toEqual([
       'مرة',
       'مرتان',
       'مرات',

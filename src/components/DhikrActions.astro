@@ -1,6 +1,7 @@
 ---
 import Button from './Button.astro';
 import Icon from './Icon.astro';
+import { Option } from 'effect';
 import type { Copy } from '../lib/copy';
 
 interface Props {
@@ -20,7 +21,7 @@ const { href, title, image, file, copy } = Astro.props;
     <Icon name="share" />
     مشاركة
   </Button>
-  <Button data-copy={copy.sabah} data-copy-masaa={copy.masaa}>
+  <Button data-copy={copy.sabah} data-copy-masaa={Option.getOrUndefined(copy.masaa)}>
     <Icon name="copy" />
     نسخ
   </Button>

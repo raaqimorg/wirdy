@@ -9,9 +9,9 @@ import type { EmblemName } from '../lib/emblems';
 import { OCCASIONS } from '../lib/occasions';
 
 interface Props {
-  tiles?: Tile[];
-  rows?: Row[];
-  sheet?: boolean;
+  tiles?: ReadonlyArray<Tile> | undefined;
+  rows?: ReadonlyArray<Row> | undefined;
+  sheet?: boolean | undefined;
 }
 
 const { tiles, rows = [], sheet = false } = Astro.props;

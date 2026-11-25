@@ -10,9 +10,13 @@ export type IconName =
   | 'search'
   | 'share';
 
-type Icon = { size: number; stroke?: number; paths: string[] };
+type Icon = {
+  readonly size: number;
+  readonly stroke?: number;
+  readonly paths: ReadonlyArray<string>;
+};
 
-export const ICONS: Record<IconName, Icon> = {
+export const ICONS: Readonly<Record<IconName, Icon>> = {
   back: { size: 12, stroke: 1.6, paths: ['M4.5 2.5L8 6l-3.5 3.5'] },
   chevron: { size: 12, stroke: 1.6, paths: ['M2.5 4.5L6 8l3.5-3.5'] },
   check: { size: 12, stroke: 1.6, paths: ['M2 6.5l2.5 2.5L10 3'] },

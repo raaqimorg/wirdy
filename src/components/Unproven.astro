@@ -1,6 +1,7 @@
 ---
 import Badge from './Badge.astro';
 import Entry from './Entry.astro';
+import { Option } from 'effect';
 import { soundPlace } from '../lib/sound';
 import { isOneWord } from '../lib/takhrij';
 import type { Unproven } from '../lib/schema';
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const { data, body, slug } = Astro.props;
-const place = data.sound ? soundPlace(data.sound) : null;
+const place = Option.getOrUndefined(Option.flatMap(Option.fromUndefinedOr(data.sound), soundPlace));
 ---
 
 <Entry
@@ -21,7 +22,7 @@ const place = data.sound ? soundPlace(data.sound) : null;
   lead={data.what}
   layout="split"
   kind="unproven"
-  sound={Boolean(data.sound)}
+  sound={data.sound !== undefined}
 >
   {isOneWord(data.takhrij.ruling) && <Badge slot="badge">{data.takhrij.ruling}</Badge>}
   <Fragment>{body.trim()}</Fragment>

@@ -10,10 +10,10 @@ interface Props extends ComponentProps<typeof Paper> {
   emblem: EmblemName;
   color: string;
   heading: string;
-  context?: string;
-  lede?: string;
-  back?: { href: string; label: string };
-  single?: boolean;
+  context?: string | undefined;
+  lede?: string | undefined;
+  back?: { href: string; label: string } | undefined;
+  single?: boolean | undefined;
 }
 
 const { emblem, color, heading, context, lede, back, single = false, ...paper } = Astro.props;

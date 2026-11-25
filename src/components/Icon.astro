@@ -3,7 +3,7 @@ import { ICONS, type IconName } from '../lib/icons';
 
 interface Props {
   name: IconName;
-  class?: string;
+  class?: string | undefined;
 }
 
 const { name, class: className } = Astro.props;

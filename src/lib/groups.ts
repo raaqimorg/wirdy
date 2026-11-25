@@ -1,29 +1,50 @@
-export type Run<T> = { group?: string; items: T[] };
-export type Form<T> = { form?: number; items: T[] };
+import { Array, Data, Effect, Option, Record } from 'effect';
+import type { FORMS } from './schema';
 
-function runsBy<T, K>(entries: T[], keyOf: (entry: T) => K): { key: K; items: T[] }[] {
-  const runs: { key: K; items: T[] }[] = [];
-  for (const entry of entries) {
-    const key = keyOf(entry);
-    const last = runs.at(-1);
-    if (last && last.key === key) {
-      last.items.push(entry);
-    } else {
-      runs.push({ key, items: [entry] });
-    }
-  }
-  return runs;
+type FormNumber = (typeof FORMS)[number];
+
+export type Run<T> = {
+  readonly group: Option.Option<string>;
+  readonly items: Array.NonEmptyReadonlyArray<T>;
+};
+export type Form<T> = { readonly form: FormNumber; readonly items: Array.NonEmptyReadonlyArray<T> };
+
+export class UnknownGroup extends Data.TaggedError('UnknownGroup')<{ readonly message: string }> {}
+
+export class MissingForm extends Data.TaggedError('MissingForm')<{ readonly message: string }> {}
+
+function runsBy<T, K>(
+  entries: ReadonlyArray<T>,
+  keyOf: (entry: T) => K
+): ReadonlyArray<{ readonly key: K; readonly items: Array.NonEmptyReadonlyArray<T> }> {
+  if (!Array.isReadonlyArrayNonEmpty(entries)) return [];
+  return Array.map(
+    Array.groupWith(entries, (one, other) => keyOf(one) === keyOf(other)),
+    (items) => ({ key: keyOf(Array.headNonEmpty(items)), items })
+  );
 }
 
-export function runsByGroup<T extends { data: { group?: string } }>(entries: T[]): Run<T>[] {
-  return runsBy(entries, ({ data }) => data.group).map(({ key, items }) => ({ group: key, items }));
+export function runsByGroup<T extends { readonly data: { readonly group?: string } }>(
+  entries: ReadonlyArray<T>
+): ReadonlyArray<Run<T>> {
+  return Array.map(
+    runsBy(entries, ({ data }) => data.group),
+    ({ key, items }) => ({ group: Option.fromUndefinedOr(key), items })
+  );
 }
 
-export function formsOf<T extends { data: { form?: number } }>(entries: T[]): Form<T>[] {
-  return runsBy(entries, ({ data }) => data.form).map(({ key, items }) => ({ form: key, items }));
-}
+export const formsOf = <T extends { readonly data: { readonly form?: FormNumber } }>(
+  entries: ReadonlyArray<T>
+): Effect.Effect<ReadonlyArray<Form<T>>, MissingForm> =>
+  Effect.forEach(
+    runsBy(entries, ({ data }) => data.form),
+    ({ key, items }) =>
+      key === undefined
+        ? Effect.fail(new MissingForm({ message: 'A dhikr among choices has no form.' }))
+        : Effect.succeed({ form: key, items })
+  );
 
-export const GROUP_SLUGS: Record<string, string> = {
+export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   القراءة: 'al-qiraah',
   'أصبحنا وأمسينا': 'asbahna-wa-amsayna',
   'الاستغفار والدعاء': 'al-istighfar-wa-al-dua',
@@ -81,11 +102,13 @@ export const GROUP_SLUGS: Record<string, string> = {
   عوارض: 'awarid',
 };
 
-export function groupId(group: string): string {
-  if (!Object.hasOwn(GROUP_SLUGS, group)) {
-    throw new Error(
-      `No slug for the group «${group}». Add one to GROUP_SLUGS in src/lib/groups.ts.`
-    );
-  }
-  return GROUP_SLUGS[group]!;
-}
+export const groupId = (group: string): Effect.Effect<string, UnknownGroup> =>
+  Option.match(Record.get(GROUP_SLUGS, group), {
+    onSome: Effect.succeed,
+    onNone: () =>
+      Effect.fail(
+        new UnknownGroup({
+          message: `No slug for the group «${group}». Add one to GROUP_SLUGS in src/lib/groups.ts.`,
+        })
+      ),
+  });
