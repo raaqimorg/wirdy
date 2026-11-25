@@ -1,3 +1,5 @@
+import { NEUTRAL } from './tone';
+
 export const SITE = {
   name: 'وِردي',
   title: 'وِردي: أذكار الصباح والمساء والنوم وأدبار الصلوات',
@@ -11,5 +13,5 @@ export const UNPROVEN = {
   heading: 'ما لم يثبت',
   lede: 'أذكار مشهورة ضعّفها الألباني، أو ضعّف عددها أو وقتها',
   note: 'أذكار مشهورة مع حكم كل واحد منها',
-  color: '#586880',
+  color: NEUTRAL,
 } as const;

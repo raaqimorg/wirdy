@@ -30,7 +30,7 @@ The site follows the device's light or dark mode. The small «المظهر» but
 - The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
 - The button has two states. It starts from the device's mode, and a click flips to the other one. When a click lands on the device's own mode, the script forgets the saved choice, so the site follows the device again. There is no third «automatic» state.
 - The button is named «المظهر», and its text never changes. Its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
-- The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 12% so they do not glare at night.
+- The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 10% (the night step of the tone rule in [`design-system.md`](design-system.md)) so they do not glare at night.
 - Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
 
 ## The `{{morning|evening}}` markers

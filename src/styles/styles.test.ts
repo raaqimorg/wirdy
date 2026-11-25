@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { OCCASIONS } from '../lib/occasions';
 import { PALETTE } from '../lib/palette';
+import { NIGHT } from '../lib/tone';
 
 const STYLES = join(process.cwd(), 'src/styles');
 const COMPONENTS = join(process.cwd(), 'src/components');
@@ -56,6 +57,11 @@ describe('the tokens', () => {
     expect(light).toContain(`--color-ink: ${PALETTE.ink};`);
     expect(light).toContain(`--color-ink-muted: ${PALETTE.inkMuted};`);
     expect(dark.chosen).toContain(`--color-paper: ${PALETTE.paperDark};`);
+  });
+
+  it('darken the tones at night by the same share as the tone rule', () => {
+    expect(light).toContain('--tone-shade: 0%;');
+    expect(dark.chosen).toContain(`--tone-shade: ${Math.round((1 - NIGHT) * 100)}%;`);
   });
 
   it('mark what is sound in the color of the adhkar after the prayers', () => {

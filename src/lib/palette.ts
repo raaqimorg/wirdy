@@ -6,6 +6,6 @@ export const PALETTE = {
   ink: 'hsl(200 50% 5%)',
   inkMuted: 'hsl(200 40% 22%)',
   shade: '#000',
-  petal: '#e0a526',
-  disc: '#ad4c0b',
+  petal: '#d2a249',
+  disc: '#91593c',
 } as const;

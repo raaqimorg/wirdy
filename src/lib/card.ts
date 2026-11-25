@@ -3,6 +3,7 @@ import { timesLabel } from './arabic';
 import { EMBLEMS } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
 import { fullLeadOf, REST, suwarOf } from './lead';
+import { markSvg } from './mark';
 import { OCCASIONS } from './occasions';
 import { phrasesOf, type Phrase } from './phrases';
 import type { Dhikr } from './schema';
@@ -64,7 +65,7 @@ export function cardOf(data: Dhikr, body: string): Card {
 
 export function cardFile(card: Card, occasion: Dhikr['occasion'], slug: string): string {
   const print = createHash('sha256')
-    .update(JSON.stringify([TEMPLATE, card, EMBLEMS[occasion]]))
+    .update(JSON.stringify([TEMPLATE, card, EMBLEMS[occasion], markSvg()]))
     .digest('hex')
     .slice(0, 8);
   return `og/${occasion}/${slug}-${print}.png`;

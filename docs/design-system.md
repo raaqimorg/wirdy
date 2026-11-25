@@ -42,7 +42,15 @@ An element that has an occasion's color (the `body` of its page, or its card) ca
 - `--tone-deep`: dark text of the same color on eggshell.
 - `--tone-wash` and `--tone-flash`: the background of a dhikr that a link points at.
 
-The colors themselves are in `src/lib/occasions.ts` and `src/lib/site.ts`.
+No occasion color is typed by hand. `src/lib/tone.ts` computes each one from a rule in OKLCH (lightness, chroma, hue):
+
+- Lightness is 0.52 for every occasion. It is the lightest value at which the eggshell text keeps 4.5:1 on every hue the rule can give.
+- Chroma is 0.086 for every occasion. It is the most that every hue on the arc can hold at that lightness, so no occasion looks louder than another.
+- The hue comes from the place on the list. The hues sit evenly on an arc of 300° that starts at 135° and skips 75° to 135°, where the tones turn olive. The first occasion has the hue 47°, and the disc of the sunflower mark takes its color (`PALETTE.disc`, which a test keeps equal). The petals (`PALETTE.petal`, `#d2a249`, OKLCH 0.74 0.12 80°) are the one color outside the rule, because the rule skips yellow. The list walks the arc by the whole step nearest the golden ratio (3 of 8 places for 8 occasions), so neighbours on the list sit about 112° apart and any two sit at least 300° ÷ their count apart.
+- At night, `--tone-shade` mixes the tone with 10% black in OKLab. That multiplies its lightness and its chroma by 0.9, so the same hue does not glare on the dark paper.
+- «ما لم يثبت» has the same lightness and almost no chroma (0.025 at 250°).
+
+To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color follows from the new count, and `src/lib/tone.test.ts` proves the rule for 2 to 16 occasions.
 
 ## Dark mode
 
