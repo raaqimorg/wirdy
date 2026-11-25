@@ -1,54 +1,84 @@
-<h1 align="center">وِردي 🌻</h1>
-
-<p align="center">The daily adhkar that are authentic from the Prophet ﷺ, in eight occasions, each with its takhrij.</p>
+<p align="center">
+  <img alt="وِردي: أذكار اليوم والليلة، مما ثبت عن النبي ﷺ، ومع كل ذكر تخريجُه" src="public/opengraph.png">
+</p>
 
 <p align="center">
   <a href="https://wirdy.site"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Fwirdy.site&label=wirdy.site"></a>
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A search icon in the bar of every page finds a dhikr by its name or its words as you type, with or without diacritics, and finds the entries of «ما لم يثبت» with their rulings. It opens over the page: on a phone it fills the screen, and on a wide screen it is a panel in the middle. [/bahth/](https://wirdy.site/bahth/) holds the same search as a page. A page of [الطب النبوي](https://wirdy.site/al-tibb-al-nabawi/) gathers the sound hadiths on treatment and keeping well: honey, black seed, Zamzam, cupping, fever, and ruqyah. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
+Wirdy (وِردي) is the daily wird of a Muslim, taken only from what is authentic from the Prophet ﷺ. At [wirdy.site](https://wirdy.site), each dhikr carries its takhrij, linked to its hadith on [dorar.net](https://dorar.net/hadith). The site has no ads, no accounts, and no tracking, and no page makes a request to another site.
 
-| Occasion       | Adhkar |
-| -------------- | -----: |
-| الصباح والمساء |     16 |
-| الأذان والمسجد  |     13 |
-| أثناء الصلاة    |     36 |
-| بعد الصلاة      |     20 |
-| عند النوم      |     18 |
-| عند الاستيقاظ   |      7 |
-| كل وقت         |     23 |
-| أحوال متفرقة   |     63 |
+| Occasions | Adhkar | الطب النبوي | ما لم يثبت |
+| --------: | -----: | ----------: | ---------: |
+|         8 |    196 |          39 |         16 |
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme_screenshot_home_darkmode.webp">
+    <img alt="The home page: a card for each occasion" src=".github/readme_screenshot_home_lightmode.webp" width="32%">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme_screenshot_occasion_darkmode.webp">
+    <img alt="The page of الصباح والمساء, with the morning and evening switch" src=".github/readme_screenshot_occasion_lightmode.webp" width="32%">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme_screenshot_dhikr_darkmode.webp">
+    <img alt="The page of سيد الاستغفار, with its virtue, its takhrij, and the share, copy, and image buttons" src=".github/readme_screenshot_dhikr_lightmode.webp" width="32%">
+  </picture>
+</p>
+
+## Features
+
+- **Eight occasions**, from الصباح والمساء to أحوال متفرقة, each on its own page.
+- **Morning and evening forms.** The page shows the form for the time of day, and a switch changes it.
+- **A page for each dhikr**, with buttons to share it, copy it with its count and takhrij, and save its card as an image.
+- **Search** by name or by words, with or without diacritics.
+- **[الطب النبوي](https://wirdy.site/al-tibb-al-nabawi/)**: the sound hadiths on treatment and keeping well.
+- **[«ما لم يثبت»](https://wirdy.site/ma-lam-yathbut/)**: well-known adhkar that are not authentic, each with its ruling.
 
 ## What goes in
 
-A dhikr is on the site only when dorar.net shows that one of these is true:
+A dhikr is on the site only when dorar.net shows one of these:
 
 1. It is in Sahih al-Bukhari or Sahih Muslim.
 2. al-Albani grades it صحيح or حسن.
 
-The same rule applies to its count and its time. A dhikr that al-Albani grades ضعيف stays out, even when another scholar accepts it. So some well-known adhkar are not here, such as «رضيت بالله ربا» three times in the morning and evening, and «حسبي الله» seven times. The page [«ما لم يثبت»](https://wirdy.site/ma-lam-yathbut/) lists them, each with its ruling. [`docs/content.md`](docs/content.md) is the full standard. `verification/` holds the saved proof of each dhikr that has been checked, with the text of its pages.
+The rule covers its count and its time too. A dhikr that al-Albani grades ضعيف stays out, even when another scholar accepts it. [`verification/`](verification/) holds the proof of each checked dhikr: the text of the pages that prove it. [`docs/content.md`](docs/content.md) is the full standard.
 
-The text of the Quran is the Uthmani text from [Tanzil](https://tanzil.net), in the riwayah of Hafs.
+The Quran text is the Uthmani text from [Tanzil](https://tanzil.net), in the riwayah of Hafs.
 
-## Report a mistake
+**Report a mistake.** If a word, a count, or a ruling is wrong, or an authentic dhikr is missing, [open a Dhikr correction](https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml). Give the dorar.net page that shows it.
 
-If a word, a count, or a ruling is wrong, or an authentic dhikr is missing, [open a Dhikr correction](https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml). Give the dorar.net page that shows it.
+## Run it locally
 
-## Development
-
-Wirdy is an [Astro](https://astro.build) site, and its TypeScript is written with [Effect](https://effect.website). Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, one page for each dhikr, and a search page, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski, and [`docs/design-system.md`](docs/design-system.md) says how the code holds it.
+You need [Bun](https://bun.sh) 1.4 or later.
 
 ```bash
-bun install      # dependencies, and the git hooks
-bun run dev      # http://localhost:4321
-bun run ci       # format, lint, types, tests, and the build test
-bun run verification  # which adhkar have a saved proof, and what the others lack
+git clone https://github.com/raaqimorg/wirdy.git
+cd wirdy
+bun install
+bun run dev
 ```
 
-Each dhikr that changes between the morning and the evening shows one form at a time, and a dhikr for the other time is hidden. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning before noon, and the evening otherwise.
+The site is then at http://localhost:4321. `bun install` also turns on the git hooks. [`docs/development.md`](docs/development.md) has every command.
 
-[`docs/README.md`](docs/README.md) is the index of the docs, and [`docs/development.md`](docs/development.md) has every command. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
+## How it works
+
+[Astro](https://astro.build) builds static HTML from Markdown, and [Cloudflare Pages](https://pages.cloudflare.com) serves it. The TypeScript is written with [Effect](https://effect.website). There is no client framework: each page has one small inline script, and search has one module.
+
+| Part                                                               | Role                                                                 |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| [`src/content/adhkar/`](src/content/adhkar/)                       | One Markdown file for each dhikr: its text, count, time, and takhrij |
+| [`src/content/tibb/`](src/content/tibb/)                           | The hadiths of الطب النبوي                                           |
+| [`src/content/unproven/`](src/content/unproven/)                   | The entries of «ما لم يثبت», each with its ruling                    |
+| [`src/lib/`](src/lib/)                                             | The schema and the logic, each file with its test                    |
+| [`src/components/`](src/components/), [`src/styles/`](src/styles/) | The design system                                                    |
+| [`src/pages/`](src/pages/)                                         | The routes                                                           |
+| [`verification/`](verification/)                                   | The proof of each checked dhikr                                      |
+| [`scripts/`](scripts/)                                             | The icon and card generators, and the verification tools             |
+
+[`docs/README.md`](docs/README.md) is the index of the docs. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents, and it is useful to anyone.
 
 ## Contributing
 
@@ -59,15 +89,19 @@ Report bugs and ideas in [GitHub issues](https://github.com/raaqimorg/wirdy/issu
 3. Run `bun run ci`.
 4. Open a pull request into `main`, linked to the issue.
 
-[`CONTRIBUTING.md`](.github/CONTRIBUTING.md) gives the full steps, and covers keeping your email private. [`docs/exceptions.md`](docs/exceptions.md) lists where the code is different from the usual approach, and why.
+[`CONTRIBUTING.md`](.github/CONTRIBUTING.md) gives the full steps. [`docs/exceptions.md`](docs/exceptions.md) lists where the code is different from the usual approach, and why.
 
 ## Contact
 
 [Raaqim](https://raaqim.org) maintains Wirdy, together with its contributors. Raaqim is an open-source organization behind several Arabic-language projects.
 
-- Report a security problem privately, not in a public issue. The [security policy](.github/SECURITY.md) has the steps.
-- Write conduct concerns to conduct@raaqim.org ([code of conduct](.github/CODE_OF_CONDUCT.md)).
+| For                                                              | Write to                                                                             |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Security reports, kept private ([policy](.github/SECURITY.md))   | [Report a vulnerability](https://github.com/raaqimorg/wirdy/security/advisories/new) |
+| Conduct concerns ([code of conduct](.github/CODE_OF_CONDUCT.md)) | conduct@raaqim.org                                                                   |
 
 ## License
 
-The code and documentation are under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one. The Quran text comes from the [Tanzil Project](https://tanzil.net), under Tanzil's terms, not under MIT: copy it as it is, and do not change it. [`NOTICE`](NOTICE) holds Tanzil's notice. The site uses the [Amiri](https://github.com/aliftype/amiri), Amiri Quran, and [IBM Plex Sans Arabic](https://github.com/IBM/plex) typefaces under the [SIL Open Font License 1.1](https://openfontlicense.org). The code of conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org) 2.1.
+The code and documentation are under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one. The Quran text is under [Tanzil's terms](NOTICE), not under MIT: copy it as it is, and do not change it.
+
+The site uses the [Amiri](https://github.com/aliftype/amiri), Amiri Quran, and [IBM Plex Sans Arabic](https://github.com/IBM/plex) typefaces under the [SIL Open Font License 1.1](https://openfontlicense.org). The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski. The code of conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org) 2.1.
