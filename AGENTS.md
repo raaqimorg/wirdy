@@ -11,7 +11,7 @@ This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Ar
 - `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), a page for each dhikr (`[occasion]/[dhikr].astro`), the «ما لم يثبت» page (`ma-lam-yathbut.astro`), the search page (`bahth.astro`), the 404 page (`404.astro`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
 - `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`), `bun run opengraph`, or `bun run opengraph:adhkar` (one card for each dhikr, in `public/og/`), and do not edit them by hand.
 - `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
-- `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`design-system.md`](docs/design-system.md), and [`exceptions.md`](docs/exceptions.md).
+- `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`design-system.md`](docs/design-system.md), [`exceptions.md`](docs/exceptions.md), and [`emblem-ideas.md`](docs/emblem-ideas.md) (emblems drawn and not chosen, for a new occasion to take).
 
 ## Commands
 

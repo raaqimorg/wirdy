@@ -50,19 +50,13 @@ const arches: Shape[] = [
   lit('path', 'up', { d: 'M100 240V194A20 20 0 0 1 140 194V240Z', ...egg() }),
 ];
 
-const DESCENT = [0.12, 0.16, 0.2, 0.24, 0.28];
-
-const bowing: Shape[] = [
-  ...DESCENT.map((opacity, index) =>
-    dark('rect', {
-      x: 210 - index * 42,
-      y: index * 40,
-      width: 30,
-      height: 240 - index * 40,
-      ...shade(opacity),
-    })
+const mat: Shape[] = [
+  dark('rect', { x: 56, y: 12, width: 128, height: 216, rx: 4, ...shade(0.16) }),
+  dark('rect', { x: 72, y: 28, width: 96, height: 184, rx: 2, ...line(PALETTE.shade, 6, 0.2) }),
+  ...times(4, (index) =>
+    dark('rect', { x: 88, y: 132 + index * 18, width: 64, height: 6, rx: 3, ...shade(0.14) })
   ),
-  lit('rect', 'up', { x: 0, y: 200, width: 30, height: 40, ...egg() }),
+  lit('path', 'up', { d: 'M88 116V84A32 32 0 0 1 152 84V116Z', ...egg() }),
 ];
 
 const THIRDS = [0.14, 0.24, 0.36];
@@ -74,32 +68,49 @@ const hundred: Shape[] = times(100, (index) => {
     : dark('circle', { ...place, ...shade(THIRDS[Math.floor(index / 33)]!) });
 });
 
-const night: Shape[] = [
-  dark('circle', { cx: 120, cy: 120, r: 120, ...shade(0.15) }),
-  dark('circle', { cx: 112, cy: 128, r: 100, ...shade(0.15) }),
+const STARS = [
+  [200, 30, 4],
+  [150, 60, 3],
+  [214, 96, 5],
+  [100, 28, 3],
+  [176, 128, 3],
+  [44, 40, 4],
+  [128, 104, 2.5],
+  [226, 160, 3],
+  [64, 84, 2.5],
+] as const;
+
+const sky: Shape[] = [
+  dark('path', { d: 'M0 240V208Q120 176 240 208V240Z', ...shade(0.24) }),
+  ...STARS.map(([cx, cy, r]) => dark('circle', { cx, cy, r, ...egg(0.55) })),
   lit('path', 'turn', {
-    d: 'M92.7 56.8A80 80 0 1 0 183.2 147.3A64 64 0 0 1 92.7 56.8Z',
+    d: 'M79.9 80.5A60 60 0 1 0 143.9 161.9A52 52 0 0 1 79.9 80.5Z',
     ...egg(),
   }),
-  lit('circle', 'grow', { cx: 168, cy: 72, r: 11, ...egg() }),
 ];
 
-const RISE = [0.14, 0.2, 0.28, 0.38, 0.5, 0.68, 1];
-const PIVOT = { x: 9, y: 231 };
+const SUN = { x: 120, y: 240 };
 
-const bar = (degrees: number): string => {
+const ray = (index: number): string => {
+  const degrees = 10 + index * 20;
   const angle = (degrees * Math.PI) / 180;
-  const corner = (along: number, off: number) =>
-    `${round(PIVOT.x + along * Math.cos(angle) + off * Math.sin(angle))} ${round(
-      PIVOT.y - along * Math.sin(angle) + off * Math.cos(angle)
-    )}`;
-  return `M${corner(72, -9)}L${corner(231, -9)}L${corner(231, 9)}L${corner(72, 9)}Z`;
+  const fit = Math.min(196, 104 / Math.abs(Math.cos(angle)), 228 / Math.sin(angle));
+  const length = index % 2 ? fit * 0.72 : fit;
+  const point = (radius: number) =>
+    `${round(SUN.x + radius * Math.cos(angle))} ${round(SUN.y - radius * Math.sin(angle))}`;
+  return `M${point(60)}L${point(length)}`;
 };
 
-const standing: Shape[] = RISE.map((opacity, index) => {
-  const attrs = { d: bar(index * 15), ...egg(opacity) };
-  return index === RISE.length - 1 ? lit('path', 'up', attrs) : dark('path', attrs);
-});
+const light: Shape[] = [
+  ...times(9, (index) =>
+    dark('path', {
+      d: ray(index),
+      ...line(PALETTE.shade, 12, 0.24),
+      'stroke-linecap': 'round',
+    })
+  ),
+  lit('path', 'up', { d: 'M76 240A44 44 0 0 1 164 240Z', ...egg() }),
+];
 
 const unbroken: Shape[] = [
   lit('path', 'fade', {
@@ -143,10 +154,10 @@ export type EmblemName = Occasion | 'unproven';
 export const EMBLEMS: Record<EmblemName, Shape[]> = {
   'sabah-masaa': halves,
   masjid: arches,
-  'fi-al-salah': bowing,
+  'fi-al-salah': mat,
   salah: hundred,
-  nawm: night,
-  istiqaz: standing,
+  nawm: sky,
+  istiqaz: light,
   mutlaq: unbroken,
   ahwal: roads,
   unproven: chains,
