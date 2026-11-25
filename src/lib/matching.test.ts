@@ -19,6 +19,11 @@ describe('normalize', () => {
     expect(normalize('هو و')).toBe('هو و');
   });
 
+  it('reads both spellings of السماوات as one word', () => {
+    expect(normalize('رَبَّ السَّمَواتِ')).toBe(normalize('رَبَّ السَّمَاوَاتِ'));
+    expect(normalize('السماء')).not.toBe(normalize('السماوات'));
+  });
+
   it('splits no word at a small Quranic letter', () => {
     expect(normalize('دَاوُۥدَ')).toBe('داود');
   });

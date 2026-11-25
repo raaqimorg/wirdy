@@ -1,6 +1,7 @@
 const INSIDE_A_WORD = /[\p{M}ـۥۦ]/gu;
 const WORD = /[\p{L}\p{M}\p{N}]+/gu;
 const BETWEEN_WORDS = /[^\p{L}\p{N}]+/gu;
+const SAMAWAT = /سموات/g;
 const LONE_WAW = /(^| )و (?=\S)/g;
 
 export function normalize(text: string): string {
@@ -10,7 +11,8 @@ export function normalize(text: string): string {
     .replaceAll('ٱ', 'ا')
     .replaceAll(BETWEEN_WORDS, ' ')
     .trim()
-    .replaceAll(LONE_WAW, '$1و');
+    .replaceAll(LONE_WAW, '$1و')
+    .replaceAll(SAMAWAT, 'سماوات');
 }
 
 export function phrasesIn(text: string): string[] {
