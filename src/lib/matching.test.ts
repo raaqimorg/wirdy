@@ -24,6 +24,13 @@ describe('normalize', () => {
     expect(normalize('السماء')).not.toBe(normalize('السماوات'));
   });
 
+  it('reads ﷺ, its words, and neither as the same text', () => {
+    const plain = normalize('ودين نبينا محمد وملة أبينا');
+    expect(normalize('ودين نبينا محمد ﷺ وملة أبينا')).toBe(plain);
+    expect(normalize('ودين نبينا محمد صلَّى اللهُ عليه وسلَّم وملة أبينا')).toBe(plain);
+    expect(normalize('اللهم صل على محمد')).toBe('اللهم صل على محمد');
+  });
+
   it('splits no word at a small Quranic letter', () => {
     expect(normalize('دَاوُۥدَ')).toBe('داود');
   });
@@ -82,6 +89,11 @@ describe('spanOf', () => {
       'بكَ أصبَحْنَا، و بكَ أمْسَيْنَا'
     );
     expect(spanOf('نحيا، و بكَ نموت', 'وبك نموت')).toBe('و بكَ نموت');
+  });
+
+  it('cuts across the words of ﷺ', () => {
+    expect(spanOf('ومحمد صلى الله عليه وسلم حق', 'ومحمد ﷺ حق')).toBe('ومحمد صلى الله عليه وسلم حق');
+    expect(spanOf('ومحمد ﷺ حق', 'ومحمد صلى الله عليه وسلم حق')).toBe('ومحمد ﷺ حق');
   });
 
   it('cuts at whole words only', () => {

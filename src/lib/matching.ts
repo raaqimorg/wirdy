@@ -2,6 +2,8 @@ const INSIDE_A_WORD = /[\p{M}ـۥۦ]/gu;
 const WORD = /[\p{L}\p{M}\p{N}]+/gu;
 const BETWEEN_WORDS = /[^\p{L}\p{N}]+/gu;
 const SAMAWAT = /سموات/g;
+const HONORIFIC = ['صلى', 'الله', 'عليه', 'وسلم'];
+const HONORIFICS = /(^| )(?:ﷺ|صلى الله عليه وسلم)(?= |$)/g;
 const LONE_WAW = /(^| )و (?=\S)/g;
 
 export function normalize(text: string): string {
@@ -12,7 +14,9 @@ export function normalize(text: string): string {
     .replaceAll(BETWEEN_WORDS, ' ')
     .trim()
     .replaceAll(LONE_WAW, '$1و')
-    .replaceAll(SAMAWAT, 'سماوات');
+    .replaceAll(SAMAWAT, 'سماوات')
+    .replaceAll(HONORIFICS, '')
+    .trim();
 }
 
 export function phrasesIn(text: string): string[] {
@@ -22,9 +26,10 @@ export function phrasesIn(text: string): string[] {
     .filter((phrase) => phrase !== '');
 }
 
-export function spanOf(text: string, words: string): string | undefined {
-  const wanted = normalize(words).split(' ');
-  const found: { word: string; from: number; to: number }[] = [];
+type Word = { word: string; from: number; to: number };
+
+function wordsIn(text: string): Word[] {
+  const found: Word[] = [];
   for (const { 0: match, index } of text.matchAll(WORD)) {
     const word = normalize(match);
     const to = index + match.length;
@@ -34,7 +39,16 @@ export function spanOf(text: string, words: string): string | undefined {
     } else if (word !== '') {
       found.push({ word, from: index, to });
     }
+    if (HONORIFIC.every((part, at) => found.at(at - HONORIFIC.length)?.word === part)) {
+      found.length -= HONORIFIC.length;
+    }
   }
+  return found;
+}
+
+export function spanOf(text: string, words: string): string | undefined {
+  const wanted = normalize(words).split(' ');
+  const found = wordsIn(text);
 
   const start = found.findIndex((_, at) =>
     wanted.every((word, offset) => found[at + offset]?.word === word)
