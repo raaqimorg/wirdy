@@ -3,7 +3,7 @@ import type { Dhikr } from './schema';
 
 export type Claim = 'text' | 'count' | 'moment' | 'manner' | 'fadl' | 'takhrij';
 
-const CLAIMS: Claim[] = ['text', 'count', 'moment', 'manner', 'fadl', 'takhrij'];
+export const CLAIMS: Claim[] = ['text', 'count', 'moment', 'manner', 'fadl', 'takhrij'];
 
 const provenBy: Record<Claim, (data: Dhikr, body: string) => object> = {
   text: ({ quran }, body) => ({ body: body.normalize('NFC').trim(), quran }),

@@ -2,14 +2,16 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:f
 import { dirname, join } from 'node:path';
 import matter from 'gray-matter';
 import { toArabicDigits } from '../../src/lib/arabic.ts';
-import { cardFile, cardOf } from '../../src/lib/card.ts';
+import { cardFile, cardOf, type Card } from '../../src/lib/card.ts';
 import { markSvg } from '../../src/lib/mark.ts';
+import type { Occasion } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import { slugOf } from '../../src/lib/permalink.ts';
+import type { Phrase } from '../../src/lib/phrases.ts';
 import { dhikrSchema } from '../../src/lib/schema.ts';
 import { SITE } from '../../src/lib/site.ts';
-import { screenshot } from '../chromium.mjs';
-import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin, root } from './shared.mjs';
+import { screenshot } from '../chromium.ts';
+import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -17,13 +19,14 @@ const HEIGHT = 630;
 const publicDir = join(root, 'public');
 const content = join(root, 'src', 'content', 'adhkar');
 
-const escape = (text) =>
-  text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+const ENTITIES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
 
-const ayatOf = (blocks) =>
+const escape = (text: string) => text.replace(/[&<>]/g, (c) => ENTITIES[c]);
+
+const ayatOf = (blocks: string[][]) =>
   blocks.map((ayat) => `<p>﴿ ${ayat.map(escape).join(' <i>۝</i> ')} ﴾</p>`).join('');
 
-const phrasesRows = (phrases) =>
+const phrasesRows = (phrases: Phrase[]) =>
   phrases
     .map(
       ({ text, count }) =>
@@ -31,20 +34,20 @@ const phrasesRows = (phrases) =>
     )
     .join('');
 
-const textOf = (card) => {
+const textOf = (card: Card) => {
   if (card.quran) return ayatOf(card.blocks);
   if (card.phrases) return phrasesRows(card.phrases);
   return `<p>${escape(card.blocks[0][0])}${card.cut ? ' …' : ''}</p>`;
 };
 
-const leading = (card) => {
+const leading = (card: Card) => {
   if (card.quran) return 2.15;
   return card.phrases ? 1.7 : 1.85;
 };
 
 const page = (
-  card,
-  occasion
+  card: Card,
+  occasion: Occasion
 ) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
 ${plexArabic(500)}
 ${plexArabic(700)}

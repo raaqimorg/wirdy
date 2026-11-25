@@ -5,8 +5,8 @@ import { markSvg } from '../../src/lib/mark.ts';
 import { OCCASIONS } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import { SITE } from '../../src/lib/site.ts';
-import { screenshot } from '../chromium.mjs';
-import { amiri, emblemSvg, plexArabic, plexLatin, root } from './shared.mjs';
+import { screenshot } from '../chromium.ts';
+import { amiri, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 2400;
 const HEIGHT = 1260;
@@ -15,7 +15,8 @@ const MARGIN = 132;
 const outDir = process.argv[2] ?? join(root, 'public');
 const ADHKAR = join(root, 'src', 'content', 'adhkar');
 
-const count = (id) => readdirSync(join(ADHKAR, id)).filter((file) => file.endsWith('.md')).length;
+const count = (id: string) =>
+  readdirSync(join(ADHKAR, id)).filter((file) => file.endsWith('.md')).length;
 
 const head = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
 ${plexArabic(400)}
@@ -49,7 +50,7 @@ body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-directio
 <div class="tiles">${tiles}</div>
 </body></html>`;
 
-const occasion = ({ id, heading, color }) => `${head}
+const occasion = ({ id, heading, color }: (typeof OCCASIONS)[number]) => `${head}
 body{background:${color};color:${PALETTE.eggshell};display:grid;
   grid-template-columns:minmax(0,1fr) 820px;grid-template-rows:auto 1fr;column-gap:96px}
 .brand{grid-column:1/-1;display:flex;align-items:center;gap:36px}

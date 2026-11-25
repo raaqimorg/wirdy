@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { markSvg } from '../../src/lib/mark.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
-import { screenshot } from '../chromium.mjs';
+import { screenshot } from '../chromium.ts';
 
 const PUBLIC = join(import.meta.dirname, '..', '..', 'public');
 const SOURCE = pathToFileURL(join(PUBLIC, 'favicon.svg')).href;
@@ -16,14 +16,17 @@ const MANIFEST_SIZES = [192, 512];
 const TOUCH_INSET = 0.72;
 const TOUCH_BACKGROUND = PALETTE.eggshell;
 
-const page = (size, background) => `<!doctype html><html><head><meta charset="utf-8"><style>
+const page = (
+  size: number,
+  background?: string
+) => `<!doctype html><html><head><meta charset="utf-8"><style>
 *{margin:0;padding:0}
 html,body{width:${size}px;height:${size}px;background:${background ?? 'transparent'};overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
 img{display:block;width:${Math.round(size * (background ? TOUCH_INSET : 1))}px;height:auto}
 </style></head><body><img src="${SOURCE}"></body></html>`;
 
-const render = (size, background) => {
+const render = (size: number, background?: string) => {
   const out = join(mkdtempSync(join(tmpdir(), 'icons-')), `${size}.png`);
   screenshot({
     html: page(size, background),
@@ -35,7 +38,7 @@ const render = (size, background) => {
   return readFileSync(out);
 };
 
-const ico = (images) => {
+const ico = (images: { size: number; data: Buffer }[]) => {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(1, 2);
   header.writeUInt16LE(images.length, 4);
@@ -54,7 +57,7 @@ const ico = (images) => {
   return Buffer.concat([header, ...entries, ...images.map(({ data }) => data)]);
 };
 
-const write = (name, data) => {
+const write = (name: string, data: string | Buffer) => {
   writeFileSync(join(PUBLIC, name), data);
   console.log(join('public', name));
 };

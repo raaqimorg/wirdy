@@ -8,7 +8,7 @@ if (existsSync(PENDING)) {
 }
 
 const entries = readAdhkar()
-  .map(({ id, data, body }) => [id, wholeFingerprint(data, body)])
+  .map(({ id, data, body }) => [id, wholeFingerprint(data, body)] as const)
   .toSorted(([a], [b]) => (a < b ? -1 : 1));
 
 mkdirSync(RECORDS, { recursive: true });

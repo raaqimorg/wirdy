@@ -2,5 +2,5 @@
 set -eu
 ./scripts/check/commit-identity.sh pre-commit
 ./scripts/check/forbidden-terms.sh pre-commit
-bun scripts/check/pending-list.mjs
+bun scripts/check/pending-list.ts
 bun run format:check

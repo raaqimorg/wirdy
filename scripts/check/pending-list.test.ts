@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const GUARD = join(import.meta.dir, 'pending-list.mjs');
+const GUARD = join(import.meta.dir, 'pending-list.ts');
 const LIST = 'verification/pending.json';
 
 const roots: string[] = [];

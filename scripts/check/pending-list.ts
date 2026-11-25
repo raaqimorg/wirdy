@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 
 const LIST = 'verification/pending.json';
 
-function listAt(revision) {
+function listAt(revision: string): Record<string, string> | undefined {
   const result = spawnSync('git', ['show', `${revision}:${LIST}`], { encoding: 'utf8' });
   return result.status === 0 ? JSON.parse(result.stdout) : undefined;
 }

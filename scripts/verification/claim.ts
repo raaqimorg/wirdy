@@ -1,12 +1,13 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fingerprintOf } from '../../src/lib/fingerprint.ts';
+import { CLAIMS, fingerprintOf } from '../../src/lib/fingerprint.ts';
 import { spanOf, spansOf } from '../../src/lib/matching.ts';
-import { proofSchema } from '../../src/lib/proof.ts';
+import { proofSchema, type Proof } from '../../src/lib/proof.ts';
 import { readAdhkar, RECORDS } from '../../src/lib/records.ts';
 import { formOf } from '../../src/lib/variants.ts';
 
-const [id, claim, at, words] = process.argv.slice(2);
+const [id, name, at, words] = process.argv.slice(2);
+const claim = CLAIMS.find((known) => known === name);
 const dhikr = readAdhkar().find((entry) => entry.id === id);
 
 if (!dhikr || !claim || (claim !== 'takhrij' && claim !== 'text' && !words)) {
@@ -15,11 +16,13 @@ if (!dhikr || !claim || (claim !== 'takhrij' && claim !== 'text' && !words)) {
 }
 
 const path = join(RECORDS, `${id}.json`);
-const proof = JSON.parse(readFileSync(path, 'utf8'));
+const proof: Proof = JSON.parse(readFileSync(path, 'utf8'));
 const { data, body } = dhikr;
 
-function cut(source) {
-  const { text } = proof.sources[source];
+function cut(index: number) {
+  const page = proof.sources[index];
+  if (page?.state !== 'present') return [undefined];
+  const { text } = page;
   if (words) return [spanOf(text, words)];
   const forms = new Set([formOf(body.trim(), 'sabah'), formOf(body.trim(), 'masaa')]);
   return [...forms].flatMap((form) => spansOf(text, form));
@@ -35,10 +38,14 @@ if (cuts.includes(undefined)) {
 const kept = (proof.claims[claim]?.spans ?? []).filter(
   (span) => !(span.source === source && cuts.includes(span.text))
 );
-proof.claims[claim] = {
-  fingerprint: fingerprintOf(claim, data, body),
-  spans: [...kept, ...cuts.map((text) => ({ source, text }))],
+const claims = {
+  ...proof.claims,
+  [claim]: {
+    fingerprint: fingerprintOf(claim, data, body),
+    spans: [...kept, ...cuts.map((text) => ({ source, text }))],
+  },
 };
+const next = proofSchema.parse({ ...proof, claims });
 
-writeFileSync(path, `${JSON.stringify(proofSchema.parse(proof), null, 2)}\n`);
-console.log(`${id}: ${claim} has ${proof.claims[claim].spans.length} spans`);
+writeFileSync(path, `${JSON.stringify(next, null, 2)}\n`);
+console.log(`${id}: ${claim} has ${next.claims[claim]?.spans.length} spans`);

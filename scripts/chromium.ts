@@ -12,7 +12,16 @@ const BROWSERS = [
   '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
 ];
 
-export function screenshot({ html, width, height, out, scale = 1, transparent = false }) {
+type Shot = {
+  html: string;
+  width: number;
+  height: number;
+  out: string;
+  scale?: number;
+  transparent?: boolean;
+};
+
+export function screenshot({ html, width, height, out, scale = 1, transparent = false }: Shot) {
   const browser = BROWSERS.find((path) => path && existsSync(path));
   if (!browser) {
     console.error('no chromium-based browser found; set CHROME to one');

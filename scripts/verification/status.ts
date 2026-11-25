@@ -1,6 +1,6 @@
 import { readAdhkar, readPending, readProofs } from '../../src/lib/records.ts';
 import { baselineProblems } from '../../src/lib/baseline.ts';
-import { statusOf } from '../../src/lib/verification.ts';
+import { statusOf, type Status } from '../../src/lib/verification.ts';
 
 const [only] = process.argv.slice(2);
 const entries = readAdhkar();
@@ -20,7 +20,7 @@ if (only) {
   }
   console.log([`${only}: ${found.state}`, ...found.problems].join('\n  '));
 } else {
-  const count = (state) => states.filter((dhikr) => dhikr.state === state).length;
+  const count = (state: Status['state']) => states.filter((dhikr) => dhikr.state === state).length;
   console.log(
     `${count('proven')} proven, ${count('changed')} changed, ${count('unproven')} unproven, ${Object.keys(pending).length} pending`
   );
