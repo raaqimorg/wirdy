@@ -17,7 +17,14 @@
   },
   "files.exclude": {
     "**/.DS_Store": true,
-    "**/graft": true
+    "**/.git": true,
+    "**/graft": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.astro": true,
+    "**/.wrangler": true,
+    "**/*.tsbuildinfo": true,
+    ".claude/worktrees": true
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
