@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { missingPhrases, normalize, phrasesIn } from './matching';
+import { missingPhrases, normalize, phrasesIn, spanOf, spansOf } from './matching';
 
 describe('normalize', () => {
   it('drops tashkil and punctuation, and writes the wasla as a plain alif', () => {
@@ -56,5 +56,42 @@ describe('missingPhrases', () => {
 
   it('goes on after a phrase that is missing', () => {
     expect(missingPhrases('أ، ج، ب', ['أ ب'])).toEqual(['ج']);
+  });
+});
+
+describe('spanOf', () => {
+  const page = '- قالَ: سُبْحانَ اللَّهِ ، وبِحَمدِه ؛ مِائةَ مَرَّةٍ.';
+
+  it('cuts the exact part of a text that holds the words', () => {
+    expect(spanOf(page, 'سبحان الله وبحمده')).toBe('سُبْحانَ اللَّهِ ، وبِحَمدِه');
+    expect(page).toContain(spanOf(page, 'مائة مرة')!);
+  });
+
+  it('cuts at whole words only', () => {
+    expect(spanOf(page, 'بحان الله')).toBeUndefined();
+    expect(spanOf(page, 'سبحان الل')).toBeUndefined();
+  });
+
+  it('finds nothing for words that are not there, or are in another order', () => {
+    expect(spanOf(page, 'الحمد لله')).toBeUndefined();
+    expect(spanOf(page, 'الله سبحان')).toBeUndefined();
+  });
+
+  it('keeps the marks at the end of the last word', () => {
+    expect(spanOf(page, 'اللَّهِ')).toBe('اللَّهِ');
+  });
+
+  it('finds nothing for no words', () => {
+    expect(spanOf(page, ' ، ')).toBeUndefined();
+  });
+});
+
+describe('spansOf', () => {
+  it('cuts the whole text in one part when it is together', () => {
+    expect(spansOf('قال: أ ، ب.', 'أ، ب')).toEqual(['أ ، ب']);
+  });
+
+  it('cuts each phrase that is there when it is not together', () => {
+    expect(spansOf('أ، ثم قال: ب', 'أ، ج، ب')).toEqual(['أ', 'ب']);
   });
 });

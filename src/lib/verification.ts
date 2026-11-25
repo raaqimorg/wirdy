@@ -1,5 +1,5 @@
 import { claimsOf, fingerprintOf, type Claim } from './fingerprint';
-import { missingPhrases, normalize } from './matching';
+import { missingPhrases, normalize, phrasesIn } from './matching';
 import type { Present, Proof, Span } from './proof';
 import type { Dhikr } from './schema';
 import { formOf } from './variants';
@@ -42,10 +42,19 @@ function formsOf(body: string): string[] {
 }
 
 function missingOn(proof: Proof, body: string, site: Site): string[] {
-  const spans = (proof.claims.text?.spans ?? [])
-    .filter((span) => sourceAt(proof, span.source)?.site === site)
-    .map((span) => span.text);
-  return [...new Set(formsOf(body).flatMap((form) => missingPhrases(form, spans)))];
+  const spans = proof.claims.text?.spans ?? [];
+  const pages = [...proof.sources.entries()].filter(([, source]) => source.site === site);
+
+  const missing = formsOf(body).flatMap((form) => {
+    const ofEachPage = pages.map(([index]) =>
+      missingPhrases(
+        form,
+        spans.filter((span) => span.source === index).map((span) => span.text)
+      )
+    );
+    return ofEachPage.toSorted((a, b) => a.length - b.length)[0] ?? phrasesIn(form);
+  });
+  return [...new Set(missing)];
 }
 
 function uncoveredOn(proof: Proof, body: string, site: Site): string[] {

@@ -20,6 +20,8 @@
     "opengraph:adhkar": "bun scripts/opengraph/adhkar.mjs",
     "icons": "bun scripts/icons/build.mjs",
     "verification": "bun scripts/verification/status.mjs",
+    "verification:import": "bun scripts/verification/import.mjs",
+    "verification:claim": "bun scripts/verification/claim.mjs",
     "deploy": "bun run ci && wrangler pages deploy"
   },
   "dependencies": {

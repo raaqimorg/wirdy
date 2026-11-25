@@ -180,6 +180,21 @@ describe('the sources', () => {
     expect(status(proof).problems).toEqual([`text: ${site} does not cover «وبحمده»`]);
   });
 
+  it('do not join two pages of one site into one text', () => {
+    const halves = [
+      { ...shamela, text: 'سبحان الله' },
+      { ...shamela, url: 'https://shamela.ws/book/2/2', text: 'وبحمده' },
+    ];
+    expect(status(withSources(dorar, ...halves, hdith, sunnah)).problems).toEqual([
+      'text: shamela does not cover «وبحمده»',
+    ]);
+  });
+
+  it('need one page of a site, when another page of it differs', () => {
+    const other = { ...shamela, url: 'https://shamela.ws/book/2/2', text: 'سبحان الله' };
+    expect(status(withSources(dorar, other, shamela, hdith, sunnah)).state).toBe('proven');
+  });
+
   it('may differ, when the difference is named and shown', () => {
     const proof = withSources(dorar, { ...shamela, text: 'سبحان الله' }, hdith, sunnah);
     expect(status(proof).state).toBe('unproven');
