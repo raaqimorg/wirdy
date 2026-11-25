@@ -27,7 +27,7 @@ Most of the work is evidence, not code. [`docs/content.md`](../docs/content.md) 
 5. Run `bun run ci` before you open a pull request. It runs the formatter, the linter, the type check, the tests, and the build test. GitHub Actions runs the same steps.
 6. Open the pull request into `main`. Put `Closes #<issue>` in its description, and fill in the template.
 
-[`docs/code-conventions.md`](../docs/code-conventions.md) covers the code, the tests, and the writing. [`docs/exceptions.md`](../docs/exceptions.md) lists the few unusual choices, and why.
+[`docs/README.md`](../docs/README.md) is the index of the docs. Read [`code-conventions.md`](../docs/code-conventions.md), [`naming.md`](../docs/naming.md), [`testing.md`](../docs/testing.md), and [`writing.md`](../docs/writing.md) before your first change. [`docs/exceptions.md`](../docs/exceptions.md) lists the few unusual choices, and why.
 
 ## Working with an AI agent
 

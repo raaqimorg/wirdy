@@ -1,6 +1,6 @@
 # Code conventions
 
-oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.json`), Prettier for the Astro files (`.prettierrc.json`), and `astro check` enforce most of the code rules. `bun run ci` runs them all. This doc covers what no tool checks. [`design-system.md`](design-system.md) covers the styles and the components.
+oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.json`), Prettier for the Astro files (`.prettierrc.json`), and `astro check` enforce most of the code rules. `bun run ci` runs them all. This doc covers what no tool checks. [`naming.md`](naming.md) covers the names, [`testing.md`](testing.md) the tests, [`writing.md`](writing.md) the docs and the commits, and [`design-system.md`](design-system.md) the styles and the components.
 
 ## Code
 
@@ -11,6 +11,18 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 - No page makes a third-party request. Fonts come from `@fontsource` (Amiri, Amiri Quran, and IBM Plex Sans Arabic), and Astro bundles them. `src/styles/fonts.css` declares them, as WOFF2 only.
 - Nothing moves while a page loads, except the animations below. `src/layouts/Paper.astro` preloads the faces that a page uses (`faces`), and the browser keeps them for a year, so they are ready before the first paint. On a first visit the text shows at once in the device's face, and the site's face replaces it when it arrives.
 - A file that can be kept for a year has its content in its name: Astro hashes `_astro/`, and `src/lib/card.ts` names the sharing cards. `public/_headers` keeps those for a year, and the icons for a week. A page itself is asked for again on each visit, so a correction shows at once. The emblems are inline, so they cost no request.
+
+## TypeScript
+
+`tsconfig.json` extends Astro's strict config, and oxlint refuses `any`.
+
+- Use `type`, not `interface`. An Astro component's `interface Props` is the one exception, because Astro reads it.
+- Do not use `enum`. Use an `as const` array and the union derived from it, as `OCCASIONS` and `Occasion` do in `src/lib/occasions.ts`.
+- Use a discriminated union for a value that has kinds: a source is `present` or `absent` (`src/lib/proof.ts`).
+- Check outside data with a zod schema where it enters: a content file (`schema.ts`), a proof (`proof.ts`). Trust the type after that.
+- Prefer a check that narrows to a cast. Keep a cast for the DOM, where the element is known.
+- Import a type with `import type`, and a Node module with `node:`.
+- Use named exports. A default export is only for a file a tool reads, such as `astro.config.ts`.
 
 ## Motion
 
@@ -28,12 +40,6 @@ The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "A
 - With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the color still brightens, so the pointer gets an answer.
 - A page fades into the next one in 200 ms, with nothing moving, so no element has a `view-transition-name`. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.
 
-## Tests
-
-- A rule that matters goes in a test, not in a comment. `src/lib/content.test.ts` checks every content file. `src/build.test.ts` builds the site and checks the HTML that ships.
-- Name a test as a full sentence about the behavior: `"opens no سورة with the بسملة"`, not `"basmalah test"`.
-- `scripts/check/*.test.ts` test the git guards. They run with `bun test`, not Vitest.
-
 ## Comments
 
 Code has no comments. Names, types, and tests carry the intent. A non-obvious reason goes in [`exceptions.md`](exceptions.md).
@@ -42,18 +48,3 @@ Two kinds of comment are allowed, each on one line:
 
 - A lint directive, with its reason on the same line.
 - In a shell script or a configuration file that has no types or tests, a short note on a directive that is not obvious.
-
-## Writing
-
-These rules apply to docs, `AGENTS.md`, issues, pull requests, and commit messages. Many readers read Arabic first and English second.
-
-- Write short sentences, with one idea in each.
-- Write an instruction as a command: "Run `bun run ci`."
-- Use the active voice and the present tense.
-- Use one word for one meaning. The terms in [`content.md`](content.md) (dhikr, occasion, takhrij, ruling) are the names for the domain.
-- A number is evidence: "60 adhkar", not "many adhkar".
-- Do not use em-dashes. Use a period, a comma, or parentheses.
-
-## Commits
-
-Write the subject as `type: what changed`, in lowercase, with no period. The types are `feat`, `fix`, `content`, `docs`, `test`, `refactor`, `chore`, and `ci`. Use `content` for a change under `src/content/`, and name the dhikr and the dorar.net page in the body.

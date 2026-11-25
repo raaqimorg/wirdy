@@ -13,7 +13,7 @@ This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Ar
 - `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`), `bun run opengraph`, or `bun run opengraph:adhkar` (one card for each dhikr, in `public/og/`), and do not edit them by hand.
 - `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
 - `verification/`: one JSON record for each proven dhikr, with the text of the pages that prove it, and `pending.json`, the adhkar that are not proven yet. The site does not read it. [`docs/content.md`](docs/content.md), "The proof", has the rules.
-- `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`design-system.md`](docs/design-system.md), [`exceptions.md`](docs/exceptions.md), and [`emblem-ideas.md`](docs/emblem-ideas.md) (emblems drawn and not chosen, for a new occasion to take).
+- `docs/`: [`README.md`](docs/README.md) is the index, with one line for each doc and when to read it. It lists [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`naming.md`](docs/naming.md), [`testing.md`](docs/testing.md), [`design-system.md`](docs/design-system.md), [`exceptions.md`](docs/exceptions.md), [`development.md`](docs/development.md), [`writing.md`](docs/writing.md), and [`emblem-ideas.md`](docs/emblem-ideas.md).
 
 ## Commands
 
@@ -49,4 +49,5 @@ bun run verification # which adhkar are proven, and what the others lack (add an
 - To check or add a dhikr, use the `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`). Use the user's browser for dorar.net, because the site can block scripted requests. Cross-check wording on Turath or al-Maktaba al-Shamela where narrations differ.
 - Commits: see [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md), "Keeping your email private". The hooks refuse any author, committer, or trailer email except the one in `wirdy.allowedEmail`. Do not add a `Co-authored-by:` trailer.
 - Run `bun run ci` before you say a change is done. Report each failure from its output.
-- Update `README.md` and `docs/` in the same change when you change what they describe.
+- Update `README.md` and `docs/` in the same change when you change what they describe. Add a new doc to [`docs/README.md`](docs/README.md).
+- Before you name a file or a function, read [`docs/naming.md`](docs/naming.md). Before you write a test, read [`docs/testing.md`](docs/testing.md).

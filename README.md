@@ -48,7 +48,7 @@ bun run verification  # which adhkar have a saved proof, and what the others lac
 
 Each dhikr that changes between the morning and the evening shows both forms: the form for now leads, and the other is muted and struck through. A dhikr for the other time is muted and struck through too. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning from 03:00 to 11:59, and the evening otherwise.
 
-[`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) covers issues, pull requests, and keeping your email private. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
+[`docs/README.md`](docs/README.md) is the index of the docs, and [`docs/development.md`](docs/development.md) has every command. [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) covers issues, pull requests, and keeping your email private. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
 
 ## License
 
