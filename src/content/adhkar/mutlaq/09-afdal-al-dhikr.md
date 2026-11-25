@@ -5,6 +5,7 @@ order: 9
 count: 1
 mode: "both"
 quran: false
+group: "التهليل"
 fadl: "أفضل الذكر"
 takhrij:
   grader: "الألباني"

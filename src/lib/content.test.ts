@@ -49,6 +49,10 @@ describe.each(entries)('$path', ({ path, raw, body, data }) => {
     expect(dirname(path)).toBe(data.occasion);
   });
 
+  it('sits under a group', () => {
+    expect(data.group).toBeTruthy();
+  });
+
   it('starts its file name with its order', () => {
     const order = String(data.order).padStart(2, '0');
     expect(basename(path)).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`));

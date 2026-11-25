@@ -12,6 +12,6 @@ takhrij:
   grader: "الألباني"
   source: "صحيح النسائي ١٣٤٩"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/35044"
+  url: "https://dorar.net/h/2JFOdZDZ"
 ---
 سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ، وَلَا إِلَهَ إِلَّا اللَّهُ

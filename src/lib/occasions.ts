@@ -4,7 +4,7 @@ export const OCCASIONS = [
   { id: 'salah', heading: 'أذكار أدبار الصلوات', color: '#1b764a' },
   { id: 'nawm', heading: 'أذكار النوم', color: '#3a67c4' },
   { id: 'istiqaz', heading: 'أذكار الاستيقاظ', color: '#0a6d73' },
-  { id: 'mutlaq', heading: 'أذكار مطلقة', color: '#764ba5' },
+  { id: 'mutlaq', heading: 'أذكار عامة', color: '#764ba5' },
   { id: 'ahwal', heading: 'أذكار الأحوال', color: '#c23943' },
 ] as const;
 

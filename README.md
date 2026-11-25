@@ -7,17 +7,17 @@
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 103 adhkar in seven occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
+Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 160 adhkar in seven occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
 
 | Occasion             | Adhkar |
 | -------------------- | -----: |
 | أذكار الصباح والمساء |     16 |
-| أذكار الأذان والمسجد  |     11 |
+| أذكار الأذان والمسجد  |     13 |
 | أذكار أدبار الصلوات  |     20 |
-| أذكار النوم          |     15 |
-| أذكار الاستيقاظ       |      4 |
-| أذكار مطلقة          |     15 |
-| أذكار الأحوال         |     22 |
+| أذكار النوم          |     18 |
+| أذكار الاستيقاظ       |      7 |
+| أذكار عامة           |     23 |
+| أذكار الأحوال         |     63 |
 
 ## What goes in
 

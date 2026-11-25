@@ -6,6 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا أخذ مضجعه"
+group: "عند الفراش"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٧١٢"

@@ -1,0 +1,16 @@
+---
+title: "اللهم بارك لنا فيه وأطعمنا خيرًا منه"
+occasion: "ahwal"
+order: 14
+count: 1
+mode: "both"
+quran: false
+when: "إذا أكل طعامًا"
+group: "الطعام"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح الترمذي ٣٤٥٥"
+  ruling: "حسن"
+  url: "https://dorar.net/h/v9usz6Ly"
+---
+اللَّهُمَّ بَارِكْ لَنَا فِيهِ، وَأَطْعِمْنَا خَيْرًا مِنْهُ

@@ -6,6 +6,7 @@ count: 100
 mode: "both"
 quran: false
 when: "في اليوم"
+group: "التسبيح"
 fadl: "حُطّت خطاياه وإن كانت مثل زبد البحر"
 takhrij:
   grader: "البخاري"

@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "بعد السلام من الوتر"
 how: "ويرفع صوته بالثالثة"
-group: "أذكار وأدعية أخرى"
+group: "بعد صلوات بعينها"
 takhrij:
   grader: "الألباني"
   source: "صحيح النسائي ١٧٣٢"

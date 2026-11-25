@@ -13,6 +13,6 @@ takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٣٢٩"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/23802"
+  url: "https://dorar.net/h/hrdaavc5"
 ---
 سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ

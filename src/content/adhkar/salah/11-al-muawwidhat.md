@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: true
 ayat: "first"
-group: "أذكار وأدعية أخرى"
+group: "القراءة"
 takhrij:
   grader: "الألباني"
   source: "صحيح أبي داود ١٥٢٣"

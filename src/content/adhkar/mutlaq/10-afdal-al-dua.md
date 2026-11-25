@@ -5,6 +5,7 @@ order: 10
 count: 1
 mode: "both"
 quran: false
+group: "التحميد والتكبير والحوقلة"
 fadl: "أفضل الدعاء"
 takhrij:
   grader: "الألباني"

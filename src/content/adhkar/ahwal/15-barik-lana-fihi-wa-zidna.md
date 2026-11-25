@@ -1,0 +1,16 @@
+---
+title: "اللهم بارك لنا فيه وزدنا منه"
+occasion: "ahwal"
+order: 15
+count: 1
+mode: "both"
+quran: false
+when: "إذا شرب لبنًا"
+group: "الطعام"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح الترمذي ٣٤٥٥"
+  ruling: "حسن"
+  url: "https://dorar.net/h/v9usz6Ly"
+---
+اللَّهُمَّ بَارِكْ لَنَا فِيهِ، وَزِدْنَا مِنْهُ

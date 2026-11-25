@@ -187,19 +187,13 @@ describe('built site', () => {
     expect(css).not.toMatch(/animation:[^;}]*scroll\(/);
   });
 
-  it('lists the groups of a page that has nothing outside a group', () => {
-    for (const id of ['ahwal', 'masjid']) {
+  it('lists the groups of each page', () => {
+    for (const id of OCCASION_IDS) {
       const groups = [...pages[id]!.matchAll(/<h2 class="group__title" id="([^"]+)"/g)];
       const jumps = pages[id]!.match(/<nav class="group-index"[\s\S]*?<\/nav>/)![0];
       expect([...jumps.matchAll(/href="#([^"]+)"/g)].map(([, at]) => at)).toEqual(
         groups.map(([, at]) => at)
       );
-    }
-  });
-
-  it('lists no groups on a page with adhkar outside a group', () => {
-    for (const id of OCCASION_IDS.filter((other) => !['ahwal', 'masjid'].includes(other))) {
-      expect(pages[id]).not.toContain('class="group-index"');
     }
   });
 
@@ -656,7 +650,7 @@ describe('built site', () => {
   });
 
   it('keeps آية الكرسي whole', () => {
-    const file = readFileSync(join(ADHKAR, 'nawm/02-ayat-al-kursi.md'), 'utf8').trim();
+    const file = readFileSync(join(ADHKAR, 'nawm/04-ayat-al-kursi.md'), 'utf8').trim();
     const ending = file.slice(file.lastIndexOf(' ', file.length - 12) + 1);
     expect(pages['nawm']).toContain(ending);
   });

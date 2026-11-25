@@ -4,7 +4,7 @@ export type SoundPlace = { before: string; name: string; path: string; after: st
 
 const NAMES: [name: string, occasion: Occasion][] = [
   ...OCCASIONS.map(({ heading, id }): [string, Occasion] => [heading, id]),
-  ['الأذكار المطلقة', 'mutlaq'],
+  ['الأذكار العامة', 'mutlaq'],
 ];
 
 export function soundPlace(sound: string): SoundPlace | null {

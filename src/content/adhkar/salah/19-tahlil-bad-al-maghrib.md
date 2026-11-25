@@ -6,7 +6,7 @@ count: 10
 mode: "both"
 quran: false
 when: "بعد صلاة المغرب"
-group: "أذكار وأدعية أخرى"
+group: "بعد صلوات بعينها"
 fadl: "بعث الله له مسلحة يحفظونه من الشيطان حتى يصبح"
 takhrij:
   grader: "الألباني"

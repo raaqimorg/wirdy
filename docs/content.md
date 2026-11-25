@@ -9,6 +9,8 @@ A dhikr goes in when dorar.net shows that one of these is true:
 1. It is in Sahih al-Bukhari or Sahih Muslim.
 2. al-Albani grades it صحيح or حسن.
 
+A dhikr that a Companion said goes in when the same hadith shows that the Prophet ﷺ heard it and approved it, such as «لقد سأل الله باسمه الأعظم». The approval is in the hadith, not inferred from silence, and the hadith passes the same rule. A Companion's own saying, with no such approval, stays out.
+
 The same rule applies to its count, to its time, and to each phrase of its text. A count, a time, or a phrase that only a weak narration gives stays out, even when the rest of the hadith is sound.
 
 ## What stays out
@@ -34,10 +36,20 @@ Each dhikr belongs to one occasion. The occasion is its folder and its `occasion
 | `salah`       | أذكار أدبار الصلوات  |
 | `nawm`        | أذكار النوم          |
 | `istiqaz`     | أذكار الاستيقاظ       |
-| `mutlaq`      | أذكار مطلقة          |
+| `mutlaq`      | أذكار عامة           |
 | `ahwal`       | أذكار الأحوال         |
 
 A dhikr that belongs to two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
+
+## The order of a page
+
+A reader goes through a page from top to bottom, so `order` follows these rules, in this order:
+
+1. The order that a hadith states. Examples: «تمام المائة» after the tasbih, and «اجعلهن آخر ما تتكلم به» last before sleep.
+2. The sequence of the moment. Examples: the adhan, then wudu, then going out, entering, and leaving the mosque.
+3. Adhkar of one kind stay together under a `group`. Every dhikr on a page has a `group`, so the page shows its index.
+
+Where no hadith states an order, the order is only an arrangement for reading. It is not a sunnah, and the site never says that it is.
 
 ## The file
 
@@ -55,7 +67,7 @@ takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٣٠٦"
   ruling: "صحيح"
-  url: "https://dorar.net/hadith/sharh/9073"
+  url: "https://dorar.net/h/1Xe5exzh"
 ---
 اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، ...
 ```

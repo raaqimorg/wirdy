@@ -6,6 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا أوى إلى فراشه"
+group: "الحمد والتسبيح"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٧١٥"

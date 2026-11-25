@@ -11,8 +11,8 @@ describe('soundPlace', () => {
     });
   });
 
-  it('knows أذكار مطلقة by its name in a sentence', () => {
-    expect(soundPlace('بغير هذه الزيادة في الأذكار المطلقة.')?.path).toBe('/mutlaq/');
+  it('knows أذكار عامة by its name in a sentence', () => {
+    expect(soundPlace('بغير هذه الزيادة في الأذكار العامة.')?.path).toBe('/mutlaq/');
   });
 
   it('finds no place when no form is on the site', () => {
