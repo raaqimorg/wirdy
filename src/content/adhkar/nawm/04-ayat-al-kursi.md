@@ -6,7 +6,7 @@ order: 4
 count: 1
 mode: "both"
 quran: true
-group: "القراءة"
+group: "القرآن"
 fadl: "لن يزال عليك من الله حافظ، ولا يقربك شيطان حتى تصبح"
 takhrij:
   grader: "الألباني"

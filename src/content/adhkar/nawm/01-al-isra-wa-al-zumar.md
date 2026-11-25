@@ -7,7 +7,7 @@ mode: "both"
 quran: true
 ayat: "fold"
 when: "قبل أن ينام"
-group: "القراءة"
+group: "القرآن"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٢٩٢٠"

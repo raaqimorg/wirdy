@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "إذا صلّى"
 how: "وأقبل على الناس بوجهه"
-group: "أدعية أدبار الصلوات"
+group: "أدعية بعد الصلاة"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٧٠٩"

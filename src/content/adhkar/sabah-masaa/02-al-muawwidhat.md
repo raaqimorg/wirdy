@@ -7,7 +7,7 @@ count: 3
 mode: "both"
 quran: true
 ayat: "first"
-group: "القراءة"
+group: "القرآن"
 fadl: "تكفيك من كل شيء"
 takhrij:
   grader: "الألباني"

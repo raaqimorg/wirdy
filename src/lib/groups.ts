@@ -45,7 +45,7 @@ export const formsOf = <T extends { readonly data: { readonly form?: FormNumber 
   );
 
 export const GROUP_SLUGS: Readonly<Record<string, string>> = {
-  القراءة: 'al-qiraah',
+  القرآن: 'al-qiraah',
   'أصبحنا وأمسينا': 'asbahna-wa-amsayna',
   'الاستغفار والدعاء': 'al-istighfar-wa-al-dua',
   الحفظ: 'al-hifz',
@@ -67,7 +67,7 @@ export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   'قيام الليل والوتر': 'qiyam-al-layl-wa-al-witr',
   'بعد السلام': 'bad-al-salam',
   'صيغ التسبيح': 'siyagh-al-tasbih',
-  'أدعية أدبار الصلوات': 'adiyat-adbar-al-salawat',
+  'أدعية بعد الصلاة': 'adiyat-adbar-al-salawat',
   'بعد صلوات بعينها': 'bad-salawat-bi-ayniha',
   'عند الفراش': 'ind-al-firash',
   'الحمد والتسبيح': 'al-hamd-wa-al-tasbih',

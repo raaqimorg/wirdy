@@ -6,7 +6,7 @@ order: 1
 count: 1
 mode: "both"
 quran: true
-group: "القراءة"
+group: "القرآن"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترغيب ٦٦٢"

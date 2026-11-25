@@ -7,7 +7,7 @@ count: 1
 mode: "both"
 quran: true
 ayat: "first"
-group: "القراءة"
+group: "القرآن"
 takhrij:
   grader: "الألباني"
   source: "صحيح أبي داود ١٥٢٣"

@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: true
 when: "في الليل"
-group: "القراءة"
+group: "القرآن"
 fadl: "من قرأ بالآيتين من آخر سورة البقرة في ليلة كفتاه"
 takhrij:
   grader: "البخاري"

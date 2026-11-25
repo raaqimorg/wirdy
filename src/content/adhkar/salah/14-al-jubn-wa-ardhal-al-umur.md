@@ -5,7 +5,7 @@ order: 14
 count: 1
 mode: "both"
 quran: false
-group: "أدعية أدبار الصلوات"
+group: "أدعية بعد الصلاة"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٢٨٢٢"

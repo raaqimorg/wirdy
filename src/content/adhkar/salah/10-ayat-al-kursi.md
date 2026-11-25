@@ -7,7 +7,7 @@ count: 1
 mode: "both"
 quran: true
 when: "دبر كل صلاة مكتوبة"
-group: "القراءة"
+group: "القرآن"
 fadl: "لم يمنعه من دخول الجنة إلا أن يموت"
 takhrij:
   grader: "الألباني"

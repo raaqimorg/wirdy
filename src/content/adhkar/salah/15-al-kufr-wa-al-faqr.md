@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "دبر الصلاة"
-group: "أدعية أدبار الصلوات"
+group: "أدعية بعد الصلاة"
 takhrij:
   grader: "الألباني"
   source: "صحيح النسائي ١٣٤٦"
