@@ -27,10 +27,6 @@
   background: var(--color-panel);
 }
 
-.icon-button--glass .icon-button__face {
-  background: var(--color-glass);
-}
-
 .icon-button--quiet .icon-button__face {
   --icon-size: var(--size-icon-medium);
 
@@ -58,9 +54,5 @@
   .icon-button--panel:hover .icon-button__face,
   .icon-button--quiet:hover .icon-button__face {
     color: var(--color-ink);
-  }
-
-  .icon-button--glass:hover .icon-button__face {
-    background: var(--color-glass-hover);
   }
 }

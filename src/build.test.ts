@@ -143,7 +143,11 @@ describe('built site', () => {
       );
       expect(page.slice(page.indexOf('</main>'))).toContain('<nav class="related container"');
     }
-    expect(css).toContain('.card-grid--compact{grid-template-columns:repeat(4,minmax(0,1fr))}');
+    expect(css).toMatch(/\.card-grid--compact\{[^}]*display:flex/);
+    expect(css).toMatch(/\.card-grid--compact>li\{flex:/);
+    expect(css).toMatch(
+      /\.occasion-card--compact \.occasion-card__stage\{[^}]*height:calc\(\(100cqi - 3 \* var\(--space-5\)\) \/ 6\)/
+    );
   });
 
   it('opens a menu of every section from the bar of each list page, with no script', () => {
@@ -209,29 +213,27 @@ describe('built site', () => {
     expect(head).toMatch(/<script>[\s\S]*?setAttribute\('aria-pressed'[\s\S]*?<\/script>/);
   });
 
-  it('puts the theme button in the header of the home and 404 pages, and in no reading bar', () => {
-    for (const page of [html, notFound]) {
-      expect(page.match(/<header class="site-header container">[\s\S]*?<\/header>/)![0]).toMatch(
-        /<button class="icon-button icon-button--panel" type="button" aria-label="الوضع الداكن" aria-pressed="false" data-theme-toggle/
+  it('puts the theme button and the GitHub link in the footer of every page, as quiet text', () => {
+    const every = [
+      html,
+      notFound,
+      ...Object.values(pages),
+      own('ma-lam-yathbut'),
+      own('nawm/ayat-al-kursi'),
+    ];
+    for (const page of every) {
+      const footer = page.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)![0];
+      const tools = footer.match(/<p class="site-footer__tools">([\s\S]*?)<\/p>/)![1]!;
+      expect(tools.replace(/\s+/g, ' ').trim()).toBe(
+        '<button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>المظهر</button><span aria-hidden="true">·</span><a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener">قتهب</a>'
+      );
+      expect(page.split('data-theme-toggle>').length - 1).toBe(1);
+      expect(page.split('href="https://github.com/raaqimorg/wirdy"').length - 1).toBe(1);
+      expect(page).not.toContain(
+        '<svg class="icon icon--line" viewBox="0 0 24 24" stroke-width="2"'
       );
     }
-    const reading = [...Object.values(pages), own('ma-lam-yathbut'), own('nawm/ayat-al-kursi')];
-    for (const page of reading) {
-      expect(page.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0]).not.toContain('data-theme-toggle');
-    }
-  });
-
-  it('keeps the GitHub link on the home and 404 pages, and out of the reading bar', () => {
-    const github =
-      '<a class="icon-button icon-button--panel" href="https://github.com/raaqimorg/wirdy" aria-label="الشيفرة على GitHub" rel="noopener">';
-    for (const page of [html, notFound]) {
-      expect(page.match(/<header class="site-header container">[\s\S]*?<\/header>/)![0]).toContain(
-        github
-      );
-    }
-    for (const page of Object.values(pages)) {
-      expect(page).not.toContain(github);
-    }
+    expect(css).toMatch(/\.site-footer__tools\{[^}]*color:var\(--color-ink-faint\)/);
   });
 
   it('names the occasion in the bar, and makes the bar mark a link home', () => {
@@ -272,7 +274,7 @@ describe('built site', () => {
     const card = html.match(
       /<a class="occasion-card [^"]*" href="\/ma-lam-yathbut\/"[\s\S]*?<\/a>/
     )![0];
-    expect(card).toContain('أذكار مشهورة لم تدخل الموقع، مع حكم كل واحد منها');
+    expect(card).toContain('أذكار مشهورة مع حكم كل واحد منها');
     expect(card).not.toMatch(/[٠-٩]/);
 
     expect(own('ma-lam-yathbut')).toContain(
@@ -358,34 +360,18 @@ describe('built site', () => {
     expect(notice).toContain('CHANGING IT IS NOT ALLOWED');
   });
 
-  it('ends every footer with the dedication', () => {
+  it('opens every footer with the dedication, centered above its tools', () => {
     for (const page of [html, ...Object.values(pages), notFound]) {
       const footer = page.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)![1]!;
       expect(footer.trim()).toMatch(
-        /<p class="site-footer__line site-footer__line--dedication">صدقة جارية عن شروق<\/p>$/
+        /^<p class="site-footer__line">صدقة جارية عن شروق<\/p>\s*<p class="site-footer__tools">/
       );
     }
-    expect(css).toMatch(/\.site-footer__line--dedication\{[^}]*font-family:var\(--font-naskh\)/);
-    expect(css).toMatch(
-      /\.site-footer__line--dedication:{1,2}before\{[^}]*background:var\(--color-line\)/
-    );
+    expect(css).toMatch(/\.site-footer__tools\{[^}]*justify-content:center/);
   });
 
   it('leaves no unparsed variant markers', () => {
     expect(all).not.toContain('{{');
-  });
-
-  it('says in one line where the adhkar come from, on every page', () => {
-    for (const page of [html, ...Object.values(pages), notFound]) {
-      const footer = page.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)![1]!;
-      const text = footer
-        .match(/<p class="site-footer__line">([\s\S]*?)<\/p>/)![1]!
-        .replace(/<[^>]+>/g, '')
-        .replace(/\s+/g, ' ');
-      expect(text.trim()).toBe(
-        'من الصحيحين وما صحّحه الألباني أو حسّنه، عن الدرر وتنزيل. أبلغ عن خطأ.'
-      );
-    }
   });
 
   it('renders every ذكر in the collection once', () => {
@@ -785,14 +771,13 @@ describe('built site', () => {
     expect(headers).toMatch(/^\/\*\n  Strict-Transport-Security: max-age=31536000\n/);
   });
 
-  it('links its sources and the place to report a mistake, on every page', () => {
-    const report = 'https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml';
-    for (const page of [html, ...Object.values(pages), notFound]) {
-      const footer = page.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)![1]!;
-      for (const href of ['https://dorar.net/hadith', 'https://tanzil.net/', report]) {
-        expect(footer).toContain(`href="${href}"`);
-      }
-    }
+  it('credits Tanzil under every قرآن entry', () => {
+    const entries =
+      Object.values(pages)
+        .join('')
+        .match(/<li class="entry[^"]*entry--quran[\s\S]*?<\/li>/g) ?? [];
+    expect(entries.length).toBeGreaterThan(0);
+    for (const entry of entries) expect(entry).toContain('href="https://tanzil.net/"');
   });
 
   it('ships a robots.txt that opens the site and points at the sitemap', () => {
@@ -958,20 +943,17 @@ describe('built site', () => {
     expect(rows.filter((row) => row.includes('class="search-row__ruling"'))).toHaveLength(
       unproven.length
     );
-    const linked = [
-      html,
+    expect(html.match(/<header class="site-header container">[\s\S]*?<\/header>/)![0]).toContain(
+      'href="/bahth/"'
+    );
+    const others = [
       notFound,
+      own('bahth'),
       ...Object.values(pages),
       own('ma-lam-yathbut'),
       own('nawm/ayat-al-kursi'),
     ];
-    for (const other of linked) {
-      expect(
-        other.match(
-          /<(header class="site-header container"|nav class="bar")[\s\S]*?<\/(header|nav)>/
-        )![0]
-      ).toContain('href="/bahth/"');
-    }
+    for (const other of others) expect(other).not.toContain('href="/bahth/"');
     const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
     expect(sitemap).not.toContain('/bahth/');
   });

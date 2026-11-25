@@ -31,7 +31,13 @@
   }
 
   .card-grid--compact {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    container-type: inline-size;
+  }
+
+  .card-grid--compact > li {
+    flex: 1 1 30%;
   }
 
   .card-grid--featured > :first-child {

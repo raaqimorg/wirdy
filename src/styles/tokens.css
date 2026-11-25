@@ -11,8 +11,6 @@
   --color-eggshell: #f4f1d0;
   --color-sound: color-mix(in oklab, #1b764a, var(--color-ink) 20%);
   --color-brighten: white;
-  --color-glass: rgb(255 255 255 / 0.16);
-  --color-glass-hover: rgb(255 255 255 / 0.26);
   --color-track: rgb(0 0 0 / 0.24);
   --color-backdrop: rgb(0 0 0 / 0.12);
   --color-mark: color-mix(in oklab, #e9b82a, var(--color-panel) 62%);
@@ -166,9 +164,6 @@
   --duration-hover: 405ms;
   --duration-enter: 607ms;
   --duration-found: 1.6s;
-
-  --theme-moon: block;
-  --theme-sun: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -181,8 +176,6 @@
     --color-line: hsl(60 10% 82% / 0.3);
     --tone-shade: 12%;
     --tone-ink: 45%;
-    --theme-moon: none;
-    --theme-sun: block;
   }
 }
 
@@ -197,8 +190,6 @@
   --color-line: hsl(60 10% 82% / 0.3);
   --tone-shade: 12%;
   --tone-ink: 45%;
-  --theme-moon: none;
-  --theme-sun: block;
 }
 
 :root[data-theme="light"] {

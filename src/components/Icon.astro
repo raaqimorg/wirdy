@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { name, class: className } = Astro.props;
-const { size, stroke, paths, disc } = ICONS[name];
+const { size, stroke, paths } = ICONS[name];
 ---
 
 <svg
@@ -16,7 +16,6 @@ const { size, stroke, paths, disc } = ICONS[name];
   stroke-width={stroke}
   aria-hidden="true"
 >
-  {disc && <circle cx={size / 2} cy={size / 2} r={disc} />}
   {paths.map((d) => (
     <path d={d} />
   ))}

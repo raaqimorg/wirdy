@@ -66,6 +66,14 @@ const title = fullTitle(data);
       {data.fadl}
     </p>
   )}
+  {data.quran && (
+    <p slot="note" class="entry__note entry__note--source">
+      النص من{' '}
+      <a class="entry__note-link" href="https://tanzil.net/" rel="noopener">
+        تنزيل
+      </a>
+    </p>
+  )}
   {!single && (
     <div slot="actions" class="entry__actions">
       <span class="entry__status" role="status" data-status />

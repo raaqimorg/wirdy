@@ -2,9 +2,10 @@
 import Icon from './Icon.astro';
 import IconButton from './IconButton.astro';
 import Mark from './Mark.astro';
-import ThemeToggle from './ThemeToggle.astro';
 import Tools from './Tools.astro';
 import { SITE } from '../lib/site';
+
+const home = Astro.url.pathname === '/';
 ---
 
 <header class="site-header container">
@@ -12,13 +13,11 @@ import { SITE } from '../lib/site';
     <Mark />
     <span>{SITE.name}</span>
   </a>
-  <Tools>
-    <IconButton label="البحث" variant="panel" href="/bahth/">
-      <Icon name="search" />
-    </IconButton>
-    <ThemeToggle />
-    <IconButton label="الشيفرة على GitHub" variant="panel" href={SITE.repo} rel="noopener">
-      <Icon name="github" />
-    </IconButton>
-  </Tools>
+  {home && (
+    <Tools>
+      <IconButton label="البحث" variant="panel" href="/bahth/">
+        <Icon name="search" />
+      </IconButton>
+    </Tools>
+  )}
 </header>

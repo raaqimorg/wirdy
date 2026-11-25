@@ -1,7 +1,17 @@
-.theme-toggle__moon {
-  display: var(--theme-moon);
+.theme-toggle {
+  padding: 0;
+  color: inherit;
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  line-height: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.theme-toggle__sun {
-  display: var(--theme-sun);
+@media (hover: hover) {
+  .theme-toggle:hover {
+    color: var(--color-ink-muted);
+  }
 }

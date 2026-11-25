@@ -67,6 +67,14 @@
   border-inline-start: var(--border-mark) solid var(--color-sound);
 }
 
+.entry__note--source {
+  font-size: var(--text-small);
+}
+
+.entry__note + .entry__note {
+  margin-top: var(--space-2);
+}
+
 .entry__note-link {
   text-underline-offset: var(--underline-gap);
 }

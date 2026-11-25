@@ -111,6 +111,11 @@
     aspect-ratio: 5 / 1;
   }
 
+  .occasion-card--compact .occasion-card__stage {
+    height: calc((100cqi - 3 * var(--space-5)) / 6);
+    aspect-ratio: auto;
+  }
+
   .occasion-card--compact .occasion-card__title {
     font-size: var(--text-body);
   }

@@ -24,12 +24,12 @@ A card shrinks to 97% while it is pressed (`src/styles/components/occasion-card.
 
 ## A button switches between light and dark
 
-The site follows the device's light or dark mode. The moon or sun button in the header of the home page (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
+The site follows the device's light or dark mode. The small «المظهر» button in the footer of every page (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
 
 - The ordinary way is to follow the device only, with no button and no script.
 - The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
 - The button has two states. It starts from the device's mode, and a click flips to the other one. When a click lands on the device's own mode, the script forgets the saved choice, so the site follows the device again. There is no third «automatic» state.
-- The button is named «الوضع الداكن», and its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
+- The button is named «المظهر», and its text never changes. Its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
 - The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 12% so they do not glare at night.
 - Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
 
