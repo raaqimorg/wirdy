@@ -25,7 +25,7 @@ const SECOND = /\d+ (\d+)(?: \([^)]*\))? (?:- )?\p{L}/u;
 const USUAL: Record<string, RegExp> = {
   'صحيح مسلم': FIRST,
   'سنن أبي داود': FIRST,
-  'سنن النسائي': /(\d+) \d+ \/ \d+ - /,
+  'سنن النسائي': /(\d+) \d+ \/ \d+ (?:- )?\p{L}/u,
 };
 
 function find(text: string, pattern: RegExp, label: string): string {

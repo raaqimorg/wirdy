@@ -112,6 +112,7 @@ describe('an hdith.com page', () => {
     expect(numberIn('سنن ابن ماجه', '1221 1167 - حدثنا')).toBe('1167');
     expect(numberIn('جامع الترمذي', '( 51 ) ( 286 ) باب 589 575 حدثنا')).toBe('575');
     expect(numberIn('سنن النسائي', '4264 4265 / 2 - أخبرني')).toBe('4264');
+    expect(numberIn('سنن النسائي', '92 / 545 - باب 1349 1348 / 1 أخبرنا')).toBe('1349');
   });
 
   it('keeps the hadith as it was, without the commentary under it', () => {
