@@ -42,6 +42,6 @@ See [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) and [`docs/`](docs/README.md).
 
 ## License
 
-The code is [MIT](LICENSE). The Quran text is under [Tanzil's terms](NOTICE). The fonts are under the SIL Open Font License 1.1. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski.
+The code is [MIT](LICENSE). The Quran text is under [Tanzil's terms](NOTICE). The fonts are under the SIL Open Font License 1.1.
 
 Maintained by [Raaqim](https://raaqim.org).
