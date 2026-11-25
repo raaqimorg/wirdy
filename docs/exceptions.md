@@ -117,5 +117,5 @@ Every page but `/bahth/` has a way into search (`components/SearchTrigger.astro`
 `verification/` holds a record for each proven dhikr, and the tests read them. The site does not. The owner asked for saved proofs, so that a check never starts from zero.
 
 - The ordinary way is a database such as SQLite, or no record. In git, each change to a proof is readable and reviewed, and branches merge.
-- `scripts/verification/capture.js` runs in the browser, on the site itself, because dorar.net and sunnah.com refuse scripted requests. It reads one page every 3 seconds, and it saves one file for all of them.
+- `scripts/verification/capture.js` runs in the browser, on the site itself, because dorar.net and sunnah.com refuse scripted requests. It reads one page every 3 seconds, and a button copies all of them, because a download opens a dialog for each file.
 - oxfmt ignores `src/lib/fixtures`, because a captured text must stay as its page gave it.

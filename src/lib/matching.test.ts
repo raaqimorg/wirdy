@@ -14,6 +14,11 @@ describe('normalize', () => {
     expect(normalize('لَهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ')).toBe('له ما فى السموت');
   });
 
+  it('joins a lone waw to its word, as dorar.net writes a space there', () => {
+    expect(normalize('و بكَ نَحيا، و إليكَ')).toBe('وبك نحيا وإليك');
+    expect(normalize('هو و')).toBe('هو و');
+  });
+
   it('splits no word at a small Quranic letter', () => {
     expect(normalize('دَاوُۥدَ')).toBe('داود');
   });
@@ -65,6 +70,13 @@ describe('spanOf', () => {
   it('cuts the exact part of a text that holds the words', () => {
     expect(spanOf(page, 'سبحان الله وبحمده')).toBe('سُبْحانَ اللَّهِ ، وبِحَمدِه');
     expect(page).toContain(spanOf(page, 'مائة مرة')!);
+  });
+
+  it('cuts across a lone waw', () => {
+    expect(spanOf('قال: بكَ أصبَحْنَا، و بكَ أمْسَيْنَا.', 'بك أصبحنا وبك أمسينا')).toBe(
+      'بكَ أصبَحْنَا، و بكَ أمْسَيْنَا'
+    );
+    expect(spanOf('نحيا، و بكَ نموت', 'وبك نموت')).toBe('و بكَ نموت');
   });
 
   it('cuts at whole words only', () => {

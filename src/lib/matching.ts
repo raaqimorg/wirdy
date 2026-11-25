@@ -1,6 +1,7 @@
 const INSIDE_A_WORD = /[\p{M}ـۥۦ]/gu;
 const WORD = /[\p{L}\p{M}\p{N}]+/gu;
 const BETWEEN_WORDS = /[^\p{L}\p{N}]+/gu;
+const LONE_WAW = /(^| )و (?=\S)/g;
 
 export function normalize(text: string): string {
   return text
@@ -8,7 +9,8 @@ export function normalize(text: string): string {
     .replaceAll(INSIDE_A_WORD, '')
     .replaceAll('ٱ', 'ا')
     .replaceAll(BETWEEN_WORDS, ' ')
-    .trim();
+    .trim()
+    .replaceAll(LONE_WAW, '$1و');
 }
 
 export function phrasesIn(text: string): string[] {
@@ -20,9 +22,17 @@ export function phrasesIn(text: string): string[] {
 
 export function spanOf(text: string, words: string): string | undefined {
   const wanted = normalize(words).split(' ');
-  const found = [...text.matchAll(WORD)]
-    .map(({ 0: word, index }) => ({ word: normalize(word), from: index, to: index + word.length }))
-    .filter(({ word }) => word !== '');
+  const found: { word: string; from: number; to: number }[] = [];
+  for (const { 0: match, index } of text.matchAll(WORD)) {
+    const word = normalize(match);
+    const to = index + match.length;
+    const last = found.at(-1);
+    if (last?.word === 'و' && word !== '') {
+      found[found.length - 1] = { word: `و${word}`, from: last.from, to };
+    } else if (word !== '') {
+      found.push({ word, from: index, to });
+    }
+  }
 
   const start = found.findIndex((_, at) =>
     wanted.every((word, offset) => found[at + offset]?.word === word)
