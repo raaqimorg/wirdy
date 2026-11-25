@@ -48,8 +48,26 @@ bun run verification  # which adhkar have a saved proof, and what the others lac
 
 Each dhikr that changes between the morning and the evening shows one form at a time, and a dhikr for the other time is hidden. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning before noon, and the evening otherwise.
 
-[`docs/README.md`](docs/README.md) is the index of the docs, and [`docs/development.md`](docs/development.md) has every command. [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) covers issues, pull requests, and keeping your email private. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
+[`docs/README.md`](docs/README.md) is the index of the docs, and [`docs/development.md`](docs/development.md) has every command. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
+
+## Contributing
+
+Report bugs and ideas in [GitHub issues](https://github.com/raaqimorg/wirdy/issues). To change code, do these steps:
+
+1. Open an issue.
+2. Fork the repo, and branch off `main`.
+3. Run `bun run ci`.
+4. Open a pull request into `main`, linked to the issue.
+
+[`CONTRIBUTING.md`](.github/CONTRIBUTING.md) gives the full steps, and covers keeping your email private. [`docs/exceptions.md`](docs/exceptions.md) lists where the code is different from the usual approach, and why.
+
+## Contact
+
+[Raaqim](https://raaqim.org) maintains Wirdy, together with its contributors. Raaqim is an open-source organization behind several Arabic-language projects.
+
+- Report a security problem privately, not in a public issue. The [security policy](.github/SECURITY.md) has the steps.
+- Write conduct concerns to conduct@raaqim.org ([code of conduct](.github/CODE_OF_CONDUCT.md)).
 
 ## License
 
-The code is under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one. The Quran text comes from the [Tanzil Project](https://tanzil.net), under Tanzil's terms, not under MIT: copy it as it is, and do not change it. [`NOTICE`](NOTICE) holds Tanzil's notice.
+The code and documentation are under the [MIT license](LICENSE). The adhkar are the words of the Prophet ﷺ, and belong to no one. The Quran text comes from the [Tanzil Project](https://tanzil.net), under Tanzil's terms, not under MIT: copy it as it is, and do not change it. [`NOTICE`](NOTICE) holds Tanzil's notice. The site uses the [Amiri](https://github.com/aliftype/amiri), Amiri Quran, and [IBM Plex Sans Arabic](https://github.com/IBM/plex) typefaces under the [SIL Open Font License 1.1](https://openfontlicense.org). The code of conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org) 2.1.

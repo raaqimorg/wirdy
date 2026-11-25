@@ -2,6 +2,18 @@
   "name": "wirdy",
   "version": "0.1.0",
   "private": true,
+  "description": "وِردي: the daily adhkar that are authentic from the Prophet ﷺ, each with its takhrij.",
+  "license": "MIT",
+  "author": "Raaqim (https://raaqim.org)",
+  "homepage": "https://wirdy.site",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raaqimorg/wirdy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/raaqimorg/wirdy/issues"
+  },
+  "funding": "https://github.com/sponsors/raaqimorg",
   "type": "module",
   "scripts": {
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
