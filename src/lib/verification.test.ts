@@ -103,6 +103,16 @@ const countSpan = (text: string) => ({
 const cited = (change: Partial<Present>) =>
   withSources({ ...dorar, ...change }, ...SOURCES.slice(1));
 
+const spanless = (proof: Proof, at: number): Proof => ({
+  ...proof,
+  claims: Object.fromEntries(
+    Object.entries(proof.claims).map(([claim, held]) => [
+      claim,
+      { ...held!, spans: held!.spans.filter(({ source }) => source !== at) },
+    ])
+  ),
+});
+
 const without = (site: 'hdith' | 'sunnah') =>
   withSources(...SOURCES.filter((source) => source.site !== site));
 
@@ -321,6 +331,25 @@ describe('hdith.com and sunnah.com', () => {
   });
 });
 
+describe('a page of another hadith', () => {
+  const stranger = 'كان إذا دخل المسجد صلى ركعتين';
+
+  it('is refused on any site, even when the other site carries the text', () => {
+    const url = 'https://sunnah.com/muslim:1';
+    const proof = withSources(dorar, shamela, hdith, { ...sunnah, url, text: stranger });
+    const claims = spanless(proof, 3).claims;
+    expect(status({ ...proof, claims }).problems).toEqual([`${url} holds no words of the proof`]);
+  });
+
+  it('is not the page that opens a hadith whose words are on the next one', () => {
+    const opening = shamelaAt('https://shamela.ws/book/1/8', stranger);
+    const words = shamelaAt('https://shamela.ws/book/1/9', WORDS);
+    const proof = withSources(dorar, opening, words, hdith, sunnah);
+    const claims = spanless(proof, 1).claims;
+    expect(status({ ...proof, claims }).state).toBe('proven');
+  });
+});
+
 describe('a text that its hadith only reports', () => {
   const data: Dhikr = { ...dhikr, quran: false };
   const report = 'وإني لأستغفر الله في اليوم';
@@ -345,12 +374,7 @@ describe('a text that its hadith only reports', () => {
 
   it('needs the words of its hadith on each page', () => {
     expect(status(proof, data).state).toBe('proven');
-    const claims = Object.fromEntries(
-      Object.entries(proof.claims).map(([claim, held]) => [
-        claim,
-        { ...held!, spans: held!.spans.filter(({ source }) => source !== 3) },
-      ])
-    );
+    const claims = spanless(proof, 3).claims;
     expect(status({ ...proof, claims }, data).problems).toContain(
       'sunnah: no page holds the words of its hadith'
     );
@@ -375,15 +399,9 @@ describe('a Quran text', () => {
 
   it('is unproven when a page holds no words of the moment, the count, or the manner', () => {
     const proof = proofOf(data, BODY, [...hadith, tanzil]);
-    const elsewhere = Object.fromEntries(
-      Object.entries(proof.claims).map(([claim, held]) => [
-        claim,
-        { ...held!, spans: held!.spans.filter(({ source }) => source !== 1) },
-      ])
+    expect(status(spanless(proof, 1), data).problems).toContain(
+      'shamela: no page holds the words of its hadith'
     );
-    expect(status({ ...proof, claims: elsewhere }, data).problems).toEqual([
-      'shamela: no page holds the words of its hadith',
-    ]);
   });
 
   it('still needs dorar.net and Shamela', () => {

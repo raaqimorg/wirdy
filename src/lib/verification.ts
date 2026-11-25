@@ -22,6 +22,8 @@ const IN_THE_CITED_PAGE = new Set<Claim>(['count', 'moment', 'fadl']);
 
 const WITHOUT_THE_WORDS = new Set(['commanded', 'reported']);
 
+const COMPARED = new Set<Site>(['shamela', 'hdith', 'sunnah']);
+
 const SAHIHAYN = new Set(['البخاري', 'مسلم']);
 
 const CHANGED = 'changed since it was proven';
@@ -118,6 +120,22 @@ function strangerProblems(data: Dhikr, proof: Proof): string[] {
   return sites
     .filter((site) => has(proof, site) && !held.has(site))
     .map((site) => `${site}: no page holds the words of its hadith`);
+}
+
+function emptyPageProblems(proof: Proof): string[] {
+  const cut = [
+    ...Object.values(proof.claims).flatMap((claim) => claim?.spans ?? []),
+    ...proof.differences.map(({ shown }) => shown),
+  ];
+  const held = new Set(cut.map((span) => sourceAt(proof, span.source)?.url));
+  return proof.sources.flatMap((source) =>
+    source.state === 'present' &&
+    COMPARED.has(source.site) &&
+    !held.has(source.url) &&
+    !held.has(nextPageOf(source.url))
+      ? [`${source.url} holds no words of the proof`]
+      : []
+  );
 }
 
 function lookupProblems(data: Dhikr, body: string, proof: Proof): string[] {
@@ -224,6 +242,7 @@ export function statusOf(data: Dhikr, body: string, proof?: Proof): Status {
   const broken = [
     ...sourceProblems(data, text, proof),
     ...strangerProblems(data, proof),
+    ...emptyPageProblems(proof),
     ...lookupProblems(data, text, proof),
     ...claimProblems(data, proof, cited),
     ...differenceProblems(text, proof),
