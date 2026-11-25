@@ -91,5 +91,20 @@
     }
   },
   "differences": [],
-  "rulings": []
+  "rulings": [
+    {
+      "grader": "الألباني",
+      "book": "صحيح الترمذي",
+      "number": "3391",
+      "ruling": "صحيح",
+      "url": "https://dorar.net/h/pH17vuWc"
+    },
+    {
+      "grader": "الألباني",
+      "book": "صحيح أبي داود",
+      "number": "5068",
+      "ruling": "صحيح",
+      "url": "https://dorar.net/h/Mk8kvN4p"
+    }
+  ]
 }
