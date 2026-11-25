@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import Dhikr from './Dhikr.astro';
+import { toArabicDigits } from '../lib/arabic';
 import type { Dhikr as DhikrData } from '../lib/schema';
 
 type Extra = { heading?: 'h2' | 'h3' | 'h4'; single?: boolean };
@@ -27,6 +28,13 @@ async function render(data: DhikrData, body: string, extra: Extra = {}) {
     props: { data, body, slug: 'sayyid-al-istighfar', ...extra },
   });
 }
+
+const textOf = (html: string) =>
+  html
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+const leadOf = (html: string) => textOf(html.match(/<p class="entry__lead">([\s\S]*?)<\/p>/)![1]!);
 
 describe('Dhikr', () => {
   it('renders each form with the other form struck after it', async () => {
@@ -68,14 +76,23 @@ describe('Dhikr', () => {
     expect(html).not.toContain('entry__head');
   });
 
-  it('shows an agreeing badge when the count is above one', async () => {
-    const html = await render({ ...base, count: 3 }, 'سبحان الله');
-    expect(html).toContain('٣ مرات');
+  it('reads the count in full to a screen reader and in a selection', async () => {
+    const few = await render({ ...base, count: 3, when: 'في اليوم' }, 'سبحان الله');
+    expect(leadOf(few)).toBe('٣ مرات، في اليوم');
+    const many = await render({ ...base, count: 100 }, 'سبحان الله');
+    expect(leadOf(many)).toBe('١٠٠ مرة');
   });
 
-  it('uses the singular for counts above ten', async () => {
-    const html = await render({ ...base, count: 100 }, 'سبحان الله');
-    expect(html).toContain('١٠٠ مرة');
+  it.each([3, 10, 100])('shows a count of %i once, as the number in the ring', async (count) => {
+    const html = await render({ ...base, count }, 'سبحان الله');
+    const seen = html
+      .replace(/<span class="visually-hidden">[\s\S]*?<\/span>/g, '')
+      .replace(/<a class="takhrij"[\s\S]*/, '');
+    expect(textOf(seen).match(/[٠-٩]+/g)).toEqual([toArabicDigits(count)]);
+  });
+
+  it('says the dual without a hidden number, because the word holds it', async () => {
+    expect(leadOf(await render({ ...base, count: 2 }, 'سبحان الله'))).toBe('مرتان');
   });
 
   it('puts no درجة marker on the card', async () => {
@@ -144,10 +161,10 @@ describe('Dhikr', () => {
     expect(html).toContain('<p class="entry__lead">في المساء</p>');
   });
 
-  it('draws the count as a ring of beads beside its label', async () => {
+  it('leads with the count as a ring of beads, before its unit', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
     const ring = html.match(
-      /<p class="entry__lead">٣ مرات<\/p>\s*<svg class="bead-ring"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>/
+      /<svg class="bead-ring"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>\s*<p class="entry__lead">\s*<span class="visually-hidden">\s*٣\s*<\/span>\s*مرات\s*<\/p>/
     );
     expect(ring).not.toBeNull();
     expect(ring![1].match(/<circle cx=/g)).toHaveLength(3);
@@ -190,13 +207,16 @@ describe('Dhikr', () => {
       'بِسْمِ اللَّهِ'
     );
     const order = [
-      '<p class="entry__lead">٣ مرات، إذا أخذ مضجعه</p>',
+      '<svg class="bead-ring"',
+      '<p class="entry__lead">',
       '<p class="entry__how">متوضئًا</p>',
       '<p class="entry__text">',
       '<p class="entry__note">كفته</p>',
       '<a class="takhrij"',
-      '<a class="share-link"',
+      'data-copy=',
+      'href="/sabah-masaa/sayyid-al-istighfar/"',
     ].map((part) => html.indexOf(part));
+    expect(leadOf(html)).toBe('٣ مرات، إذا أخذ مضجعه');
     expect(order).not.toContain(-1);
     expect(order).toEqual(order.toSorted((a, b) => a - b));
   });
@@ -222,8 +242,10 @@ describe('Dhikr', () => {
     expect(await render(base, 'سبحان الله', { single: true })).not.toMatch(/<h\d/);
   });
 
-  it('leaves the share link to its own page when it stands alone', async () => {
-    expect(await render(base, 'سبحان الله', { single: true })).not.toContain('data-share-title');
+  it('leaves the buttons to its own page when it stands alone', async () => {
+    const html = await render(base, 'سبحان الله', { single: true });
+    expect(html).not.toContain('entry__actions');
+    expect(html).not.toContain('data-copy');
   });
 
   it('omits the lead when there is no cue', async () => {
@@ -254,18 +276,29 @@ describe('Dhikr', () => {
     expect(html).not.toContain('entry__lead');
   });
 
-  it('carries its id, and shares the link of its own page', async () => {
+  it('carries its id, copies itself, and opens its own page', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('<li class="entry entry--split" id="sayyid-al-istighfar">');
     expect(html).toMatch(
-      /<a class="share-link" href="\/sabah-masaa\/sayyid-al-istighfar\/" data-share-title="سيد الاستغفار" aria-label="مشاركة: سيد الاستغفار">/
+      /<button class="icon-button icon-button--quiet" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">/
     );
+    expect(html).toMatch(
+      /<a class="icon-button icon-button--quiet" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">/
+    );
+    expect(html).not.toContain('data-share-title');
   });
 
-  it('has an empty status, next to the link, for saying that it was copied', async () => {
+  it('copies the evening form only when the dhikr has one', async () => {
+    const both = await render(base, '{{أَصْبَحْنَا|أَمْسَيْنَا}} بِكَ');
+    expect(both).toContain('data-copy="أَصْبَحْنَا بِكَ\n');
+    expect(both).toContain('data-copy-masaa="أَمْسَيْنَا بِكَ\n');
+    expect(await render(base, 'سبحان الله')).not.toContain('data-copy-masaa');
+  });
+
+  it('has an empty status, next to the buttons, for saying that it was copied', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="share-link__status share-link__status--over" role="status" data-share-status><\/span>\s*<a class="share-link"/
+      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="icon-button/
     );
   });
 });

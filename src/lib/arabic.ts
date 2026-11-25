@@ -17,8 +17,12 @@ export function formLabel(n: number): string {
   return `الصيغة ${ORDINALS[n - 1]}`;
 }
 
-export function timesLabel(n: number): string {
+export function timesUnit(n: number): string {
   if (n === 2) return 'مرتان';
-  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} مرات`;
-  return `${toArabicDigits(n)} مرة`;
+  return n >= 3 && n <= 10 ? 'مرات' : 'مرة';
+}
+
+export function timesLabel(n: number): string {
+  if (n === 2) return timesUnit(n);
+  return `${toArabicDigits(n)} ${timesUnit(n)}`;
 }

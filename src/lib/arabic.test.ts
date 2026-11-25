@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { adhkarLabel, formLabel, toArabicDigits, timesLabel } from './arabic';
+import { adhkarLabel, formLabel, toArabicDigits, timesLabel, timesUnit } from './arabic';
 
 describe('adhkarLabel', () => {
   it('names a single dhikr in words', () => {
@@ -42,6 +42,19 @@ describe('toArabicDigits', () => {
 
   it('converts zero', () => {
     expect(toArabicDigits(0)).toBe('٠');
+  });
+});
+
+describe('timesUnit', () => {
+  it('names the unit of a count without its number', () => {
+    expect([1, 2, 3, 10, 11, 100].map(timesUnit)).toEqual([
+      'مرة',
+      'مرتان',
+      'مرات',
+      'مرات',
+      'مرة',
+      'مرة',
+    ]);
   });
 });
 

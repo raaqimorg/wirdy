@@ -34,7 +34,7 @@ ul {
 h1,
 h2,
 h3 {
-  line-height: var(--leading-heading);
+  line-height: var(--leading-tight);
 }
 
 ol,
@@ -71,16 +71,10 @@ a:focus-visible {
     navigation: auto;
   }
 
-  ::view-transition-group(*) {
-    animation-duration: var(--duration-enter);
-    animation-timing-function: var(--spring);
-  }
-
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    height: 100%;
-    overflow: clip;
-    object-fit: cover;
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation-duration: var(--duration-fade);
+    animation-timing-function: linear;
   }
 }

@@ -17,7 +17,7 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with springs").
 
 - Animate only `transform` and `opacity`, in CSS. Add no motion library. The one exception is the browser's own view transition (below).
-- Move with `--spring`, Apple's spring with no bounce, written as CSS `linear()`. Its duration sets the speed: 607 ms (a 0.45 s spring) for the emblems and for the way from a card to its page, 405 ms (0.3 s) for the hover, and 270 ms (0.2 s) for the press to return. Fade with `--ease-out`.
+- Move with `--spring`, Apple's spring with no bounce, written as CSS `linear()`. Its duration sets the speed: 607 ms (a 0.45 s spring) for the emblems, 405 ms (0.3 s) for the hover, and 270 ms (0.2 s) for the press to return. Fade with `--ease-out`. The fade between two pages is linear, so it keeps pace with Safari's own fade of the status bar.
 - Respond on the first frame. Never use an ease-in or an ease-in-out, which start slowly.
 - Grow a shape from 60%, not from nothing. This is Apple's Replace for SF Symbols.
 - Move only what is lit. An emblem fades in as a whole, and its dark shapes stay still. After 180 ms its lit shapes enter, each in its own way (`enter` in `src/lib/emblems.ts`).
@@ -26,7 +26,7 @@ The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "A
 - A press on any other link or button dims it to 60% at once, with no transition.
 - The bar title fades in with the scroll (see [`exceptions.md`](exceptions.md)).
 - With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the color still brightens, so the pointer gets an answer.
-- A card on the home page and the banner of its page share a `view-transition-name`, so the card grows into the banner. The «بقية الأقسام» cards have none, or they would fly across the page. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.
+- A page fades into the next one in 200 ms, with nothing moving, so no element has a `view-transition-name`. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.
 
 ## Tests
 

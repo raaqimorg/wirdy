@@ -2,6 +2,7 @@
   flex: none;
   width: var(--size-touch);
   height: var(--size-touch);
+  margin-inline-start: calc(var(--space-1-5) * -1);
   color: var(--tone-text);
   fill: currentColor;
   -webkit-user-select: none;

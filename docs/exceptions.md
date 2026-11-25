@@ -45,13 +45,33 @@ The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alterna
 
 ## A share link opens the device's share sheet
 
-Each dhikr has a link to its own page, drawn as a share icon in the foot of its card. Its own page has it as a button, next to «احفظ الصورة». The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it.
+The page of each dhikr has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it. In a list, the foot of a card has a copy button and a plain link to the dhikr's page, drawn as a chevron. A third button would put 100 of the 196 takhrij lines on two lines at 390 px, and two buttons put 16.
 
 - The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
 - It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
 - A place in an occasion page is a plain `#slug`, marked with `:target` in CSS. The text after `#` never reaches the server, so only a page of its own can have its own sharing card.
-- The message lies over the foot of the card, so nothing moves under the finger.
 - Switching between the morning and the evening form keeps the `#slug`.
+
+## A button copies a dhikr with its takhrij
+
+Each dhikr has a copy button, in the foot of its card and on its own page. It copies the words, then the count and the moment when there are any, then the takhrij, so a dhikr does not travel without its source. The owner asked for it.
+
+- The ordinary way is to select the text. That still works, and it also gives the count once.
+- `src/lib/copy.ts` writes what to copy at build time, into `data-copy`. A dhikr with a morning and an evening form also has `data-copy-masaa`, and the script copies the form that shows. So the words are in the page twice.
+- قرآن is copied as Tanzil gives it: one آية on each line, a blank line between سور, and no ornaments. A dhikr with `counts` gives one phrase on each line, with its count.
+- The message («نُسخ الذكر», or «تعذّر النسخ» when the browser refuses) is a `role="status"`. In a card it lies over the foot, beside the buttons, so nothing moves under the finger.
+- Without JavaScript, the button is hidden (`<noscript>`), because it would do nothing.
+- «ما لم يثبت» has no copy button, so a weak dhikr does not travel without its ruling.
+
+## A colored layer sits behind the top of a page with a color
+
+When an iPhone bounces at the top of a page, it uncovers what is above the page and paints it in the color of `body`. On an occasion page that put a band of paper between the status bar and the colored bar, both in the occasion's color. So `.page::before` (`src/styles/utilities.css`) is a fixed layer in the color of the bar, behind the page. A fixed layer stays in place while the page bounces, so the bounce uncovers it.
+
+- The ordinary way is to let the page color show there, as on most sites.
+- `.page` has the paper color and is at least as tall as the layer, so the layer shows only in the bounce. The bounce at the end of a page stays paper.
+- A colored `body` would fix the top only. The bounce at the end of the page, and the area behind Safari's bottom bar, would turn that color too.
+- `html { background }` does not change the color of the bounce, and an element above the page with a negative offset is not painted there.
+- The home and 404 pages have no color, so they have no layer.
 
 ## The bar shows the page title after a scroll
 
@@ -67,8 +87,9 @@ The bar of an occasion page repeats the heading, so the reader knows the page af
 
 - The name changes when the card changes, so an app that cached the old image fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only the cards that changed.
 - Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.
+- The card looks like the dhikr's page: a band in the occasion's color with the name and the count, the words in ink on the panel, and a muted foot. The size of the words is the largest that fits. A text that does not fit gets a red outline, and a build test refuses a card that has one.
 - A long text stops at the end of a clause, and قرآن at the end of an آية, never inside one (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks, and could end a card on «لا إله».
-- The card carries the moment, the count, and the takhrij, because an image travels without its page. A قرآن card names Tanzil.
+- The card carries the moment, the count, and the takhrij, because an image travels without its page. A قرآن card says «النص: tanzil.net» in its foot.
 
 ## The icons and the OpenGraph cards come from a headless browser
 

@@ -6,6 +6,7 @@ import Neighbours from '../../components/Neighbours.astro';
 import WirdSwitch from '../../components/WirdSwitch.astro';
 import Section from '../../layouts/Section.astro';
 import { cardFile, cardOf } from '../../lib/card';
+import { copyOf } from '../../lib/copy';
 import { adhkarOf } from '../../lib/collection';
 import { OCCASIONS } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
@@ -68,6 +69,12 @@ const links = [
   <EntryList variant="single">
     <Dhikr data={data} body={body} slug={slug} single />
   </EntryList>
-  <DhikrActions href={path} title={data.title} image={image} file={`wirdy-${slug}.png`} />
+  <DhikrActions
+    href={path}
+    title={data.title}
+    image={image}
+    file={`wirdy-${slug}.png`}
+    copy={copyOf(data, body)}
+  />
   <Neighbours links={links} />
 </Section>

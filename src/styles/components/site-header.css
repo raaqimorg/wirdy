@@ -8,10 +8,13 @@
 }
 
 .site-header__brand {
+  --icon-drop: var(--drop-brand);
+
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--size-touch);
+  padding-bottom: var(--space-lift-brand);
   font-size: var(--text-title-1);
   font-weight: var(--weight-bold);
   text-decoration: none;

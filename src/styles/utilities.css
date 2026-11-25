@@ -17,3 +17,18 @@
 .salawat {
   font-family: var(--font-naskh);
 }
+
+.page {
+  min-height: var(--size-under);
+  background: var(--color-paper);
+}
+
+.page::before {
+  content: "";
+  position: fixed;
+  z-index: var(--layer-under);
+  top: 0;
+  inset-inline: 0;
+  height: var(--size-under);
+  background: var(--tone-fill);
+}

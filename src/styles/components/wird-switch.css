@@ -1,6 +1,7 @@
 .wird-switch {
   display: inline-grid;
-  grid-template-columns: repeat(2, minmax(var(--size-option), 1fr));
+  grid-template-columns: repeat(2, minmax(0, var(--size-option)));
+  max-width: 100%;
   margin-top: var(--space-3);
   padding: var(--space-track);
   background: var(--color-track);
@@ -12,6 +13,7 @@
   place-items: center;
   min-height: var(--size-touch);
   padding-inline: var(--space-4);
+  padding-bottom: var(--space-lift);
   border-radius: var(--radius-pill);
   font-size: var(--text-note);
   font-weight: var(--weight-medium);

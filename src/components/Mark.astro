@@ -1,11 +1,24 @@
 ---
 import { PETALS } from '../lib/mark';
 import { PALETTE } from '../lib/palette';
+
+interface Props {
+  inks?: 'own' | 'stage';
+}
+
+const { inks = 'own' } = Astro.props;
+const stage = inks === 'stage';
 ---
 
 <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
   {PETALS.map(({ cx, cy }) => (
-    <circle cx={cx} cy={cy} r="6.4" fill={PALETTE.petal} />
+    <circle cx={cx} cy={cy} r="6.4" fill={stage ? PALETTE.eggshell : PALETTE.petal} />
   ))}
-  <circle cx="32" cy="32" r="12.5" fill={PALETTE.disc}></circle>
+  <circle
+    cx="32"
+    cy="32"
+    r="12.5"
+    fill={stage ? PALETTE.shade : PALETTE.disc}
+    fill-opacity={stage ? 0.24 : undefined}
+  ></circle>
 </svg>

@@ -2,8 +2,11 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'node:child_process';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { inflateSync } from 'node:zlib';
 import { OCCASIONS, OCCASION_IDS } from './lib/occasions';
 import { adhkarLabel } from './lib/arabic';
+import { PALETTE } from './lib/palette';
+import { UNPROVEN } from './lib/site';
 
 let html = '';
 let notFound = '';
@@ -29,6 +32,22 @@ const pngSize = (file: string) => {
   const png = readFileSync(join(DIST, file));
   return [png.readUInt32BE(16), png.readUInt32BE(20)];
 };
+
+const cornerOf = (file: string) => {
+  const png = readFileSync(file);
+  const chunks: Buffer[] = [];
+  for (let at = 8; at < png.length; at += png.readUInt32BE(at) + 12) {
+    if (png.toString('latin1', at + 4, at + 8) !== 'IDAT') continue;
+    chunks.push(png.subarray(at + 8, at + 8 + png.readUInt32BE(at)));
+  }
+  return [...inflateSync(Buffer.concat(chunks)).subarray(1, 4)];
+};
+const unescaped = (text: string) =>
+  text
+    .replace(/&#34;|&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&');
+const plain = (text: string) => text.replace(/\s+/g, ' ').trim();
 
 const own = (path: string) => readFileSync(join(DIST, path, 'index.html'), 'utf8');
 const facesOf = (page: string) =>
@@ -74,11 +93,33 @@ describe('built site', () => {
     expect(html.match(/occasion-card--band/g)).toHaveLength(1);
   });
 
-  it('gives a home card and the banner of its page one view transition name', () => {
-    for (const id of OCCASION_IDS) {
-      expect(html).toContain(`--stage: stage-${id}`);
-      expect(pages[id]).toContain(`view-transition-name: stage-${id}`);
+  it('fades one page into the next with nothing moving, and not with reduced motion', () => {
+    expect(all + css).not.toContain('view-transition-name');
+    const motion = css.match(
+      /@media \(prefers-reduced-motion:no-preference\)\{@view-transition\{navigation:auto\}([^{}]*)\{([^{}]*)\}\}/
+    )!;
+    expect(motion[1]).toBe(
+      '::view-transition-group(root),::view-transition-old(root),::view-transition-new(root)'
+    );
+    expect(motion[2]).toContain('animation-duration:var(--duration-fade)');
+    expect(motion[2]).toContain('animation-timing-function:linear');
+    expect(css.match(/@view-transition/g)).toHaveLength(1);
+  });
+
+  it('gives a page with a color its tone on the body, over a layer behind its top', () => {
+    for (const { id, color } of [...OCCASIONS, { id: 'ma-lam-yathbut', color: UNPROVEN.color }]) {
+      expect(own(id)).toMatch(
+        new RegExp(`<body class="tone" style="--tone: ${color}"> ?<div class="page">`)
+      );
     }
+    expect(own('nawm/ayat-al-kursi')).toMatch(
+      /<body class="tone" style="--tone: #[0-9a-f]{6}"> ?<div class="page">/
+    );
+    for (const page of [html, notFound]) {
+      expect(page).toContain('<body>');
+      expect(page).not.toContain('class="page"');
+    }
+    expect(css).toMatch(/\.page:{1,2}before\{[^}]*position:fixed/);
   });
 
   it('gives each occasion its own page with one heading and a way back', () => {
@@ -115,11 +156,11 @@ describe('built site', () => {
     );
   });
 
-  it('applies a saved theme before the first paint, and hides the button without script', () => {
+  it('applies a saved theme before the first paint, and hides the buttons without script', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/)![1]!;
     expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\('theme'\)[\s\S]*?<\/script>/);
     expect(head).toMatch(
-      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/
+      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/
     );
   });
 
@@ -158,8 +199,20 @@ describe('built site', () => {
       const bar = pages[id]!.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
       expect(bar).toContain(`<span class="bar__title" aria-hidden="true">${heading}</span>`);
       expect(bar).toMatch(
-        /<a class="icon-button icon-button--eggshell" href="\/" aria-label="وِردي، الرئيسية"><span class="icon-button__face"><svg class="mark"/
+        /<a class="icon-button" href="\/" aria-label="وِردي، الرئيسية"><span class="icon-button__face"><svg class="mark"/
       );
+    }
+  });
+
+  it('draws the bar mark in the two inks of the emblems, and the home mark in its own', () => {
+    const home = html.match(/<svg class="mark"[\s\S]*?<\/svg>/)![0];
+    expect(home).toContain(PALETTE.petal);
+    for (const page of [...Object.values(pages), own('ma-lam-yathbut')]) {
+      const mark = page.match(/<svg class="mark"[\s\S]*?<\/svg>/)![0];
+      expect([...new Set([...mark.matchAll(/ fill="([^"]+)"/g)].map(([, ink]) => ink))]).toEqual([
+        PALETTE.eggshell,
+        PALETTE.shade,
+      ]);
     }
   });
 
@@ -475,9 +528,7 @@ describe('built site', () => {
     const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
     const bar = page.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
     expect(bar).toContain('<span class="bar__title" aria-hidden="true">ما لم يثبت</span>');
-    expect(bar).toContain(
-      '<a class="icon-button icon-button--eggshell" href="/" aria-label="وِردي، الرئيسية">'
-    );
+    expect(bar).toContain('<a class="icon-button" href="/" aria-label="وِردي، الرئيسية">');
     expect(bar).not.toContain('github.com');
     const rulings = page.match(/<span class="badge">[^<]+<\/span>/g)!;
     expect(
@@ -527,15 +578,63 @@ describe('built site', () => {
       expect(page).not.toContain('class="crumbs"');
       expect(page).not.toContain('bar__title');
       expect(page.match(/data-share-title=/g)).toHaveLength(1);
+      expect(page.match(/ data-copy=/g)).toHaveLength(1);
+      expect(page.match(/ data-status/g)).toHaveLength(1);
       expect(page).toMatch(/<a class="button" href="\/og\/[^"]+" download="wirdy-/);
+      expect(pages[occasion!]).toMatch(
+        new RegExp(
+          `<a class="icon-button icon-button--quiet" href="/${slug}/" aria-label="صفحة الذكر: `
+        )
+      );
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
     expect(images.size).toBe(expected);
   });
 
-  it('shares nothing from «ما لم يثبت»', () => {
+  it('shares and copies nothing from «ما لم يثبت»', () => {
     const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
     expect(page).not.toContain('data-share-title=');
+    expect(page).not.toContain('data-copy=');
+  });
+
+  it('copies each dhikr as it shows, with its takhrij last', () => {
+    for (const id of OCCASION_IDS) {
+      const cards = pages[id]!.match(/<li class="entry[ "][\s\S]*?<\/li>/g)!;
+      expect(cards).toHaveLength(countOf(id));
+      for (const card of cards) {
+        const copied = unescaped(card.match(/ data-copy="([^"]*)"/)![1]!);
+        const takhrij = card.match(/<a class="takhrij"[^>]*><span>([^<]*)<\/span>/)![1]!;
+        expect(copied.split('\n').at(-1)).toBe(unescaped(takhrij));
+        const shown = card
+          .match(/<p class="entry__text">([\s\S]*?)<\/p>/)![1]!
+          .replace(/<span class="badge[\s\S]*?<\/span>\s*<\/span>/g, ' ')
+          .replace(
+            /<span class="variant-text variant-text--masaa">[\s\S]*?<\/span><\/span><\/span>/g,
+            ''
+          )
+          .replace(/\u00a0<span class="word-form__other"[^>]*>[^<]*<\/span>/g, '')
+          .replace(/<span class="surah(__ayah-end)?">/g, ' ');
+        const words = copied
+          .split('\n\n')
+          .slice(0, -1)
+          .join(' ')
+          .replace(/ \([٠-٩]+ مر(ة|ات)\)$/gm, '');
+        expect(plain(words)).toBe(plain(unescaped(shown.replace(/<[^>]+>/g, ''))));
+      }
+    }
+  });
+
+  it('carries the evening form to copy where a dhikr has one, and nowhere else', () => {
+    const forms = contentFiles.filter((f) => readFileSync(join(ADHKAR, f), 'utf8').includes('{{'));
+    expect(all.match(/ data-copy-masaa="/g)).toHaveLength(forms.length);
+  });
+
+  it('draws no card with the red outline of a text that does not fit', () => {
+    const cards = readdirSync(join(DIST, 'og'), { recursive: true, encoding: 'utf8' }).filter((f) =>
+      f.endsWith('.png')
+    );
+    expect(cards).toHaveLength(expected);
+    expect(cards.filter((f) => cornerOf(join(DIST, 'og', f)).join() === '255,0,0')).toEqual([]);
   });
 
   it('marks the shared dhikr without script, clear of the bar', () => {

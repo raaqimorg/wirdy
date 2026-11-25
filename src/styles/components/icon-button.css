@@ -14,7 +14,6 @@
 
 .icon-button__face {
   --icon-size: var(--size-icon-large);
-  --mark-size: var(--size-mark-small);
 
   display: grid;
   place-items: center;
@@ -32,8 +31,10 @@
   background: var(--color-glass);
 }
 
-.icon-button--eggshell .icon-button__face {
-  background: var(--color-eggshell);
+.icon-button--quiet .icon-button__face {
+  --icon-size: var(--size-icon-medium);
+
+  color: var(--color-ink-muted);
 }
 
 .icon-button:focus-visible {
@@ -54,7 +55,8 @@
 }
 
 @media (hover: hover) {
-  .icon-button--panel:hover .icon-button__face {
+  .icon-button--panel:hover .icon-button__face,
+  .icon-button--quiet:hover .icon-button__face {
     color: var(--color-ink);
   }
 

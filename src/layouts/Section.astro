@@ -18,8 +18,8 @@ interface Props extends ComponentProps<typeof Paper> {
 const { emblem, color, heading, lede, back, single = false, ...paper } = Astro.props;
 ---
 
-<Paper {...paper}>
-  <div class="tone" style={`--tone: ${color}`}>
+<Paper {...paper} tone={color}>
+  <div class="page">
     <Bar heading={single ? undefined : heading} back={back} />
     <Banner emblem={emblem} title={heading} lede={lede} single={single}>
       <slot name="banner" />

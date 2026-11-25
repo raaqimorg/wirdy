@@ -1,11 +1,13 @@
 ---
 import BeadRing from './BeadRing.astro';
 import Entry from './Entry.astro';
+import Icon from './Icon.astro';
+import IconButton from './IconButton.astro';
 import Phrase from './Phrase.astro';
-import ShareLink from './ShareLink.astro';
 import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
-import { timesLabel } from '../lib/arabic';
+import { timesUnit, toArabicDigits } from '../lib/arabic';
+import { copyOf } from '../lib/copy';
 import { leadOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
 import { phrasesOf } from '../lib/phrases';
@@ -24,8 +26,10 @@ const { data, body, slug, heading, single = false, nested = false } = Astro.prop
 
 const text = body.trim();
 const suwar = suwarOf(data, text);
-const count = data.count > 1 ? timesLabel(data.count) : null;
-const lead = [count, leadOf(data, suwar)].filter(Boolean).join('، ');
+const unit = data.count > 1 ? timesUnit(data.count) : null;
+const lead = [unit, leadOf(data, suwar)].filter(Boolean).join('، ');
+const copy = copyOf(data, body);
+const path = dhikrPath(data.occasion, slug);
 const phrases = data.counts ? phrasesOf(text, data.counts) : null;
 ---
 
@@ -41,7 +45,12 @@ const phrases = data.counts ? phrasesOf(text, data.counts) : null;
   kind={data.quran ? 'quran' : undefined}
   time={single || data.mode === 'both' ? undefined : data.mode}
 >
-  {data.count > 1 && <BeadRing slot="badge" count={data.count} />}
+  {data.count > 1 && <BeadRing slot="count" count={data.count} />}
+  {data.count > 2 && (
+    <span slot="number" class="visually-hidden">
+      {`${toArabicDigits(data.count)}\u00a0`}
+    </span>
+  )}
   <Fragment>
     {suwar && suwar.map((ayat) => <Surah ayat={ayat} />)}
     {phrases && phrases.map((phrase) => <Phrase {...phrase} />)}
@@ -53,11 +62,19 @@ const phrases = data.counts ? phrasesOf(text, data.counts) : null;
     </p>
   )}
   {!single && (
-    <ShareLink
-      slot="actions"
-      variant="icon"
-      href={dhikrPath(data.occasion, slug)}
-      title={data.title}
-    />
+    <div slot="actions" class="entry__actions">
+      <span class="entry__status" role="status" data-status />
+      <IconButton
+        label={`نسخ: ${data.title}`}
+        variant="quiet"
+        data-copy={copy.sabah}
+        data-copy-masaa={copy.masaa}
+      >
+        <Icon name="copy" />
+      </IconButton>
+      <IconButton label={`صفحة الذكر: ${data.title}`} variant="quiet" href={path}>
+        <Icon name="open" />
+      </IconButton>
+    </div>
   )}
 </Entry>

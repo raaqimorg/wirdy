@@ -29,7 +29,7 @@ describe('the tokens', () => {
   it('are all defined', () => {
     const used = new Set([...all.matchAll(/var\((--[\w-]+)/g)].map(([, name]) => name!));
     const defined = new Set([...all.matchAll(/^\s*(--[\w-]+):/gm)].map(([, name]) => name!));
-    const inline = new Set(['--stage', '--tone']);
+    const inline = new Set(['--tone']);
     expect([...used].filter((name) => !defined.has(name) && !inline.has(name))).toEqual([]);
   });
 
@@ -51,6 +51,7 @@ describe('the tokens', () => {
 
   it('match the palette that the scripts and the metadata use', () => {
     expect(light).toContain(`--color-paper: ${PALETTE.paper};`);
+    expect(light).toContain(`--color-panel: ${PALETTE.panel};`);
     expect(light).toContain(`--color-eggshell: ${PALETTE.eggshell};`);
     expect(light).toContain(`--color-ink: ${PALETTE.ink};`);
     expect(light).toContain(`--color-ink-muted: ${PALETTE.inkMuted};`);

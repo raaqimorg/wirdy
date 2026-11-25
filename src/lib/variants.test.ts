@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { pairWords, parseVariants } from './variants';
+import { formOf, pairWords, parseVariants } from './variants';
+
+describe('formOf', () => {
+  it('reads a text in one form, with no marker left', () => {
+    expect(formOf('{{أصبحنا|أمسينا}} لله', 'sabah')).toBe('أصبحنا لله');
+    expect(formOf('{{أصبحنا|أمسينا}} لله', 'masaa')).toBe('أمسينا لله');
+    expect(formOf('سبحان الله', 'masaa')).toBe('سبحان الله');
+  });
+});
 
 describe('pairWords', () => {
   it('pairs a one-word marker with its other form', () => {

@@ -12,12 +12,9 @@ interface Props {
 const { emblem, title, lede, single = false } = Astro.props;
 ---
 
-<header
-  class:list={['banner', single && 'banner--single']}
-  style={single ? undefined : `view-transition-name: stage-${emblem}`}
->
+<header class:list={['banner', single && 'banner--single']}>
   <div class="banner__inner">
-    <div>
+    <div class="banner__words">
       <h1 class="banner__title">{title}</h1>
       {lede && <p class="banner__lede">{lede}</p>}
       <slot />

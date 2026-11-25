@@ -7,9 +7,9 @@ import { OCCASIONS } from './occasions';
 import { phrasesOf, type Phrase } from './phrases';
 import type { Dhikr } from './schema';
 import { takhrijLine } from './takhrij';
-import { parseVariants } from './variants';
+import { formOf } from './variants';
 
-const TEMPLATE = 1;
+const TEMPLATE = 2;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
 const REST = 'وتتمة الآيات في الصفحة';
@@ -27,12 +27,6 @@ export type Card = {
   phrases?: Phrase[];
   takhrij: string;
 };
-
-function formOf(text: string, form: 'sabah' | 'masaa'): string {
-  return parseVariants(text)
-    .map((segment) => (segment.type === 'text' ? segment.value : segment[form]))
-    .join('');
-}
 
 export function cardOf(data: Dhikr, body: string): Card {
   const text = body.trim();

@@ -37,6 +37,11 @@ const textOf = (card) => {
   return `<p>${escape(card.blocks[0][0])}${card.cut ? ' …' : ''}</p>`;
 };
 
+const leading = (card) => {
+  if (card.quran) return 2.15;
+  return card.phrases ? 1.7 : 1.85;
+};
+
 const page = (
   card,
   occasion
@@ -48,32 +53,48 @@ ${amiri()}
 ${amiriQuran()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
-body{font-family:"Plex",sans-serif;font-weight:500;background:${card.color};color:${PALETTE.eggshell};padding:40px 56px 36px;display:flex;flex-direction:column;gap:16px}
-.top{display:flex;align-items:center;gap:20px;font-size:25px}
-.top svg{width:64px;height:64px}
-.top b{display:block;font-size:32px;line-height:1.35}
-.count{margin-inline-start:auto;font-size:27px;font-weight:700;border:2px solid ${PALETTE.eggshell};border-radius:99px;padding:4px 22px;white-space:nowrap}
-.lead{font-size:24px;line-height:1.5;opacity:.88}
+body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.ink} 30%);font-family:"Plex",sans-serif;font-weight:500;background:${PALETTE.panel};color:${PALETTE.ink};display:flex;flex-direction:column}
+.top{flex:none;display:flex;align-items:center;gap:26px;height:152px;padding:0 56px;background:var(--tone);color:${PALETTE.eggshell}}
+.top svg{flex:none;width:104px;height:104px}
+.names{flex:1;min-width:0;padding-bottom:8px}
+.heading{font-size:26px;line-height:1.35;opacity:.85}
+.title{font-weight:700;line-height:1.4;white-space:nowrap}
+.count{flex:none;padding:8px 30px 13px;font-size:36px;font-weight:700;line-height:1.35;color:color-mix(in oklab,var(--tone),black 35%);background:${PALETTE.eggshell};border-radius:99px}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;padding:22px 56px 0}
+.lead{font-size:28px;font-weight:700;line-height:1.5;color:var(--tone-text)}
 .box{flex:1;min-height:0;display:flex;align-items:center}
-.text{width:100%;font-family:"${card.quran ? 'Amiri Quran' : 'Amiri'}";line-height:${card.quran ? 2.15 : 1.85}}
-.text i{font-style:normal;opacity:.75}
-.phrase{display:flex;align-items:center;justify-content:space-between}
-.phrase b{font:700 30px/1 "Plex";min-width:104px;padding:12px 0;text-align:center;border:2px solid ${PALETTE.eggshell};border-radius:99px}
-.evening{font-family:"Plex";font-size:.5em;line-height:1.6;opacity:.75}
-.evening span{font-family:"Amiri";font-size:1.5em}
-.foot{display:flex;align-items:center;gap:14px;font-size:22px;border-top:2px solid rgb(244 241 208 / .3);padding-top:14px}
-.foot svg{width:36px;height:36px;background:${PALETTE.eggshell};border-radius:50%;padding:4px}
-.foot b{font-size:26px}
+.text{width:100%;font-family:"${card.quran ? 'Amiri Quran' : 'Amiri'}";line-height:${leading(card)};text-wrap:balance}
+.text i{font-style:normal;color:${PALETTE.inkMuted}}
+.phrase{display:flex;align-items:center;justify-content:space-between;gap:28px}
+.phrase b{flex:none;min-width:max(84px,1.4em);padding:.1em .4em .22em;font:700 max(28px,.5em)/1.35 "Plex";text-align:center;color:${PALETTE.eggshell};background:var(--tone);border-radius:99px}
+.evening{font-size:max(32px,min(.6em,44px));line-height:1.7;color:${PALETTE.inkMuted}}
+.evening b{font:700 26px/1 "Plex";color:var(--tone-text)}
+.foot{flex:none;display:flex;align-items:center;gap:14px;height:78px;margin:0 56px;padding-bottom:4px;font-size:23px;color:${PALETTE.inkMuted};border-top:2px solid color-mix(in oklab,${PALETTE.inkMuted},transparent 80%)}
+.foot svg{width:42px;height:42px;translate:0 2px}
+.foot b{font-size:29px;font-weight:700;color:${PALETTE.ink};margin-top:-7px}
 .foot .site{direction:ltr}
-.foot .tk{margin-inline-start:auto;text-align:left}
+.foot .source{margin-inline-start:auto;text-align:left}
 </style></head><body>
-<div class="top">${emblemSvg(occasion)}<div>${card.heading}<b>${escape(card.title)}</b></div>${card.count ? `<span class="count">${card.count}</span>` : ''}</div>
-${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
-<div class="box"><div class="text">${textOf(card)}${card.evening ? `<p class="evening">وفي المساء: <span>${escape(card.evening)}</span></p>` : ''}</div></div>
-<div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="tk">${card.quran ? 'النص من مشروع تنزيل (tanzil.net). ' : ''}${escape(card.takhrij)}</span></div>
+<div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}</p></div>${card.count ? `<p class="count">${card.count}</p>` : ''}</div>
+<div class="main">${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
+<div class="box"><div class="text">${textOf(card)}${card.evening ? `<p class="evening"><b>وفي المساء:</b> ${escape(card.evening)}</p>` : ''}</div></div></div>
+<div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="source">${escape(card.takhrij)}${card.quran ? '. النص: tanzil.net' : ''}</span></div>
 <script>
-const box=document.querySelector('.box'),text=document.querySelector('.text');
-document.fonts.ready.then(()=>{for(const size of [64,58,52,46,42,38,34,31]){text.style.fontSize=size+'px';if(text.scrollHeight<=box.clientHeight-8)return}document.body.style.outline='12px solid red';document.body.style.outlineOffset='-12px'});
+const [title,box,text,foot]=['.title','.box','.text','.foot'].map((name)=>document.querySelector(name));
+const fit=(element,largest,smallest,fits)=>{
+  for(let size=largest;size>=smallest;size--){element.style.fontSize=size+'px';if(fits())return true}
+  return false;
+};
+document.fonts.ready.then(()=>{
+  const fits=[
+    fit(title,48,36,()=>title.scrollWidth<=title.clientWidth),
+    fit(text,92,31,()=>text.scrollHeight<=box.clientHeight-14&&text.scrollWidth<=box.clientWidth),
+    foot.scrollWidth<=foot.clientWidth,
+  ];
+  if(fits.every(Boolean))return;
+  document.body.style.outline='12px solid red';
+  document.body.style.outlineOffset='-12px';
+});
 </script></body></html>`;
 
 const entries = readdirSync(content, { recursive: true, encoding: 'utf8' })

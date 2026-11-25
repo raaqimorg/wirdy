@@ -32,7 +32,11 @@ const { takhrij, id, title, heading: Heading, lead, how, layout, nested, kind, t
   <div class="entry__main">
     {lead && (
       <div class="entry__head">
-        <p class="entry__lead">{lead}</p>
+        <slot name="count" />
+        <p class="entry__lead">
+          <slot name="number" />
+          {lead}
+        </p>
         <slot name="badge" />
       </div>
     )}

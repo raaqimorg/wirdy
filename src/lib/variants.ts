@@ -23,6 +23,12 @@ export function parseVariants(input: string): Segment[] {
   return segments;
 }
 
+export function formOf(input: string, form: 'sabah' | 'masaa'): string {
+  return parseVariants(input)
+    .map((segment) => (segment.type === 'text' ? segment.value : segment[form]))
+    .join('');
+}
+
 export type Word = { word: string; alt?: string };
 
 export function pairWords(now: string, other: string): Word[] {

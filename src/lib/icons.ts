@@ -1,10 +1,21 @@
-export type IconName = 'back' | 'github' | 'moon' | 'out' | 'save' | 'share' | 'sun';
+export type IconName =
+  | 'back'
+  | 'copy'
+  | 'github'
+  | 'moon'
+  | 'open'
+  | 'out'
+  | 'save'
+  | 'share'
+  | 'sun';
 
 type Icon = { size: number; stroke?: number; paths: string[]; disc?: number };
 
 export const ICONS: Record<IconName, Icon> = {
   back: { size: 12, stroke: 1.6, paths: ['M1.5 6h9M7 2.5L10.5 6 7 9.5'] },
   out: { size: 12, stroke: 1.6, paths: ['M9.5 9.5l-7-7M2.5 8V2.5H8'] },
+  copy: { size: 12, stroke: 1.6, paths: ['M4.5 4.5h6v6h-6z', 'M7.5 2V1.5h-6v6H2'] },
+  open: { size: 12, stroke: 1.6, paths: ['M7.5 2.5L4 6l3.5 3.5'] },
   share: { size: 12, stroke: 1.6, paths: ['M6 7.5v-6M3.5 3.5L6 1l2.5 2.5M2 6.5V11h8V6.5'] },
   save: { size: 12, stroke: 1.6, paths: ['M6 1v6M3.5 5L6 7.5 8.5 5M2 8v3h8V8'] },
   moon: { size: 24, stroke: 2, paths: ['M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'] },

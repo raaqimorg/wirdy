@@ -1,14 +1,32 @@
 .button {
+  --icon-drop: var(--drop);
+
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   min-height: var(--size-button);
+  padding-bottom: var(--space-lift);
+  padding-inline: var(--space-3);
+  color: inherit;
   background: var(--color-panel);
+  border: 0;
   border-radius: var(--radius-card);
+  font-family: var(--font-ui);
   font-size: var(--text-note);
   font-weight: var(--weight-bold);
   text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button:focus-visible {
+  outline: var(--border-ring) solid var(--color-ink);
+  outline-offset: var(--ring-gap);
+}
+
+.button:active {
+  opacity: var(--opacity-pressed);
 }
 
 .button--primary {

@@ -1,22 +1,31 @@
 ---
 import Button from './Button.astro';
 import Icon from './Icon.astro';
-import ShareLink from './ShareLink.astro';
+import type { Copy } from '../lib/copy';
 
 interface Props {
   href: string;
   title: string;
   image: string;
   file: string;
+  copy: Copy;
 }
 
-const { href, title, image, file } = Astro.props;
+const { href, title, image, file, copy } = Astro.props;
 ---
 
 <p class="dhikr-actions">
-  <ShareLink variant="button" href={href} title={title} />
+  <span class="dhikr-actions__status" role="status" data-status></span>
+  <Button href={href} variant="primary" data-share-title={title}>
+    <Icon name="share" />
+    مشاركة
+  </Button>
+  <Button data-copy={copy.sabah} data-copy-masaa={copy.masaa}>
+    <Icon name="copy" />
+    نسخ
+  </Button>
   <Button href={image} download={file}>
     <Icon name="save" />
-    احفظ الصورة
+    الصورة
   </Button>
 </p>

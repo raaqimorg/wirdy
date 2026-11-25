@@ -52,11 +52,6 @@
   font-weight: var(--weight-medium);
 }
 
-.occasion-card--lead .occasion-card__stage,
-.occasion-card--row .occasion-card__stage {
-  view-transition-name: var(--stage);
-}
-
 @media (hover: hover) {
   .occasion-card:hover .occasion-card__stage::before {
     opacity: 0.14;

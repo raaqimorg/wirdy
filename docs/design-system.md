@@ -6,7 +6,7 @@ The design follows [Laws of UX](https://lawsofux.com/). This doc says how the co
 
 - `src/styles/tokens.css`: every color, font, size, space, radius, and duration. No other stylesheet holds a raw value.
 - `src/styles/base.css`: the reset, the elements, the focus ring, the press, and the view transitions.
-- `src/styles/utilities.css`: three classes that belong to no component (`container`, `visually-hidden`, `salawat`).
+- `src/styles/utilities.css`: four classes that belong to no component (`container`, `visually-hidden`, `salawat`, and `page`, the paper of a page with a color).
 - `src/styles/components/`: one file for each component, with the same name (`EntryList.astro` and `entry-list.css`).
 - `src/styles/index.css`: the imports, in order. A small component comes before one that uses it.
 - `src/lib/palette.ts`: the colors that TypeScript and the scripts need too. A test keeps it equal to the tokens.
@@ -29,9 +29,13 @@ The names follow the namespaces of Tailwind.
 
 There are two type scales. `--text-title-1` to `--text-title-4` grow by a ratio of 1.333. `--text-reading-1` to `--text-reading-5` hold the words of the adhkar, and grow by 4 px. Three text sizes are for everything else: `small`, `note`, and `body`.
 
+There are seven line heights. `tight` is for headings, `snug` for short lines, `body` for the page, `relaxed` for notes, `reading-small` and `reading` for the words of the adhkar, and `quran` for قرآن.
+
+IBM Plex Sans Arabic sits low in its line, so text in a row of fixed height is lifted by `--space-lift` under it, and an icon beside it is put back by `--drop`.
+
 ## Color of an occasion
 
-An element that has an occasion's color carries the class `tone` and sets `--tone` in its `style`. Everything inside it uses the mixes that `.tone` defines:
+An element that has an occasion's color (the `body` of its page, or its card) carries the class `tone` and sets `--tone` in its `style`. Everything inside it uses the mixes that `.tone` defines:
 
 - `--tone-fill`: a colored surface (the bar, the banner, the card stage, a badge).
 - `--tone-text`: colored text and beads on a panel.
@@ -47,24 +51,24 @@ The dark values appear twice in `tokens.css`: once for a device in dark mode, an
 ## Names
 
 - A class is `block__element--modifier`. The block is the component's name: `OccasionCard.astro` has `occasion-card`, `occasion-card__stage`, and `occasion-card--row`.
-- A stylesheet names only its own block. To change a component from outside, pass it a prop, or set a custom property that it reads (`--icon-size`, `--mark-size`).
+- A stylesheet names only its own block. To change a component from outside, pass it a prop, or set a custom property that it reads (`--icon-size`, `--icon-drop`).
 - A state is an attribute or a pseudo-class (`aria-current`, `data-wird`, `:target`), not a class.
 - A script finds an element by a `data-*` attribute, never by a class.
 - Every class in a page has a rule, and every rule has a class in a page.
 
 ## Components
 
-| Component                                                                                  | What it is                                        |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------- |
-| `Icon`, `Mark`, `Emblem`                                                                   | Drawings. Their shapes are in `src/lib/`          |
-| `Button`, `IconButton`, `Badge`, `BeadRing`                                                | Small parts                                       |
-| `ThemeToggle`, `WirdSwitch`, `ShareLink`, `Takhrij`                                        | Controls and links with one job                   |
-| `Entry`                                                                                    | The card around a text, with its lead and takhrij |
-| `Dhikr`, `Unproven`                                                                        | What fills an `Entry`                             |
-| `Surah`, `Phrase`, `VariantText`, `WordForm`                                               | The text inside an `Entry`                        |
-| `EntryList`, `Group`, `GroupIndex`, `Choices`                                              | How entries sit on a page                         |
-| `OccasionCard`, `CardGrid`, `Related`                                                      | The cards of the occasions                        |
-| `SiteHeader`, `Bar`, `Tools`, `Banner`, `Hero`, `DhikrActions`, `Neighbours`, `SiteFooter` | The parts of a page                               |
+| Component                                                                                                       | What it is                                                          |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `Icon`, `Mark`, `Emblem`                                                                                        | Drawings. Their shapes are in `src/lib/`                            |
+| `Button`, `IconButton`, `Badge`, `BeadRing`                                                                     | Small parts. A button without `href` is a `<button>`                |
+| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                          | Controls and links with one job                                     |
+| `Entry`                                                                                                         | The card around a text: its count, lead, text, takhrij, and buttons |
+| `Dhikr`, `Unproven`                                                                                             | What fills an `Entry`                                               |
+| `Surah`, `Phrase`, `VariantText`, `WordForm`                                                                    | The text inside an `Entry`                                          |
+| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                   | How entries sit on a page                                           |
+| `OccasionCard`, `CardGrid`, `Related`                                                                           | The cards of the occasions                                          |
+| `SiteHeader`, `Bar`, `Tools`, `Banner`, `Hero`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                 |
 
 ## Breakpoints
 

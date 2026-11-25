@@ -16,6 +16,7 @@ interface Props {
   crumbs?: { name: string; path: string }[];
   noindex?: boolean;
   faces?: ('naskh' | 'quran')[];
+  tone?: string;
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   crumbs = [],
   noindex = false,
   faces = ['naskh'],
+  tone,
 } = Astro.props;
 const FACES = { naskh, quran };
 const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])];
@@ -211,12 +213,35 @@ const structuredData = {
           announce();
         });
 
+        function say(from, words) {
+          var said = from.parentElement.querySelector('[data-status]');
+          said.textContent = words;
+          clearTimeout(said.clearing);
+          said.clearing = setTimeout(function () {
+            said.textContent = '';
+          }, 2500);
+        }
         document.addEventListener('click', function (event) {
           var form = event.target.closest('[data-wird-form]');
           if (form && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
             event.preventDefault();
             choose(form.dataset.wirdForm);
             if (location.search) history.replaceState(null, '', location.pathname + location.hash);
+          }
+          var copy = event.target.closest('[data-copy]');
+          if (copy) {
+            var evening = root.dataset.wird === 'm' && copy.dataset.copyMasaa;
+            var done = navigator.clipboard
+              ? navigator.clipboard.writeText(evening || copy.dataset.copy)
+              : Promise.reject();
+            done.then(
+              function () {
+                say(copy, 'نُسخ الذكر');
+              },
+              function () {
+                say(copy, 'تعذّر النسخ');
+              }
+            );
           }
           var share = event.target.closest('[data-share-title]');
           if (!share || event.metaKey || event.ctrlKey || event.shiftKey) return;
@@ -228,11 +253,7 @@ const structuredData = {
             event.preventDefault();
             navigator.clipboard.writeText(url).then(
               function () {
-                var said = share.parentElement.querySelector('[data-share-status]');
-                said.textContent = 'نُسخ الرابط';
-                setTimeout(function () {
-                  said.textContent = '';
-                }, 2500);
+                say(share, 'نُسخ الرابط');
               },
               function () {
                 location.href = url;
@@ -245,13 +266,14 @@ const structuredData = {
     <noscript>
       <style>
         [data-theme-toggle],
-        [data-wird-switch] {
+        [data-wird-switch],
+        [data-copy] {
           display: none !important;
         }
       </style>
     </noscript>
   </head>
-  <body>
+  <body class={tone && 'tone'} style={tone && `--tone: ${tone}`}>
     <slot />
   </body>
 </html>
