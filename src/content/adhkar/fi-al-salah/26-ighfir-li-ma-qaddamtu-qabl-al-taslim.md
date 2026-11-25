@@ -1,5 +1,6 @@
 ---
-title: "اللهم اغفر لي ما قدمت قبل التسليم"
+title: "اللهم اغفر لي ما قدمت"
+context: "قبل التسليم"
 occasion: "fi-al-salah"
 order: 26
 count: 1

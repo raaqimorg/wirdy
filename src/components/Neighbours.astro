@@ -1,16 +1,24 @@
 ---
 interface Props {
-  links: { label: string; title: string; href: string }[];
+  links: { label: string; title: string; context?: string; href: string }[];
 }
 
 const { links } = Astro.props;
 ---
 
 <nav class="neighbours" aria-label="التالي والسابق">
-  {links.map(({ label, title, href }) => (
+  {links.map(({ label, title, context, href }) => (
     <a class="neighbours__link" href={href}>
       <span class="neighbours__label">{label}</span>
-      <span>{title}</span>
+      <span>
+        {title}
+        {context && (
+          <Fragment>
+            {' '}
+            <span class="neighbours__context">{context}</span>
+          </Fragment>
+        )}
+      </span>
     </a>
   ))}
 </nav>

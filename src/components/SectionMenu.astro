@@ -1,0 +1,41 @@
+---
+import Icon from './Icon.astro';
+import { sectionTiles } from '../lib/collection';
+
+const tiles = await sectionTiles();
+const here = Astro.url.pathname;
+---
+
+<div class="section-menu">
+  <button class="section-menu__button" type="button" popovertarget="sections">
+    الأقسام
+    <Icon name="chevron" />
+  </button>
+  <div class="section-menu__panel" id="sections" popover>
+    <ul class="section-menu__list">
+      <li>
+        <a class="section-menu__link" href="/">
+          الرئيسية
+        </a>
+      </li>
+      {tiles.map(({ id, heading, color, note, href }) => (
+        <li>
+          <a
+            class="section-menu__link tone"
+            href={href}
+            style={`--tone: ${color}`}
+            aria-current={href === here ? 'page' : undefined}
+          >
+            <span class="section-menu__dot" />
+            {heading}
+            {href === here ? (
+              <Icon name="check" class="section-menu__check" />
+            ) : (
+              id !== 'unproven' && <span class="section-menu__count">{note}</span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

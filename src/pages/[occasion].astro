@@ -5,7 +5,7 @@ import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
 import Section from '../layouts/Section.astro';
 import { adhkarLabel } from '../lib/arabic';
-import { adhkarOf, occasionTiles } from '../lib/collection';
+import { adhkarOf, sectionTiles } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
 import { OCCASIONS } from '../lib/occasions';
 
@@ -18,7 +18,7 @@ const entries = await adhkarOf(id);
 const runs = runsByGroup(entries);
 const groups = runs.flatMap(({ group }) => group ?? []);
 const hasIndex = runs.length > 1 && groups.length === runs.length;
-const others = (await occasionTiles()).filter((tile) => tile.id !== id);
+const others = (await sectionTiles()).filter((tile) => tile.id !== id);
 const hasQuran = entries.some(({ data }) => data.quran);
 const hasVariants = entries.some((entry) => entry.body?.includes('{{'));
 

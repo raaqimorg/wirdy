@@ -1,5 +1,6 @@
 ---
-title: "حمد العاطس في الصلاة"
+title: "حمد العاطس"
+context: "في الصلاة"
 occasion: "fi-al-salah"
 order: 31
 count: 1

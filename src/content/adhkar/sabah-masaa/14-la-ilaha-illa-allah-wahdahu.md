@@ -1,5 +1,6 @@
 ---
-title: "التهليل في الصباح والمساء"
+title: "التهليل"
+context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 14
 count: 1

@@ -1,5 +1,6 @@
 ---
-title: "سبحانك اللهم وبحمدك بعد الوضوء"
+title: "سبحانك اللهم وبحمدك"
+context: "بعد الوضوء"
 occasion: "masjid"
 order: 8
 count: 1

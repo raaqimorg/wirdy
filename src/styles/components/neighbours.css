@@ -12,6 +12,11 @@
   text-decoration: none;
 }
 
+.neighbours__context {
+  color: var(--color-ink-muted);
+  font-weight: var(--weight-regular);
+}
+
 .neighbours__label {
   flex: none;
   width: var(--size-label);

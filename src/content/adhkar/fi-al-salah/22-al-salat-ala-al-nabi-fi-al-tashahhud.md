@@ -1,5 +1,6 @@
 ---
-title: "الصلاة الإبراهيمية في الصلاة"
+title: "الصلاة الإبراهيمية"
+context: "في الصلاة"
 occasion: "fi-al-salah"
 order: 22
 count: 1

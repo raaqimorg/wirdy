@@ -32,6 +32,15 @@ describe('cardOf', () => {
     });
   });
 
+  it('carries the context apart from the name', () => {
+    const card = cardOf(
+      { ...base, title: 'أعوذ بكلمات الله التامات', context: 'في المساء' },
+      'سبحان الله'
+    );
+    expect(card).toMatchObject({ title: 'أعوذ بكلمات الله التامات', context: 'في المساء' });
+    expect(cardOf(base, 'سبحان الله').context).toBeNull();
+  });
+
   it('carries each phrase with its own count', () => {
     const card = cardOf({ ...base, counts: [33, 34] }, 'سبحان الله، والله أكبر');
     expect(card.phrases).toEqual([
@@ -51,6 +60,22 @@ describe('cardOf', () => {
     const card = cardOf({ ...base, quran: true }, `${'أ ب '.repeat(60)}\n${'ج د '.repeat(60)}`);
     expect(card.cut).toBe(true);
     expect(card.blocks[0]).toHaveLength(1);
+    expect(card.lead).toBe('وتتمة الآيات في الصفحة');
+  });
+  it('shares its letters among the سور of a folded card, so two سور fit as one does', () => {
+    const ayah = 'ب'.repeat(60);
+    const surah = [ayah, ayah, ayah, ayah, ayah].join('\n');
+    const card = cardOf({ ...base, quran: true, ayat: 'fold' }, `${surah}\n\n${surah}`);
+    expect(card.blocks).toEqual([
+      [ayah, ayah],
+      [ayah, ayah],
+    ]);
+  });
+
+  it('shows the آيات that show on the page of a folded سورة, and says the rest is there', () => {
+    const ayah = 'ب'.repeat(100);
+    const card = cardOf({ ...base, quran: true, ayat: 'fold' }, [ayah, ayah, ayah].join('\n'));
+    expect(card.blocks).toEqual([[ayah, ayah]]);
     expect(card.lead).toBe('وتتمة الآيات في الصفحة');
   });
 });

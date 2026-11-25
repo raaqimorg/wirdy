@@ -14,6 +14,8 @@
   --color-glass: rgb(255 255 255 / 0.16);
   --color-glass-hover: rgb(255 255 255 / 0.26);
   --color-track: rgb(0 0 0 / 0.24);
+  --color-backdrop: rgb(0 0 0 / 0.12);
+  --color-mark: color-mix(in oklab, #e9b82a, var(--color-panel) 62%);
   --tone-shade: 0%;
   --tone-ink: 30%;
 
@@ -92,6 +94,7 @@
   --size-action: 5.5rem;
   --size-action-wide: 9rem;
   --size-side: 18rem;
+  --size-menu: 16.5rem;
   --size-label: 3.5rem;
   --size-banner: 15rem;
   --size-under: 50vh;
@@ -100,6 +103,8 @@
   --size-graphic-fluid: clamp(4.5rem, 24vw, 6.5rem);
   --size-graphic-small: 6.5rem;
   --size-graphic: 12rem;
+
+  --shadow-menu: 0 12px 40px -8px rgb(0 0 0 / 0.45), 0 0 0 1px var(--color-line-soft);
 
   --radius-focus: 4px;
   --radius-card: 0.8rem;
@@ -123,6 +128,7 @@
   --layer-bar: 5;
 
   --opacity-pressed: 0.6;
+  --opacity-quiet: 0.82;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --spring: linear(
     0,

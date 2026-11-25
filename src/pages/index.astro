@@ -2,11 +2,10 @@
 import CardGrid from '../components/CardGrid.astro';
 import Hero from '../components/Hero.astro';
 import Home from '../layouts/Home.astro';
-import { occasionTiles } from '../lib/collection';
-import { SITE, UNPROVEN } from '../lib/site';
+import { sectionTiles } from '../lib/collection';
+import { SITE } from '../lib/site';
 
-const { heading, color, note, path: href } = UNPROVEN;
-const tiles = [...(await occasionTiles()), { id: 'unproven' as const, heading, color, note, href }];
+const tiles = await sectionTiles();
 ---
 
 <Home title="أذكار اليوم والليلة" description={SITE.description}>

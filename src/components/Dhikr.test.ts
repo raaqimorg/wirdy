@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import Dhikr from './Dhikr.astro';
-import { toArabicDigits } from '../lib/arabic';
+import { ayatLabel, toArabicDigits } from '../lib/arabic';
 import type { Dhikr as DhikrData } from '../lib/schema';
 
 type Extra = { heading?: 'h2' | 'h3' | 'h4'; single?: boolean };
@@ -111,8 +111,8 @@ describe('Dhikr', () => {
       { ...base, quran: true, ayat: 'first' },
       'قُلْ هُوَ\nٱللَّهُ ٱلصَّمَدُ\n\nقُلْ أَعُوذُ\nمِن شَرِّ'
     );
-    expect(html).toContain('<span class="surah">قُلْ هُوَ</span>');
-    expect(html).toContain('<span class="surah">قُلْ أَعُوذُ</span>');
+    expect(html).toContain('<div class="surah">قُلْ هُوَ</div>');
+    expect(html).toContain('<div class="surah">قُلْ أَعُوذُ</div>');
     expect(html).not.toContain('ٱلصَّمَدُ');
     expect(html).not.toContain('مِن شَرِّ');
     expect(html).not.toContain('surah__ayah-end');
@@ -120,21 +120,38 @@ describe('Dhikr', () => {
 
   it('wraps each سورة of a قرآن card in its own element', async () => {
     const html = await render({ ...base, quran: true }, 'قُلْ هُوَ\n\nقُلْ أَعُوذُ');
-    expect(html).toContain('<span class="surah">قُلْ هُوَ</span>');
-    expect(html).toContain('<span class="surah">قُلْ أَعُوذُ</span>');
+    expect(html).toContain('<div class="surah">قُلْ هُوَ</div>');
+    expect(html).toContain('<div class="surah">قُلْ أَعُوذُ</div>');
   });
 
   it('gives each سورة its own element, one after the other', async () => {
     const html = await render({ ...base, quran: true }, 'أ\n\nب\n\nج');
     expect(html.match(/class="surah"/g)).toHaveLength(3);
-    expect(html).toMatch(/<\/span>\s*<span class="surah">ب<\/span>\s*<span class="surah">/);
+    expect(html).toMatch(/<\/div>\s*<div class="surah">ب<\/div>\s*<div class="surah">/);
+  });
+
+  it('folds the rest of a long سورة behind a button that says how many آيات remain', async () => {
+    const ayah = 'ب'.repeat(100);
+    const html = await render(
+      { ...base, quran: true, ayat: 'fold' },
+      [ayah, ayah, ayah, ayah, ayah].join('\n')
+    );
+    expect(html).toContain('<div class="surah surah--fold">');
+    expect(html.match(/<details class="surah__rest">/g)).toHaveLength(1);
+    expect(html).toContain(
+      `<summary class="surah__more"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">طيّ</span><svg class="icon icon--line surah__chevron"`
+    );
+    expect(html.split('<details')[0]!.match(new RegExp(ayah, 'g'))).toHaveLength(2);
+    expect(
+      html.split('<details')[1]!.split('</details>')[0]!.match(new RegExp(ayah, 'g'))
+    ).toHaveLength(3);
   });
 
   it('closes each آية inside a سورة with ۝ but not the last', async () => {
     const html = await render({ ...base, quran: true }, 'أ\nب\nج\nد');
     expect(html.match(/class="surah"/g)).toHaveLength(1);
     expect(html.match(/class="surah__ayah-end"/g)).toHaveLength(3);
-    expect(html).toMatch(/<span class="surah">أ<span class="surah__ayah-end"><\/span>ب/);
+    expect(html).toMatch(/<div class="surah">أ<span class="surah__ayah-end"><\/span>ب/);
   });
 
   it('leaves a single آية unmarked', async () => {
@@ -181,7 +198,7 @@ describe('Dhikr', () => {
   it('links the تخريج with its source and its ruling', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('href="https://dorar.net/hadith/sharh/1"');
-    expect(html).toContain('<span>صحيح البخاري (١)</span>');
+    expect(html).toContain('<span class="takhrij__text">صحيح البخاري (١)</span>');
   });
 
   it("writes al-Albani's ruling as a sentence when he is the grader", async () => {
@@ -192,7 +209,7 @@ describe('Dhikr', () => {
       },
       'سبحان الله'
     );
-    expect(html).toContain('<span>صحّحه الألباني في صحيح أبي داود (١)</span>');
+    expect(html).toContain('<span class="takhrij__text">صحّحه الألباني في صحيح أبي داود (١)</span>');
   });
 
   it('keeps an optional note off the card', async () => {
@@ -210,7 +227,7 @@ describe('Dhikr', () => {
       '<svg class="bead-ring"',
       '<p class="entry__lead">',
       '<p class="entry__how">متوضئًا</p>',
-      '<p class="entry__text">',
+      '<div class="entry__text">',
       '<p class="entry__note">كفته</p>',
       '<a class="takhrij"',
       'data-copy=',

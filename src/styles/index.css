@@ -26,9 +26,13 @@
 @import "./components/card-grid.css";
 @import "./components/hero.css";
 @import "./components/site-header.css";
+@import "./components/section-menu.css";
 @import "./components/bar.css";
 @import "./components/banner.css";
 @import "./components/dhikr-actions.css";
 @import "./components/neighbours.css";
 @import "./components/related.css";
+@import "./components/search-field.css";
+@import "./components/search-row.css";
+@import "./components/search.css";
 @import "./components/site-footer.css";

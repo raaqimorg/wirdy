@@ -1,5 +1,6 @@
 ---
-title: "رضيت بالله ربًّا عند الأذان"
+title: "رضيت بالله ربًّا"
+context: "عند الأذان"
 occasion: "masjid"
 order: 3
 count: 1

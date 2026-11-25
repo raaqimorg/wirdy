@@ -7,7 +7,7 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 - Astro components render. Logic that can be a plain function goes in `src/lib/`, with a test next to it.
 - Validate content once, at the schema (`src/lib/schema.ts`). After that, trust the types.
 - A build-time error is better than a wrong page. If content is malformed, throw during the build, as `parseVariants` does.
-- Prefer CSS to JavaScript. Each page has one inline script (see [`exceptions.md`](exceptions.md)), and it must stay small enough to read at a glance.
+- Prefer CSS to JavaScript. Each page has one inline script (see [`exceptions.md`](exceptions.md)), and it must stay small enough to read at a glance. The search page also has one module script, which imports `src/lib/search.ts` (see [`exceptions.md`](exceptions.md)).
 - No page makes a third-party request. Fonts come from `@fontsource` (Amiri, Amiri Quran, and IBM Plex Sans Arabic), and Astro bundles them. `src/styles/fonts.css` declares them, as WOFF2 only.
 - Nothing moves while a page loads, except the animations below. `src/layouts/Paper.astro` preloads the faces that a page uses (`faces`), and the browser keeps them for a year, so they are ready before the first paint. On a first visit the text shows at once in the device's face, and the site's face replaces it when it arrives.
 - A file that can be kept for a year has its content in its name: Astro hashes `_astro/`, and `src/lib/card.ts` names the sharing cards. `public/_headers` keeps those for a year, and the icons for a week. A page itself is asked for again on each visit, so a correction shows at once. The emblems are inline, so they cost no request.

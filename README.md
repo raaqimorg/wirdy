@@ -7,7 +7,7 @@
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
+Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A search page at [/bahth/](https://wirdy.site/bahth/) finds a dhikr by its name or its words as you type, with or without diacritics, and finds the entries of «ما لم يثبت» with their rulings. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
 
 | Occasion             | Adhkar |
 | -------------------- | -----: |
@@ -37,7 +37,7 @@ If a word, a count, or a ruling is wrong, or an authentic dhikr is missing, [ope
 
 ## Development
 
-Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, and one page for each dhikr, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski, and [`docs/design-system.md`](docs/design-system.md) says how the code holds it.
+Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in `src/content/adhkar/<occasion>/`. The build turns them into a home page, one page for each occasion, one page for each dhikr, and a search page, and [Cloudflare Pages](https://pages.cloudflare.com) serves them. The design follows [Laws of UX](https://lawsofux.com/) by Jon Yablonski, and [`docs/design-system.md`](docs/design-system.md) says how the code holds it.
 
 ```bash
 bun install      # dependencies, and the git hooks

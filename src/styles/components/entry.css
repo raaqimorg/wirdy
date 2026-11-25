@@ -2,7 +2,7 @@
   --entry-pad: var(--space-4-5);
 
   min-width: 0;
-  overflow: hidden;
+  overflow: clip;
   scroll-margin-top: var(--space-16);
   background: var(--color-panel);
   border-radius: var(--radius-card);

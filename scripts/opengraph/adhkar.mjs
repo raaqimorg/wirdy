@@ -53,12 +53,15 @@ ${amiri()}
 ${amiriQuran()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
+body.unfit{outline:12px solid red;outline-offset:-12px}
 body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.ink} 30%);font-family:"Plex",sans-serif;font-weight:500;background:${PALETTE.panel};color:${PALETTE.ink};display:flex;flex-direction:column}
 .top{flex:none;display:flex;align-items:center;gap:26px;height:152px;padding:0 56px;background:var(--tone);color:${PALETTE.eggshell}}
 .top svg{flex:none;width:104px;height:104px}
 .names{flex:1;min-width:0;padding-bottom:8px}
 .heading{font-size:26px;line-height:1.35;opacity:.85}
 .title{font-weight:700;line-height:1.4;white-space:nowrap}
+.context{font-size:.6em;font-weight:500;opacity:.82}
+.stacked .context{display:block;font-size:26px;line-height:1.3}
 .count{flex:none;padding:8px 30px 13px;font-size:36px;font-weight:700;line-height:1.35;color:color-mix(in oklab,var(--tone),black 35%);background:${PALETTE.eggshell};border-radius:99px}
 .main{flex:1;min-height:0;display:flex;flex-direction:column;padding:22px 56px 0}
 .lead{font-size:28px;font-weight:700;line-height:1.5;color:var(--tone-text)}
@@ -74,26 +77,26 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 .foot b{font-size:29px;font-weight:700;color:${PALETTE.ink};margin-top:-7px}
 .foot .site{direction:ltr}
 .foot .source{margin-inline-start:auto;text-align:left}
-</style></head><body>
-<div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}</p></div>${card.count ? `<p class="count">${card.count}</p>` : ''}</div>
+</style></head><body class="unfit">
+<div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}${card.context ? ` <span class="context">${escape(card.context)}</span>` : ''}</p></div>${card.count ? `<p class="count">${card.count}</p>` : ''}</div>
 <div class="main">${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
 <div class="box"><div class="text">${textOf(card)}${card.evening ? `<p class="evening"><b>وفي المساء:</b> ${escape(card.evening)}</p>` : ''}</div></div></div>
 <div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="source">${escape(card.takhrij)}${card.quran ? '. النص: tanzil.net' : ''}</span></div>
 <script>
-const [title,box,text,foot]=['.title','.box','.text','.foot'].map((name)=>document.querySelector(name));
+const [band,names,title,box,text,foot]=['.top','.names','.title','.box','.text','.foot'].map((name)=>document.querySelector(name));
+const titleFits=()=>title.scrollWidth<=title.clientWidth&&names.offsetHeight<=band.clientHeight;
 const fit=(element,largest,smallest,fits)=>{
   for(let size=largest;size>=smallest;size--){element.style.fontSize=size+'px';if(fits())return true}
   return false;
 };
 document.fonts.ready.then(()=>{
+  if(title.querySelector('.context')&&!fit(title,48,48,titleFits))title.classList.add('stacked');
   const fits=[
-    fit(title,48,36,()=>title.scrollWidth<=title.clientWidth),
+    fit(title,48,36,titleFits),
     fit(text,92,31,()=>text.scrollHeight<=box.clientHeight-14&&text.scrollWidth<=box.clientWidth),
     foot.scrollWidth<=foot.clientWidth,
   ];
-  if(fits.every(Boolean))return;
-  document.body.style.outline='12px solid red';
-  document.body.style.outlineOffset='-12px';
+  if(fits.every(Boolean))document.body.classList.remove('unfit');
 });
 </script></body></html>`;
 
@@ -120,6 +123,6 @@ for (const { card, occasion, file } of entries) {
   const out = join(publicDir, file);
   if (existsSync(out)) continue;
   mkdirSync(dirname(out), { recursive: true });
-  screenshot({ html: page(card, occasion), width: WIDTH, height: HEIGHT, out });
+  screenshot({ html: page(card, occasion), width: WIDTH, height: HEIGHT, scale: 2, out });
   console.log(file);
 }

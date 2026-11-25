@@ -1,5 +1,6 @@
 ---
-title: "آية الكرسي في الصباح والمساء"
+title: "آية الكرسي"
+context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 1
 count: 1

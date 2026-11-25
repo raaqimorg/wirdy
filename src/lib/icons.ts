@@ -1,11 +1,15 @@
 export type IconName =
   | 'back'
+  | 'check'
+  | 'chevron'
+  | 'close'
   | 'copy'
   | 'github'
   | 'moon'
   | 'open'
   | 'out'
   | 'save'
+  | 'search'
   | 'share'
   | 'sun';
 
@@ -13,6 +17,14 @@ type Icon = { size: number; stroke?: number; paths: string[]; disc?: number };
 
 export const ICONS: Record<IconName, Icon> = {
   back: { size: 12, stroke: 1.6, paths: ['M1.5 6h9M7 2.5L10.5 6 7 9.5'] },
+  chevron: { size: 12, stroke: 1.6, paths: ['M2.5 4.5L6 8l3.5-3.5'] },
+  check: { size: 12, stroke: 1.6, paths: ['M2 6.5l2.5 2.5L10 3'] },
+  close: { size: 12, stroke: 1.6, paths: ['M3 3l6 6M9 3L3 9'] },
+  search: {
+    size: 24,
+    stroke: 2.2,
+    paths: ['M18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0z', 'M20 20l-4-4'],
+  },
   out: { size: 12, stroke: 1.6, paths: ['M9.5 9.5l-7-7M2.5 8V2.5H8'] },
   copy: { size: 12, stroke: 1.6, paths: ['M4.5 4.5h6v6h-6z', 'M7.5 2V1.5h-6v6H2'] },
   open: { size: 12, stroke: 1.6, paths: ['M7.5 2.5L4 6l3.5 3.5'] },

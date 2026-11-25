@@ -26,3 +26,17 @@ export function timesLabel(n: number): string {
   if (n === 2) return timesUnit(n);
   return `${toArabicDigits(n)} ${timesUnit(n)}`;
 }
+
+export function ayatLabel(n: number): string {
+  if (n === 1) return 'آية واحدة';
+  if (n === 2) return 'آيتان';
+  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} آيات`;
+  return `${toArabicDigits(n)} آية`;
+}
+
+export function resultsLabel(n: number): string {
+  if (n === 1) return 'نتيجة واحدة';
+  if (n === 2) return 'نتيجتان';
+  if (n >= 3 && n <= 10) return `${toArabicDigits(n)} نتائج`;
+  return `${toArabicDigits(n)} نتيجة`;
+}

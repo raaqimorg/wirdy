@@ -1,5 +1,6 @@
 ---
-title: "فاطر السماوات والأرض، عند النوم"
+title: "فاطر السماوات والأرض"
+context: "عند النوم"
 occasion: "nawm"
 order: 11
 count: 1

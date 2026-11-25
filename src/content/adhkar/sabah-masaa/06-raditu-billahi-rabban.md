@@ -1,5 +1,6 @@
 ---
-title: "رضيت بالله ربًّا في الصباح"
+title: "رضيت بالله ربًّا"
+context: "في الصباح"
 occasion: "sabah-masaa"
 order: 6
 count: 1

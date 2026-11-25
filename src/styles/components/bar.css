@@ -43,6 +43,12 @@
   text-overflow: ellipsis;
 }
 
+@supports selector(:popover-open) {
+  .bar__back--fallback {
+    display: none;
+  }
+}
+
 @supports (animation-timeline: scroll()) {
   .bar__title {
     animation: fade linear both;

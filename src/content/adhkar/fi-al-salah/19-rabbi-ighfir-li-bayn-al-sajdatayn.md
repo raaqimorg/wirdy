@@ -1,5 +1,6 @@
 ---
-title: "رب اغفر لي بين السجدتين"
+title: "رب اغفر لي"
+context: "بين السجدتين"
 occasion: "fi-al-salah"
 order: 19
 count: 1

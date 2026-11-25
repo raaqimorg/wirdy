@@ -50,6 +50,8 @@ A reader goes through a page from top to bottom, so `order` follows these rules,
 2. The sequence of the moment. Examples: the adhan, then wudu, then going out, entering, and leaving the mosque.
 3. Adhkar of one kind stay together under a `group`. Every dhikr on a page has a `group`, so the page shows its index.
 
+Each group links by a Latin slug, such as `/sabah-masaa/#al-hifz`. A new group needs its slug in `GROUP_SLUGS` (`src/lib/groups.ts`), or the build fails. A slug is lowercase Latin words joined by hyphens, and it never equals the slug of a dhikr on the same page.
+
 Where no hadith states an order, the order is only an arrangement for reading. It is not a sunnah, and the site never says that it is.
 
 ## The file
@@ -73,11 +75,15 @@ takhrij:
 اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، ...
 ```
 
-- `title`: the short Arabic name of the dhikr, for its own page, its link, and its sharing card. Use its known name, such as «سيد الاستغفار», or its first words. Each title is used once.
+- `title`: the short Arabic name of the dhikr, for its own page, its link, and its sharing card. Use its known name, such as «سيد الاستغفار», or its first words. The name holds no place or time.
+- `context`: where or when the dhikr is said, such as «عند النوم». Add it only when the same name is in more than one place, so each `title` with its `context` is used once. A heading shows the context under the name, smaller and lighter. Plain text (the browser tab, a share, a link, a button label) joins them as «آية الكرسي (عند النوم)» (`fullTitle` in `src/lib/title.ts`). A title that describes its place stays whole, such as «الدعاء بعد الأذان».
 - `count`: the number that the sound narration states. Use 1 when it states none.
 - `counts`: one number for each phrase, when the narration gives each its own, such as `[33, 33, 34]`. The phrases are the parts of the text between «، ». Leave `count` at 1. The build fails when the numbers and the phrases do not match.
 - `mode`: `sabah` or `masaa` for a dhikr that belongs to one of the two times only. Use `both` everywhere else.
-- `ayat`: `first` shows only the first آية of each سورة, as for المعوذات or a long سورة, and the card adds the line «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one), so the reader reads on to the end. The file keeps the whole text. Use `all`, the default, everywhere else. Only قرآن files may use `first`.
+- `ayat`: how much of each سورة shows. The file keeps the whole text in every case. Only قرآن files may use `first` or `fold`.
+  - `all`, the default, shows every آية.
+  - `first` shows only the first آية of each سورة, for سور that the reader knows by heart, such as المعوذات. The card adds the line «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one), so the reader reads on to the end.
+  - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one), then a button, «أكمل القراءة · ٨ آيات», opens the rest in place. It is a `<details>`, with no script, and it reads «طيّ» while open. Copy gives the آيات that show, with the line «وتتمة الآيات في الصفحة». The sharing card shares its 250 letters among the سور, with the same line.
 - `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only: not the manner, not the source, not the virtue. The card shows it first, with the count.
 - `how`: what the narration says of the manner, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.
 - `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with the same `group` show under that heading. Use it for one situation inside an occasion, or for alternatives. A page whose adhkar all have a group opens with links to its groups.
@@ -94,7 +100,7 @@ takhrij:
 
 - Write the text with full tashkil, as the sound narration gives it.
 - Mark the words that change between morning and evening as `{{morning|evening}}`, for example `{{أَصْبَحْنَا|أَمْسَيْنَا}}`. Only `sabah-masaa` files with `mode: "both"` use markers.
-- Write قرآن in the Uthmani text from [Tanzil](https://tanzil.net), one آية on each line, with a blank line between سور. Do not add the بسملة, because it is not a counted آية of these سور. Download it with Tanzil's «rub el hizb» option off, so it has no ۞, and change nothing else in it (see `NOTICE`). Use `ayat: "first"` for a long سورة that the reader knows to read whole, such as السجدة and الملك.
+- Write قرآن in the Uthmani text from [Tanzil](https://tanzil.net), one آية on each line, with a blank line between سور. Do not add the بسملة, because it is not a counted آية of these سور. Download it with Tanzil's «rub el hizb» option off, so it has no ۞, and change nothing else in it (see `NOTICE`). Use `ayat: "fold"` for a long سورة, such as السجدة and الملك.
 - When one hadith gives two texts for two moments, such as on entering and on leaving the mosque, write two files, each with its own `when`.
 
 ## How to check a dhikr

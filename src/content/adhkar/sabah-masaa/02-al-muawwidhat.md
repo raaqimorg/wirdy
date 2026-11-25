@@ -1,5 +1,6 @@
 ---
-title: "المعوذات في الصباح والمساء"
+title: "المعوذات"
+context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 2
 count: 3

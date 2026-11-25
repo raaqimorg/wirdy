@@ -5,17 +5,26 @@ import type { EmblemName } from '../lib/emblems';
 interface Props {
   emblem: EmblemName;
   title: string;
+  context?: string;
   lede?: string;
   single?: boolean;
 }
 
-const { emblem, title, lede, single = false } = Astro.props;
+const { emblem, title, context, lede, single = false } = Astro.props;
 ---
 
 <header class:list={['banner', single && 'banner--single']}>
   <div class="banner__inner">
     <div class="banner__words">
-      <h1 class="banner__title">{title}</h1>
+      <h1 class="banner__title">
+        {title}
+        {context && (
+          <Fragment>
+            {' '}
+            <span class="banner__context">{context}</span>
+          </Fragment>
+        )}
+      </h1>
       {lede && <p class="banner__lede">{lede}</p>}
       <slot />
     </div>

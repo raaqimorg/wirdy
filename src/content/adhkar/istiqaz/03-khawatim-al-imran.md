@@ -5,7 +5,7 @@ order: 3
 count: 1
 mode: "both"
 quran: true
-ayat: "first"
+ayat: "fold"
 when: "إذا استيقظ من الليل"
 group: "عند الاستيقاظ"
 takhrij:

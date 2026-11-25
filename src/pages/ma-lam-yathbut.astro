@@ -1,13 +1,16 @@
 ---
 import EntryList from '../components/EntryList.astro';
+import Related from '../components/Related.astro';
 import Unproven from '../components/Unproven.astro';
 import Section from '../layouts/Section.astro';
 import { adhkarLabel } from '../lib/arabic';
-import { unprovenEntries } from '../lib/collection';
+import { occasionTiles, unprovenEntries } from '../lib/collection';
+import { slugOf } from '../lib/permalink';
 import { UNPROVEN } from '../lib/site';
 
 const { heading, color, lede, path } = UNPROVEN;
 const entries = await unprovenEntries();
+const others = await occasionTiles();
 
 const description = `${heading}: ${adhkarLabel(entries.length)} مشهورة لم تدخل الموقع، لأن الألباني ضعّفها أو ضعّف عددها أو وقتها، ومع كل واحد حكمه من الدرر السنية.`;
 ---
@@ -22,8 +25,9 @@ const description = `${heading}: ${adhkarLabel(entries.length)} مشهورة ل�
   lede={lede}
 >
   <EntryList>
-    {entries.map(({ data, body = '' }) => (
-      <Unproven data={data} body={body} />
+    {entries.map(({ id, data, body = '' }) => (
+      <Unproven data={data} body={body} slug={slugOf(id)} />
     ))}
   </EntryList>
+  <Related slot="after" tiles={others} />
 </Section>

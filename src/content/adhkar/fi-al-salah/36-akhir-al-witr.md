@@ -1,5 +1,6 @@
 ---
-title: "اللهم إني أعوذ برضاك في آخر الوتر"
+title: "اللهم إني أعوذ برضاك"
+context: "في آخر الوتر"
 occasion: "fi-al-salah"
 order: 36
 count: 1

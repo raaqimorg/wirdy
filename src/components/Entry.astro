@@ -41,9 +41,9 @@ const { takhrij, id, title, heading: Heading, lead, how, layout, nested, kind, t
       </div>
     )}
     {how && <p class="entry__how">{how}</p>}
-    <p class="entry__text">
+    <div class="entry__text">
       <slot />
-    </p>
+    </div>
   </div>
   <div class="entry__side">
     <slot name="note" />

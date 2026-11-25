@@ -11,6 +11,7 @@ import { adhkarOf } from '../../lib/collection';
 import { OCCASIONS } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
 import { phrasesLabel } from '../../lib/phrases';
+import { fullTitle } from '../../lib/title';
 
 export async function getStaticPaths() {
   const lists = await Promise.all(OCCASIONS.map(({ id }) => adhkarOf(id)));
@@ -30,6 +31,7 @@ const path = dhikrPath(data.occasion, slug);
 const card = cardOf(data, body);
 const image = `/${cardFile(card, data.occasion, slug)}`;
 const back = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
+const title = fullTitle(data);
 
 const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
 const description = [card.lead, count, data.fadl, card.takhrij].filter(Boolean).join('. ');
@@ -42,6 +44,7 @@ const links = [
         {
           label,
           title: neighbour.data.title,
+          context: neighbour.data.context,
           href: dhikrPath(data.occasion, slugOf(neighbour.id)),
         },
       ]
@@ -50,18 +53,18 @@ const links = [
 ---
 
 <Section
-  title={`${data.title} | ${occasion.heading}`}
+  title={`${title} | ${occasion.heading}`}
   description={description}
   image={image}
-  imageSize={[1200, 630]}
   faces={data.quran ? ['quran'] : ['naskh']}
   crumbs={[
     { name: occasion.heading, path: `/${occasion.id}/` },
-    { name: data.title, path },
+    { name: title, path },
   ]}
   emblem={occasion.id}
   color={occasion.color}
   heading={data.title}
+  context={data.context}
   back={back}
   single
 >
@@ -71,7 +74,7 @@ const links = [
   </EntryList>
   <DhikrActions
     href={path}
-    title={data.title}
+    title={title}
     image={image}
     file={`wirdy-${slug}.png`}
     copy={copyOf(data, body)}

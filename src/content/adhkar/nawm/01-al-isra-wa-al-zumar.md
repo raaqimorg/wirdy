@@ -5,7 +5,7 @@ order: 1
 count: 1
 mode: "both"
 quran: true
-ayat: "first"
+ayat: "fold"
 when: "قبل أن ينام"
 group: "القراءة"
 takhrij:

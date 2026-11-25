@@ -1,5 +1,6 @@
 ---
-title: "المعوذات بعد الصلاة"
+title: "المعوذات"
+context: "بعد الصلاة"
 occasion: "salah"
 order: 11
 count: 1

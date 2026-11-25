@@ -1,5 +1,6 @@
 ---
-title: "آية الكرسي عند النوم"
+title: "آية الكرسي"
+context: "عند النوم"
 occasion: "nawm"
 order: 4
 count: 1

@@ -13,8 +13,19 @@
 }
 
 .site-footer__line--dedication {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3-5);
   color: var(--color-ink);
+  font-family: var(--font-naskh);
+  font-size: var(--text-reading-1);
+}
+
+.site-footer__line--dedication::before {
+  content: "";
+  display: block;
+  width: var(--size-mark);
+  height: var(--border-hairline);
+  margin: 0 auto var(--space-3-5);
+  background: var(--color-line);
 }
 
 .site-footer__link {
@@ -29,7 +40,8 @@
     text-align: start;
   }
 
-  .site-footer__line {
+  .site-footer__line,
+  .site-footer__line--dedication::before {
     margin-inline: 0;
   }
 }

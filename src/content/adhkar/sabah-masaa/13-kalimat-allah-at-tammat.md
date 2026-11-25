@@ -1,5 +1,6 @@
 ---
-title: "أعوذ بكلمات الله التامات في المساء"
+title: "أعوذ بكلمات الله التامات"
+context: "في المساء"
 occasion: "sabah-masaa"
 order: 13
 count: 3

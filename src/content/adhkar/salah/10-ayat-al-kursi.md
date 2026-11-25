@@ -1,5 +1,6 @@
 ---
-title: "آية الكرسي بعد الصلاة"
+title: "آية الكرسي"
+context: "بعد الصلاة"
 occasion: "salah"
 order: 10
 count: 1

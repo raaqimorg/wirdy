@@ -2,22 +2,22 @@ import { createHash } from 'node:crypto';
 import { timesLabel } from './arabic';
 import { EMBLEMS } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
-import { fullLeadOf, suwarOf } from './lead';
+import { fullLeadOf, REST, suwarOf } from './lead';
 import { OCCASIONS } from './occasions';
 import { phrasesOf, type Phrase } from './phrases';
 import type { Dhikr } from './schema';
 import { takhrijLine } from './takhrij';
 import { formOf } from './variants';
 
-const TEMPLATE = 2;
+const TEMPLATE = 3;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
-const REST = 'وتتمة الآيات في الصفحة';
 
 export type Card = {
   heading: string;
   color: string;
   title: string;
+  context: string | null;
   lead: string;
   quran: boolean;
   blocks: string[][];
@@ -38,7 +38,8 @@ export function cardOf(data: Dhikr, body: string): Card {
   let blocks = [[morning?.text ?? '']];
   let cut = morning?.cut ?? false;
   if (suwar) {
-    const excerpts = suwar.map((ayat) => excerptAyat(ayat, LIMIT));
+    const share = data.ayat === 'fold' ? Math.floor(LIMIT / suwar.length) : LIMIT;
+    const excerpts = suwar.map((ayat) => excerptAyat(ayat, share));
     blocks = excerpts.map(({ ayat }) => ayat);
     cut = excerpts.some((excerpt) => excerpt.cut);
   }
@@ -47,6 +48,7 @@ export function cardOf(data: Dhikr, body: string): Card {
     heading: occasion.heading,
     color: occasion.color,
     title: data.title,
+    context: data.context ?? null,
     lead: [fullLeadOf(data, suwar), suwar && cut && REST].filter(Boolean).join('، '),
     quran: data.quran,
     blocks,

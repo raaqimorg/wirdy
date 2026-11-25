@@ -23,6 +23,15 @@
   text-wrap: balance;
 }
 
+.banner__context {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  opacity: var(--opacity-quiet);
+}
+
 .banner__lede {
   margin-top: var(--space-1);
   font-weight: var(--weight-medium);
@@ -82,6 +91,10 @@
 
   .banner--single .banner__title {
     font-size: var(--text-reading-5);
+  }
+
+  .banner__context {
+    font-size: var(--text-title-1);
   }
 
   .banner--single .banner__graphic {

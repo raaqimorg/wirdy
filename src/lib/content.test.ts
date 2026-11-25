@@ -3,11 +3,13 @@ import { basename, dirname, join, relative } from 'node:path';
 import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
 import { cardFile, cardOf } from './card';
+import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
 import { dhikrPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
 import { dhikrSchema, unprovenSchema, type Dhikr } from './schema';
 import { phrasesOf } from './phrases';
+import { fullTitle } from './title';
 import { parseVariants } from './variants';
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
@@ -37,6 +39,32 @@ describe('the adhkar collection', () => {
   it.each(OCCASION_IDS)('gives each dhikr in %s its own order', (occasion) => {
     const orders = byOccasion(occasion).map((entry) => entry.data.order);
     expect(new Set(orders).size).toBe(orders.length);
+  });
+});
+
+describe('the group links', () => {
+  const groups = new Set(entries.flatMap(({ data }) => data.group ?? []));
+
+  it.each([...groups])('give %s a slug', (group) => {
+    expect(Object.hasOwn(GROUP_SLUGS, group)).toBe(true);
+  });
+
+  it('are lowercase Latin words joined by hyphens', () => {
+    for (const slug of Object.values(GROUP_SLUGS)) expect(slug).toMatch(/^[a-z][a-z0-9-]*$/);
+  });
+
+  it('name no group that the content does not have', () => {
+    expect(Object.keys(GROUP_SLUGS).filter((group) => !groups.has(group))).toEqual([]);
+  });
+
+  it.each(OCCASION_IDS)('are unique in %s, and never the slug of one of its adhkar', (occasion) => {
+    const onPage = byOccasion(occasion);
+    const slugs = [...new Set(onPage.flatMap(({ data }) => data.group ?? []))].map(
+      (group) => GROUP_SLUGS[group]
+    );
+    expect(new Set(slugs).size).toBe(slugs.length);
+    const adhkar = new Set(onPage.map(({ path }) => slugOf(path.replace(/\.md$/, ''))));
+    expect(slugs.filter((slug) => adhkar.has(slug!))).toEqual([]);
   });
 });
 
@@ -215,8 +243,8 @@ describe('the permalinks', () => {
     expect(gone.filter((path) => !redirects.includes(`${path} `))).toEqual([]);
   });
 
-  it('gives each dhikr its own title', () => {
-    const titles = entries.map((entry) => entry.data.title);
+  it('gives each dhikr its own title, with its context', () => {
+    const titles = entries.map((entry) => fullTitle(entry.data));
     expect(new Set(titles).size).toBe(titles.length);
   });
 });

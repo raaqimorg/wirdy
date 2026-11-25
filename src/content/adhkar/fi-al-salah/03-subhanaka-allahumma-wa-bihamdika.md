@@ -1,5 +1,6 @@
 ---
-title: "سبحانك اللهم وبحمدك في الاستفتاح"
+title: "سبحانك اللهم وبحمدك"
+context: "في الاستفتاح"
 occasion: "fi-al-salah"
 order: 3
 count: 1

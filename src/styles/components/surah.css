@@ -8,6 +8,7 @@
 
 .surah::before,
 .surah::after,
+.surah__ayat::after,
 .surah__ayah-end {
   color: var(--color-ink-muted);
 }
@@ -17,9 +18,14 @@
   content: "﴿" / "";
 }
 
-.surah::after {
+.surah::after,
+.surah__ayat::after {
   content: "﴾";
   content: "﴾" / "";
+}
+
+.surah--fold::after {
+  content: none;
 }
 
 .surah__ayah-end {
@@ -29,4 +35,61 @@
 .surah__ayah-end::before {
   content: "۝";
   content: "۝" / "";
+}
+
+.surah__more {
+  position: sticky;
+  top: calc(env(safe-area-inset-top) + var(--size-touch));
+  z-index: var(--layer-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1-5);
+  min-height: var(--size-touch);
+  margin-block: var(--space-2);
+  padding-bottom: var(--space-lift);
+  color: var(--tone-text);
+  background: var(--tone-wash);
+  border-radius: var(--radius-card);
+  font-family: var(--font-ui);
+  font-size: var(--text-note);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.surah__chevron {
+  --icon-drop: var(--drop);
+
+  transition: rotate var(--duration-release) var(--spring);
+}
+
+.surah__rest[open] .surah__chevron {
+  rotate: 180deg;
+}
+
+.surah__more::-webkit-details-marker {
+  display: none;
+}
+
+.surah__more:focus-visible {
+  outline: var(--border-ring) solid var(--tone-text);
+  outline-offset: var(--ring-inset);
+}
+
+.surah__more:active {
+  opacity: var(--opacity-pressed);
+}
+
+.surah__rest[open] .surah__closed,
+.surah__rest:not([open]) .surah__opened {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surah__chevron {
+    transition: none;
+  }
 }

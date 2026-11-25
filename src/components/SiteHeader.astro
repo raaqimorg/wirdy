@@ -13,7 +13,10 @@ import { SITE } from '../lib/site';
     <span>{SITE.name}</span>
   </a>
   <Tools>
-    <ThemeToggle variant="panel" />
+    <IconButton label="البحث" variant="panel" href="/bahth/">
+      <Icon name="search" />
+    </IconButton>
+    <ThemeToggle />
     <IconButton label="الشيفرة على GitHub" variant="panel" href={SITE.repo} rel="noopener">
       <Icon name="github" />
     </IconButton>

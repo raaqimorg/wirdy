@@ -12,7 +12,7 @@ const BROWSERS = [
   '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
 ];
 
-export function screenshot({ html, width, height, out, transparent = false }) {
+export function screenshot({ html, width, height, out, scale = 1, transparent = false }) {
   const browser = BROWSERS.find((path) => path && existsSync(path));
   if (!browser) {
     console.error('no chromium-based browser found; set CHROME to one');
@@ -26,7 +26,7 @@ export function screenshot({ html, width, height, out, transparent = false }) {
     '--hide-scrollbars',
     '--no-sandbox',
     `--window-size=${width},${height}`,
-    '--force-device-scale-factor=1',
+    `--force-device-scale-factor=${scale}`,
     ...(transparent ? ['--default-background-color=00000000'] : []),
     `--screenshot=${out}`,
     pathToFileURL(page).href,

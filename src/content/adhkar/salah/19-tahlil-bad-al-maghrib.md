@@ -1,5 +1,6 @@
 ---
-title: "التهليل عشرًا بعد المغرب"
+title: "التهليل عشرًا"
+context: "بعد المغرب"
 occasion: "salah"
 order: 19
 count: 10

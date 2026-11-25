@@ -1,5 +1,6 @@
 ---
-title: "يا حي يا قيوم عند الكرب"
+title: "يا حي يا قيوم"
+context: "عند الكرب"
 occasion: "ahwal"
 order: 49
 count: 1

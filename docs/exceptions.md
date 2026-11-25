@@ -24,7 +24,7 @@ A card shrinks to 97% while it is pressed (`src/styles/components/occasion-card.
 
 ## A button switches between light and dark
 
-The site follows the device's light or dark mode. The moon or sun button in the top bar (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
+The site follows the device's light or dark mode. The moon or sun button in the header of the home page (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
 
 - The ordinary way is to follow the device only, with no button and no script.
 - The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
@@ -41,6 +41,8 @@ A dhikr that changes between the morning and the evening is one file with marker
 
 The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
 
+- A folded سورة (`ayat: "fold"`) ends what shows with ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when the سورة is open.
+- The button of an open سورة is `position: sticky` under the bar, so a long سورة can be folded from anywhere in it. `.entry` clips with `overflow: clip`, not `overflow: hidden`, because a scroll container would stop the sticky button.
 - Consecutive سور are parted by an empty gap (`src/styles/components/surah.css`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
 ## A share link opens the device's share sheet
@@ -83,11 +85,11 @@ The bar of an occasion page repeats the heading, so the reader knows the page af
 
 ## Each dhikr has a card, named by its fingerprint
 
-`scripts/opengraph/adhkar.mjs` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, 1200 by 630. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
+`scripts/opengraph/adhkar.mjs` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, 2400 by 1260: a page of 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
 
 - The name changes when the card changes, so an app that cached the old image fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only the cards that changed.
 - Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.
-- The card looks like the dhikr's page: a band in the occasion's color with the name and the count, the words in ink on the panel, and a muted foot. The size of the words is the largest that fits. A text that does not fit gets a red outline, and a build test refuses a card that has one.
+- The card looks like the dhikr's page: a band in the occasion's color with the name, its context (lighter, on the name's line when it fits and under it when it does not), and the count, the words in ink on the panel, and a muted foot. The size of the words is the largest that fits. A text that does not fit gets a red outline, and a build test refuses a card that has one.
 - A long text stops at the end of a clause, and قرآن at the end of an آية, never inside one (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks, and could end a card on «لا إله».
 - The card carries the moment, the count, and the takhrij, because an image travels without its page. A قرآن card says «النص: tanzil.net» in its foot.
 
@@ -97,3 +99,14 @@ The bar of an occasion page repeats the heading, so the reader knows the page af
 
 - The ordinary way is an image library such as `sharp`. That adds a native dependency for two scripts that run only when the mark or the card changes.
 - The OpenGraph cards draw the same mark, colors, and emblems as the site, from `src/lib/`, in the site's own fonts from `@fontsource`. The home card shows every occasion. Each occasion card shows its heading, its count, and its emblem on its color, as its page banner does. Run `bun run opengraph` after you change any of them, or after you add or remove a dhikr, because the cards print the count.
+
+## The search page has a module script
+
+`/bahth/` (`src/pages/bahth.astro`) finds a dhikr as the reader types. The page holds one row for each dhikr and each entry of «ما لم يثبت», in its HTML, so the page is its own index. An ordinary Astro `<script>` imports `src/lib/search.ts`, hides the rows that do not match, puts the rest in order, and marks the match. The owner asked for search.
+
+- The ordinary way is the inline script the other pages use. This one imports `search.ts`, so the folding, the matching, and the marking have unit tests like the rest of `src/lib/`. Nothing in it has to run before the first paint. Astro compiles it, and today it is small enough that Astro writes it into the page as a `<script type="module">` instead of a file in `_astro/`.
+- There is no index file to fetch and nothing to go stale. The browser asks for the page again on each visit, as for any page.
+- The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
+- قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens.
+- Without JavaScript, the field and the count are hidden (`<noscript>` in `src/layouts/Paper.astro`), and the page is a plain list of every row, which the browser's find can search.
+- The page is `noindex` and stays out of the sitemap.

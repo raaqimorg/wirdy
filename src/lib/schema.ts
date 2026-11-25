@@ -9,13 +9,14 @@ const dorarUrl = z
 
 export const dhikrSchema = z.strictObject({
   title: z.string().min(1),
+  context: z.string().min(1).optional(),
   occasion: z.enum(OCCASION_IDS),
   order: z.number().int().positive(),
   count: z.number().int().positive(),
   counts: z.array(z.number().int().positive()).min(2).optional(),
   mode: z.enum(['both', 'sabah', 'masaa']).default('both'),
   quran: z.boolean().default(false),
-  ayat: z.enum(['all', 'first']).default('all'),
+  ayat: z.enum(['all', 'first', 'fold']).default('all'),
   when: z.string().min(1).optional(),
   how: z.string().min(1).optional(),
   group: z.string().min(1).optional(),

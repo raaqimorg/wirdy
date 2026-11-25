@@ -1,5 +1,6 @@
 ---
-title: "الحمد لله على كل حال للعاطس"
+title: "الحمد لله على كل حال"
+context: "للعاطس"
 occasion: "ahwal"
 order: 22
 count: 1

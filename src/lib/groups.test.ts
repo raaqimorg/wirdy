@@ -45,7 +45,11 @@ describe('formsOf', () => {
 });
 
 describe('groupId', () => {
-  it('leaves no space in the place of a group', () => {
-    expect(groupId('الخروج من البيت')).toBe('الخروج-من-البيت');
+  it('gives a group its Latin slug', () => {
+    expect(groupId('الحفظ')).toBe('al-hifz');
+  });
+
+  it('throws on a group that has no slug', () => {
+    expect(() => groupId('بقية الأقسام')).toThrow('بقية الأقسام');
   });
 });

@@ -1,0 +1,36 @@
+---
+import CardGrid from './CardGrid.astro';
+import Mark from './Mark.astro';
+import SearchField from './SearchField.astro';
+import SearchRow from './SearchRow.astro';
+import type { SearchRow as Row, Tile } from '../lib/collection';
+
+interface Props {
+  tiles: Tile[];
+  rows: Row[];
+}
+
+const { tiles, rows } = Astro.props;
+---
+
+<div class="search">
+  <h1 class="search__title">البحث</h1>
+  <SearchField />
+  <p class="search__status" role="status" data-search-only data-search-status></p>
+  <div class="search__empty" role="status" hidden data-search-empty>
+    <Mark />
+    <p class="search__empty-title">
+      لا نتائج لـ «<bdi data-search-query></bdi>»
+    </p>
+    <p>جرّب كلمة من أول الذكر، أو كلمة أقصر، بلا تشكيل.</p>
+  </div>
+  <section class="search__browse" data-search-browse>
+    <h2 class="search__subtitle">تصفّح الأقسام</h2>
+    <CardGrid tiles={tiles} variant="browse" />
+  </section>
+  <ul class="search__list" hidden data-search-list>
+    {rows.map((row) => (
+      <SearchRow row={row} />
+    ))}
+  </ul>
+</div>

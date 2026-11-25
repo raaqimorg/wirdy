@@ -10,18 +10,19 @@ interface Props extends ComponentProps<typeof Paper> {
   emblem: EmblemName;
   color: string;
   heading: string;
+  context?: string;
   lede?: string;
   back?: { href: string; label: string };
   single?: boolean;
 }
 
-const { emblem, color, heading, lede, back, single = false, ...paper } = Astro.props;
+const { emblem, color, heading, context, lede, back, single = false, ...paper } = Astro.props;
 ---
 
 <Paper {...paper} tone={color}>
   <div class="page">
     <Bar heading={single ? undefined : heading} back={back} />
-    <Banner emblem={emblem} title={heading} lede={lede} single={single}>
+    <Banner emblem={emblem} title={heading} context={context} lede={lede} single={single}>
       <slot name="banner" />
     </Banner>
     <main class="container">

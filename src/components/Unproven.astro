@@ -8,13 +8,14 @@ import type { Unproven } from '../lib/schema';
 interface Props {
   data: Unproven;
   body: string;
+  slug: string;
 }
 
-const { data, body } = Astro.props;
+const { data, body, slug } = Astro.props;
 const place = data.sound ? soundPlace(data.sound) : null;
 ---
 
-<Entry takhrij={data.takhrij} lead={data.what} layout="split" kind="unproven">
+<Entry takhrij={data.takhrij} id={slug} lead={data.what} layout="split" kind="unproven">
   {isOneWord(data.takhrij.ruling) && <Badge slot="badge">{data.takhrij.ruling}</Badge>}
   <Fragment>{body.trim()}</Fragment>
   {place && (

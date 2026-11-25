@@ -1,5 +1,6 @@
 ---
-title: "اللهم إني أعوذ برضاك في السجود"
+title: "اللهم إني أعوذ برضاك"
+context: "في السجود"
 occasion: "fi-al-salah"
 order: 17
 count: 1

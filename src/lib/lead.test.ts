@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fullLeadOf, leadOf, suwarOf } from './lead';
+import { foldOf, fullLeadOf, leadOf, suwarOf } from './lead';
 import type { Dhikr } from './schema';
 
 const base: Dhikr = {
@@ -27,8 +27,31 @@ describe('suwarOf', () => {
     expect(suwarOf({ ...base, ayat: 'first' }, 'أ\nب\n\nج\nد')).toEqual([['أ'], ['ج']]);
   });
 
+  it('keeps every آية of a سورة that folds', () => {
+    expect(suwarOf({ ...base, ayat: 'fold' }, 'أ\nب\n\nج\nد')).toEqual([
+      ['أ', 'ب'],
+      ['ج', 'د'],
+    ]);
+  });
+
   it('is nothing for a text that is not قرآن', () => {
     expect(suwarOf({ ...base, quran: false }, 'أ')).toBeNull();
+  });
+});
+
+describe('foldOf', () => {
+  it('shows the whole آيات that fit 250 letters, and folds the rest', () => {
+    const ayah = 'ب'.repeat(100);
+    expect(foldOf([ayah, ayah, ayah, ayah])).toEqual({ shown: [ayah, ayah], rest: [ayah, ayah] });
+  });
+
+  it('shows at least one آية, however long', () => {
+    const long = 'ب'.repeat(300);
+    expect(foldOf([long, 'أ'])).toEqual({ shown: [long], rest: ['أ'] });
+  });
+
+  it('folds nothing when the whole سورة fits', () => {
+    expect(foldOf(['أ', 'ب'])).toEqual({ shown: ['أ', 'ب'], rest: [] });
   });
 });
 
@@ -36,6 +59,12 @@ describe('leadOf', () => {
   it('joins the time, the moment, and the read-to-the-end line', () => {
     const data: Dhikr = { ...base, mode: 'masaa', when: 'إذا أوى إلى فراشه', ayat: 'first' };
     expect(leadOf(data, [['أ']])).toBe('في المساء، إذا أوى إلى فراشه. تُقرأ إلى آخر السورة');
+  });
+
+  it('says nothing of reading to the end for a سورة that folds, because the page holds it', () => {
+    expect(leadOf({ ...base, ayat: 'fold', when: 'إذا أوى إلى فراشه' }, [['أ'], ['ب']])).toBe(
+      'إذا أوى إلى فراشه'
+    );
   });
 
   it('leaves the manner to its own line', () => {

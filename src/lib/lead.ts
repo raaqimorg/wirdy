@@ -1,6 +1,9 @@
+import { excerptAyat } from './excerpt';
 import type { Dhikr } from './schema';
 
 const TIME = { sabah: 'في الصباح', masaa: 'في المساء', both: null };
+const FOLD = 250;
+export const REST = 'وتتمة الآيات في الصفحة';
 
 export function suwarOf(data: Dhikr, text: string): string[][] | null {
   if (!data.quran) return null;
@@ -14,6 +17,11 @@ export function suwarOf(data: Dhikr, text: string): string[][] | null {
     )
     .filter((surah) => surah.length > 0)
     .map((ayat) => (data.ayat === 'first' ? ayat.slice(0, 1) : ayat));
+}
+
+export function foldOf(ayat: string[]): { shown: string[]; rest: string[] } {
+  const shown = excerptAyat(ayat, FOLD).ayat;
+  return { shown, rest: ayat.slice(shown.length) };
 }
 
 function leadWith(cues: (string | null | undefined)[], data: Dhikr, suwar: string[][] | null) {

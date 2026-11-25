@@ -58,17 +58,18 @@ The dark values appear twice in `tokens.css`: once for a device in dark mode, an
 
 ## Components
 
-| Component                                                                                                       | What it is                                                          |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `Icon`, `Mark`, `Emblem`                                                                                        | Drawings. Their shapes are in `src/lib/`                            |
-| `Button`, `IconButton`, `Badge`, `BeadRing`                                                                     | Small parts. A button without `href` is a `<button>`                |
-| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                          | Controls and links with one job                                     |
-| `Entry`                                                                                                         | The card around a text: its count, lead, text, takhrij, and buttons |
-| `Dhikr`, `Unproven`                                                                                             | What fills an `Entry`                                               |
-| `Surah`, `Phrase`, `VariantText`, `WordForm`                                                                    | The text inside an `Entry`                                          |
-| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                   | How entries sit on a page                                           |
-| `OccasionCard`, `CardGrid`, `Related`                                                                           | The cards of the occasions                                          |
-| `SiteHeader`, `Bar`, `Tools`, `Banner`, `Hero`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                 |
+| Component                                                                                                                      | What it is                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `Icon`, `Mark`, `Emblem`                                                                                                       | Drawings. Their shapes are in `src/lib/`                            |
+| `Button`, `IconButton`, `Badge`, `BeadRing`                                                                                    | Small parts. A button without `href` is a `<button>`                |
+| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                                         | Controls and links with one job                                     |
+| `Entry`                                                                                                                        | The card around a text: its count, lead, text, takhrij, and buttons |
+| `Dhikr`, `Unproven`                                                                                                            | What fills an `Entry`                                               |
+| `Surah`, `Phrase`, `VariantText`, `WordForm`                                                                                   | The text inside an `Entry`                                          |
+| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                                  | How entries sit on a page                                           |
+| `OccasionCard`, `CardGrid`, `Related`                                                                                          | The cards of the occasions                                          |
+| `Search`, `SearchField`, `SearchRow`                                                                                           | The search page: its field, its results, and its empty state        |
+| `SiteHeader`, `Bar`, `SectionMenu`, `Tools`, `Banner`, `Hero`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                 |
 
 ## Breakpoints
 

@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import IconButton from './IconButton.astro';
 import Mark from './Mark.astro';
-import ThemeToggle from './ThemeToggle.astro';
+import SectionMenu from './SectionMenu.astro';
 import Tools from './Tools.astro';
 import { SITE } from '../lib/site';
 
@@ -11,21 +11,33 @@ interface Props {
   back?: { href: string; label: string };
 }
 
-const { heading, back = { href: '/', label: 'كل الأقسام' } } = Astro.props;
+const { heading, back } = Astro.props;
 ---
 
 <nav class="bar" aria-label="التنقّل">
-  <a class="bar__back" href={back.href}>
-    <Icon name="back" />
-    {back.label}
-  </a>
+  {back ? (
+    <a class="bar__back" href={back.href}>
+      <Icon name="back" />
+      {back.label}
+    </a>
+  ) : (
+    <Fragment>
+      <SectionMenu />
+      <a class="bar__back bar__back--fallback" href="/">
+        <Icon name="back" />
+        كل الأقسام
+      </a>
+    </Fragment>
+  )}
   {heading && (
     <span class="bar__title" aria-hidden="true">
       {heading}
     </span>
   )}
   <Tools>
-    <ThemeToggle variant="glass" />
+    <IconButton label="البحث" variant="glass" href="/bahth/">
+      <Icon name="search" />
+    </IconButton>
     <IconButton label={`${SITE.name}، الرئيسية`} href="/">
       <Mark inks="stage" />
     </IconButton>

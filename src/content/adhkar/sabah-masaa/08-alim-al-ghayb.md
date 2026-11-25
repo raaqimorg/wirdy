@@ -1,5 +1,6 @@
 ---
-title: "فاطر السماوات والأرض، في الصباح والمساء"
+title: "فاطر السماوات والأرض"
+context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 8
 count: 1

@@ -8,10 +8,11 @@ import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
 import { timesUnit, toArabicDigits } from '../lib/arabic';
 import { copyOf } from '../lib/copy';
-import { leadOf, suwarOf } from '../lib/lead';
+import { foldOf, leadOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
 import { phrasesOf } from '../lib/phrases';
 import type { Dhikr } from '../lib/schema';
+import { fullTitle } from '../lib/title';
 
 interface Props {
   data: Dhikr;
@@ -26,17 +27,21 @@ const { data, body, slug, heading, single = false, nested = false } = Astro.prop
 
 const text = body.trim();
 const suwar = suwarOf(data, text);
+const folds = suwar?.map((ayat) =>
+  data.ayat === 'fold' ? foldOf(ayat) : { shown: ayat, rest: [] }
+);
 const unit = data.count > 1 ? timesUnit(data.count) : null;
 const lead = [unit, leadOf(data, suwar)].filter(Boolean).join('، ');
 const copy = copyOf(data, body);
 const path = dhikrPath(data.occasion, slug);
 const phrases = data.counts ? phrasesOf(text, data.counts) : null;
+const title = fullTitle(data);
 ---
 
 <Entry
   takhrij={data.takhrij}
   id={slug}
-  title={data.title}
+  title={title}
   heading={heading}
   lead={lead}
   how={data.how}
@@ -52,7 +57,7 @@ const phrases = data.counts ? phrasesOf(text, data.counts) : null;
     </span>
   )}
   <Fragment>
-    {suwar && suwar.map((ayat) => <Surah ayat={ayat} />)}
+    {folds && folds.map(({ shown, rest }) => <Surah ayat={shown} rest={rest} />)}
     {phrases && phrases.map((phrase) => <Phrase {...phrase} />)}
     {!suwar && !phrases && <VariantText text={text} />}
   </Fragment>
@@ -65,14 +70,14 @@ const phrases = data.counts ? phrasesOf(text, data.counts) : null;
     <div slot="actions" class="entry__actions">
       <span class="entry__status" role="status" data-status />
       <IconButton
-        label={`نسخ: ${data.title}`}
+        label={`نسخ: ${title}`}
         variant="quiet"
         data-copy={copy.sabah}
         data-copy-masaa={copy.masaa}
       >
         <Icon name="copy" />
       </IconButton>
-      <IconButton label={`صفحة الذكر: ${data.title}`} variant="quiet" href={path}>
+      <IconButton label={`صفحة الذكر: ${title}`} variant="quiet" href={path}>
         <Icon name="open" />
       </IconButton>
     </div>

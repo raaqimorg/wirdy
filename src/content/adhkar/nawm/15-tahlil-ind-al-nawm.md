@@ -1,5 +1,6 @@
 ---
-title: "التهليل والتسبيح عند النوم"
+title: "التهليل والتسبيح"
+context: "عند النوم"
 occasion: "nawm"
 order: 15
 count: 1

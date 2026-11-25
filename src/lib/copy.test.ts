@@ -48,6 +48,16 @@ describe('copyOf', () => {
     );
   });
 
+  it('gives the آيات that show of a folded سورة, and says the rest is on the page', () => {
+    const data: Dhikr = { ...base, quran: true, ayat: 'fold' };
+    const ayah = 'ب'.repeat(100);
+    const text = [ayah, ayah, ayah].join('\n');
+    expect(copyOf(data, text).sabah).toBe(
+      `${ayah}\n${ayah}\n\nوتتمة الآيات في الصفحة\nصحيح البخاري (١)`
+    );
+    expect(copyOf(data, 'أ\nب').sabah).toBe('أ\nب\n\nصحيح البخاري (١)');
+  });
+
   it('names the time of a dhikr that has one, and changes no word of it', () => {
     const data: Dhikr = { ...base, mode: 'masaa' };
     expect(copyOf(data, 'أَ ب، ج.\n')).toEqual({

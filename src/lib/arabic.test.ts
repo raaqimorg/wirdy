@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { adhkarLabel, formLabel, toArabicDigits, timesLabel, timesUnit } from './arabic';
+import {
+  adhkarLabel,
+  ayatLabel,
+  resultsLabel,
+  formLabel,
+  toArabicDigits,
+  timesLabel,
+  timesUnit,
+} from './arabic';
 
 describe('adhkarLabel', () => {
   it('names a single dhikr in words', () => {
@@ -76,5 +84,26 @@ describe('timesLabel', () => {
 
   it('labels one, though the card suppresses the badge', () => {
     expect(timesLabel(1)).toBe('١ مرة');
+  });
+});
+
+describe('ayatLabel', () => {
+  it('counts آيات as Arabic counts them', () => {
+    expect(ayatLabel(1)).toBe('آية واحدة');
+    expect(ayatLabel(2)).toBe('آيتان');
+    expect(ayatLabel(8)).toBe('٨ آيات');
+    expect(ayatLabel(10)).toBe(`${toArabicDigits(10)} آيات`);
+    expect(ayatLabel(72)).toBe('٧٢ آية');
+    expect(ayatLabel(11)).toBe(`${toArabicDigits(11)} آية`);
+  });
+});
+
+describe('resultsLabel', () => {
+  it('counts results as Arabic counts them', () => {
+    expect(resultsLabel(1)).toBe('نتيجة واحدة');
+    expect(resultsLabel(2)).toBe('نتيجتان');
+    expect(resultsLabel(3)).toBe(`${toArabicDigits(3)} نتائج`);
+    expect(resultsLabel(10)).toBe(`${toArabicDigits(10)} نتائج`);
+    expect(resultsLabel(11)).toBe(`${toArabicDigits(11)} نتيجة`);
   });
 });
