@@ -20,6 +20,16 @@ const COLLECTIONS: Record<string, string> = {
   adab: 'الأدب المفرد',
 };
 
+const NAMED_COLLECTIONS: Record<string, string> = {
+  'Sahih Ibn Hibban': 'صحيح ابن حبان',
+  'Sahih Ibn Khuzayma': 'صحيح ابن خزيمة',
+  "Sunan an-Nasa'i al-Kubra": 'السنن الكبرى للنسائي',
+  'Mustadrak al-Hakim': 'المستدرك على الصحيحين',
+  'Musannaf Ibn Abi Shayba': 'مصنف ابن أبي شيبة',
+  'As-Sunan al-Kubra li al-Bayhaqi': 'السنن الكبرى للبيهقي',
+  'Sunan ad-Darimi': 'سنن الدارمي',
+};
+
 const FIRST = /(\d+) \d+(?: \([^)]*\))? (?:- )?\p{L}/u;
 const SECOND = /\d+ (\d+)(?: \([^)]*\))? (?:- )?\p{L}/u;
 const USUAL: Record<string, RegExp> = {
@@ -66,8 +76,11 @@ function fromShamela(capture: Capture, number?: string): Present {
 }
 
 function fromSunnah(capture: Capture): Present {
-  const [, collection, number] = capture.url.match(/sunnah\.com\/([a-z]+):(\w+)$/) ?? [];
-  const book = COLLECTIONS[collection ?? ''];
+  const [, name, hadith] = capture.title.match(/ » (.+) » Hadith (\w+)$/) ?? [];
+  const named = capture.url.includes('sunnah.com/urn/');
+  const [, collection, place] = capture.url.match(/sunnah\.com\/([a-z]+):(\w+)$/) ?? [];
+  const book = named ? NAMED_COLLECTIONS[name ?? ''] : COLLECTIONS[collection ?? ''];
+  const number = named ? hadith : place;
   if (!book || !number) throw new Error(`no primary collection at ${capture.url}`);
   return { ...base(capture), book, number, text: capture.text };
 }

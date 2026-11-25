@@ -87,6 +87,23 @@ describe('a sunnah.com page', () => {
     });
   });
 
+  it('gives the book and the number of its path, where its address has neither', () => {
+    const url = 'https://sunnah.com/urn/6609840';
+    const title = 'Home » Sahih Ibn Hibban » Hadith 972';
+    expect(sourceOf({ ...sunnah, url, title })).toMatchObject({
+      url,
+      book: 'صحيح ابن حبان',
+      number: '972',
+    });
+  });
+
+  it('is refused when its path is not of a primary collection', () => {
+    const url = 'https://sunnah.com/urn/1';
+    const title = 'Home » Mishkat al-Masabih » Hadith 5';
+    expect(() => sourceOf({ ...sunnah, url, title })).toThrow('urn/1');
+    expect(() => sourceOf({ ...sunnah, url, title: 'Sunnah.com' })).toThrow('urn/1');
+  });
+
   it('is refused when its collection is not a primary one', () => {
     expect(() => sourceOf({ ...sunnah, url: 'https://sunnah.com/hisn:1' })).toThrow('hisn');
   });

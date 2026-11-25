@@ -50,7 +50,9 @@ async function read() {
         site,
         url: new URL(path, location.origin).href,
         capturedAt: new Date().toISOString().slice(0, 10),
-        title: page.title,
+        title: path.startsWith('/urn/')
+          ? page.querySelector('.crumbs').textContent.replaceAll(/\s+/g, ' ').trim()
+          : page.title,
         text: block.textContent,
       });
     } else {

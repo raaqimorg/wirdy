@@ -20,6 +20,8 @@ const COVERED_BOOKS = [
 
 const IN_THE_CITED_PAGE = new Set<Claim>(['count', 'moment', 'fadl']);
 
+const WITHOUT_THE_WORDS = new Set(['commanded', 'reported']);
+
 const SAHIHAYN = new Set(['البخاري', 'مسلم']);
 
 const CHANGED = 'changed since it was proven';
@@ -104,8 +106,8 @@ function sourceProblems(data: Dhikr, body: string, proof: Proof): string[] {
 
 function strangerProblems(data: Dhikr, proof: Proof): string[] {
   const sites = ['shamela', 'hdith', 'sunnah'] as const;
-  const commanded = proof.differences.some(({ reason }) => reason === 'commanded');
-  if (!data.quran && !commanded) return [];
+  const without = proof.differences.some(({ reason }) => WITHOUT_THE_WORDS.has(reason));
+  if (!data.quran && !without) return [];
 
   const held = new Set(
     Object.entries(proof.claims)

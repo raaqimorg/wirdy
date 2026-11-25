@@ -80,7 +80,7 @@ export const proofSchema = z.strictObject({
     z.strictObject({
       site,
       phrase: words,
-      reason: z.enum(['commanded', 'carried', 'narration']),
+      reason: z.enum(['commanded', 'carried', 'narration', 'reported']),
       shown: spanSchema,
     })
   ),

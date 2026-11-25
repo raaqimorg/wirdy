@@ -321,6 +321,42 @@ describe('hdith.com and sunnah.com', () => {
   });
 });
 
+describe('a text that its hadith only reports', () => {
+  const data: Dhikr = { ...dhikr, quran: false };
+  const report = 'وإني لأستغفر الله في اليوم';
+  const told = (text: string): Proof['sources'] => [
+    { ...dorar, text },
+    { ...shamela, text },
+    { ...hdith, text },
+    { ...sunnah, text },
+  ];
+  const words: Present = { ...dorar, url: 'https://dorar.net/h/words', text: BODY };
+  const proof = {
+    ...proofOf(data, BODY, [...told(report), words]),
+    differences: (['shamela', 'hdith'] as const).flatMap((site) =>
+      ['سبحان الله', 'وبحمده'].map((phrase) => ({
+        site,
+        phrase,
+        reason: 'reported' as const,
+        shown: { source: 0, text: 'لأستغفر الله' },
+      }))
+    ),
+  };
+
+  it('needs the words of its hadith on each page', () => {
+    expect(status(proof, data).state).toBe('proven');
+    const claims = Object.fromEntries(
+      Object.entries(proof.claims).map(([claim, held]) => [
+        claim,
+        { ...held!, spans: held!.spans.filter(({ source }) => source !== 3) },
+      ])
+    );
+    expect(status({ ...proof, claims }, data).problems).toContain(
+      'sunnah: no page holds the words of its hadith'
+    );
+  });
+});
+
 describe('a Quran text', () => {
   const data: Dhikr = { ...dhikr, quran: true };
   const hadith = pagesWith('اقرأ آية الكرسي');
