@@ -3,11 +3,9 @@ import type { Dhikr } from './schema';
 
 export type Claim = 'text' | 'count' | 'moment' | 'manner' | 'fadl' | 'takhrij';
 
-type Verifiable = Dhikr & { context?: string };
-
 const CLAIMS: Claim[] = ['text', 'count', 'moment', 'manner', 'fadl', 'takhrij'];
 
-const provenBy: Record<Claim, (data: Verifiable, body: string) => object> = {
+const provenBy: Record<Claim, (data: Dhikr, body: string) => object> = {
   text: ({ quran }, body) => ({ body: body.normalize('NFC').trim(), quran }),
   count: ({ count, counts }) => ({ count, counts }),
   moment: ({ occasion, mode, when, context }) => ({ occasion, mode, when, context }),
@@ -20,23 +18,15 @@ function hash(value: object): string {
   return createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
 }
 
-export function fingerprintOf(claim: Claim, data: Verifiable, body: string): string {
+export function fingerprintOf(claim: Claim, data: Dhikr, body: string): string {
   return hash(provenBy[claim](data, body));
 }
 
-export function wholeFingerprint(data: Verifiable, body: string): string {
+export function wholeFingerprint(data: Dhikr, body: string): string {
   return hash(CLAIMS.map((claim) => fingerprintOf(claim, data, body)));
 }
 
-export function claimsOf({
-  count,
-  counts,
-  occasion,
-  when,
-  context,
-  how,
-  fadl,
-}: Verifiable): Claim[] {
+export function claimsOf({ count, counts, occasion, when, context, how, fadl }: Dhikr): Claim[] {
   const made: Record<Claim, boolean> = {
     text: true,
     count: count > 1 || counts !== undefined,
