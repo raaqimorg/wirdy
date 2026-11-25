@@ -9,7 +9,7 @@ import SearchRow from './SearchRow.astro';
 import type { SearchRow as Row, Tile } from '../lib/collection';
 import type { EmblemName } from '../lib/emblems';
 import { OCCASIONS } from '../lib/occasions';
-import { UNPROVEN } from '../lib/site';
+import { TIBB, UNPROVEN } from '../lib/site';
 
 interface Props {
   tiles?: ReadonlyArray<Tile> | undefined;
@@ -20,6 +20,7 @@ interface Props {
 const { tiles, rows = [], sheet = false } = Astro.props;
 const sections: { id: EmblemName; heading: string; color: string }[] = [
   ...OCCASIONS,
+  { id: 'tibb', heading: TIBB.heading, color: TIBB.color },
   { id: 'unproven', heading: UNPROVEN.heading, color: UNPROVEN.color },
 ];
 const tries = ['السفر', 'الاستخارة', 'الكرب', 'النوم', 'العافية', 'سيد الاستغفار'];

@@ -61,4 +61,30 @@ export const unprovenSchema = Schema.Struct({
 
 export type Unproven = typeof unprovenSchema.Type;
 
+const SOURCE =
+  /^https:\/\/(dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+|sunnah\.com\/[a-z]+:[0-9]+[a-z]?|shamela\.ws\/book\/[0-9]+\/[0-9]+|usul\.ai\/t\/[a-z0-9-]+\/[0-9]+)$/u;
+
+const sourceUrl = Schema.String.check(
+  Schema.isPattern(SOURCE, {
+    message: 'must be a hadith page on dorar.net, sunnah.com, shamela.ws, or usul.ai',
+  })
+);
+
+export const tibbSchema = Schema.Struct({
+  title: text,
+  order: positive,
+  group: text,
+  rawi: text,
+  takhrij: Schema.Struct({
+    grader: Schema.Literals(['البخاري', 'مسلم', 'الألباني']),
+    source: text,
+    ruling: text,
+    url: sourceUrl,
+    also: Schema.optionalKey(sourceUrl),
+  }),
+  note: Schema.optionalKey(text),
+});
+
+export type Tibb = typeof tibbSchema.Type;
+
 export const decodeDhikr = Schema.decodeUnknownEffect(dhikrSchema, STRICT);

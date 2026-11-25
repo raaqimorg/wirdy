@@ -27,6 +27,7 @@ For each file:
 4. Check the grade: the book is al-Bukhari or Muslim, or the scholar is al-Albani and the ruling is صحيح or حسن. Copy the book, the number, and the ruling into `takhrij`.
 5. Search dorar.net for the hadith's first words. If another major grader weakens it, or al-Albani has a second ruling, record it in `note`, with its source.
 6. Where the wording differs between narrations, or the takhrij is an al-Albani book rather than the primary collection, check the wording in the books themselves on [Turath](https://app.turath.io) or [al-Maktaba al-Shamela](https://shamela.ws). Open their search pages in the same browser tab. Turath's page never finishes loading, so read it with a script (`document.body.innerText`) after a few seconds.
+7. To find a hadith inside one book, use [usul.ai](https://usul.ai). It serves the Turath and Shamela editions, and its API answers `curl`: `https://api.usul.ai/search?q=<book name>` gives the book's `id` and the `id` of each edition (`source: "turath"`, `value` is the Shamela book number), and `https://api.usul.ai/search/content?bookId=<id>&versionId=<edition>&q=<words>` gives the text with its volume and page. Then open that page on Shamela, which is the source a proof cites. Its page `index` is not Shamela's page number.
 
 ## Save the proof
 

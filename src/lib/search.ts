@@ -7,7 +7,7 @@ export const searchRowSchema = Schema.Struct({
   also: Schema.optionalKey(Schema.String),
   heading: Schema.String,
   color: Schema.String,
-  emblem: Schema.Literals([...OCCASION_IDS, 'unproven']),
+  emblem: Schema.Literals([...OCCASION_IDS, 'tibb', 'unproven']),
   group: Schema.optionalKey(Schema.String),
   ruling: Schema.optionalKey(Schema.String),
   quran: Schema.optionalKey(Schema.Boolean),

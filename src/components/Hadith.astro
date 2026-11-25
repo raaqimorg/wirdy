@@ -1,0 +1,23 @@
+---
+import Entry from './Entry.astro';
+import type { Tibb } from '../lib/schema';
+
+interface Props {
+  data: Tibb;
+  body: string;
+  slug: string;
+}
+
+const { data, body, slug } = Astro.props;
+---
+
+<Entry
+  takhrij={data.takhrij}
+  id={slug}
+  title={data.title}
+  heading="h3"
+  lead={data.title}
+  how={`عن ${data.rawi}`}
+>
+  <p>{body.trim()}</p>
+</Entry>

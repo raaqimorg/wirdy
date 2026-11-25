@@ -100,6 +100,15 @@ export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   'المرض والمصيبة': 'al-marad-wa-al-musibah',
   المقابر: 'al-maqabir',
   عوارض: 'awarid',
+  'مبادئ التداوي': 'mabadi-al-tadawi',
+  'حفظ الصحة': 'hifz-al-sihhah',
+  'العدوى والأوبئة': 'al-adwa-wa-al-awbiah',
+  'العسل والحبة السوداء': 'al-asal-wa-al-habbah-al-sawda',
+  'التمر وماء زمزم': 'al-tamr-wa-ma-zamzam',
+  'أغذية وأدوية': 'aghdhiyah-wa-adwiyah',
+  الحجامة: 'al-hijamah',
+  'الحمى وأجر المريض': 'al-humma-wa-ajr-al-marid',
+  الرقية: 'al-ruqyah',
 };
 
 export const groupId = (group: string): Effect.Effect<string, UnknownGroup> =>

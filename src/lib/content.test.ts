@@ -8,7 +8,7 @@ import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
 import { dhikrPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
-import { dhikrSchema, STRICT, unprovenSchema, type Dhikr } from './schema';
+import { dhikrSchema, STRICT, tibbSchema, unprovenSchema, type Dhikr } from './schema';
 import { phrasesOf as phrasesEffect } from './phrases';
 import { fullTitle } from './title';
 import { parseVariants as variantsEffect } from './variants';
@@ -37,6 +37,21 @@ const entries = readdirSync(ROOT, { recursive: true, encoding: 'utf8' })
     };
   });
 
+const TIBB = join(process.cwd(), 'src/content/tibb');
+
+const tibb = readdirSync(TIBB, { encoding: 'utf8' })
+  .filter((path) => path.endsWith('.md'))
+  .toSorted()
+  .map((path) => {
+    const file = matter(readFileSync(join(TIBB, path), 'utf8'));
+    return {
+      path,
+      raw: file.data,
+      body: file.content,
+      data: Schema.decodeUnknownSync(tibbSchema, STRICT)(file.data),
+    };
+  });
+
 const quran = entries.filter((entry) => entry.data.quran);
 const prose = entries.filter((entry) => !entry.data.quran);
 const albani = entries.filter((entry) => entry.data.takhrij.grader === 'الألباني');
@@ -58,7 +73,10 @@ describe('the adhkar collection', () => {
 });
 
 describe('the group links', () => {
-  const groups = new Set(entries.flatMap(({ data }) => data.group ?? []));
+  const groups = new Set([
+    ...entries.flatMap(({ data }) => data.group ?? []),
+    ...tibb.map(({ data }) => data.group),
+  ]);
 
   it.each([...groups])('give %s a slug', (group) => {
     expect(Object.hasOwn(GROUP_SLUGS, group)).toBe(true);
@@ -229,6 +247,51 @@ describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
 
   it('carries a ruling of weakness', () => {
     expect(data.takhrij.ruling).toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ|باطل|دون/u);
+  });
+
+  it('has a text on one line', () => {
+    expect(body.trim().length).toBeGreaterThan(0);
+    expect(body.trim()).not.toContain('\n');
+  });
+});
+
+it('lists at least one hadith of الطب النبوي', () => {
+  expect(tibb.length).toBeGreaterThan(0);
+});
+
+it('gives each hadith of الطب النبوي its own order', () => {
+  const orders = tibb.map(({ data }) => data.order);
+  expect(new Set(orders).size).toBe(orders.length);
+});
+
+it('gives the groups of الطب النبوي slugs that no hadith there has', () => {
+  const slugs = [...new Set(tibb.map(({ data }) => GROUP_SLUGS[data.group]))];
+  const hadith = new Set(tibb.map(({ path }) => slugOf(path.replace(/\.md$/u, ''))));
+  expect(slugs.filter((slug) => hadith.has(slug!))).toEqual([]);
+});
+
+const siteOf = (link: string) => new URL(link).hostname;
+
+describe.each(tibb)('tibb/$path', ({ path, raw, body, data }) => {
+  it('has valid frontmatter', () => {
+    expect(issuesOf(tibbSchema, raw)).toBeUndefined();
+  });
+
+  it('starts its file name with its order', () => {
+    const order = String(data.order).padStart(2, '0');
+    expect(path).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`, 'u'));
+  });
+
+  it('rests on dorar.net, or on two other sites that agree', () => {
+    const { url, also } = data.takhrij;
+    if (siteOf(url) === 'dorar.net') return;
+    expect(also).toBeDefined();
+    expect(siteOf(also!)).not.toBe(siteOf(url));
+  });
+
+  it('carries a ruling of صحيح or حسن, and none of weakness', () => {
+    expect(data.takhrij.ruling).toMatch(/صحيح|حسن/u);
+    expect(data.takhrij.ruling).not.toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ/u);
   });
 
   it('has a text on one line', () => {

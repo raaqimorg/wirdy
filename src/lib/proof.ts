@@ -9,6 +9,7 @@ const HOSTS = {
   sunnah: ['sunnah.com'],
   alukah: ['www.alukah.net'],
   tanzil: ['tanzil.net'],
+  usul: ['usul.ai'],
 } as const;
 
 const ONLY_ON = {
@@ -16,7 +17,7 @@ const ONLY_ON = {
   shamela: ['edition', 'volume', 'page'],
 } as const;
 
-const SITES = ['dorar', 'shamela', 'hdith', 'sunnah', 'alukah', 'tanzil'] as const;
+const SITES = ['dorar', 'shamela', 'hdith', 'sunnah', 'alukah', 'tanzil', 'usul'] as const;
 
 export type Site = (typeof SITES)[number];
 

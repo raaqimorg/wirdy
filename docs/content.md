@@ -4,7 +4,7 @@ Wirdy shows only the adhkar that are authentic from the Prophet ﷺ, with the fe
 
 ## What goes in
 
-A dhikr goes in when dorar.net shows that one of these is true:
+A dhikr goes in when dorar.net, or two other sources that agree, show that one of these is true:
 
 1. It is in Sahih al-Bukhari or Sahih Muslim.
 2. al-Albani grades it صحيح or حسن.
@@ -115,13 +115,26 @@ takhrij:
 
 `verification/<occasion>/<slug>.json` holds the proof of a dhikr, so a checked dhikr is not checked again. `bun run verification` calculates the status of each dhikr. No field says that a dhikr is proven.
 
-- `sources`: each page that was read, with its text as the page gave it. dorar.net is the only source of a ruling. Shamela gives the wording in the books. hdith.com and sunnah.com give the wording in the primary collections. Tanzil gives the text of the Quran. alukah.net proves nothing alone.
+- `sources`: each page that was read, with its text as the page gave it. dorar.net is the only source of a ruling. Shamela gives the wording in the books. hdith.com and sunnah.com give the wording in the primary collections. Tanzil gives the text of the Quran. alukah.net proves nothing alone. usul.ai searches inside one book of the Turath and Shamela editions, so it finds the Shamela page of a hadith, but its text is Shamela's, and it proves nothing alone.
 - A dhikr needs dorar.net and Shamela. hdith.com and sunnah.com are both looked up, and where they have the book, at least one carries the text. A page that was not found is written as `absent`, with the searches tried.
 - `claims`: what the card states (`text`, `count`, `moment`, `manner`, `fadl`, `takhrij`), each with the exact words of a source that prove it. The count, the moment, and the fadl are in the cited dorar.net page.
 - `differences`: a phrase that a source does not have, with the reason. `commanded`: the hadith commands it, and another source gives the words. `carried`: the hadith gives one form and says that the other is the same. `narration`: editions or narrations differ. `reported`: the hadith reports that he said it, and another source gives the words. A Quran text, and a text that is `commanded` or `reported`, needs words of its hadith on each Shamela, hdith.com, and sunnah.com page, so a page of another hadith never passes. Every one of those pages, of any text, holds words that the proof cites. When two sources disagree on a ruling or a wording, ask the owner.
 - `rulings`: the other rulings on dorar.net.
 
 A proof ends when what it proves changes. A change of order, title, group, form, ayat, or note ends nothing. `verification/pending.json` lists the adhkar that are not proven yet. It only shrinks: the tests refuse a dhikr that is neither proven nor pending, and a pending dhikr that changes.
+
+## الطب النبوي
+
+`src/content/tibb/` holds the hadiths of الطب النبوي: what the Prophet ﷺ said and did about treatment, healing, and keeping well (honey, black seed, Zamzam, ajwa dates, cupping, fever, ruqyah, contagion, eating and drinking). They show on one page, `/al-tibb-al-nabawi/`, under a heading for each `group`. They are hadiths to read, not adhkar to say, so a file has no count, no moment, no copy button, and no page of its own.
+
+- The same rule lets a hadith in: it is in al-Bukhari or Muslim, or al-Albani grades it صحيح or حسن. The tests refuse a ruling of weakness.
+- `title`: a short name, such as «الحبة السوداء». `rawi`: the Companion who narrates it, in the genitive, because the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.
+- The body is the matn as the book gives it, cut from the page with a script, from where the Companion's words start. Never shorten or join it by hand.
+- A hadith that is only his ﷺ words has them alone in the body, with no quotation marks, like a dhikr. A narration (an exchange, an act, or a gloss of the narrator) keeps «» around his words, as a `note` quotes words inside prose, so the reader sees where his words start.
+- The groups read from the principles of treatment, to keeping well and contagion, to the remedies, to fever and the reward of the sick, to ruqyah. Inside a group, the general hadith comes before the particular one.
+- `note` records a dispute over a ruling, with its source, as for an adhkar file.
+- `takhrij.url` is the dorar.net page of the hadith, or the page of one of two other sources that agree, and `takhrij.also` is the other one. Two sources stand for one dorar.net page only when they are on two different sites, and each page states the book and the number, and, for al-Albani, his ruling. sunnah.com prints his ruling on Abu Dawud and on Mishkat al-Masabih, Shamela prints it in its editions of the Sunan («[حكم الألباني]»), and usul.ai holds his own books, such as «صحيح وضعيف الجامع الصغير». A usul.ai page counts only when it is another book than the Shamela page, because both serve the Turath editions. The tests refuse a takhrij without dorar.net that has no second source on another site.
+- The adhkar of the sick (what to say over a pain, on visiting the sick) stay in `ahwal`, under «المرض والمصيبة». Do not copy them here.
 
 ## What did not come in
 

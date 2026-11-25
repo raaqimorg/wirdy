@@ -15,6 +15,13 @@ export function adhkarLabel(n: number): string {
   return `${toArabicDigits(n)} ذكرًا`;
 }
 
+export function hadithLabel(n: number): string {
+  if (n === 1) return 'حديث واحد';
+  if (n === 2) return 'حديثان';
+  if (isFew(n)) return `${toArabicDigits(n)} أحاديث`;
+  return `${toArabicDigits(n)} حديثًا`;
+}
+
 const ORDINALS: Readonly<Record<(typeof FORMS)[number], string>> = {
   1: 'الأولى',
   2: 'الثانية',

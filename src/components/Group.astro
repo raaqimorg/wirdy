@@ -9,11 +9,11 @@ import { slugOf } from '../lib/permalink';
 
 interface Props {
   title?: string | undefined;
-  entries: ReadonlyArray<AdhkarEntry>;
+  entries?: ReadonlyArray<AdhkarEntry> | undefined;
 }
 
 const { title, entries } = Astro.props;
-const isChoice = entries[0]?.data.form !== undefined;
+const isChoice = entries?.[0]?.data.form !== undefined;
 const id = title === undefined ? undefined : Effect.runSync(groupId(title));
 ---
 
@@ -23,7 +23,9 @@ const id = title === undefined ? undefined : Effect.runSync(groupId(title));
       {title}
     </h2>
   )}
-  {isChoice ? (
+  {entries === undefined ? (
+    <slot />
+  ) : isChoice ? (
     <Fragment>
       <p class="group__note">تكفي واحدة منها</p>
       <Choices entries={entries} />

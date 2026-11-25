@@ -152,7 +152,34 @@ const chains: ReadonlyArray<Shape> = [
   ...[20, 153.3, 220].map((cx) => lit('circle', 'grow', { cx, cy: 150, r: 20, ...egg() })),
 ];
 
-export type EmblemName = Occasion | 'unproven';
+const HEX = 30;
+const COMB_STEP = HEX * Math.sqrt(3);
+
+const CELL = HEX - 4;
+
+const hexagon = (cx: number, cy: number): string =>
+  `M${times(6, (index) => {
+    const angle = ((60 * index - 90) * Math.PI) / 180;
+    return `${round(cx + CELL * Math.cos(angle))} ${round(cy + CELL * Math.sin(angle))}`;
+  }).join('L')}Z`;
+
+const COMB = [-2, -1, 0, 1, 2].flatMap((row) => {
+  const columns = row % 2 === 0 ? [-1, 0, 1] : [-1.5, -0.5, 0.5, 1.5];
+  return columns.map((column) => ({
+    lit: row === 0 && column === 0,
+    cx: CENTER + column * COMB_STEP,
+    cy: CENTER + row * HEX * 1.5,
+  }));
+});
+
+const comb: ReadonlyArray<Shape> = [
+  ...COMB.filter(({ lit: isLit }) => !isLit).map(({ cx, cy }) =>
+    dark('path', { d: hexagon(cx, cy), ...shade(0.16) })
+  ),
+  lit('path', 'grow', { d: hexagon(CENTER, CENTER), ...egg() }),
+];
+
+export type EmblemName = Occasion | 'tibb' | 'unproven';
 
 export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   'sabah-masaa': halves,
@@ -163,5 +190,6 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   istiqaz: light,
   mutlaq: unbroken,
   ahwal: roads,
+  tibb: comb,
   unproven: chains,
 };

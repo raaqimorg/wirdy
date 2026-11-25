@@ -64,6 +64,12 @@ const sunnah: Present = {
 const shamelaAt = (url: string, text: string): Present => ({ ...shamela, url, text });
 const alukah: Present = { ...page, site: 'alukah', url: 'https://www.alukah.net/a/1', text: WORDS };
 const tanzil: Present = { ...page, site: 'tanzil', url: 'https://tanzil.net/', text: BODY };
+const usul: Present = {
+  ...page,
+  site: 'usul',
+  url: 'https://usul.ai/t/sahih-muslim/1',
+  text: WORDS,
+};
 
 const absent = (site: 'hdith' | 'sunnah') => ({
   state: 'absent' as const,
@@ -178,6 +184,13 @@ describe('the claims', () => {
     const proof = withSources(...SOURCES, alukah);
     proof.claims.count!.spans = [{ source: 4, text: 'مائة مرة' }];
     expect(status(proof).state).toBe('unproven');
+  });
+
+  it('are not proven by usul.ai alone', () => {
+    const proof = withSources(...SOURCES, usul);
+    proof.claims.count!.spans = [{ source: 4, text: 'مائة مرة' }];
+    expect(status(proof).state).toBe('unproven');
+    expect(status(proof).problems).toContain('count: usul proves nothing alone');
   });
 
   it.each(['count', 'moment', 'fadl'] as const)('give the %s in the cited page', (claim) => {

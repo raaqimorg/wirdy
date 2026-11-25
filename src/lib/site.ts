@@ -1,4 +1,4 @@
-import { NEUTRAL } from './tone';
+import { CHROMA, hexFromOklch, LIGHTNESS, NEUTRAL } from './tone';
 
 export const SITE = {
   name: 'وِردي',
@@ -14,4 +14,12 @@ export const UNPROVEN = {
   title: 'ما لم يثبت',
   lede: 'أذكار مشهورة، وحكم كل منها',
   color: NEUTRAL,
+} as const;
+
+export const TIBB = {
+  path: '/al-tibb-al-nabawi/',
+  heading: 'الطب النبوي',
+  title: 'الطب النبوي',
+  lede: 'العسل، والحجامة، والرقية',
+  color: hexFromOklch(LIGHTNESS, CHROMA, 80),
 } as const;

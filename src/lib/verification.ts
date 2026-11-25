@@ -26,6 +26,8 @@ const IN_THE_CITED_PAGE: ReadonlySet<Claim> = new Set<Claim>(['count', 'moment',
 
 const WITHOUT_THE_WORDS: ReadonlySet<string> = new Set(['commanded', 'reported']);
 
+const HELPERS: ReadonlyArray<Site> = ['alukah', 'usul'];
+
 const COMPARED: ReadonlySet<Site> = new Set<Site>(['shamela', 'hdith', 'sunnah']);
 
 const SAHIHAYN: ReadonlySet<string> = new Set(['البخاري', 'مسلم']);
@@ -181,8 +183,10 @@ function spanProblems(
   if (!spans.every((span) => isIn(proof, span))) {
     problems.push(`${claim}: a span is not in its source`);
   }
-  if (spans.length > 0 && spans.every((span) => Option.contains(siteOf(proof, span), 'alukah'))) {
-    problems.push(`${claim}: alukah proves nothing alone`);
+  for (const helper of HELPERS) {
+    if (spans.length > 0 && spans.every((span) => Option.contains(siteOf(proof, span), helper))) {
+      problems.push(`${claim}: ${helper} proves nothing alone`);
+    }
   }
   if (
     Option.isSome(cited) &&
