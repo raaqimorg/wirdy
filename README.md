@@ -9,16 +9,16 @@
 
 Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A search icon in the bar of every page finds a dhikr by its name or its words as you type, with or without diacritics, and finds the entries of «ما لم يثبت» with their rulings. It opens over the page: on a phone it fills the screen, and on a wide screen it is a panel in the middle. [/bahth/](https://wirdy.site/bahth/) holds the same search as a page. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
 
-| Occasion             | Adhkar |
-| -------------------- | -----: |
-| أذكار الصباح والمساء |     16 |
-| أذكار الأذان والمسجد  |     13 |
-| أذكار داخل الصلاة     |     36 |
-| أذكار أدبار الصلوات  |     20 |
-| أذكار النوم          |     18 |
-| أذكار الاستيقاظ       |      7 |
-| أذكار عامة           |     23 |
-| أذكار الأحوال         |     63 |
+| Occasion       | Adhkar |
+| -------------- | -----: |
+| الصباح والمساء |     16 |
+| الأذان والمسجد  |     13 |
+| أثناء الصلاة    |     36 |
+| بعد الصلاة      |     20 |
+| عند النوم      |     18 |
+| عند الاستيقاظ   |      7 |
+| كل وقت         |     23 |
+| أحوال متفرقة   |     63 |
 
 ## What goes in
 

@@ -55,7 +55,7 @@ body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-directio
 <div class="tiles">${tiles}</div>
 </body></html>`;
 
-const occasion = ({ id, heading, color }: Section, count: number) => `${head}
+const occasion = ({ id, title, color }: Section, count: number) => `${head}
 body{background:${color};color:${PALETTE.eggshell};display:grid;
   grid-template-columns:minmax(0,1fr) 820px;grid-template-rows:auto 1fr;column-gap:96px}
 .brand{grid-column:1/-1;display:flex;align-items:center;gap:36px}
@@ -69,7 +69,7 @@ body{background:${color};color:${PALETTE.eggshell};display:grid;
 .emblem svg{width:100%;height:100%}
 </style></head><body>
 <div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
-<div class="text"><p class="heading">${heading}</p><p class="count">${adhkarLabel(count)}</p></div>
+<div class="text"><p class="heading">${title}</p><p class="count">${adhkarLabel(count)}</p></div>
 <div class="emblem">${emblemSvg(id)}</div>
 </body></html>`;
 

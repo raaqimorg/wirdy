@@ -63,7 +63,7 @@ export const occasionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
 export const sectionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.map(
   occasionTiles,
   (tiles) => {
-    const { heading, color, note, path: href } = UNPROVEN;
+    const { heading, color, lede: note, path: href } = UNPROVEN;
     return [...tiles, { id: 'unproven', heading, color, note, href }];
   }
 );
@@ -73,8 +73,11 @@ function shownAyat(data: Dhikr, text: string): string {
   return suwar.flatMap((ayat) => (data.ayat === 'fold' ? foldOf(ayat).shown : ayat)).join(' ');
 }
 
+const placeOf = ({ heading, title }: { readonly heading: string; readonly title: string }) =>
+  title.includes(heading) ? title : `${title}، ${heading}`;
+
 const adhkarRow = (
-  { heading, color, id: emblem }: (typeof OCCASIONS)[number],
+  section: (typeof OCCASIONS)[number],
   { id, data, body }: AdhkarEntry
 ): Effect.Effect<SearchRow, MalformedMarker> =>
   Effect.gen(function* () {
@@ -85,9 +88,9 @@ const adhkarRow = (
       title: fullTitle(data),
       words,
       ...Option.match(also, { onNone: () => ({}), onSome: (evening) => ({ also: evening }) }),
-      heading,
-      color,
-      emblem,
+      heading: placeOf(section),
+      color: section.color,
+      emblem: section.id,
       ...(data.group !== undefined && { group: data.group }),
       ...(data.quran && { quran: true }),
       href: dhikrAnchor(data.occasion, slugOf(id)),
@@ -104,7 +107,7 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
     const unproven = Array.map(yield* unprovenEntries, ({ id, data, body }): SearchRow => ({
       title: data.what,
       words: bodyOf({ body }).trim(),
-      heading: UNPROVEN.heading,
+      heading: placeOf(UNPROVEN),
       color: UNPROVEN.color,
       emblem: 'unproven',
       ruling: data.takhrij.ruling,

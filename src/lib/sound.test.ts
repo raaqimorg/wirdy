@@ -12,8 +12,8 @@ describe('soundPlace', () => {
     });
   });
 
-  it('knows أذكار عامة by its name in a sentence', () => {
-    expect(Option.getOrNull(soundPlace('بغير هذه الزيادة في الأذكار العامة.'))?.path).toBe(
+  it('names a section by its full title', () => {
+    expect(Option.getOrNull(soundPlace('بغير هذه الزيادة في أذكار كل وقت.'))?.path).toBe(
       '/mutlaq/'
     );
   });

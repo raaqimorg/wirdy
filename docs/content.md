@@ -29,16 +29,16 @@ When al-Albani states that he changed his ruling (dorar.net shows «تراجع �
 
 Each dhikr belongs to one occasion. The occasion is its folder and its `occasion` field. `src/lib/occasions.ts` holds the order and the Arabic heading of each.
 
-| Folder        | Heading              |
-| ------------- | -------------------- |
-| `sabah-masaa` | أذكار الصباح والمساء |
-| `masjid`      | أذكار الأذان والمسجد  |
-| `fi-al-salah` | أذكار داخل الصلاة     |
-| `salah`       | أذكار أدبار الصلوات  |
-| `nawm`        | أذكار النوم          |
-| `istiqaz`     | أذكار الاستيقاظ       |
-| `mutlaq`      | أذكار عامة           |
-| `ahwal`       | أذكار الأحوال         |
+| Folder        | Heading        |
+| ------------- | -------------- |
+| `sabah-masaa` | الصباح والمساء |
+| `masjid`      | الأذان والمسجد  |
+| `fi-al-salah` | أثناء الصلاة    |
+| `salah`       | بعد الصلاة      |
+| `nawm`        | عند النوم      |
+| `istiqaz`     | عند الاستيقاظ   |
+| `mutlaq`      | كل وقت         |
+| `ahwal`       | أحوال متفرقة   |
 
 A dhikr that belongs to two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
 

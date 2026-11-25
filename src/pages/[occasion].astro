@@ -15,7 +15,7 @@ export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
 }
 
-const { id, heading, color, lede } = Astro.props.occasion;
+const { id, heading, title, color, lede } = Astro.props.occasion;
 const entries = await Effect.runPromise(adhkarOf(id));
 const runs = runsByGroup(entries);
 const groups = runs.flatMap(({ group }) => Option.toArray(group));
@@ -27,14 +27,14 @@ const hasVariants = entries.some((entry) => entry.body?.includes('{{') === true)
 const label = adhkarLabel(entries.length);
 const labelAt = (time: 'sabah' | 'masaa') =>
   adhkarLabel(entries.filter(({ data }) => data.mode === 'both' || data.mode === time).length);
-const description = `${heading}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
+const description = `${title}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
 ---
 
 <Section
-  title={heading}
+  title={title}
   description={description}
   image={`/opengraph-${id}.png`}
-  crumbs={[{ name: heading, path: `/${id}/` }]}
+  crumbs={[{ name: title, path: `/${id}/` }]}
   faces={hasQuran ? ['naskh', 'quran'] : ['naskh']}
   emblem={id}
   color={color}

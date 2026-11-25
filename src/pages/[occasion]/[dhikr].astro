@@ -36,9 +36,11 @@ const image = `/${cardFile(card, data.occasion, slug)}`;
 const up = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
 const title = fullTitle(data);
 const times = data.count > 1 ? timesLabel(data.count) : undefined;
-const lede = [data.context, times, data.context === undefined ? data.group : undefined]
-  .filter((part) => part !== undefined)
-  .join(' · ');
+const named = [data.context, data.group].find(
+  (part) => part !== undefined && part !== occasion.heading
+);
+const parts = [named, times].filter((part) => part !== undefined);
+const lede = parts.length === 0 ? occasion.title : parts.join(' · ');
 const evening = Effect.runSync(eveningTitle(data.title, body));
 
 const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
@@ -63,12 +65,12 @@ const links = [
 ---
 
 <Section
-  title={`${title} | ${occasion.heading}`}
+  title={`${title} | ${occasion.title}`}
   description={description}
   image={image}
   faces={data.quran ? ['quran'] : ['naskh']}
   crumbs={[
-    { name: occasion.heading, path: `/${occasion.id}/` },
+    { name: occasion.title, path: `/${occasion.id}/` },
     { name: title, path },
   ]}
   emblem={occasion.id}

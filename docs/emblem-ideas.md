@@ -11,7 +11,7 @@ To use one:
 3. Run `bun run opengraph` and `bun run opengraph:adhkar`, because the sharing cards draw the emblems.
 4. Remove it from this page.
 
-## أذكار الصباح والمساء (`sabah-masaa`)
+## الصباح والمساء (`sabah-masaa`)
 
 ### The horizon
 
@@ -69,7 +69,7 @@ A wall with its battlements and the sun sitting on it. The adhkar of the morning
 
 From the content: «وكان في حرز من الشيطان حتى يمسي» (لا إله إلا الله وحده، in this occasion).
 
-## أذكار الأذان والمسجد (`masjid`)
+## الأذان والمسجد (`masjid`)
 
 ### The call
 
@@ -101,7 +101,7 @@ A dome on its drum, three small windows below, and a lit crescent on its point. 
 
 «لو يعلم الناس ما في النداء والصف الأول». Rows of worshippers behind the mihrab, and the first row lit.
 
-## أذكار داخل الصلاة (`fi-al-salah`)
+## أثناء الصلاة (`fi-al-salah`)
 
 ### Standing, bowing, prostrating
 
@@ -121,7 +121,7 @@ The three postures of a rakʿah, read from the right. The prostration is lit: «
 
 Rows around the Kaʿbah seen from above: squares inside squares, all facing one lit centre. Every prayer turns to it.
 
-## أذكار أدبار الصلوات (`salah`)
+## بعد الصلاة (`salah`)
 
 ### Three rings of beads
 
@@ -179,7 +179,7 @@ Three lanes, and the lit one is ahead of the rest. A few words after each prayer
 
 From the content: «تدركون من كان قبلكم، وتسبقون من جاء بعدكم» (التسبيح عشرًا).
 
-## أذكار النوم (`nawm`)
+## عند النوم (`nawm`)
 
 ### The closing eye
 
@@ -193,7 +193,7 @@ From the content: «تدركون من كان قبلكم، وتسبقون من ج
 
 «والليل إذا يغشى». Bands of dark coming down from the top of the sky, each one lighter than the one above it, and a crescent low in the last light.
 
-## أذكار الاستيقاظ (`istiqaz`)
+## عند الاستيقاظ (`istiqaz`)
 
 ### The opening eye
 
@@ -213,7 +213,7 @@ A window with its shutters pushed open, and the lit sun of the new day behind th
 
 «يعقد الشيطان على قافية رأس أحدكم ثلاث عقد». A cord with three knots. Remembering Allah on waking loosens the first, and it is lit and open.
 
-## أذكار عامة (`mutlaq`)
+## كل وقت (`mutlaq`)
 
 ### Without end
 
@@ -271,7 +271,7 @@ Four lit squares for the four words that remain, and around them two rings of do
 
 From the content: الباقيات الصالحات, «أحبّ إليّ مما طلعت عليه الشمس». سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر.
 
-## أذكار الأحوال (`ahwal`)
+## أحوال متفرقة (`ahwal`)
 
 ### The compass
 

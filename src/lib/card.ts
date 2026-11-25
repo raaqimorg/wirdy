@@ -69,7 +69,7 @@ export const cardOf = (
 ): Effect.Effect<Card, MalformedMarker | PhraseCountMismatch> =>
   Effect.gen(function* () {
     const text = body.trim();
-    const { heading, color } = sectionOf(data.occasion);
+    const { title: heading, color } = sectionOf(data.occasion);
     const suwar = suwarOf(data, text);
     const { blocks, cut } = yield* bodyOf(data, text);
     const rest = Option.isSome(suwar) && cut ? [REST] : [];

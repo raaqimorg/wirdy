@@ -21,7 +21,7 @@ export const GET: APIRoute = ({ site }) => {
       { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
       { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
-    shortcuts: OCCASIONS.map(({ id, heading }) => ({ name: heading, url: `/${id}/` })),
+    shortcuts: OCCASIONS.map(({ id, title }) => ({ name: title, url: `/${id}/` })),
   };
   return new Response(JSON.stringify(manifest, null, 2), {
     headers: { 'content-type': 'application/manifest+json; charset=utf-8' },

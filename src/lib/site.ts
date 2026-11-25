@@ -10,8 +10,8 @@ export const SITE = {
 
 export const UNPROVEN = {
   path: '/ma-lam-yathbut/',
-  heading: 'ما لم يثبت',
-  lede: 'أذكار مشهورة ضعّفها الألباني، أو ضعّف عددها أو وقتها',
-  note: 'أذكار مشهورة مع حكم كل واحد منها',
+  heading: 'لم يثبت',
+  title: 'ما لم يثبت',
+  lede: 'أذكار مشهورة، وحكم كل منها',
   color: NEUTRAL,
 } as const;

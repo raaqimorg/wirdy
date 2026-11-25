@@ -4,6 +4,16 @@ import { PALETTE } from './palette';
 import { UNPROVEN } from './site';
 import { contrast, hueOf } from './tone';
 
+const wordsOf = (text: string) => text.split(/[ ،]+/u).map((word) => word.replace(/^و?(ال)?/u, ''));
+
+describe('the line of an occasion', () => {
+  it('repeats no word of its heading', () => {
+    for (const { heading, lede } of OCCASIONS) {
+      expect(wordsOf(lede).filter((word) => wordsOf(heading).includes(word))).toEqual([]);
+    }
+  });
+});
+
 const COLORS = [...OCCASIONS.map(({ id, color }) => [id, color]), ['unproven', UNPROVEN.color]];
 
 describe('the occasion colors', () => {

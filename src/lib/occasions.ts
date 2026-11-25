@@ -2,14 +2,30 @@ import { Array, Record } from 'effect';
 import { toneOf } from './tone';
 
 const SECTIONS = {
-  'sabah-masaa': { heading: 'أذكار الصباح والمساء', lede: 'ما يقال حين تصبح وحين تمسي' },
-  masjid: { heading: 'أذكار الأذان والمسجد', lede: 'الأذان، والوضوء، والمسجد' },
-  'fi-al-salah': { heading: 'أذكار داخل الصلاة', lede: 'من الاستفتاح إلى التشهد، والوتر' },
-  salah: { heading: 'أذكار أدبار الصلوات', lede: 'بعد السلام: تسبيح وقراءة ودعاء' },
-  nawm: { heading: 'أذكار النوم', lede: 'عند الفراش، وآخر ما يقال' },
-  istiqaz: { heading: 'أذكار الاستيقاظ', lede: 'عند الاستيقاظ، وما يعرض في الليل' },
-  mutlaq: { heading: 'أذكار عامة', lede: 'تسبيح وتهليل واستغفار ودعاء' },
-  ahwal: { heading: 'أذكار الأحوال', lede: 'الطعام، والسفر، والكرب، وغيرها' },
+  'sabah-masaa': {
+    heading: 'الصباح والمساء',
+    title: 'أذكار الصباح والمساء',
+    lede: 'القرآن، والاستغفار، والتسبيح',
+  },
+  masjid: {
+    heading: 'الأذان والمسجد',
+    title: 'أذكار الأذان والمسجد',
+    lede: 'إجابة المؤذن، والوضوء، والدخول',
+  },
+  'fi-al-salah': {
+    heading: 'أثناء الصلاة',
+    title: 'أذكار أثناء الصلاة',
+    lede: 'الركوع، والسجود، والتشهد',
+  },
+  salah: { heading: 'بعد الصلاة', title: 'أذكار بعد الصلاة', lede: 'التسبيح، والقرآن، والدعاء' },
+  nawm: { heading: 'عند النوم', title: 'أذكار النوم', lede: 'القرآن، والتسبيح، وآخر ما يقال' },
+  istiqaz: {
+    heading: 'عند الاستيقاظ',
+    title: 'أذكار الاستيقاظ',
+    lede: 'يقظة الليل، والفزع، والرؤيا المكروهة',
+  },
+  mutlaq: { heading: 'كل وقت', title: 'أذكار كل وقت', lede: 'التسبيح، والتهليل، والاستغفار' },
+  ahwal: { heading: 'أحوال متفرقة', title: 'أذكار الأحوال', lede: 'الطعام، والسفر، والكرب' },
 } as const;
 
 export type Occasion = keyof typeof SECTIONS;
@@ -17,6 +33,7 @@ export type Occasion = keyof typeof SECTIONS;
 export type Section = {
   readonly id: Occasion;
   readonly heading: string;
+  readonly title: string;
   readonly lede: string;
   readonly color: string;
 };

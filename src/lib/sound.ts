@@ -8,10 +8,10 @@ export type SoundPlace = {
   readonly after: string;
 };
 
-const NAMES: ReadonlyArray<readonly [name: string, occasion: Occasion]> = [
-  ...Array.map(OCCASIONS, ({ heading, id }) => [heading, id] as const),
-  ['الأذكار العامة', 'mutlaq'],
-];
+const NAMES: ReadonlyArray<readonly [name: string, occasion: Occasion]> = Array.map(
+  OCCASIONS,
+  ({ title, id }) => [title, id] as const
+);
 
 export function soundPlace(sound: string): Option.Option<SoundPlace> {
   return Array.findFirst(NAMES, ([name, occasion]) => {

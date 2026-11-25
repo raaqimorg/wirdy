@@ -259,8 +259,18 @@ describe('built site', () => {
 
   it('names the section over the title of a dhikr, as the way back to its place', () => {
     expect(own('nawm/ayat-al-kursi')).toMatch(
-      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi">\s*<svg[\s\S]*?<span class="banner__up-label">أذكار النوم<\/span>/u
+      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi">\s*<svg[\s\S]*?<span class="banner__up-label">عند النوم<\/span>/u
     );
+  });
+
+  it('says the section once at the top of a dhikr', () => {
+    for (const file of contentFiles) {
+      const path = file.replace(/\.md$/u, '').replace(/\/\d+-/u, '/');
+      const top = own(path).match(/<header class="banner[\s\S]*?<\/header>/u)![0];
+      const up = top.match(/<span class="banner__up-label">([^<]+)</u)![1];
+      const lede = top.match(/<p class="banner__lede">([^<]+)</u)![1];
+      expect(`${path}: ${lede}`).not.toBe(`${path}: ${up}`);
+    }
   });
 
   it('counts the adhkar of the time that shows', () => {
@@ -305,11 +315,11 @@ describe('built site', () => {
     const card = html.match(
       /<a class="occasion-card [^"]*" href="\/ma-lam-yathbut\/"[\s\S]*?<\/a>/u
     )![0];
-    expect(card).toContain('أذكار مشهورة مع حكم كل واحد منها');
+    expect(card).toContain('أذكار مشهورة، وحكم كل منها');
     expect(card).not.toMatch(/[٠-٩]/u);
 
     expect(own('ma-lam-yathbut')).toContain(
-      '<p class="banner__lede">أذكار مشهورة ضعّفها الألباني، أو ضعّف عددها أو وقتها</p>'
+      '<p class="banner__lede">أذكار مشهورة، وحكم كل منها</p>'
     );
   });
 
@@ -442,9 +452,9 @@ describe('built site', () => {
   });
 
   it('describes each occasion page with its count, in a snippet that fits the results page', () => {
-    for (const { id, heading } of OCCASIONS) {
+    for (const { id, title } of OCCASIONS) {
       const description = metaOf(pages[id]!, 'name', 'description')!;
-      expect(description.startsWith(`${heading}: ${adhkarLabel(countOf(id))} `)).toBe(true);
+      expect(description.startsWith(`${title}: ${adhkarLabel(countOf(id))} `)).toBe(true);
       expect(description.length).toBeGreaterThanOrEqual(90);
       expect(description.length).toBeLessThanOrEqual(160);
       expect(metaOf(pages[id]!, 'property', 'og:description')).toBe(description);
@@ -544,11 +554,11 @@ describe('built site', () => {
 
   it('gives each occasion page a breadcrumb from the home page, and the home page none', () => {
     expect(graphOf(html).some((node) => node['@type'] === 'BreadcrumbList')).toBe(false);
-    for (const { id, heading } of OCCASIONS) {
+    for (const { id, title } of OCCASIONS) {
       const crumbs = graphOf(pages[id]!).find((node) => node['@type'] === 'BreadcrumbList')!;
       expect(crumbs['itemListElement']).toEqual([
         { '@type': 'ListItem', position: 1, name: 'وِردي', item: 'https://wirdy.site/' },
-        { '@type': 'ListItem', position: 2, name: heading, item: `https://wirdy.site/${id}/` },
+        { '@type': 'ListItem', position: 2, name: title, item: `https://wirdy.site/${id}/` },
       ]);
     }
   });
@@ -573,7 +583,7 @@ describe('built site', () => {
     const manifest = JSON.parse(readFileSync(join(DIST, 'site.webmanifest'), 'utf8'));
     expect(manifest.id).toBe('/');
     expect(manifest.shortcuts).toEqual(
-      OCCASIONS.map(({ id, heading }) => ({ name: heading, url: `/${id}/` }))
+      OCCASIONS.map(({ id, title }) => ({ name: title, url: `/${id}/` }))
     );
   });
 
@@ -669,11 +679,11 @@ describe('built site', () => {
   it('shows the context of a dhikr under its name, and in parentheses in plain text', () => {
     const page = own('sabah-masaa/kalimat-allah-at-tammat');
     const full = 'أعوذ بكلمات الله التامات (في المساء)';
-    const { heading } = OCCASIONS.find(({ id }) => id === 'sabah-masaa')!;
+    const { title } = OCCASIONS.find(({ id }) => id === 'sabah-masaa')!;
     expect(page).toMatch(
       /<h1 class="banner__title">\s*أعوذ بكلمات الله التامات\s*<\/h1>\s*<p class="banner__lede">في المساء/u
     );
-    expect(page).toContain(`<title>${full} | ${heading} | ${SITE.name}</title>`);
+    expect(page).toContain(`<title>${full} | ${title} | ${SITE.name}</title>`);
     expect(page).toContain(`data-share-title="${full}"`);
     const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
     expect((crumbs['itemListElement'] as { name: string }[]).at(-1)!.name).toBe(full);
