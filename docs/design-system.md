@@ -1,6 +1,6 @@
 # Design system
 
-The design follows [Laws of UX](https://lawsofux.com/). This doc says how the code holds it. The shape is the usual one: tokens, then base styles, then one stylesheet for each component. `bun run ci` enforces it.
+This doc holds the shape of the styles and the components. The shape is the usual one: tokens, then base styles, then one stylesheet for each component. `bun run ci` enforces it.
 
 ## Where things are
 
