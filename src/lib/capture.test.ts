@@ -123,6 +123,10 @@ describe('an hdith.com page', () => {
     expect(sourceOf(hdithMuslim)).toMatchObject({ book: 'صحيح مسلم', number: '2723' });
   });
 
+  it('gives the only number, where the book has one', () => {
+    expect(numberIn('المستدرك على الصحيحين', '2008 - أخبرنا أحمد')).toBe('2008');
+  });
+
   it('gives the usual number of each book, in the order it prints them', () => {
     expect(numberIn('سنن أبي داود', '701 698 - حدثنا')).toBe('701');
     expect(numberIn('جامع الترمذي', '3719 3384 - حدثنا')).toBe('3384');
