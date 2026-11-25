@@ -110,6 +110,7 @@ describe('an hdith.com page', () => {
     expect(numberIn('سنن أبي داود', '701 698 - حدثنا')).toBe('701');
     expect(numberIn('جامع الترمذي', '3719 3384 - حدثنا')).toBe('3384');
     expect(numberIn('سنن ابن ماجه', '1221 1167 - حدثنا')).toBe('1167');
+    expect(numberIn('جامع الترمذي', '( 51 ) ( 286 ) باب 589 575 حدثنا')).toBe('575');
     expect(numberIn('سنن النسائي', '4264 4265 / 2 - أخبرني')).toBe('4264');
   });
 

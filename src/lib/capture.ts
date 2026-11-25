@@ -20,8 +20,8 @@ const COLLECTIONS: Record<string, string> = {
   adab: 'الأدب المفرد',
 };
 
-const FIRST = /(\d+) \d+(?: \([^)]*\))? - /;
-const SECOND = /\d+ (\d+)(?: \([^)]*\))? - /;
+const FIRST = /(\d+) \d+(?: \([^)]*\))? (?:- )?\p{L}/u;
+const SECOND = /\d+ (\d+)(?: \([^)]*\))? (?:- )?\p{L}/u;
 const USUAL: Record<string, RegExp> = {
   'صحيح مسلم': FIRST,
   'سنن أبي داود': FIRST,
