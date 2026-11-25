@@ -1,5 +1,5 @@
 import { Data, Effect, Option, Schema } from 'effect';
-import { resultsLabel } from '../lib/arabic';
+import { resultsLabel, toArabicDigits } from '../lib/arabic';
 import {
   match,
   ranges,
@@ -56,17 +56,16 @@ export const fillRow = (
     const link = yield* element(item, 'a', HTMLAnchorElement);
     link.href = row.href;
     link.style.setProperty('--tone', row.color);
-    (yield* part(item, 'tile', HTMLElement)).dataset['searchTile'] = row.emblem;
+    item.dataset['searchSection'] = row.emblem;
+    item.classList.toggle('search-row--quran', row.quran === true);
     (yield* part(item, 'title', HTMLElement)).textContent = row.title;
     const words = yield* part(item, 'words', HTMLElement);
     words.textContent = row.words;
     if (row.also === undefined) delete words.dataset['also'];
     else words.dataset['also'] = row.also;
     (yield* part(item, 'where', HTMLElement)).textContent =
-      row.group === undefined ? row.heading : `${row.heading} · ${row.group}`;
-    const ruling = yield* part(item, 'ruling', HTMLElement);
-    if (row.ruling === undefined) ruling.remove();
-    else ruling.textContent = row.ruling;
+      row.group === undefined ? row.heading : `${row.heading}، ${row.group}`;
+    (yield* part(item, 'ruling', HTMLElement)).textContent = row.ruling ?? '';
     return item;
   });
 
@@ -128,6 +127,7 @@ const isBackForward = (): boolean => {
 
 type Entry = {
   readonly item: HTMLElement;
+  readonly section: string;
   readonly title: HTMLElement;
   readonly words: HTMLElement;
   readonly text: { readonly title: string; readonly words: string };
@@ -142,11 +142,32 @@ const entryOf = (item: HTMLElement): Effect.Effect<Entry, MissingElement> =>
     const text = { title: textOf(title), words: textOf(words) };
     return {
       item,
+      section: item.dataset['searchSection'] ?? '',
       title,
       words,
       text,
       row: rowOf({ ...text, also: words.dataset['also'], place: textOf(place) }),
     };
+  });
+
+type Head = {
+  readonly section: string;
+  readonly head: HTMLElement;
+  readonly count: HTMLElement;
+};
+
+const headOf = (template: Element): Effect.Effect<Head, MissingElement> =>
+  Effect.gen(function* () {
+    if (!(template instanceof HTMLTemplateElement)) {
+      return yield* new MissingElement({ message: 'the head of a section is not a template' });
+    }
+    const section = template.dataset['searchSectionHead'] ?? '';
+    const first = yield* element(template.content, '[data-search-head]', HTMLElement);
+    const head = first.cloneNode(true);
+    if (!(head instanceof HTMLElement)) {
+      return yield* new MissingElement({ message: 'the head of a section did not clone' });
+    }
+    return { section, head, count: yield* part(head, 'count', HTMLElement) };
   });
 
 export const mountSearch = (
@@ -168,13 +189,10 @@ export const mountSearch = (
     const entries = yield* Effect.forEach(items, entryOf);
     const rows = entries.map(({ row }) => row);
 
-    const draw = (item: HTMLElement) => {
-      const tile = lookup(item, '[data-search-tile]', HTMLElement);
-      if (Option.isNone(tile) || tile.value.firstChild !== null) return;
-      const name = tile.value.dataset['searchTile'] ?? '';
-      const art = lookup(root, `template[data-search-art="${name}"]`, HTMLTemplateElement);
-      if (Option.isSome(art)) tile.value.append(art.value.content.cloneNode(true));
-    };
+    const heads = yield* Effect.forEach(
+      [...root.querySelectorAll('template[data-search-section-head]')],
+      headOf
+    );
 
     const render = () => {
       const query = input.value;
@@ -193,9 +211,21 @@ export const mountSearch = (
       const shown = new Set(hits);
       for (const [index, { item }] of entries.entries()) item.hidden = !shown.has(index);
       const hitEntries = hits.flatMap((index) => entries.slice(index, index + 1));
-      list.append(...hitEntries.map(({ item }) => item));
-      for (const { item, title, words, text, row } of hitEntries) {
-        draw(item);
+      for (const { head } of heads) head.remove();
+      const firstHit = new Map<string, number>();
+      for (const [index, { section }] of hitEntries.entries()) {
+        if (!firstHit.has(section)) firstHit.set(section, index);
+      }
+      const order = (section: string) => firstHit.get(section) ?? hitEntries.length;
+      for (const { section, head, count } of heads.toSorted(
+        (a, b) => order(a.section) - order(b.section)
+      )) {
+        const group = hitEntries.filter((entry) => entry.section === section);
+        if (group.length === 0) continue;
+        count.textContent = toArabicDigits(group.length);
+        list.append(head, ...group.map(({ item }) => item));
+      }
+      for (const { title, words, text, row } of hitEntries) {
         paint(title, text.title, ranges(text.title, row.title, found.value.words));
         const marked = ranges(text.words, row.words, found.value.words);
         const { from, to } = windowOf(text.words, marked);
@@ -210,6 +240,18 @@ export const mountSearch = (
     input.addEventListener('input', render);
     input.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') input.blur();
+    });
+    root.addEventListener('keydown', (event) => {
+      if (list.hidden !== false || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
+      const stops: HTMLElement[] = [input];
+      for (const stop of list.querySelectorAll('[data-search-row]:not([hidden]) a')) {
+        if (stop instanceof HTMLElement) stops.push(stop);
+      }
+      const at = stops.findIndex((stop) => stop === document.activeElement);
+      const next = stops[at + (event.key === 'ArrowDown' ? 1 : -1)];
+      if (at === -1 || next === undefined) return;
+      event.preventDefault();
+      next.focus();
     });
     for (const word of root.querySelectorAll('[data-search-try]')) {
       word.addEventListener('click', () => {

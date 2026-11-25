@@ -4,15 +4,15 @@ import { Effect } from 'effect';
 import { searchIndex } from '../lib/collection';
 
 interface Props {
-  tone?: boolean | undefined;
+  stage?: boolean | undefined;
 }
 
-const { tone = false } = Astro.props;
+const { stage = false } = Astro.props;
 const { path } = await Effect.runPromise(searchIndex);
 ---
 
 <dialog
-  class:list={['search-sheet', tone && 'search-sheet--tone']}
+  class:list={['search-sheet', stage && 'search-sheet--stage']}
   aria-label="البحث"
   data-search-sheet
   data-search-index={path}

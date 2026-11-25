@@ -7,7 +7,7 @@
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A search field on every page finds a dhikr by its name or its words as you type, with or without diacritics, and finds the entries of «ما لم يثبت» with their rulings. It opens in place: on a phone the bar turns into the field, and on a wide screen the field in the bar grows into a panel. [/bahth/](https://wirdy.site/bahth/) holds the same search as a page. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
+Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A button copies a dhikr with its count, its moment, and its takhrij. A search icon in the bar of every page finds a dhikr by its name or its words as you type, with or without diacritics, and finds the entries of «ما لم يثبت» with their rulings. It opens over the page: on a phone it fills the screen, and on a wide screen it is a panel in the middle. [/bahth/](https://wirdy.site/bahth/) holds the same search as a page. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
 
 | Occasion             | Adhkar |
 | -------------------- | -----: |
@@ -46,7 +46,7 @@ bun run ci       # format, lint, types, tests, and the build test
 bun run verification  # which adhkar have a saved proof, and what the others lack
 ```
 
-Each dhikr that changes between the morning and the evening shows both forms: the form for now leads, and the other is muted and struck through. A dhikr for the other time is muted and struck through too. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning from 03:00 to 11:59, and the evening otherwise.
+Each dhikr that changes between the morning and the evening shows one form at a time, and a dhikr for the other time is hidden. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning before noon, and the evening otherwise.
 
 [`docs/README.md`](docs/README.md) is the index of the docs, and [`docs/development.md`](docs/development.md) has every command. [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) covers issues, pull requests, and keeping your email private. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents.
 

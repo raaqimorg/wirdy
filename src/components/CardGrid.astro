@@ -4,13 +4,13 @@ import type { Tile } from '../lib/collection';
 
 interface Props {
   tiles: ReadonlyArray<Tile>;
-  variant: 'featured' | 'compact' | 'browse';
+  variant: 'featured' | 'compact';
 }
 
 const { tiles, variant } = Astro.props;
 
 const ANIMATED = 3;
-const ANIMATED_WIDE = 5;
+const ANIMATED_WIDE = 6;
 
 const motionOf = (index: number) => {
   if (variant !== 'featured' || index >= ANIMATED_WIDE) return 'still';
@@ -18,7 +18,6 @@ const motionOf = (index: number) => {
 };
 const cardOf = (index: number) => {
   if (variant !== 'featured') return 'compact';
-  if (index === tiles.length - 1) return 'band';
   return index === 0 ? 'lead' : 'row';
 };
 ---

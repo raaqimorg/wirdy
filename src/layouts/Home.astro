@@ -1,14 +1,19 @@
 ---
 import Paper from './Paper.astro';
+import Bar from '../components/Bar.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import SiteHeader from '../components/SiteHeader.astro';
 import type { ComponentProps } from 'astro/types';
 
-type Props = ComponentProps<typeof Paper>;
+interface Props extends ComponentProps<typeof Paper> {
+  menu?: boolean | undefined;
+}
+
+const { menu = true, ...paper } = Astro.props;
 ---
 
-<Paper {...Astro.props}>
-  <SiteHeader />
+<Paper {...paper}>
+  <Bar menu={menu} />
+  <slot name="top" />
   <main class="container">
     <slot />
   </main>

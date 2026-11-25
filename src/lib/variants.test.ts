@@ -1,11 +1,6 @@
 import { Effect } from 'effect';
 import { describe, it, expect } from 'vitest';
-import {
-  formOf as formEffect,
-  pairWords,
-  parseVariants as variantsEffect,
-  type Form,
-} from './variants';
+import { formOf as formEffect, parseVariants as variantsEffect, type Form } from './variants';
 
 const parseVariants = (input: string) => Effect.runSync(variantsEffect(input));
 const formOf = (input: string, form: Form) => Effect.runSync(formEffect(input, form));
@@ -15,30 +10,6 @@ describe('formOf', () => {
     expect(formOf('{{أصبحنا|أمسينا}} لله', 'sabah')).toBe('أصبحنا لله');
     expect(formOf('{{أصبحنا|أمسينا}} لله', 'masaa')).toBe('أمسينا لله');
     expect(formOf('سبحان الله', 'masaa')).toBe('سبحان الله');
-  });
-});
-
-describe('pairWords', () => {
-  it('pairs a one-word marker with its other form', () => {
-    expect(pairWords('أَصْبَحْنَا', 'أَمْسَيْنَا')).toEqual([{ word: 'أَصْبَحْنَا', alt: 'أَمْسَيْنَا' }]);
-  });
-
-  it('pairs each word with its own other form', () => {
-    expect(pairWords('هَذَا الْيَوْمِ', 'هَذِهِ اللَّيْلَةِ')).toEqual([
-      { word: 'هَذَا', alt: 'هَذِهِ' },
-      { word: 'الْيَوْمِ', alt: 'اللَّيْلَةِ' },
-    ]);
-  });
-
-  it('shows a word once when both forms share it', () => {
-    expect(pairWords('رَبِّ أَسْأَلُكَ', 'رَبِّ أَعُوذُ')).toEqual([
-      { word: 'رَبِّ' },
-      { word: 'أَسْأَلُكَ', alt: 'أَعُوذُ' },
-    ]);
-  });
-
-  it('keeps forms of different lengths whole', () => {
-    expect(pairWords('أ ب', 'ج')).toEqual([{ word: 'أ ب', alt: 'ج' }]);
   });
 });
 

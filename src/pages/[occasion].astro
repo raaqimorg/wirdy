@@ -2,6 +2,7 @@
 import { Effect, Option } from 'effect';
 import Group from '../components/Group.astro';
 import GroupIndex from '../components/GroupIndex.astro';
+import PageTools from '../components/PageTools.astro';
 import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
 import Section from '../layouts/Section.astro';
@@ -14,7 +15,7 @@ export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
 }
 
-const { id, heading, color } = Astro.props.occasion;
+const { id, heading, color, lede } = Astro.props.occasion;
 const entries = await Effect.runPromise(adhkarOf(id));
 const runs = runsByGroup(entries);
 const groups = runs.flatMap(({ group }) => Option.toArray(group));
@@ -24,6 +25,8 @@ const hasQuran = entries.some(({ data }) => data.quran);
 const hasVariants = entries.some((entry) => entry.body?.includes('{{') === true);
 
 const label = adhkarLabel(entries.length);
+const labelAt = (time: 'sabah' | 'masaa') =>
+  adhkarLabel(entries.filter(({ data }) => data.mode === 'both' || data.mode === time).length);
 const description = `${heading}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
 ---
 
@@ -36,10 +39,15 @@ const description = `${heading}: ${label} مما ثبت عن النبي ﷺ، ب
   emblem={id}
   color={color}
   heading={heading}
-  lede={label}
+  kicker={hasVariants ? labelAt('sabah') : label}
+  eveningKicker={hasVariants ? labelAt('masaa') : undefined}
+  lede={lede}
+  turns={hasVariants}
 >
-  {hasVariants && <WirdSwitch slot="banner" />}
-  {hasIndex && <GroupIndex groups={groups} />}
+  <PageTools>
+    {hasVariants && <WirdSwitch />}
+    {hasIndex && <GroupIndex groups={groups} />}
+  </PageTools>
   {runs.map(({ group, items }) => (
     <Group title={Option.getOrUndefined(group)} entries={items} />
   ))}

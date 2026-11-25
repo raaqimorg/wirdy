@@ -10,7 +10,7 @@ The design follows [Laws of UX](https://lawsofux.com/). This doc says how the co
 - `src/styles/components/`: one file for each component, with the same name (`EntryList.astro` and `entry-list.css`).
 - `src/styles/index.css`: the imports, in order. A small component comes before one that uses it.
 - `src/lib/palette.ts`: the colors that TypeScript and the scripts need too. A test keeps it equal to the tokens.
-- `src/layouts/`: `Paper` (the document), `Home` (the home and 404 pages), and `Section` (every page with a color).
+- `src/layouts/`: `Paper` (the document), `Home` (the home, search, and 404 pages), and `Section` (every page with a color).
 
 ## Tokens
 
@@ -31,7 +31,7 @@ There are two type scales. `--text-title-1` to `--text-title-4` grow by a ratio 
 
 There are seven line heights. `tight` is for headings, `snug` for short lines, `body` for the page, `relaxed` for notes, `reading-small` and `reading` for the words of the adhkar, and `quran` for قرآن.
 
-IBM Plex Sans Arabic sits low in its line, so text in a row of fixed height is lifted by `--space-lift` under it, and an icon beside it is put back by `--drop`. The rule is the one iOS follows beside an Arabic label: the middle of the text's ink meets the middle of the icon, within a point. The name «وِردي» hangs lower than most words, with its kasra and the dots of its ي, so the header raises it by `--space-lift-brand` alone and leaves the mark where it is. Both values were measured on the ink, in Safari on an iPhone simulator.
+IBM Plex Sans Arabic sits low in its line, so text in a row of fixed height is lifted by `--space-lift` under it, and an icon beside it is put back by `--drop`. The rule is the one iOS follows beside an Arabic label: the middle of the text's ink meets the middle of the icon, within a point. The name «وِردي» hangs lower than most words, with its kasra and the dots of its ي, so the bar raises it by `--space-lift-brand` alone and leaves the mark where it is. Both values were measured on the ink, in Safari on an iPhone simulator.
 
 ## Color of an occasion
 
@@ -66,22 +66,26 @@ The dark values appear twice in `tokens.css`: once for a device in dark mode, an
 
 ## Components
 
-| Component                                                                                                             | What it is                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `Icon`, `Mark`, `Emblem`                                                                                              | Drawings. Their shapes are in `src/lib/`                                                                      |
-| `Button`, `Badge`, `BeadRing`                                                                                         | Small parts. A button without `href` is a `<button>`                                                          |
-| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                                | Controls and links with one job                                                                               |
-| `Entry`                                                                                                               | The card around a text: its count, lead, text, notes, and foot                                                |
-| `Dhikr`, `Unproven`                                                                                                   | What fills an `Entry`                                                                                         |
-| `Surah`, `Phrase`, `VariantText`, `WordForm`                                                                          | The text inside an `Entry`                                                                                    |
-| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                         | How entries sit on a page                                                                                     |
-| `OccasionCard`, `CardGrid`, `Related`                                                                                 | The cards of the occasions                                                                                    |
-| `Search`, `SearchField`, `SearchRow`, `SearchSheet`, `SearchTrigger`                                                  | Search: its field, results, and empty state, the sheet that holds it over a page, and the fields that open it |
-| `SiteHeader`, `Bar`, `SectionMenu`, `Banner`, `Hero`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                                           |
+| Component                                                                                                            | What it is                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `Icon`, `Mark`, `Emblem`                                                                                             | Drawings. Their shapes are in `src/lib/`                                                                                |
+| `Button`, `Badge`, `BeadRing`                                                                                        | Small parts. A button without `href` is a `<button>`                                                                    |
+| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                               | Controls and links with one job                                                                                         |
+| `Entry`                                                                                                              | The card around a text: its count, lead, text, notes, and foot                                                          |
+| `Dhikr`, `Unproven`                                                                                                  | What fills an `Entry`                                                                                                   |
+| `Surah`, `Phrase`, `VariantText`                                                                                     | The text inside an `Entry`                                                                                              |
+| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                        | How entries sit on a page                                                                                               |
+| `OccasionCard`, `CardGrid`, `Related`                                                                                | The cards of the occasions                                                                                              |
+| `Search`, `SearchField`, `SearchHead`, `SearchRow`, `SearchSheet`                                                    | Search: its field, its results under the head of each section, its empty state, and the sheet that holds it over a page |
+| `Bar`, `SectionMenu`, `Banner`, `Hero`, `PageTools`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                                                     |
 
 The foot of an `Entry` is a list of labelled rows, in the same order on every card: «الفضل» when the hadith states a virtue, «تنبيه» on «ما لم يثبت» when there is a note on what is sound, «التخريج», and «النص» (موقع تنزيل) under every قرآن. The labels sit in one column, so the values line up from card to card. Under the rows, «نسخ» and «صفحة الذكر» sit at the two ends of their own line. On a wide screen the foot is the side column of the card, and the buttons sit at its bottom.
 
-The bar of a section page has the same three places on a phone: the way back, «الأقسام» (the title once the page scrolls), and search. On a wide screen it reads as a path: the sunflower and «وِردي» lead home, then the section, as a capsule that opens the menu of the sections, and the search field sits at the other end. The menu lines up with the start of the page, under the sunflower.
+There is one bar, with the same places on every page and at every width: the sunflower and «وِردي» lead home at the start, and the icons of the sections and of search are at the end. The home page leaves out the sections, because it shows them. The bar is a solid color: the paper, or the color of the section, with the mark and the icons in eggshell. The menu of the sections does not dim the page behind it.
+
+The top of a page has one height at each width, `--size-banner` and `--size-banner-wide`. It holds a short line (the count, or the section of a dhikr as the way back to its place), the title, and one line that describes the page. A title of more than 24 letters takes a smaller size. The line of a section is `lede` in `src/lib/occasions.ts`. The line of a dhikr is its `context`, or its `group`, and its count when it is more than one. It never states a virtue or a ruling. The home page has one sentence in place of them, at the same height.
+
+The cards of the sections are rows on a phone, under a large first card. On a wide screen they sit in four columns, and in each row one card is two columns wide: the first, then the last, then the middle.
 
 ## Breakpoints
 

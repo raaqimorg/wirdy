@@ -43,9 +43,10 @@ The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "A
 - Respond on the first frame. Never use an ease-in or an ease-in-out, which start slowly.
 - Grow a shape from 60%, not from nothing. This is Apple's Replace for SF Symbols.
 - Move only what is lit. An emblem fades in as a whole, and its dark shapes stay still. After 180 ms its lit shapes enter, each in its own way (`enter` in `src/lib/emblems.ts`).
-- Animate nothing out of sight. On the home page only the first 3 cards animate, or the first 5 on a wide screen. The «بقية الأقسام» cards do not animate.
+- Animate nothing out of sight. On the home page only the first 3 cards animate, or the first 6 on a wide screen. The «بقية الأقسام» cards do not animate.
 - On hover the card's color brightens and the card grows 2%, as on Laws of UX. A press shrinks the card to 97% at once, on iPhones too (see [`exceptions.md`](exceptions.md)).
 - A press on any other link or button dims it to 60% at once, with no transition.
+- The sun of the morning and the evening turns half a circle when the form changes, so its lit half is above in the morning and below in the evening. With reduced motion it changes at once.
 - The menu of the sections grows from the bar, from 94% to full size, as it fades in. With reduced motion it appears at once.
 - With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the color still brightens, so the pointer gets an answer.
 - A page fades into the next one in 200 ms, with nothing moving, so no element has a `view-transition-name`. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.

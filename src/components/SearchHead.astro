@@ -1,0 +1,16 @@
+---
+interface Props {
+  heading: string;
+  color: string;
+}
+
+const { heading, color } = Astro.props;
+---
+
+<li class="search-head tone" style={`--tone: ${color}`} data-search-head>
+  <span class="search-head__tile">
+    <slot />
+  </span>
+  <span class="search-head__name">{heading}</span>
+  <span class="search-head__count" data-search-count></span>
+</li>

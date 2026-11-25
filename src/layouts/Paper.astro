@@ -139,7 +139,7 @@ const structuredData = {
         const root = document.documentElement;
         function period() {
           const hour = new Date().getHours();
-          return hour >= 3 && hour < 12 ? 's' : 'm';
+          return hour < 12 ? 's' : 'm';
         }
         function kept() {
           try {
@@ -282,6 +282,6 @@ const structuredData = {
   </head>
   <body class={tone && 'tone'} style={tone && `--tone: ${tone}`}>
     <slot />
-    {search && <SearchSheet tone={Boolean(tone)} />}
+    {search && <SearchSheet stage={Boolean(tone)} />}
   </body>
 </html>

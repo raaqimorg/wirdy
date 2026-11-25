@@ -37,41 +37,11 @@ const textOf = (html: string) =>
 const leadOf = (html: string) => textOf(html.match(/<p class="entry__lead">([\s\S]*?)<\/p>/u)![1]!);
 
 describe('Dhikr', () => {
-  it('renders each form with the other form struck after it', async () => {
+  it('renders each form whole, and never the other form beside it', async () => {
     const html = await render(base, '{{أَصْبَحْنَا|أَمْسَيْنَا}} بِكَ');
     expect(html).toContain(
-      '<span class="variant-text variant-text--sabah"><span>أَصْبَحْنَا\u00A0<span class="word-form__other" aria-hidden="true">أَمْسَيْنَا</span></span></span>'
+      '<span class="variant-text variant-text--sabah">أَصْبَحْنَا</span><span class="variant-text variant-text--masaa">أَمْسَيْنَا</span> بِكَ'
     );
-    expect(html).toContain(
-      '<span class="variant-text variant-text--masaa"><span>أَمْسَيْنَا\u00A0<span class="word-form__other" aria-hidden="true">أَصْبَحْنَا</span></span></span>'
-    );
-  });
-
-  it('keeps the two variant spans adjacent with no stray whitespace', async () => {
-    const html = await render(base, '{{أ|ب}}');
-    expect(html).toMatch(
-      /<\/span><\/span><\/span><span class="variant-text variant-text--masaa">/u
-    );
-  });
-
-  it('strikes each word that differs, right after its own word', async () => {
-    const html = await render(base, '{{هَذَا الْيَوْمِ|هَذِهِ اللَّيْلَةِ}}');
-    const morning =
-      html.match(
-        /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/u
-      )?.[1] ?? '';
-    expect(morning.replaceAll(/<[^>]+>/gu, '')).toBe('هَذَا\u00A0هَذِهِ الْيَوْمِ\u00A0اللَّيْلَةِ');
-    expect(morning.match(/class="word-form__other"/gu)).toHaveLength(2);
-  });
-
-  it('shows a word that both forms share once, with nothing struck', async () => {
-    const html = await render(base, '{{رَبِّ أَسْأَلُكَ|رَبِّ أَعُوذُ}}');
-    const morning =
-      html.match(
-        /<span class="variant-text variant-text--sabah">([\s\S]*?)<\/span><span class="variant-text variant-text--masaa">/u
-      )?.[1] ?? '';
-    expect(morning.match(/رَبِّ/gu)).toHaveLength(1);
-    expect(morning.match(/class="word-form__other"/gu)).toHaveLength(1);
   });
 
   it('suppresses the badge when the count is one', async () => {
@@ -300,7 +270,7 @@ describe('Dhikr', () => {
 
   it('carries its id, copies itself, and opens its own page', async () => {
     const html = await render(base, 'سبحان الله');
-    expect(html).toContain('<li class="entry entry--split" id="sayyid-al-istighfar">');
+    expect(html).toContain('<li class="entry" id="sayyid-al-istighfar">');
     expect(html).toMatch(
       /<button class="entry__act" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">[\s\S]*?<span class="entry__act-label">نسخ<\/span>/u
     );

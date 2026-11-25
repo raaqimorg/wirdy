@@ -4,7 +4,7 @@ import type { Tile } from '../lib/collection';
 
 interface Props {
   tile: Tile;
-  variant: 'lead' | 'row' | 'band' | 'compact';
+  variant: 'lead' | 'row' | 'compact';
   motion: 'always' | 'wide-only' | 'still';
 }
 
@@ -12,15 +12,7 @@ const { tile, variant, motion } = Astro.props;
 const { id, heading, color, note, href } = tile;
 ---
 
-<a
-  class:list={[
-    'occasion-card',
-    variant === 'band' ? 'occasion-card--row occasion-card--band' : `occasion-card--${variant}`,
-    'tone',
-  ]}
-  href={href}
-  style={`--tone: ${color}`}
->
+<a class={`occasion-card occasion-card--${variant} tone`} href={href} style={`--tone: ${color}`}>
   <span class="occasion-card__stage">
     <Emblem name={id} motion={motion} class="occasion-card__emblem" />
   </span>

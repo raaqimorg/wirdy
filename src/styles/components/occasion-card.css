@@ -12,7 +12,7 @@
 .occasion-card__stage {
   position: relative;
   display: block;
-  aspect-ratio: 3 / 2;
+  height: var(--size-stage);
   overflow: hidden;
   background: var(--tone-fill);
 }
@@ -71,6 +71,7 @@
 
 @media (max-width: 40rem) {
   .occasion-card--lead .occasion-card__stage {
+    height: auto;
     aspect-ratio: 2 / 1;
   }
 
@@ -83,15 +84,15 @@
   .occasion-card--row .occasion-card__stage {
     flex: none;
     width: min(var(--size-thumb), var(--size-thumb-fluid));
+    height: auto;
     min-height: var(--size-thumb);
-    aspect-ratio: auto;
   }
 
   .occasion-card--compact .occasion-card__stage {
     flex: none;
     width: min(var(--size-thumb-small), var(--size-thumb-fluid));
+    height: auto;
     min-height: var(--size-thumb-small);
-    aspect-ratio: auto;
   }
 
   .occasion-card--row .occasion-card__body,
@@ -102,18 +103,12 @@
 }
 
 @media (min-width: 64rem) {
-  .occasion-card--lead .occasion-card__stage {
-    flex: 1;
-    aspect-ratio: auto;
-  }
-
-  .occasion-card--band .occasion-card__stage {
-    aspect-ratio: 5 / 1;
+  .occasion-card__stage {
+    height: var(--size-stage-wide);
   }
 
   .occasion-card--compact .occasion-card__stage {
     height: calc((100cqi - 3 * var(--space-5)) / 6);
-    aspect-ratio: auto;
   }
 
   .occasion-card--compact .occasion-card__title {

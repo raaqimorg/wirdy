@@ -89,6 +89,7 @@ const adhkarRow = (
       color,
       emblem,
       ...(data.group !== undefined && { group: data.group }),
+      ...(data.quran && { quran: true }),
       href: dhikrAnchor(data.occasion, slugOf(id)),
     };
   });

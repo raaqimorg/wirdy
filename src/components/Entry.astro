@@ -12,7 +12,7 @@ interface Props {
   how?: string | undefined;
   fadl?: string | undefined;
   sound?: boolean | undefined;
-  layout: 'split' | 'single';
+  single?: boolean | undefined;
   nested?: boolean | undefined;
   kind?: 'quran' | 'unproven' | undefined;
   time?: 'sabah' | 'masaa' | undefined;
@@ -27,7 +27,7 @@ const {
   how,
   fadl,
   sound,
-  layout,
+  single,
   nested,
   kind,
   time,
@@ -37,7 +37,7 @@ const {
 <li
   class:list={[
     'entry',
-    `entry--${layout}`,
+    single && 'entry--single',
     nested && 'entry--nested',
     kind && `entry--${kind}`,
     time && `entry--${time}`,

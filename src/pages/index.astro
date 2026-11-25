@@ -2,7 +2,6 @@
 import { Effect } from 'effect';
 import CardGrid from '../components/CardGrid.astro';
 import Hero from '../components/Hero.astro';
-import SearchTrigger from '../components/SearchTrigger.astro';
 import Home from '../layouts/Home.astro';
 import { sectionTiles } from '../lib/collection';
 import { SITE } from '../lib/site';
@@ -10,10 +9,9 @@ import { SITE } from '../lib/site';
 const tiles = await Effect.runPromise(sectionTiles);
 ---
 
-<Home title="أذكار اليوم والليلة" description={SITE.description}>
+<Home title="أذكار اليوم والليلة" description={SITE.description} menu={false}>
   <Hero>
     أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salawat">ﷺ</span>، ومع كل ذكر تخريجُه
   </Hero>
-  <SearchTrigger variant="hero" />
   <CardGrid tiles={tiles} variant="featured" />
 </Home>

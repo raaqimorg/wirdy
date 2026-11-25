@@ -5,25 +5,26 @@ interface Props {
   row: SearchRow;
 }
 
-const { title, words, also, heading, color, emblem, group, ruling, href } = Astro.props.row;
+const { title, words, also, heading, color, emblem, group, ruling, quran, href } = Astro.props.row;
 ---
 
-<li class="search-row" data-search-row>
+<li
+  class:list={['search-row', quran && 'search-row--quran']}
+  data-search-row
+  data-search-section={emblem}
+>
   <a class="search-row__link tone" href={href} style={`--tone: ${color}`}>
-    <span class="search-row__tile" data-search-tile={emblem}></span>
     <span class="search-row__title" data-search-title>
       {title}
     </span>
+    <span class="search-row__place" data-search-place>
+      <span class="visually-hidden" data-search-where>
+        {group ? `${heading}، ${group}` : heading}
+      </span>
+      <span data-search-ruling>{ruling}</span>
+    </span>
     <span class="search-row__words" data-search-words data-also={also}>
       {words}
-    </span>
-    <span class="search-row__place" data-search-place>
-      <span data-search-where>{group ? `${heading} · ${group}` : heading}</span>
-      {ruling && (
-        <span class="search-row__ruling" data-search-ruling>
-          {ruling}
-        </span>
-      )}
     </span>
   </a>
 </li>

@@ -10,6 +10,7 @@ export const searchRowSchema = Schema.Struct({
   emblem: Schema.Literals([...OCCASION_IDS, 'unproven']),
   group: Schema.optionalKey(Schema.String),
   ruling: Schema.optionalKey(Schema.String),
+  quran: Schema.optionalKey(Schema.Boolean),
   href: Schema.String,
 });
 

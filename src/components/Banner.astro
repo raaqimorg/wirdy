@@ -1,35 +1,64 @@
 ---
 import Emblem from './Emblem.astro';
+import Icon from './Icon.astro';
 import type { EmblemName } from '../lib/emblems';
 
 interface Props {
-  emblem: EmblemName;
   title: string;
-  context?: string | undefined;
-  lede?: string | undefined;
-  single?: boolean | undefined;
+  evening?: string | undefined;
+  lede: string;
+  kicker?: string | undefined;
+  eveningKicker?: string | undefined;
+  up?: { href: string; label: string } | undefined;
+  emblem?: EmblemName | undefined;
+  turns?: boolean | undefined;
 }
 
-const { emblem, title, context, lede, single = false } = Astro.props;
+const { title, evening, lede, kicker, eveningKicker, up, emblem, turns = false } = Astro.props;
+const long = title.length > 24;
 ---
 
-<header class:list={['banner', single && 'banner--single']}>
-  <div class="banner__inner">
+<header
+  class:list={[
+    'banner',
+    emblem ? 'banner--stage' : 'banner--plain',
+    long && 'banner--long',
+    turns && 'banner--turns',
+  ]}
+>
+  <div class="banner__inner container">
     <div class="banner__words">
-      <h1 class="banner__title">
-        {title}
-        {context && (
+      <p class="banner__kicker">
+        {up ? (
+          <a class="banner__up" href={up.href}>
+            <Icon name="back" />
+            <span class="banner__up-label">{up.label}</span>
+          </a>
+        ) : eveningKicker ? (
           <Fragment>
-            {' '}
-            <span class="banner__context">{context}</span>
+            <span class="variant-text variant-text--sabah">{kicker}</span>
+            <span class="variant-text variant-text--masaa">{eveningKicker}</span>
           </Fragment>
+        ) : (
+          kicker
+        )}
+      </p>
+      <h1 class="banner__title">
+        {evening ? (
+          <Fragment>
+            <span class="variant-text variant-text--sabah">{title}</span>
+            <span class="variant-text variant-text--masaa">{evening}</span>
+          </Fragment>
+        ) : (
+          title
         )}
       </h1>
-      {lede && <p class="banner__lede">{lede}</p>}
-      <slot />
+      <p class="banner__lede">{lede}</p>
     </div>
-    <div class="banner__graphic">
-      <Emblem name={emblem} />
-    </div>
+    {emblem && (
+      <div class="banner__graphic">
+        <Emblem name={emblem} />
+      </div>
+    )}
   </div>
 </header>

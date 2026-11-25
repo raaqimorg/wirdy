@@ -10,21 +10,41 @@ interface Props extends ComponentProps<typeof Paper> {
   emblem: EmblemName;
   color: string;
   heading: string;
-  context?: string | undefined;
-  lede?: string | undefined;
-  back?: { href: string; label: string } | undefined;
-  single?: boolean | undefined;
+  evening?: string | undefined;
+  lede: string;
+  kicker?: string | undefined;
+  eveningKicker?: string | undefined;
+  up?: { href: string; label: string } | undefined;
+  turns?: boolean | undefined;
 }
 
-const { emblem, color, heading, context, lede, back, single = false, ...paper } = Astro.props;
+const {
+  emblem,
+  color,
+  heading,
+  evening,
+  lede,
+  kicker,
+  eveningKicker,
+  up,
+  turns = false,
+  ...paper
+} = Astro.props;
 ---
 
 <Paper {...paper} tone={color}>
   <div class="page">
-    <Bar heading={single ? undefined : heading} back={back} />
-    <Banner emblem={emblem} title={heading} context={context} lede={lede} single={single}>
-      <slot name="banner" />
-    </Banner>
+    <Bar stage />
+    <Banner
+      title={heading}
+      evening={evening}
+      lede={lede}
+      kicker={kicker}
+      eveningKicker={eveningKicker}
+      up={up}
+      emblem={emblem}
+      turns={turns}
+    />
     <main class="container">
       <slot />
     </main>

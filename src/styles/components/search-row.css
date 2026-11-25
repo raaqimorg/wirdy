@@ -1,70 +1,67 @@
 .search-row {
   position: relative;
+  background: var(--color-panel);
 }
 
-.search-row:not([hidden]) ~ .search-row::before {
+:not(.search-row) + .search-row {
+  border-start-start-radius: var(--radius-card);
+  border-start-end-radius: var(--radius-card);
+}
+
+.search-row:has(+ :not(.search-row)),
+.search-row:last-child {
+  border-end-start-radius: var(--radius-card);
+  border-end-end-radius: var(--radius-card);
+}
+
+.search-row:not([hidden]) + .search-row::before {
   content: "";
   position: absolute;
   top: 0;
-  inset-inline: calc(var(--space-3-5) + var(--size-tile) + var(--space-3)) 0;
+  inset-inline: var(--space-4) 0;
   border-top: var(--border-hairline) solid var(--color-line-soft);
 }
 
 .search-row__link {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: var(--space-3);
-  padding: var(--space-3) var(--space-3-5) var(--space-2-5);
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-4);
+  align-content: center;
+  align-items: baseline;
+  min-height: var(--size-row);
+  padding: var(--space-2) var(--space-4);
+  border-radius: inherit;
   text-decoration: none;
 }
 
-.search-row__tile {
-  display: grid;
-  grid-row: 1 / span 3;
-  place-items: center;
-  width: var(--size-tile);
-  height: var(--size-tile);
-  margin-top: var(--space-0-5);
-  overflow: hidden;
-  background: var(--tone-fill);
-  border-radius: var(--radius-tile);
-}
-
-.search-row__tile svg {
-  width: 72%;
-  height: 72%;
+.search-row__link:focus-visible {
+  outline-offset: var(--ring-inset);
 }
 
 .search-row__title {
-  font-size: var(--text-note);
-  font-weight: var(--weight-bold);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
 }
 
+.search-row__place {
+  color: var(--color-ink-faint);
+  font-size: var(--text-small);
+}
+
 .search-row__words {
+  grid-column: 1 / -1;
   overflow: hidden;
   color: var(--color-ink-muted);
   font-family: var(--font-naskh);
-  font-size: var(--text-reading-1);
+  font-size: var(--text-body);
   line-height: var(--leading-reading-small);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.search-row__place {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--tone-text);
-  font-size: var(--text-small);
-  font-weight: var(--weight-medium);
-}
-
-.search-row__ruling {
-  padding: 0 var(--space-2) var(--space-lift);
-  color: var(--color-eggshell);
-  background: var(--tone-fill);
-  border-radius: var(--radius-pill);
+.search-row--quran .search-row__words {
+  display: none;
 }
 
 .search-row mark {

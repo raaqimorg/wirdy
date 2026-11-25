@@ -1,5 +1,4 @@
 ---
-import WordForm from './WordForm.astro';
 import { Effect } from 'effect';
 import { parseVariants } from '../lib/variants';
 
@@ -16,12 +15,8 @@ const segments = Effect.runSync(parseVariants(text));
     segment.value
   ) : (
     <Fragment>
-      <span class="variant-text variant-text--sabah">
-        <WordForm now={segment.sabah} other={segment.masaa} />
-      </span>
-      <span class="variant-text variant-text--masaa">
-        <WordForm now={segment.masaa} other={segment.sabah} />
-      </span>
+      <span class="variant-text variant-text--sabah">{segment.sabah}</span>
+      <span class="variant-text variant-text--masaa">{segment.masaa}</span>
     </Fragment>
   )
 )}

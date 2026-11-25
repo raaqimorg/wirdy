@@ -1,15 +1,20 @@
 .hero {
-  max-width: var(--size-hero);
-  margin-block: var(--space-10);
+  display: grid;
+  align-items: center;
+  height: var(--size-banner);
   font-size: var(--text-title-2);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
+}
+
+.hero__words {
+  max-width: var(--size-hero);
   text-wrap: balance;
 }
 
 @media (min-width: 64rem) {
   .hero {
-    margin-block: var(--space-18) var(--space-14);
+    height: var(--size-banner-wide);
     font-size: var(--text-title-3);
   }
 }

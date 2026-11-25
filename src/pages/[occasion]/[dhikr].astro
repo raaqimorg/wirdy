@@ -1,18 +1,20 @@
 ---
-import { Effect } from 'effect';
+import { Effect, Option } from 'effect';
 import Dhikr from '../../components/Dhikr.astro';
 import DhikrActions from '../../components/DhikrActions.astro';
 import EntryList from '../../components/EntryList.astro';
 import Neighbours from '../../components/Neighbours.astro';
+import PageTools from '../../components/PageTools.astro';
 import WirdSwitch from '../../components/WirdSwitch.astro';
 import Section from '../../layouts/Section.astro';
+import { timesLabel } from '../../lib/arabic';
 import { cardFile, cardOf } from '../../lib/card';
 import { copyOf } from '../../lib/copy';
 import { adhkarOf } from '../../lib/collection';
 import { OCCASIONS, sectionOf } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
 import { phrasesLabel } from '../../lib/phrases';
-import { fullTitle } from '../../lib/title';
+import { eveningTitle, fullTitle } from '../../lib/title';
 
 export async function getStaticPaths() {
   const lists = await Effect.runPromise(Effect.forEach(OCCASIONS, ({ id }) => adhkarOf(id)));
@@ -31,8 +33,13 @@ const slug = slugOf(entry.id);
 const path = dhikrPath(data.occasion, slug);
 const card = Effect.runSync(cardOf(data, body));
 const image = `/${cardFile(card, data.occasion, slug)}`;
-const back = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
+const up = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
 const title = fullTitle(data);
+const times = data.count > 1 ? timesLabel(data.count) : undefined;
+const lede = [data.context, times, data.context === undefined ? data.group : undefined]
+  .filter((part) => part !== undefined)
+  .join(' · ');
+const evening = Effect.runSync(eveningTitle(data.title, body));
 
 const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
 const description = [card.lead, count, data.fadl, card.takhrij]
@@ -67,11 +74,16 @@ const links = [
   emblem={occasion.id}
   color={occasion.color}
   heading={data.title}
-  context={data.context}
-  back={back}
-  single
+  evening={Option.getOrUndefined(evening)}
+  lede={lede}
+  up={up}
+  turns={card.evening !== null}
 >
-  {card.evening !== null && <WirdSwitch slot="banner" />}
+  {card.evening !== null && (
+    <PageTools>
+      <WirdSwitch />
+    </PageTools>
+  )}
   <EntryList variant="single">
     <Dhikr data={data} body={body} slug={slug} single />
   </EntryList>

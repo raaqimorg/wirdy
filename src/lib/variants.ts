@@ -51,14 +51,3 @@ export const textFormsOf = (input: string): Effect.Effect<ReadonlyArray<string>,
   Effect.map(Effect.all([formOf(input, 'sabah'), formOf(input, 'masaa')]), Array.dedupe);
 
 export const hasVariants = (input: string): boolean => input.includes('{{');
-
-export type Word = { readonly word: string; readonly alt?: string };
-
-export function pairWords(now: string, other: string): ReadonlyArray<Word> {
-  const mine = now.split(' ');
-  const theirs = other.split(' ');
-  if (mine.length !== theirs.length) return [{ word: now, alt: other }];
-  return Array.map(Array.zip(mine, theirs), ([word, alt]) =>
-    alt === word ? { word } : { word, alt }
-  );
-}

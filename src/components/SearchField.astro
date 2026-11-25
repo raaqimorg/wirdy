@@ -29,10 +29,8 @@ const { variant = 'page' } = Astro.props;
     </button>
   </label>
   {variant === 'bar' && (
-    <button class="search-field__close" type="button" aria-label="إغلاق" data-search-close>
-      <span class="search-field__close-face">
-        <Icon name="close" />
-      </span>
+    <button class="search-field__close" type="button" data-search-close>
+      إلغاء
     </button>
   )}
 </div>

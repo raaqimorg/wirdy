@@ -1,5 +1,6 @@
 ---
 import { Effect } from 'effect';
+import Banner from '../components/Banner.astro';
 import Search from '../components/Search.astro';
 import Home from '../layouts/Home.astro';
 import { searchRows, sectionTiles } from '../lib/collection';
@@ -7,6 +8,12 @@ import { SITE } from '../lib/site';
 ---
 
 <Home title="البحث" description={SITE.description} noindex faces={['naskh']} search={false}>
+  <Banner
+    slot="top"
+    title="البحث"
+    kicker="كل الأذكار"
+    lede="اكتب كلمة من الذكر أو من اسمه، بلا تشكيل"
+  />
   <Search
     tiles={await Effect.runPromise(sectionTiles)}
     rows={await Effect.runPromise(searchRows)}

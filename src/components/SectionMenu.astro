@@ -1,15 +1,9 @@
 ---
 import Emblem from './Emblem.astro';
 import Icon from './Icon.astro';
-import Mark from './Mark.astro';
 import { Effect } from 'effect';
 import { sectionTiles } from '../lib/collection';
 
-interface Props {
-  heading: string;
-}
-
-const { heading } = Astro.props;
 const tiles = await Effect.runPromise(sectionTiles);
 const here = Astro.url.pathname;
 const groups = [
@@ -19,36 +13,15 @@ const groups = [
 ---
 
 <div class="section-menu">
-  <button
-    class="section-menu__button"
-    type="button"
-    popovertarget="sections"
-    aria-label={`الأقسام، ${heading}`}
-  >
-    <span class="section-menu__state section-menu__state--top">
-      <span class="section-menu__words">الأقسام</span>
-      <Icon name="chevron" />
-    </span>
-    <span class="section-menu__state section-menu__state--title">
-      <span class="section-menu__words">{heading}</span>
-      <Icon name="chevron" />
-    </span>
+  <button class="section-menu__button" type="button" popovertarget="sections" aria-label="الأقسام">
+    <Icon name="sections" />
   </button>
   <div class="section-menu__panel" id="sections" popover>
     <ul>
-      <li class="section-menu__group">
-        <a class="section-menu__link" href="/">
-          <span class="section-menu__tile section-menu__tile--home">
-            <Mark />
-          </span>
-          <span class="section-menu__label">الرئيسية</span>
-          <Icon name="open" class="section-menu__go" />
-        </a>
-      </li>
       {groups.map((group) => (
         <li class="section-menu__group">
           <ul>
-            {group.map(({ id, heading: name, color, note, href }) => (
+            {group.map(({ id, heading, color, href }) => (
               <li>
                 <a
                   class="section-menu__link tone"
@@ -59,12 +32,8 @@ const groups = [
                   <span class="section-menu__tile">
                     <Emblem name={id} motion="still" />
                   </span>
-                  <span class="section-menu__label">{name}</span>
-                  {href === here ? (
-                    <Icon name="check" class="section-menu__check" />
-                  ) : (
-                    id !== 'unproven' && <span class="section-menu__count">{note}</span>
-                  )}
+                  <span class="section-menu__label">{heading}</span>
+                  {href === here && <Icon name="check" class="section-menu__check" />}
                 </a>
               </li>
             ))}

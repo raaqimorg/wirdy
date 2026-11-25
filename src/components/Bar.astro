@@ -1,52 +1,34 @@
 ---
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
-import SearchTrigger from './SearchTrigger.astro';
 import SectionMenu from './SectionMenu.astro';
 import { SITE } from '../lib/site';
 
 interface Props {
-  heading?: string | undefined;
-  back?: { href: string; label: string } | undefined;
+  menu?: boolean | undefined;
+  stage?: boolean | undefined;
 }
 
-const { heading, back } = Astro.props;
-const home = `${SITE.name}، الرئيسية`;
-const up = back ?? { href: '/', label: home };
+const { menu = true, stage = false } = Astro.props;
+const label = 'ابحث في الأذكار';
+const here = Astro.url.pathname === '/bahth/';
 ---
 
-<nav class="bar" aria-label="التنقّل">
-  <a class="bar__back" href={up.href} aria-label={up.label}>
-    <span class="bar__face">
-      <Icon name="back" />
-    </span>
-  </a>
-  <span class="bar__trail">
-    <a class="bar__brand" href="/" aria-label={home}>
-      <Mark inks="stage" />
+<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقّل">
+  <div class="bar__inner container">
+    <a class="bar__brand" href="/" aria-label={`${SITE.name}، الرئيسية`}>
+      <Mark inks={stage ? 'stage' : 'own'} />
       <span class="bar__name">{SITE.name}</span>
     </a>
-    <Icon name="open" class="bar__sep" />
-    {back && (
-      <a class="bar__crumb" href={back.href}>
-        {back.label}
-      </a>
-    )}
-  </span>
-  {heading && (
-    <Fragment>
-      <SectionMenu heading={heading} />
-      <span class="bar__title" aria-hidden="true">
-        {heading}
-      </span>
-    </Fragment>
-  )}
-  <span class="bar__end">
-    <span class="bar__narrow">
-      <SearchTrigger variant="round" />
-    </span>
-    <span class="bar__wide">
-      <SearchTrigger variant="field" />
-    </span>
-  </span>
+    {menu && <SectionMenu />}
+    <a
+      class="bar__search"
+      href="/bahth/"
+      aria-label={label}
+      aria-current={here ? 'page' : undefined}
+      data-search-open
+    >
+      <Icon name="search" />
+    </a>
+  </div>
 </nav>
