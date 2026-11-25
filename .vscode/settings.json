@@ -21,10 +21,21 @@
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "package.json": "bun.lock, tsconfig.json, astro.config.mjs, vitest*.config.ts, wrangler.toml, .oxlintrc.json, .oxfmtrc.json",
-    "README.md": "LICENSE",
+    "package.json": "bun.lock, tsconfig.json, astro.config.mjs, vitest*.config.ts, wrangler.toml, .oxlintrc.json, .oxfmtrc.json, .prettierrc.json, .stylelintrc.json",
+    "README.md": "LICENSE, NOTICE",
     "AGENTS.md": "CLAUDE.md, GEMINI.md",
-    ".gitignore": ".ignore"
+    ".gitignore": ".ignore",
+    "*.ts": "${capture}.test.ts",
+    "*.astro": "${capture}.test.ts",
+    "*.mjs": "${capture}.test.ts",
+    "*.sh": "${capture}.test.ts",
+    "*.md": "${capture}.html, ${capture}-plan.md",
+    "schema.ts": "content.test.ts",
+    "records.ts": "proofs.test.ts",
+    "permalink.ts": "permalinks.json",
+    "index.css": "fonts.css, tokens.css, base.css, utilities.css, styles.test.ts",
+    "favicon.svg": "favicon.ico, favicon-32x32.png, apple-touch-icon.png, icon-192.png, icon-512.png",
+    "opengraph.png": "opengraph-*.png"
   },
   "npm.packageManager": "bun"
 }
