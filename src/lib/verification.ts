@@ -102,6 +102,22 @@ function sourceProblems(data: Dhikr, body: string, proof: Proof): string[] {
   return [...missing, ...uncovered];
 }
 
+function strangerProblems(data: Dhikr, proof: Proof): string[] {
+  const sites = ['shamela', 'hdith', 'sunnah'] as const;
+  const commanded = proof.differences.some(({ reason }) => reason === 'commanded');
+  if (!data.quran && !commanded) return [];
+
+  const held = new Set(
+    Object.entries(proof.claims)
+      .filter(([claim]) => claim !== 'text')
+      .flatMap(([, claim]) => claim?.spans ?? [])
+      .map((span) => sourceAt(proof, span.source)?.site)
+  );
+  return sites
+    .filter((site) => has(proof, site) && !held.has(site))
+    .map((site) => `${site}: no page holds the words of its hadith`);
+}
+
 function lookupProblems(data: Dhikr, body: string, proof: Proof): string[] {
   const sites = ['hdith', 'sunnah'] as const;
   const problems = sites
@@ -205,6 +221,7 @@ export function statusOf(data: Dhikr, body: string, proof?: Proof): Status {
 
   const broken = [
     ...sourceProblems(data, text, proof),
+    ...strangerProblems(data, proof),
     ...lookupProblems(data, text, proof),
     ...claimProblems(data, proof, cited),
     ...differenceProblems(text, proof),

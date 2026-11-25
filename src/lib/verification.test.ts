@@ -337,6 +337,19 @@ describe('a Quran text', () => {
     );
   });
 
+  it('is unproven when a page holds no words of the moment, the count, or the manner', () => {
+    const proof = proofOf(data, BODY, [...hadith, tanzil]);
+    const elsewhere = Object.fromEntries(
+      Object.entries(proof.claims).map(([claim, held]) => [
+        claim,
+        { ...held!, spans: held!.spans.filter(({ source }) => source !== 1) },
+      ])
+    );
+    expect(status({ ...proof, claims: elsewhere }, data).problems).toEqual([
+      'shamela: no page holds the words of its hadith',
+    ]);
+  });
+
   it('still needs dorar.net and Shamela', () => {
     const proof = proofOf(data, BODY, [...hadith.slice(0, 1), ...hadith.slice(2), tanzil]);
     expect(status(proof, data).problems).toContain('shamela is missing');
