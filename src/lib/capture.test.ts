@@ -15,6 +15,9 @@ const hdith = captureOfMarkdown(fixture('hdith-9775.md'), '2026-11-25');
 const hdithMuslim = captureOfMarkdown(fixture('hdith-19845.md'), '2026-11-25');
 const tanzil = json('capture-tanzil.json');
 
+const numberIn = (book: string, text: string) =>
+  sourceOf({ ...hdith, title: `حديث | ${book} (1)`, text }).number;
+
 describe('a dorar.net page', () => {
   const source = sourceOf(dorar);
 
@@ -103,6 +106,13 @@ describe('an hdith.com page', () => {
     expect(sourceOf(hdithMuslim)).toMatchObject({ book: 'صحيح مسلم', number: '2723' });
   });
 
+  it('gives the usual number of each book, in the order it prints them', () => {
+    expect(numberIn('سنن أبي داود', '701 698 - حدثنا')).toBe('701');
+    expect(numberIn('جامع الترمذي', '3719 3384 - حدثنا')).toBe('3384');
+    expect(numberIn('سنن ابن ماجه', '1221 1167 - حدثنا')).toBe('1167');
+    expect(numberIn('سنن النسائي', '4264 4265 / 2 - أخبرني')).toBe('4264');
+  });
+
   it('keeps the hadith as it was, without the commentary under it', () => {
     const { text } = sourceOf(hdith);
     expect(fixture('hdith-9775.md')).toContain(text);
@@ -120,6 +130,11 @@ describe('a tanzil.net page', () => {
       number: '2:255',
       text: tanzil.text,
     });
+  });
+
+  it('gives several places when the ayat are in several سور', () => {
+    const title = '32:1-32:30, 67:1-67:30';
+    expect(sourceOf({ ...tanzil, title }).number).toBe(title);
   });
 
   it('is refused when its title is not a place in the Quran', () => {

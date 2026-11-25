@@ -20,6 +20,14 @@ const COLLECTIONS: Record<string, string> = {
   adab: 'الأدب المفرد',
 };
 
+const FIRST = /(\d+) \d+(?: \([^)]*\))? - /;
+const SECOND = /\d+ (\d+)(?: \([^)]*\))? - /;
+const USUAL: Record<string, RegExp> = {
+  'صحيح مسلم': FIRST,
+  'سنن أبي داود': FIRST,
+  'سنن النسائي': /(\d+) \d+ \/ \d+ - /,
+};
+
 function find(text: string, pattern: RegExp, label: string): string {
   const value = text.match(pattern)?.[1]?.trim();
   if (!value) throw new Error(`no ${label} in the captured page`);
@@ -66,7 +74,7 @@ function fromSunnah(capture: Capture): Present {
 
 function fromHdith(capture: Capture): Present {
   const book = find(capture.title, /\| ([^|(]+?) \(\d+\)$/, 'book');
-  const usual = book === 'صحيح مسلم' ? /(\d+) \d+ - / : /\d+ (\d+) - /;
+  const usual = USUAL[book] ?? SECOND;
   return {
     ...base(capture),
     book,
@@ -79,7 +87,7 @@ function fromTanzil(capture: Capture): Present {
   return {
     ...base(capture),
     book: 'القرآن الكريم',
-    number: find(capture.title, /^(\d+:\d+(?:-\d+:\d+)?)$/, 'ayat'),
+    number: find(capture.title, /^(\d+:\d+(?:-\d+:\d+)?(?:, \d+:\d+(?:-\d+:\d+)?)*)$/, 'ayat'),
     text: capture.text,
   };
 }
