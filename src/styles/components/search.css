@@ -81,6 +81,37 @@
   font-weight: var(--weight-bold);
 }
 
+.search__recent {
+  margin-bottom: var(--space-4);
+}
+
+.search__recent-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.search__forget {
+  padding: var(--space-1) var(--space-1) var(--space-2);
+  color: var(--color-ink-muted);
+  background: none;
+  border: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-note);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.search__forget:focus-visible {
+  outline: var(--border-ring) solid var(--color-ink);
+  outline-offset: var(--ring-inset);
+}
+
+.search__forget:active {
+  opacity: var(--opacity-pressed);
+}
+
 .search--sheet {
   display: flex;
   flex: 1;
@@ -110,5 +141,9 @@
 @media (hover: hover) {
   .search__try:hover {
     background: var(--color-line-soft);
+  }
+
+  .search__forget:hover {
+    color: var(--color-ink);
   }
 }

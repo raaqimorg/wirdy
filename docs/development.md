@@ -12,20 +12,20 @@ The icon and card scripts need a Chromium-based browser (Brave, Chrome, Chromium
 
 ## Commands
 
-| Command                    | What it does                                                         |
-| -------------------------- | -------------------------------------------------------------------- |
-| `bun run dev`              | Serves the site locally.                                             |
-| `bun run build`            | Builds the site into `dist/`.                                        |
-| `bun run preview`          | Serves the built site.                                               |
-| `bun run ci`               | The full gate: format, lint, types, and the three test suites.       |
-| `bun run format`           | Formats the code (oxfmt, and Prettier for `.astro`).                 |
-| `bun run lint`             | Runs oxlint and stylelint.                                           |
-| `bun run check`            | Runs `astro check`, the type check.                                  |
-| `bun run test`             | Runs the unit tests. [`testing.md`](testing.md) has the suites.      |
-| `bun run verification`     | Lists which adhkar are proven, and what the others lack.             |
-| `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                           |
-| `bun run opengraph`        | Draws the card of the home page and of each occasion.                |
-| `bun run opengraph:adhkar` | Draws the card of each dhikr that has none, and deletes stale cards. |
+| Command                    | What it does                                                            |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `bun run dev`              | Serves the site locally.                                                |
+| `bun run build`            | Builds the site into `dist/`.                                           |
+| `bun run preview`          | Serves the built site.                                                  |
+| `bun run ci`               | The full gate: format, lint, types, and the three test suites.          |
+| `bun run format`           | Formats the code (oxfmt, and Prettier for `.astro`).                    |
+| `bun run lint`             | Generates the Astro types, then runs oxlint (with types) and stylelint. |
+| `bun run check`            | Runs `astro check`, the type check.                                     |
+| `bun run test`             | Runs the unit tests. [`testing.md`](testing.md) has the suites.         |
+| `bun run verification`     | Lists which adhkar are proven, and what the others lack.                |
+| `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                              |
+| `bun run opengraph`        | Draws the card of the home page and of each occasion.                   |
+| `bun run opengraph:adhkar` | Draws the card of each dhikr that has none, and deletes stale cards.    |
 
 The `verification:*` scripts write the proof of a dhikr. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each one.
 

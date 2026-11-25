@@ -1,5 +1,13 @@
-import { Data, Effect, Option, Schema } from 'effect';
+import { Array, Data, Effect, Option, Schema } from 'effect';
 import { resultsLabel, toArabicDigits } from '../lib/arabic';
+import {
+  encodeHistory,
+  HISTORY_KEY,
+  known,
+  parseHistory,
+  remember,
+  type History,
+} from '../lib/history';
 import {
   match,
   ranges,
@@ -120,6 +128,26 @@ const storage = {
   },
 };
 
+const history = {
+  read: (): History => {
+    const stored = Option.flatMap(
+      Option.liftThrowable(() => localStorage.getItem(HISTORY_KEY))(),
+      Option.fromNullishOr
+    );
+    if (Option.isNone(stored)) return [];
+    return Option.getOrElse(parseHistory(stored.value), () => {
+      history.write([]);
+      return [];
+    });
+  },
+  write: (entries: History): void => {
+    Option.liftThrowable(() => {
+      if (entries.length === 0) localStorage.removeItem(HISTORY_KEY);
+      else localStorage.setItem(HISTORY_KEY, encodeHistory(entries));
+    })();
+  },
+};
+
 const isBackForward = (): boolean => {
   const [navigation] = performance.getEntriesByType('navigation');
   return navigation instanceof PerformanceNavigationTiming && navigation.type === 'back_forward';
@@ -127,6 +155,7 @@ const isBackForward = (): boolean => {
 
 type Entry = {
   readonly item: HTMLElement;
+  readonly href: string;
   readonly section: string;
   readonly title: HTMLElement;
   readonly words: HTMLElement;
@@ -140,8 +169,10 @@ const entryOf = (item: HTMLElement): Effect.Effect<Entry, MissingElement> =>
     const words = yield* part(item, 'words', HTMLElement);
     const place = yield* part(item, 'place', HTMLElement);
     const text = { title: textOf(title), words: textOf(words) };
+    const link = yield* element(item, 'a', HTMLAnchorElement);
     return {
       item,
+      href: link.getAttribute('href') ?? '',
       section: item.dataset['searchSection'] ?? '',
       title,
       words,
@@ -188,6 +219,37 @@ export const mountSearch = (
     );
     const entries = yield* Effect.forEach(items, entryOf);
     const rows = entries.map(({ row }) => row);
+    const byHref = new Map(entries.map((entry) => [entry.href, entry]));
+    const hrefs = new Set(byHref.keys());
+    const recent = lookup(root, '[data-search-recent]', HTMLElement);
+    const recentList = lookup(root, '[data-search-recent-list]', HTMLElement);
+
+    const plainCopy = ({ item, text }: Entry): Option.Option<HTMLElement> =>
+      Option.flatMap(
+        Option.liftPredicate(item.cloneNode(true), (copy) => copy instanceof HTMLElement),
+        (copy) => {
+          const title = lookup(copy, '[data-search-title]', HTMLElement);
+          const words = lookup(copy, '[data-search-words]', HTMLElement);
+          if (Option.isNone(title) || Option.isNone(words)) return Option.none();
+          copy.toggleAttribute('hidden', false);
+          paint(title.value, text.title, []);
+          const { from, to } = windowOf(text.words, []);
+          paint(words.value, text.words, [], from, to);
+          return Option.some(copy);
+        }
+      );
+
+    const showRecent = (query: string) => {
+      if (Option.isNone(recent) || Option.isNone(recentList)) return;
+      const stored = query === '' ? history.read() : [];
+      const shown = known(stored, hrefs);
+      if (shown.length !== stored.length) history.write(shown);
+      const copies = Array.getSomes(
+        shown.map((href) => Option.flatMap(Option.fromUndefinedOr(byHref.get(href)), plainCopy))
+      );
+      recentList.value.replaceChildren(...copies);
+      recent.value.hidden = copies.length === 0;
+    };
 
     const heads = yield* Effect.forEach(
       [...root.querySelectorAll('template[data-search-section-head]')],
@@ -197,6 +259,7 @@ export const mountSearch = (
     const render = () => {
       const query = input.value;
       clear.hidden = query === '';
+      showRecent(query.trim());
       if (restore) storage.write(query);
       const found = match(rows, query);
       const hits = Option.match(found, { onNone: () => [], onSome: ({ hits: all }) => all });
@@ -259,6 +322,24 @@ export const mountSearch = (
         render();
       });
     }
+    const opened = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return;
+      const link = event.target.closest('[data-search-row] a');
+      const href = link instanceof HTMLAnchorElement ? link.getAttribute('href') : null;
+      if (href !== null && hrefs.has(href)) history.write(remember(history.read(), href));
+    };
+    root.addEventListener('click', opened);
+    root.addEventListener('auxclick', opened);
+    for (const forget of root.querySelectorAll('[data-search-forget]')) {
+      forget.addEventListener('click', () => {
+        history.write([]);
+        render();
+        input.focus();
+      });
+    }
+    window.addEventListener('storage', (event) => {
+      if (event.key === HISTORY_KEY || event.key === null) showRecent(input.value.trim());
+    });
     clear.addEventListener('click', () => {
       input.value = '';
       render();

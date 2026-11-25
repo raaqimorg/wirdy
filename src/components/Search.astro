@@ -36,6 +36,15 @@ const blank: Row = {
 <div class:list={['search', sheet && 'search--sheet']} data-search>
   <SearchField variant={sheet ? 'bar' : 'page'} />
   <div class="search__body">
+    <section class="search__recent" hidden data-search-recent>
+      <div class="search__recent-head">
+        <h2 class="search__subtitle">آخر ما فتحت</h2>
+        <button class="search__forget" type="button" data-search-forget>
+          مسح
+        </button>
+      </div>
+      <ul class="search__list" data-search-recent-list></ul>
+    </section>
     {sheet && (
       <div data-search-browse>
         <p class="search__subtitle">اقتراحات</p>

@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "ci": "astro sync && bun run format:check && bun run lint && bun run check && bun run test && bun run test:scripts && bun run test:build",
     "check": "astro check",
-    "lint": "oxlint --type-aware --deny-warnings && stylelint \"src/**/*.css\"",
+    "lint": "astro sync && oxlint --type-aware --deny-warnings && stylelint \"src/**/*.css\"",
     "format": "oxfmt && prettier --write \"src/**/*.astro\"",
     "format:check": "oxfmt --check && prettier --check \"src/**/*.astro\"",
     "test": "vitest run",

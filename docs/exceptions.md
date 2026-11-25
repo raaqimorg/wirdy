@@ -116,6 +116,18 @@ The bar of every page ends in a search icon (`components/Bar.astro`). A tap open
 - قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens, and shows only its name, so no آية is cut.
 - Without JavaScript, `/bahth/` hides its field and its count (`<noscript>` in `src/layouts/Paper.astro`), and is a plain list of every row, which the browser's find can search. `/bahth/` is `noindex` and stays out of the sitemap.
 
+## Search remembers the results the reader opens
+
+Before the reader types, search lists «آخر ما فتحت»: the last results the reader opened from search, newest first, with a «مسح» button that forgets them. The browser keeps them in `localStorage` under `search-history`. They never leave the device. The owner asked for it.
+
+- The ordinary way is no history, or the browser's own history of the field.
+- It keeps the link of a result that the reader opened, not the words the reader typed, because an opened result is a search that found its dhikr.
+- `src/lib/history.ts` holds the rules, with tests. The stored value is `{ "version": 1, "hrefs": [...] }`. Raise `HISTORY_VERSION` when the shape changes. A value of any other version is removed, and the list starts empty.
+- The stored text is not trusted. It is refused when it is longer than 4 KB, before it is parsed, when it is not JSON, when it has a field it does not know, more than 8 links, or a link that is not a path on the site. A refused value is removed.
+- It keeps 8 links, each once. A link that no row of the search index has (a dhikr that was removed or renamed) does not show, and the next read writes the list without it.
+- A row of the list is a copy of the row in the index, so a stored link never becomes markup. Every read and write is in a `try`, because Safari's private mode and a full storage throw.
+- Another tab that opens a result updates the list through the `storage` event.
+
 ## The proofs are JSON files in git
 
 `verification/` holds a record for each proven dhikr, and the tests read them. The site does not. The owner asked for saved proofs, so that a check never starts from zero.
