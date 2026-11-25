@@ -1,6 +1,7 @@
 const INSIDE_A_WORD = /[\p{M}ـۥۦ]/gu;
 const WORD = /[\p{L}\p{M}]+/gu;
 const BETWEEN_WORDS = /[^\p{L}]+/gu;
+const SHAY = /ش(?:ئ|ىء)(?= |$)/g;
 const SAMAWAT = /سموات/g;
 const HONORIFIC = ['صلى', 'الله', 'عليه', 'وسلم'];
 const HONORIFICS = /(^| )(?:ﷺ|صلى الله عليه وسلم)(?= |$)/g;
@@ -15,6 +16,7 @@ export function normalize(text: string): string {
     .trim()
     .replaceAll(LONE_WAW, '$1و')
     .replaceAll(SAMAWAT, 'سماوات')
+    .replaceAll(SHAY, 'شيء')
     .replaceAll(HONORIFICS, '')
     .trim();
 }

@@ -35,6 +35,12 @@ describe('normalize', () => {
     expect(normalize('لا إله إلا الله (١) وحده ⦗٢٣٢٤⦘ لا شريك')).toBe('لا إله إلا الله وحده لا شريك');
   });
 
+  it('reads the old spellings of شيء as one word', () => {
+    expect(normalize('على كل شئ قدير')).toBe('على كل شيء قدير');
+    expect(normalize('على كُلِّ شَىْءٍ قدير')).toBe('على كل شيء قدير');
+    expect(normalize('شئت')).toBe('شئت');
+  });
+
   it('splits no word at a small Quranic letter', () => {
     expect(normalize('دَاوُۥدَ')).toBe('داود');
   });
