@@ -492,6 +492,52 @@ describe('built site', () => {
     expect(html).toMatch(new RegExp(`<meta property="og:image:height" content="${height}"`, 'u'));
   });
 
+  it('says the same title, description, and card in every tag of every head', () => {
+    const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    for (const file of files) {
+      const page = readFileSync(join(DIST, file), 'utf8');
+      const title = unescaped(page.match(/<title>([^<]+)<\/title>/u)![1]!);
+      const description = unescaped(metaOf(page, 'name', 'description')!);
+      const image = metaOf(page, 'property', 'og:image')!;
+      expect(title.endsWith(` | ${SITE.name}`)).toBe(true);
+      for (const [attr, name] of [
+        ['property', 'og:title'],
+        ['name', 'twitter:title'],
+        ['property', 'og:image:alt'],
+        ['name', 'twitter:image:alt'],
+      ]) {
+        expect(unescaped(metaOf(page, attr!, name!)!)).toBe(title);
+      }
+      expect(unescaped(metaOf(page, 'property', 'og:description')!)).toBe(description);
+      expect(unescaped(metaOf(page, 'name', 'twitter:description')!)).toBe(description);
+      expect(metaOf(page, 'name', 'twitter:image')).toBe(image);
+      const shipped = image.replace(SITE.url, '');
+      expect(existsSync(join(DIST, shipped))).toBe(true);
+      expect(pngSize(shipped)).toEqual([
+        Number(metaOf(page, 'property', 'og:image:width')),
+        Number(metaOf(page, 'property', 'og:image:height')),
+      ]);
+      if (metaOf(page, 'name', 'robots') === 'noindex') continue;
+      const webPage = graphOf(page).find((node) => node['@type'] === 'WebPage')!;
+      expect(webPage['name']).toBe(title);
+      expect(webPage['description']).toBe(description);
+      expect((webPage['primaryImageOfPage'] as { url: string }).url).toBe(image);
+    }
+  });
+
+  it('lists in the sitemap every page that may be indexed, and no other', () => {
+    const indexed = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
+      .filter((file) => file.endsWith('index.html'))
+      .filter((file) => !readFileSync(join(DIST, file), 'utf8').includes('content="noindex"'))
+      .map((file) => `${SITE.url}/${file.replace(/index\.html$/u, '')}`)
+      .toSorted();
+    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+    const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gu)].map(([, loc]) => loc!).toSorted();
+    expect(listed).toEqual(indexed);
+  });
+
   it('declares a raster favicon and a touch icon, and ships every icon it declares', () => {
     expect(html).toMatch(/<link rel="icon" href="\/favicon\.ico" sizes="any"/u);
     expect(html).toMatch(/<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml"/u);

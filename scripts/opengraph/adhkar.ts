@@ -81,7 +81,7 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 <div class="top">${emblemSvg(occasion)}<div class="names"><p class="heading">${card.heading}</p><p class="title">${escape(card.title)}${card.context !== null && card.context !== '' ? ` <span class="context">${escape(card.context)}</span>` : ''}</p></div>${card.count !== null && card.count !== '' ? `<p class="count">${card.count}</p>` : ''}</div>
 <div class="main">${card.lead ? `<p class="lead">${escape(card.lead)}</p>` : ''}
 <div class="box"><div class="text">${textOf(card)}${card.evening !== null && card.evening !== '' ? `<p class="evening"><b>وفي المساء:</b> ${escape(card.evening)}</p>` : ''}</div></div></div>
-<div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">wirdy.site</span><span class="source">${escape(card.takhrij)}${card.quran ? '. النص: tanzil.net' : ''}</span></div>
+<div class="foot">${markSvg()}<b>${SITE.name}</b><span class="site">${SITE.domain}</span><span class="source">${escape(card.takhrij)}${card.quran ? '. النص: tanzil.net' : ''}</span></div>
 <script>
 const [band,names,title,box,text,foot]=['.top','.names','.title','.box','.text','.foot'].map((name)=>document.querySelector(name));
 const titleFits=()=>title.scrollWidth<=title.clientWidth&&names.offsetHeight<=band.clientHeight;

@@ -6,6 +6,10 @@ This is the index of everything the repo knows. Each doc has one line that says 
 
 - [Content](content.md): what goes in, what stays out, the occasions, the file, the text, how to check a dhikr, and the proof. Read it before you add or change a dhikr.
 
+## Branding
+
+- [Branding](branding/README.md): the name and its words, the mark, the colors, the type, the emblems and cards, and the metadata of each page. Read it before you change anything a reader sees or a link preview shows. It is the source of truth for the visuals, and `src/lib/branding.test.ts` keeps it equal to the code.
+
 ## Code
 
 - [Code conventions](code-conventions.md): the code rules no tool checks, TypeScript, motion, and comments. Read it before you write code.

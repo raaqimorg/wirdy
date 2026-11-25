@@ -9,9 +9,10 @@ import { SITE } from '../lib/site';
 const tiles = await Effect.runPromise(sectionTiles);
 ---
 
-<Home title="أذكار اليوم والليلة" description={SITE.description} menu={false}>
+<Home title={SITE.tagline} description={SITE.description} menu={false}>
   <Hero>
-    أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salawat">ﷺ</span>، ومع كل ذكر تخريجُه
+    {SITE.promise.before}&nbsp;<span class="salawat">ﷺ</span>
+    {SITE.promise.after}
   </Hero>
   <CardGrid tiles={tiles} variant="featured" />
 </Home>

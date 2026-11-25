@@ -50,8 +50,8 @@ body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-directio
 .tile svg{height:100%}
 .domain{color:${PALETTE.inkMuted}}
 </style></head><body>
-<div class="brand">${markSvg()}<span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
-<p class="hero">أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكر تخريجُه</p>
+<div class="brand">${markSvg()}<span class="name">${SITE.name}</span><span class="domain">${SITE.domain}</span></div>
+<p class="hero">${SITE.promise.before}&nbsp;<span class="salla">ﷺ</span>${SITE.promise.after}</p>
 <div class="tiles">${tiles}</div>
 </body></html>`;
 
@@ -68,7 +68,7 @@ body{background:${color};color:${PALETTE.eggshell};display:grid;
 .emblem{align-self:end;width:820px;height:820px}
 .emblem svg{width:100%;height:100%}
 </style></head><body>
-<div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
+<div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span><span class="domain">${SITE.domain}</span></div>
 <div class="text"><p class="heading">${title}</p><p class="count">${adhkarLabel(count)}</p></div>
 <div class="emblem">${emblemSvg(id)}</div>
 </body></html>`;
