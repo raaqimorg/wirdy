@@ -12,6 +12,8 @@ const dorar = json('capture-dorar.json');
 const shamela = json('capture-shamela.json');
 const sunnah = json('capture-sunnah.json');
 const hdith = captureOfMarkdown(fixture('hdith-9775.md'), '2026-11-25');
+const hdithMuslim = captureOfMarkdown(fixture('hdith-19845.md'), '2026-11-25');
+const tanzil = json('capture-tanzil.json');
 
 describe('a dorar.net page', () => {
   const source = sourceOf(dorar);
@@ -97,10 +99,30 @@ describe('an hdith.com page', () => {
     });
   });
 
+  it('gives the usual number of صحيح مسلم, which it prints first', () => {
+    expect(sourceOf(hdithMuslim)).toMatchObject({ book: 'صحيح مسلم', number: '2723' });
+  });
+
   it('keeps the hadith as it was, without the commentary under it', () => {
     const { text } = sourceOf(hdith);
     expect(fixture('hdith-9775.md')).toContain(text);
     expect(normalize(text)).toContain('سيد الاستغفار أن تقول');
     expect(text).not.toContain('الشروح');
+  });
+});
+
+describe('a tanzil.net page', () => {
+  it('gives the place of the ayat and their text, unchanged', () => {
+    expect(sourceOf(tanzil)).toMatchObject({
+      site: 'tanzil',
+      url: 'https://tanzil.net/#2:255',
+      book: 'القرآن الكريم',
+      number: '2:255',
+      text: tanzil.text,
+    });
+  });
+
+  it('is refused when its title is not a place in the Quran', () => {
+    expect(() => sourceOf({ ...tanzil, title: 'Al-Baqara' })).toThrow('ayat');
   });
 });

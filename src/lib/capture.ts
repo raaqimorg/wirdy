@@ -1,7 +1,7 @@
 import type { Present } from './proof';
 
 export type Capture = {
-  site: 'dorar' | 'shamela' | 'hdith' | 'sunnah';
+  site: 'dorar' | 'shamela' | 'hdith' | 'sunnah' | 'tanzil';
   url: string;
   capturedAt: string;
   title: string;
@@ -65,10 +65,21 @@ function fromSunnah(capture: Capture): Present {
 }
 
 function fromHdith(capture: Capture): Present {
+  const book = find(capture.title, /\| ([^|(]+?) \(\d+\)$/, 'book');
+  const usual = book === 'صحيح مسلم' ? /(\d+) \d+ - / : /\d+ (\d+) - /;
   return {
     ...base(capture),
-    book: find(capture.title, /\| ([^|(]+?) \(\d+\)$/, 'book'),
-    number: find(capture.text, /\d+ (\d+) - /, 'number'),
+    book,
+    number: find(capture.text, usual, 'number'),
+    text: capture.text,
+  };
+}
+
+function fromTanzil(capture: Capture): Present {
+  return {
+    ...base(capture),
+    book: 'القرآن الكريم',
+    number: find(capture.title, /^(\d+:\d+(?:-\d+:\d+)?)$/, 'ayat'),
     text: capture.text,
   };
 }
@@ -91,5 +102,6 @@ export function sourceOf(capture: Capture, number?: string): Present {
   if (capture.site === 'dorar') return fromDorar(capture);
   if (capture.site === 'shamela') return fromShamela(capture, number);
   if (capture.site === 'sunnah') return fromSunnah(capture);
+  if (capture.site === 'tanzil') return fromTanzil(capture);
   return fromHdith(capture);
 }

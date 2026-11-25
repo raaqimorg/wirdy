@@ -22,7 +22,7 @@ function cut(source) {
   const { text } = proof.sources[source];
   if (words) return [spanOf(text, words)];
   const forms = new Set([formOf(body.trim(), 'sabah'), formOf(body.trim(), 'masaa')]);
-  return [...new Set([...forms].flatMap((form) => spansOf(text, form)))];
+  return [...forms].flatMap((form) => spansOf(text, form));
 }
 
 const source = Number(at);

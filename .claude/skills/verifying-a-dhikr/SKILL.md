@@ -31,8 +31,8 @@ For each file:
 ## Save the proof
 
 1. Put the paths of one site in `PATHS` of `scripts/verification/capture.js` (do not commit that change), and run the script in a tab of that site. Run it without waiting for it, since a run over 45 seconds times out. Then click the yellow button, which copies the pages as JSON, and write them with `pbpaste > <file>` (`LC_ALL=en_US.UTF-8`). Compare the SHA-256 in the page with the file's. Back up the user's clipboard text first, and restore it after. Never use a download: Brave opens a dialog for each file, and the user must not have to press it.
-2. Read hdith.com as `.md` pages with `curl`, one every 3 seconds. Its ids are its own: the text opens with two numbers, and the second is the usual one. Guess an id from a known one, and step to it.
-3. Run `bun run verification:import` for each page and `bun run verification:claim` for each claim, which cuts its words from the page. Then run `bun run verification <id>`. When it is proven, remove its entry from `verification/pending.json`.
+2. Read hdith.com as `.md` pages with `curl`, one every 3 seconds. Its ids are its own: the text opens with two numbers, and the second is the usual one (in صحيح مسلم, the first). Guess an id from a known one, and step to it.
+3. Run `bun run verification:import` for each page and `bun run verification:claim` for each claim, which cuts its words from the page. `verification:difference` names a phrase that a site does not have, `verification:absent` names a page that is not there, and `verification:ruling` keeps another ruling of dorar.net. Before `absent`, read the whole list of the books of hdith.com (`/encyclopedia/books.md`): an empty search can be a page that did not load. For a Quran text, set Tanzil's text type to Uthmani, capture the ayat with their place as the title (`2:255`, or `112:1-114:6`), and set the type back. Then run `bun run verification <id>`. When it is proven, remove its entry from `verification/pending.json`.
 4. Save each record before you start the next dhikr. Never write a source text by hand, and never edit a dhikr to make a proof pass.
 
 ## Report

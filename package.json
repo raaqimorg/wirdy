@@ -22,6 +22,9 @@
     "verification": "bun scripts/verification/status.mjs",
     "verification:import": "bun scripts/verification/import.mjs",
     "verification:claim": "bun scripts/verification/claim.mjs",
+    "verification:difference": "bun scripts/verification/difference.mjs",
+    "verification:absent": "bun scripts/verification/absent.mjs",
+    "verification:ruling": "bun scripts/verification/ruling.mjs",
     "deploy": "bun run ci && wrangler pages deploy"
   },
   "dependencies": {
