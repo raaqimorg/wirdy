@@ -35,7 +35,6 @@
     "*.ts": "${capture}.test.ts",
     "*.astro": "${capture}.test.ts",
     "*.sh": "${capture}.test.ts",
-    "*.md": "${capture}.html, ${capture}-plan.md",
     "schema.ts": "content.test.ts",
     "records.ts": "proofs.test.ts",
     "permalink.ts": "permalinks.json",
