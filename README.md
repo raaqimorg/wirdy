@@ -27,7 +27,7 @@ A dhikr is on the site only when dorar.net shows that one of these is true:
 1. It is in Sahih al-Bukhari or Sahih Muslim.
 2. al-Albani grades it صحيح or حسن.
 
-The same rule applies to its count and its time. A dhikr that al-Albani grades ضعيف stays out, even when another scholar accepts it. So some well-known adhkar are not here, such as «رضيت بالله ربا» three times in the morning and evening, and «حسبي الله» seven times. The page [«ما لم يثبت»](https://wirdy.site/ma-lam-yathbut/) lists them, each with its ruling. [`docs/content.md`](docs/content.md) is the full standard.
+The same rule applies to its count and its time. A dhikr that al-Albani grades ضعيف stays out, even when another scholar accepts it. So some well-known adhkar are not here, such as «رضيت بالله ربا» three times in the morning and evening, and «حسبي الله» seven times. The page [«ما لم يثبت»](https://wirdy.site/ma-lam-yathbut/) lists them, each with its ruling. [`docs/content.md`](docs/content.md) is the full standard. `verification/` holds the saved proof of each dhikr that has been checked, with the text of its pages.
 
 The text of the Quran is the Uthmani text from [Tanzil](https://tanzil.net), in the riwayah of Hafs.
 
@@ -43,6 +43,7 @@ Wirdy is an [Astro](https://astro.build) site. Each dhikr is a Markdown file in 
 bun install      # dependencies, and the git hooks
 bun run dev      # http://localhost:4321
 bun run ci       # format, lint, types, tests, and the build test
+bun run verification  # which adhkar have a saved proof, and what the others lack
 ```
 
 Each dhikr that changes between the morning and the evening shows both forms: the form for now leads, and the other is muted and struck through. A dhikr for the other time is muted and struck through too. A switch at the top changes the form at once. `?w=s` and `?w=m` in the URL do the same. Without a choice, the page picks the morning from 03:00 to 11:59, and the evening otherwise.

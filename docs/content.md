@@ -111,6 +111,18 @@ takhrij:
 4. Check that the book is al-Bukhari or Muslim, or that the scholar is al-Albani and the ruling is صحيح or حسن. Copy the book, the number, and the ruling exactly.
 5. Search dorar.net for other rulings on the same hadith. Record a dispute in `note`.
 
+## The proof
+
+`verification/<occasion>/<slug>.json` holds the proof of a dhikr, so a checked dhikr is not checked again. `bun run verification` calculates the status of each dhikr. No field says that a dhikr is proven.
+
+- `sources`: each page that was read, with its text as the page gave it. dorar.net is the only source of a ruling. Shamela gives the wording in the books. hdith.com and sunnah.com give the wording in the primary collections. Tanzil gives the text of the Quran. alukah.net proves nothing alone.
+- A dhikr needs dorar.net and Shamela. hdith.com and sunnah.com are both looked up, and where they have the book, at least one carries the text. A page that was not found is written as `absent`, with the searches tried.
+- `claims`: what the card states (`text`, `count`, `moment`, `manner`, `fadl`, `takhrij`), each with the exact words of a source that prove it. The count, the moment, and the fadl are in the cited dorar.net page.
+- `differences`: a phrase that a source does not have, with the reason. `commanded`: the hadith commands it, and another source gives the words. `carried`: the hadith gives one form and says that the other is the same. `narration`: editions or narrations differ. When two sources disagree on a ruling or a wording, ask the owner.
+- `rulings`: the other rulings on dorar.net.
+
+A proof ends when what it proves changes. A change of order, title, group, form, ayat, or note ends nothing. `verification/pending.json` lists the adhkar that are not proven yet. It only shrinks: the tests refuse a dhikr that is neither proven nor pending, and a pending dhikr that changes.
+
 ## What did not come in
 
 `src/content/unproven/` holds the well-known adhkar that stay out, shown on the «ما لم يثبت» page, so a reader who misses one knows why. They have no share link, no copy button, and no card, so a weak dhikr never travels as an image without its ruling. Each file holds the text as people say it, `what` (which part is not established: the whole dhikr, its count, or its time), the al-Albani ruling with its dorar.net page, and `sound` when a sound form of it is on the site. When `sound` names an occasion, the page links to it. A ruling of one word shows as a badge above the text. The tests refuse a ruling there that is not one of weakness.

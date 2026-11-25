@@ -6,12 +6,13 @@ This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Ar
 
 - `src/content/adhkar/<occasion>/`: one Markdown file for each dhikr. The frontmatter holds the count, the occasion, the takhrij, and optionally its `context`, its manner (`how`), its `counts`, a `group` heading, a `form`, and its `fadl`. The body is the text. [`docs/content.md`](docs/content.md) is the standard every file meets.
 - `src/content/unproven/`: the well-known adhkar that stay out, each with its al-Albani ruling, shown on the «ما لم يثبت» page.
-- `src/lib/`: the content schema (`schema.ts`), the morning and evening markers and their word pairs (`variants.ts`), the occasions (`occasions.ts`), the color of each occasion from its place on the list (`tone.ts`), the grouping of a page into headed runs (`groups.ts`), Arabic numerals and labels (`arabic.ts`), the count's ring of beads (`beads.ts`), the takhrij sentence under each dhikr (`takhrij.ts`), the name of a dhikr with its context (`title.ts`), the lead line and the fold of a long سورة (`lead.ts`), the phrases with their counts (`phrases.ts`), what the copy button gives (`copy.ts`), the place of a sound form (`sound.ts`), the permanent links (`permalink.ts`, `permalinks.json`), the sharing card and its excerpt (`card.ts`, `excerpt.ts`), the folding, matching, and marking of a search (`search.ts`), the occasion emblems (`emblems.ts`), the sunflower mark (`mark.ts`), and the points of a ring (`ring.ts`). Each one has a test next to it (`content.test.ts` covers the schema). `icons.ts` holds the icons, and `palette.ts` holds the colors that the code shares with the styles. `collection.ts` reads the collection for the pages, and the build test covers it.
+- `src/lib/`: the content schema (`schema.ts`), the morning and evening markers and their word pairs (`variants.ts`), the occasions (`occasions.ts`), the color of each occasion from its place on the list (`tone.ts`), the grouping of a page into headed runs (`groups.ts`), Arabic numerals and labels (`arabic.ts`), the count's ring of beads (`beads.ts`), the takhrij sentence under each dhikr (`takhrij.ts`), the name of a dhikr with its context (`title.ts`), the lead line and the fold of a long سورة (`lead.ts`), the phrases with their counts (`phrases.ts`), what the copy button gives (`copy.ts`), the place of a sound form (`sound.ts`), the permanent links (`permalink.ts`, `permalinks.json`), the sharing card and its excerpt (`card.ts`, `excerpt.ts`), the folding, matching, and marking of a search (`search.ts`), the occasion emblems (`emblems.ts`), the sunflower mark (`mark.ts`), and the points of a ring (`ring.ts`). Each one has a test next to it (`content.test.ts` covers the schema). `icons.ts` holds the icons, and `palette.ts` holds the colors that the code shares with the styles. `collection.ts` reads the collection for the pages, and the build test covers it. The proofs are in `proof.ts` (the record's schema), `matching.ts`, `fingerprint.ts`, `verification.ts` (the status of a dhikr), and `baseline.ts`. `records.ts` reads the files, and `proofs.test.ts` covers it.
 - `src/components/`, `src/layouts/`, `src/styles/`: the design system. Each component's stylesheet has its name, and `tokens.css` holds every value. [`docs/design-system.md`](docs/design-system.md) has the rules. The design follows [Laws of UX](https://lawsofux.com/), and the README credits it.
 - `src/pages/`: the home page (`index.astro`), the occasion pages (`[occasion].astro`), a page for each dhikr (`[occasion]/[dhikr].astro`), the «ما لم يثبت» page (`ma-lam-yathbut.astro`), the search page (`bahth.astro`), the 404 page (`404.astro`), the search index (`search/[version].json.ts`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
 - `src/scripts/`: the module script of search (`search.ts`), shared by the search page and the search sheet.
 - `public/`: the icons, the OpenGraph cards (one for the home page and one for each occasion), and `_headers`, the Cloudflare Pages response headers. The icons and the cards are generated. Run `bun run icons` (it draws `favicon.svg` from `src/lib/mark.ts`), `bun run opengraph`, or `bun run opengraph:adhkar` (one card for each dhikr, in `public/og/`), and do not edit them by hand.
 - `scripts/`: the icon and OpenGraph generators (headless Chromium), and `scripts/check/`, the git guards.
+- `verification/`: one JSON record for each proven dhikr, with the text of the pages that prove it, and `pending.json`, the adhkar that are not proven yet. The site does not read it. [`docs/content.md`](docs/content.md), "The proof", has the rules.
 - `docs/`: [`content.md`](docs/content.md) (what goes in, and how to check it), [`code-conventions.md`](docs/code-conventions.md), [`design-system.md`](docs/design-system.md), [`exceptions.md`](docs/exceptions.md), and [`emblem-ideas.md`](docs/emblem-ideas.md) (emblems drawn and not chosen, for a new occasion to take).
 
 ## Commands
@@ -21,11 +22,13 @@ bun install          # also turns on the git hooks in .githooks/
 bun run dev          # the local site
 bun run ci           # the full gate: format, lint, types, tests, and the build test
 bun run test         # the unit and content tests only
+bun run verification # which adhkar are proven, and what the others lack (add an id for one)
 ```
 
 ## Hard rules
 
 - Never add a dhikr, or change its text, count, or ruling, from memory. Every change cites a dorar.net page that you opened in this session. Follow [`docs/content.md`](docs/content.md), and use the `verifying-a-dhikr` skill.
+- Never add or refresh an entry in `verification/pending.json`. It only shrinks. Never write a source text in a record by hand: capture it from its page.
 - Never add a dhikr that al-Albani grades ضعيف or worse, even when another scholar accepts it. The site holds only what passes [`docs/content.md`](docs/content.md), "What goes in".
 - Never deploy unless the user asks for that deploy. This covers `bun run deploy` and any `wrangler` command that changes the live site. Approval for one deploy does not carry over to the next.
 - Never start subagents, workflows, or other multi-agent tooling unless the user asks for it in that request.
@@ -42,6 +45,7 @@ bun run test         # the unit and content tests only
 ## Agent workflow
 
 - When the user asks for a review, use the `reviewing` skill (`.claude/skills/reviewing/SKILL.md`).
+- Before you check any dhikr, run `bun run verification`. Do not check a proven dhikr again. Check only what it lists, and save the record of each dhikr before you start the next.
 - To check or add a dhikr, use the `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`). Use the user's browser for dorar.net, because the site can block scripted requests. Cross-check wording on Turath or al-Maktaba al-Shamela where narrations differ.
 - Commits: see [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md), "Keeping your email private". The hooks refuse any author, committer, or trailer email except the one in `wirdy.allowedEmail`. Do not add a `Co-authored-by:` trailer.
 - Run `bun run ci` before you say a change is done. Report each failure from its output.

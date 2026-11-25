@@ -111,3 +111,11 @@ Every page but `/bahth/` has a way into search (`components/SearchTrigger.astro`
 - `/bahth/` holds one row for each dhikr and each entry of «ما لم يثبت» in its HTML, so the page is its own index, and it uses the same script. The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
 - قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens.
 - Without JavaScript, `/bahth/` hides its field and its count (`<noscript>` in `src/layouts/Paper.astro`), and is a plain list of every row, which the browser's find can search. `/bahth/` is `noindex` and stays out of the sitemap.
+
+## The proofs are JSON files in git
+
+`verification/` holds a record for each proven dhikr, and the tests read them. The site does not. The owner asked for saved proofs, so that a check never starts from zero.
+
+- The ordinary way is a database such as SQLite, or no record. In git, each change to a proof is readable and reviewed, and branches merge.
+- `scripts/verification/capture.js` runs in the browser, on the site itself, because dorar.net and sunnah.com refuse scripted requests. It reads one page every 3 seconds, and it saves one file for all of them.
+- oxfmt ignores `src/lib/fixtures`, because a captured text must stay as its page gave it.

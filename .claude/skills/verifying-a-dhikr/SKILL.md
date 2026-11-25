@@ -7,6 +7,10 @@ description: Use when adding, changing, or auditing a dhikr under src/content/ad
 
 `docs/content.md` is the standard. This skill is the procedure. Never write a text, a count, or a ruling from memory.
 
+## Start with the records
+
+Run `bun run verification`. Check only the adhkar that it lists, and leave a proven dhikr alone. `docs/content.md`, "The proof", has the rules of a record.
+
 ## Open dorar.net in the user's browser
 
 dorar.net can block scripted requests (`curl`, fetch tools). Use the browser extension (`mcp__claude-in-chrome__*`), in a new tab.
@@ -23,6 +27,13 @@ For each file:
 4. Check the grade: the book is al-Bukhari or Muslim, or the scholar is al-Albani and the ruling is صحيح or حسن. Copy the book, the number, and the ruling into `takhrij`.
 5. Search dorar.net for the hadith's first words. If another major grader weakens it, or al-Albani has a second ruling, record it in `note`, with its source.
 6. Where the wording differs between narrations, or the takhrij is an al-Albani book rather than the primary collection, check the wording in the books themselves on [Turath](https://app.turath.io) or [al-Maktaba al-Shamela](https://shamela.ws). Open their search pages in the same browser tab. Turath's page never finishes loading, so read it with a script (`document.body.innerText`) after a few seconds.
+
+## Save the proof
+
+1. Put the paths of one site in `PATHS` of `scripts/verification/capture.js` (do not commit that change), and run the script in a tab of that site. Click the yellow link. Brave asks where to save the file. Ask the user before the first download of a session.
+2. Read hdith.com as `.md` pages with `curl`, one every 3 seconds. Its ids are its own: the text opens with two numbers, and the second is the usual one. Guess an id from a known one, and step to it.
+3. Write the record of the dhikr, and run `bun run verification <id>`. When it is proven, remove its entry from `verification/pending.json`.
+4. Save each record before you start the next dhikr. Never write a source text by hand, and never edit a dhikr to make a proof pass.
 
 ## Report
 
