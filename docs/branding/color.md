@@ -1,10 +1,10 @@
 # Color
 
-This doc holds every color of the brand and the rule that makes the color of each section. Read it before you add or change a color. [`design-system.md`](../design-system.md#color-of-an-occasion) has the rule in full and how the CSS uses it.
+Every brand color, and the rule that makes each section's color. Read it before you add or change a color. [`design-system.md`](../design-system.md#color-of-an-occasion) has the full rule and its CSS.
 
 ## The palette
 
-`src/lib/palette.ts` holds these, and `src/styles/tokens.css` holds the same values for the CSS. A test keeps the two equal, and `src/lib/branding.test.ts` keeps this table equal to them.
+`src/lib/palette.ts` holds these, and `src/styles/tokens.css` the same values for CSS. A test keeps the two equal, and `src/lib/branding.test.ts` keeps this table equal to them.
 
 | Key         | Value              | What it is                                                       |
 | ----------- | ------------------ | ---------------------------------------------------------------- |
@@ -18,16 +18,16 @@ This doc holds every color of the brand and the rule that makes the color of eac
 | `petal`     | `#d2a249`          | The petals of the mark. The one color outside the rule below     |
 | `disc`      | `#91593c`          | The disc of the mark. It equals the color of «الصباح والمساء»    |
 
-Dark mode changes the paper, the panel, and the ink in `tokens.css`. It does not change the mark, the eggshell, or the hue of a section. At night a section color is mixed with 10% black, so it does not glare.
+Dark mode changes the paper, the panel, and the ink in `tokens.css`, not the mark, the eggshell, or a section's hue. At night a section color takes 10% black, so it does not glare.
 
 ## The color of a section
 
-No section color is typed by hand. `src/lib/tone.ts` computes each one in OKLCH from the place of the section on the list:
+No section color is typed by hand. `src/lib/tone.ts` computes each in OKLCH from the section's place on the list:
 
-- Lightness `0.52` and chroma `0.086` for every section, so eggshell text keeps at least 4.5:1 on each, and no section looks louder than another.
-- The hue walks an arc of 300° that skips the olive tones, from 47° for the first section, in steps near the golden ratio, so neighbours on the list look different.
+- Lightness `0.52` and chroma `0.086` for every section, so eggshell text keeps 4.5:1 or more, and no section looks louder.
+- The hue walks a 300° arc that skips the olive tones, from 47° for the first section, in steps near the golden ratio, so neighbours differ.
 
-These are the colors the rule gives now. Adding a section changes them all.
+The rule gives these now. A new section changes them all.
 
 | Section       | Heading        | Color     | Hue  |
 | ------------- | -------------- | --------- | ---- |
@@ -42,10 +42,10 @@ These are the colors the rule gives now. Adding a section changes them all.
 | `unproven`    | لم يثبت        | `#5e6a77` | 250° |
 | `tibb`        | الطب النبوي    | `#836328` | 80°  |
 
-«لم يثبت» has the same lightness and almost no chroma (`0.025`), so it reads as grey beside the sections. «الطب النبوي» has the same lightness and chroma at the hue of the petals (80°), the yellow that the arc skips, so it sits apart from the adhkar and beside the mark.
+«لم يثبت» has the same lightness and almost no chroma (`0.025`), so it reads grey. «الطب النبوي» has the same lightness and chroma at the petals' hue (80°), the yellow the arc skips, so it sits apart from the adhkar and beside the mark.
 
 ## Where the colors go
 
-- A section color fills its bar, its banner, its card, its emblem tile, and its sharing card. The text on it is eggshell.
-- The paper and the panel carry everything else. The mark keeps its own two colors on the paper.
-- The home card is on the paper. A section card is on the color of its section. A dhikr card has a band of the color of its section over a panel.
+- A section color fills its bar, banner, card, emblem tile, and sharing card, with eggshell text.
+- The paper and the panel carry the rest. On the paper, the mark keeps its two colors.
+- The home card is on the paper, a section card on its section's color, and a dhikr card has a band of its section's color over a panel.

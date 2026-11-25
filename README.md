@@ -7,7 +7,7 @@
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-The daily adhkar that are authentic from the Prophet ﷺ, in eight occasions. Each dhikr links to its hadith on [dorar.net](https://dorar.net/hadith).
+The daily adhkar authentic from the Prophet ﷺ, in eight occasions. Each dhikr links to its hadith on [dorar.net](https://dorar.net/hadith).
 
 <p align="center">
   <picture>
@@ -26,7 +26,7 @@ The daily adhkar that are authentic from the Prophet ﷺ, in eight occasions. Ea
 
 ## What goes in
 
-A dhikr is in Sahih al-Bukhari or Sahih Muslim, or al-Albani grades it صحيح or حسن. The rule covers its count and its time. [`docs/content.md`](docs/content.md) has the full standard.
+A dhikr is in Sahih al-Bukhari or Sahih Muslim, or al-Albani grades it صحيح or حسن, with its count and its time. [`docs/content.md`](docs/content.md) has the full standard.
 
 Found a mistake? [Open a Dhikr correction](https://github.com/raaqimorg/wirdy/issues/new?template=dhikr-correction.yml).
 

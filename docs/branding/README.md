@@ -1,8 +1,8 @@
 # Branding
 
-This folder defines how Wirdy looks and speaks: its name, its words, its mark, its colors, its type, its images, and what each page says to search engines and to the apps that preview a link. Read it before you change anything a reader sees or a link preview shows.
+How Wirdy looks and speaks: the name, the words, the mark, the colors, the type, the images, and what each page tells search engines and link previews. Read it before you change anything a reader sees or a preview shows.
 
-The code holds the values, and this folder says what they are and why. `src/lib/branding.test.ts` fails when a value here and its value in the code differ, so change both in the same commit.
+The code holds the values, and this folder says what they are and why. `src/lib/branding.test.ts` fails when a value here differs from the code, so change both in one commit.
 
 | Doc                         | What it holds                                                       | Where the code holds it                               |
 | --------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------- |
@@ -16,8 +16,8 @@ The code holds the values, and this folder says what they are and why. `src/lib/
 ## The rules in one place
 
 - The name is «وِردي», always with its kasra. In Latin letters it is Wirdy, and the site is `wirdy.site`.
-- The mark is the sunflower. It sits before the name at the start of the bar, and it is the favicon.
-- No color is typed by hand outside `tokens.css` and `palette.ts`. The color of a section comes from its place on the list ([Color](color.md)).
-- The words of the adhkar are in Amiri, the Quran in Amiri Quran, and everything else in IBM Plex Sans Arabic.
-- Every page title ends with « | وِردي». Every link preview carries a card of 2400 by 1260.
-- Generated files are never edited by hand: run `bun run icons`, `bun run opengraph`, and `bun run opengraph:adhkar`.
+- The mark is the sunflower. It leads the name at the start of the bar, and it is the favicon.
+- No color is typed by hand outside `tokens.css` and `palette.ts`. A section's color comes from its place on the list ([Color](color.md)).
+- The adhkar are in Amiri, the Quran in Amiri Quran, and the rest in IBM Plex Sans Arabic.
+- Every page title ends with « | وِردي». Every link preview carries a 2400 by 1260 card.
+- Never edit generated files by hand: run `bun run icons`, `bun run opengraph`, and `bun run opengraph:adhkar`.
