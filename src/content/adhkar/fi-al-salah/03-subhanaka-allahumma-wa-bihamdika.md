@@ -1,0 +1,16 @@
+---
+title: "سبحانك اللهم وبحمدك في الاستفتاح"
+occasion: "fi-al-salah"
+order: 3
+count: 1
+mode: "both"
+quran: false
+when: "إذا افتتح الصلاة"
+group: "الاستفتاح"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح الترمذي ٢٤٣"
+  ruling: "صحيح"
+  url: "https://dorar.net/h/wNcmx3w7"
+---
+سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ، وَلَا إِلَهَ غَيْرُكَ

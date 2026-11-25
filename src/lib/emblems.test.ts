@@ -71,6 +71,14 @@ describe('the emblem of the adhkar after the prayers', () => {
   });
 });
 
+describe('the emblem of the adhkar inside the prayer', () => {
+  it('steps down from the standing to the prostration, and lights only the lowest', () => {
+    const heights = EMBLEMS['fi-al-salah'].map(({ attrs }) => Number(attrs.height));
+    expect(heights).toEqual(heights.toSorted((a, b) => b - a));
+    expect(lit('fi-al-salah')).toEqual([EMBLEMS['fi-al-salah'].at(-1)]);
+  });
+});
+
 describe('the emblem of «ما لم يثبت»', () => {
   it('misses one narrator from the lit chain', () => {
     expect(lit('unproven').filter(({ tag }) => tag === 'circle')).toHaveLength(3);

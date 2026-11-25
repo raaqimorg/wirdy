@@ -18,6 +18,7 @@ const motionOf = (index: number) => {
 };
 const cardOf = (index: number) => {
   if (variant === 'compact') return 'compact';
+  if (index === tiles.length - 1) return 'band';
   return index === 0 ? 'lead' : 'row';
 };
 ---

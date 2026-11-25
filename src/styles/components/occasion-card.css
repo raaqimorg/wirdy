@@ -112,6 +112,10 @@
     aspect-ratio: auto;
   }
 
+  .occasion-card--band .occasion-card__stage {
+    aspect-ratio: 5 / 1;
+  }
+
   .occasion-card--compact .occasion-card__title {
     font-size: var(--text-body);
   }

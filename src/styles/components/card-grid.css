@@ -23,4 +23,8 @@
   .card-grid--featured > :first-child {
     grid-column: span 2;
   }
+
+  .card-grid--featured > :last-child {
+    grid-column: 1 / -1;
+  }
 }

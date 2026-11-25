@@ -1,18 +1,19 @@
 <h1 align="center">وِردي 🌻</h1>
 
-<p align="center">The daily adhkar that are authentic from the Prophet ﷺ, in seven occasions, each with its takhrij.</p>
+<p align="center">The daily adhkar that are authentic from the Prophet ﷺ, in eight occasions, each with its takhrij.</p>
 
 <p align="center">
   <a href="https://wirdy.site"><img alt="Live site" src="https://img.shields.io/website?url=https%3A%2F%2Fwirdy.site&label=wirdy.site"></a>
   <a href="LICENSE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-blue.svg"></a>
 </p>
 
-Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 160 adhkar in seven occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
+Wirdy is a small static Arabic site at [wirdy.site](https://wirdy.site). It shows 196 adhkar in eight occasions, with full tashkil. The home page has a card for each occasion, and each occasion has its own page. Each dhikr has its own page too, with a share link and a card. A dhikr shows its count, the moment it is for, and its virtue when the hadith states one. Under each dhikr is its source and ruling, linked to the page of its hadith on [dorar.net](https://dorar.net/hadith). There are no ads, no accounts, and no tracking. No page makes a request to another site.
 
 | Occasion             | Adhkar |
 | -------------------- | -----: |
 | أذكار الصباح والمساء |     16 |
 | أذكار الأذان والمسجد  |     13 |
+| أذكار داخل الصلاة     |     36 |
 | أذكار أدبار الصلوات  |     20 |
 | أذكار النوم          |     18 |
 | أذكار الاستيقاظ       |      7 |

@@ -50,6 +50,21 @@ const arches: Shape[] = [
   lit('path', 'up', { d: 'M100 240V194A20 20 0 0 1 140 194V240Z', ...egg() }),
 ];
 
+const DESCENT = [0.12, 0.16, 0.2, 0.24, 0.28];
+
+const bowing: Shape[] = [
+  ...DESCENT.map((opacity, index) =>
+    dark('rect', {
+      x: 210 - index * 42,
+      y: index * 40,
+      width: 30,
+      height: 240 - index * 40,
+      ...shade(opacity),
+    })
+  ),
+  lit('rect', 'up', { x: 0, y: 200, width: 30, height: 40, ...egg() }),
+];
+
 const THIRDS = [0.14, 0.24, 0.36];
 
 const hundred: Shape[] = times(100, (index) => {
@@ -128,6 +143,7 @@ export type EmblemName = Occasion | 'unproven';
 export const EMBLEMS: Record<EmblemName, Shape[]> = {
   'sabah-masaa': halves,
   masjid: arches,
+  'fi-al-salah': bowing,
   salah: hundred,
   nawm: night,
   istiqaz: standing,

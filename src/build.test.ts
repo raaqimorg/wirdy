@@ -71,6 +71,7 @@ describe('built site', () => {
     }
     expect(html).toMatch(cardTo('/ma-lam-yathbut/'));
     expect(html.match(/class="occasion-card /g)).toHaveLength(OCCASION_IDS.length + 1);
+    expect(html.match(/occasion-card--band/g)).toHaveLength(1);
   });
 
   it('gives a home card and the banner of its page one view transition name', () => {

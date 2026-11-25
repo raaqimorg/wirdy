@@ -33,6 +33,7 @@ Each dhikr belongs to one occasion. The occasion is its folder and its `occasion
 | ------------- | -------------------- |
 | `sabah-masaa` | أذكار الصباح والمساء |
 | `masjid`      | أذكار الأذان والمسجد  |
+| `fi-al-salah` | أذكار داخل الصلاة     |
 | `salah`       | أذكار أدبار الصلوات  |
 | `nawm`        | أذكار النوم          |
 | `istiqaz`     | أذكار الاستيقاظ       |

@@ -1,6 +1,6 @@
 # Wirdy Agent Guidelines
 
-This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Arabic site of the daily adhkar that are authentic from the Prophet ﷺ: a home page of seven occasions, one page for each occasion, one page for each dhikr, and a page of the well-known adhkar that did not come in («ما لم يثبت»). Under each dhikr is its takhrij, linked to dorar.net. Astro builds the pages, and Cloudflare Pages serves them. There is no server, no client framework, and one small inline script.
+This repo holds [wirdy.site](https://wirdy.site) (وِردي): a small static Arabic site of the daily adhkar that are authentic from the Prophet ﷺ: a home page of eight occasions, one page for each occasion, one page for each dhikr, and a page of the well-known adhkar that did not come in («ما لم يثبت»). Under each dhikr is its takhrij, linked to dorar.net. Astro builds the pages, and Cloudflare Pages serves them. There is no server, no client framework, and one small inline script.
 
 ## Layout
 
