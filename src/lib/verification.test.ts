@@ -251,6 +251,21 @@ describe('the takhrij', () => {
     expect(status(cited(change)).state).toBe('unproven');
   });
 
+  it('ignores the quotation marks of a ruling', () => {
+    const data = { ...dhikr, takhrij: { ...dhikr.takhrij, ruling: 'صحيح دون قوله: ثلاث مرار' } };
+    const quoted = { ...dorar, ruling: 'صحيح دون قوله: "ثلاث مرار"' };
+    const sources = [quoted, ...SOURCES.slice(1)];
+    expect(status(proofOf(data, BODY, sources), data).state).toBe('proven');
+  });
+
+  it('reads «أورده في صحيحه» of the two Sahihs as sound, and of no other grader', () => {
+    const ruling = 'أورده في صحيحه] وقال : تابعه عبيد الله';
+    expect(status(cited({ ruling })).state).toBe('proven');
+    const data: Dhikr = { ...dhikr, takhrij: { ...dhikr.takhrij, grader: 'الألباني' } };
+    const sources = [{ ...dorar, grader: 'الألباني', ruling }, ...SOURCES.slice(1)];
+    expect(status(proofOf(data, BODY, sources), data).state).toBe('unproven');
+  });
+
   it('reads the digits of either script as equal', () => {
     expect(status(cited({ number: '٢٦٩٢' })).state).toBe('proven');
   });

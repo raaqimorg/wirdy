@@ -20,6 +20,8 @@ const COVERED_BOOKS = [
 
 const IN_THE_CITED_PAGE = new Set<Claim>(['count', 'moment', 'fadl']);
 
+const SAHIHAYN = new Set(['البخاري', 'مسلم']);
+
 const CHANGED = 'changed since it was proven';
 
 const latinDigits = (text: string) =>
@@ -147,6 +149,14 @@ function differenceProblems(body: string, proof: Proof): string[] {
   });
 }
 
+function sameRuling(cited: Present, takhrij: Dhikr['takhrij']): boolean {
+  const ruling = normalize(cited.ruling ?? '');
+  if (SAHIHAYN.has(takhrij.grader) && takhrij.ruling === 'صحيح') {
+    return ruling === 'صحيح' || ruling.startsWith('أورده في صحيحه');
+  }
+  return ruling === normalize(takhrij.ruling);
+}
+
 function takhrijProblems({ takhrij }: Dhikr, cited: Present | undefined): string[] {
   if (!cited) return ['takhrij: the cited dorar.net page is missing'];
   const problems: string[] = [];
@@ -156,7 +166,7 @@ function takhrijProblems({ takhrij }: Dhikr, cited: Present | undefined): string
   if (cited.grader !== takhrij.grader) {
     problems.push(`takhrij: the grader is «${cited.grader}» on the cited page`);
   }
-  if (cited.ruling !== takhrij.ruling) {
+  if (!sameRuling(cited, takhrij)) {
     problems.push(`takhrij: the ruling is «${cited.ruling}» on the cited page`);
   }
   return problems;
