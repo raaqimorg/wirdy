@@ -43,18 +43,35 @@ function formsOf(body: string): string[] {
   return [...new Set([formOf(body, 'sabah'), formOf(body, 'masaa')])];
 }
 
+function nextPageOf(url: string): string | undefined {
+  const [, book, page] = url.match(/^(https:\/\/shamela\.ws\/book\/\d+\/)(\d+)$/) ?? [];
+  return book && `${book}${Number(page) + 1}`;
+}
+
+function readingsOf(proof: Proof, site: Site): number[][] {
+  const pages = proof.sources.flatMap((source, index) =>
+    source.state === 'present' && source.site === site ? [{ index, url: source.url }] : []
+  );
+  return pages.flatMap(({ index, url }) => {
+    const next = pages.find((other) => other.url === nextPageOf(url));
+    return next ? [[index], [index, next.index]] : [[index]];
+  });
+}
+
 function missingOn(proof: Proof, body: string, site: Site): string[] {
   const spans = proof.claims.text?.spans ?? [];
-  const pages = [...proof.sources.entries()].filter(([, source]) => source.site === site);
+  const readings = readingsOf(proof, site);
 
   const missing = formsOf(body).flatMap((form) => {
-    const ofEachPage = pages.map(([index]) =>
+    const ofEach = readings.map((reading) =>
       missingPhrases(
         form,
-        spans.filter((span) => span.source === index).map((span) => span.text)
+        reading.flatMap((index) =>
+          spans.filter((span) => span.source === index).map((span) => span.text)
+        )
       )
     );
-    return ofEachPage.toSorted((a, b) => a.length - b.length)[0] ?? phrasesIn(form);
+    return ofEach.toSorted((a, b) => a.length - b.length)[0] ?? phrasesIn(form);
   });
   return [...new Set(missing)];
 }

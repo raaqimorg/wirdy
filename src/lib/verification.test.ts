@@ -58,6 +58,7 @@ const sunnah: Present = {
   url: 'https://sunnah.com/muslim:2692',
   text: WORDS,
 };
+const shamelaAt = (url: string, text: string): Present => ({ ...shamela, url, text });
 const alukah: Present = { ...page, site: 'alukah', url: 'https://www.alukah.net/a/1', text: WORDS };
 const tanzil: Present = { ...page, site: 'tanzil', url: 'https://tanzil.net/', text: BODY };
 
@@ -188,6 +189,18 @@ describe('the sources', () => {
     expect(status(withSources(dorar, ...halves, hdith, sunnah)).problems).toEqual([
       'text: shamela does not cover «وبحمده»',
     ]);
+  });
+
+  it('may go on from one page of a book to the next page of it', () => {
+    const next = [
+      shamelaAt('https://shamela.ws/book/2/9', 'سبحان الله'),
+      shamelaAt('https://shamela.ws/book/2/10', 'وبحمده'),
+    ];
+    expect(status(withSources(dorar, ...next, hdith, sunnah)).state).toBe('proven');
+    const apart = [next[0]!, shamelaAt('https://shamela.ws/book/2/11', 'وبحمده')];
+    expect(status(withSources(dorar, ...apart, hdith, sunnah)).state).toBe('unproven');
+    const other = [next[0]!, shamelaAt('https://shamela.ws/book/3/10', 'وبحمده')];
+    expect(status(withSources(dorar, ...other, hdith, sunnah)).state).toBe('unproven');
   });
 
   it('need one page of a site, when another page of it differs', () => {
