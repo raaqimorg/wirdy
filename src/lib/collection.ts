@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { adhkarLabel } from './arabic';
 import { foldOf, suwarOf } from './lead';
@@ -44,6 +45,7 @@ export type SearchRow = {
   also?: string;
   heading: string;
   color: string;
+  emblem: EmblemName;
   group?: string;
   ruling?: string;
   href: string;
@@ -56,7 +58,7 @@ function shownAyat(data: AdhkarEntry['data'], text: string): string {
 
 export async function searchRows(): Promise<SearchRow[]> {
   const lists = await Promise.all(OCCASIONS.map(({ id }) => adhkarOf(id)));
-  const adhkar = OCCASIONS.flatMap(({ heading, color }, index) =>
+  const adhkar = OCCASIONS.flatMap(({ id: emblem, heading, color }, index) =>
     lists[index]!.map(({ id, data, body = '' }) => {
       const text = body.trim();
       return {
@@ -65,6 +67,7 @@ export async function searchRows(): Promise<SearchRow[]> {
         also: text.includes('{{') ? formOf(text, 'masaa') : undefined,
         heading,
         color,
+        emblem,
         group: data.group,
         href: dhikrAnchor(data.occasion, slugOf(id)),
       };
@@ -75,8 +78,15 @@ export async function searchRows(): Promise<SearchRow[]> {
     words: body.trim(),
     heading: UNPROVEN.heading,
     color: UNPROVEN.color,
+    emblem: 'unproven' as const,
     ruling: data.takhrij.ruling,
     href: `${UNPROVEN.path}#${slugOf(id)}`,
   }));
   return [...adhkar, ...unproven];
+}
+
+export async function searchIndex(): Promise<{ rows: SearchRow[]; version: string; path: string }> {
+  const rows = await searchRows();
+  const version = createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
+  return { rows, version, path: `/search/${version}.json` };
 }

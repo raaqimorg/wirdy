@@ -1,0 +1,77 @@
+---
+import Search from './Search.astro';
+import { searchIndex } from '../lib/collection';
+
+interface Props {
+  tone?: boolean;
+}
+
+const { tone = false } = Astro.props;
+const { path } = await searchIndex();
+---
+
+<dialog
+  class:list={['search-sheet', tone && 'search-sheet--tone']}
+  aria-label="البحث"
+  data-search-sheet
+  data-search-index={path}
+>
+  <Search sheet />
+</dialog>
+
+<script>
+  import type { SearchRow } from '../lib/collection';
+  import { fillRow, mountSearch } from '../scripts/search';
+
+  const sheet = document.querySelector<HTMLDialogElement>('[data-search-sheet]');
+  if (sheet) {
+    const root = sheet.querySelector<HTMLElement>('[data-search]')!;
+    const input = root.querySelector<HTMLInputElement>('[data-search-input]')!;
+    let loading: Promise<void> | undefined;
+
+    const load = () =>
+      (loading ??= fetch(sheet.dataset.searchIndex!)
+        .then((response) => {
+          if (!response.ok) throw new Error(response.statusText);
+          return response.json() as Promise<SearchRow[]>;
+        })
+        .then((rows) => {
+          const template = root.querySelector<HTMLTemplateElement>('[data-search-template]')!;
+          const list = root.querySelector('[data-search-list]')!;
+          list.append(...rows.map((row) => fillRow(template, row)));
+          mountSearch(root);
+        }));
+
+    const open = (fallback: string) => {
+      if (!sheet.open) sheet.showModal();
+      input.focus();
+      load().catch(() => {
+        location.href = fallback;
+      });
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      const trigger = target.closest<HTMLAnchorElement>('[data-search-open]');
+      if (trigger && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
+        event.preventDefault();
+        open(trigger.href);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const typing = (event.target as Element).closest('input, textarea, [contenteditable]');
+      const slash = event.key === '/' && !typing;
+      const command = event.key === 'k' && (event.metaKey || event.ctrlKey);
+      if (!slash && !command) return;
+      event.preventDefault();
+      open('/bahth/');
+    });
+
+    sheet.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      if (target === sheet || target.closest('[data-search-close]')) sheet.close();
+      else if (target.closest('[data-search-row] a')) sheet.close();
+    });
+  }
+</script>

@@ -1,7 +1,0 @@
-.tools {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: var(--space-1);
-  margin-inline: auto calc(var(--space-1-5) * -1);
-}

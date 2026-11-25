@@ -74,7 +74,7 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 .evening b{font:700 26px/1 "Plex";color:var(--tone-text)}
 .foot{flex:none;display:flex;align-items:center;gap:14px;height:78px;margin:0 56px;padding-bottom:4px;font-size:23px;color:${PALETTE.inkMuted};border-top:2px solid color-mix(in oklab,${PALETTE.inkMuted},transparent 80%)}
 .foot svg{width:42px;height:42px;translate:0 2px}
-.foot b{font-size:29px;font-weight:700;color:${PALETTE.ink};margin-top:-7px}
+.foot b{font-size:29px;font-weight:700;color:${PALETTE.ink};translate:0 -7px}
 .foot .site{direction:ltr}
 .foot .source{margin-inline-start:auto;text-align:left}
 </style></head><body class="unfit">

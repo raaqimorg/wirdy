@@ -126,8 +126,9 @@ describe('built site', () => {
     for (const id of OCCASION_IDS) {
       const page = pages[id]!;
       expect(page.match(/<h1[ >]/g)).toHaveLength(1);
-      expect(page).toMatch(/<nav class="bar" aria-label="التنقّل"><div class="section-menu">/);
-      expect(page).toContain('<a class="bar__back bar__back--fallback" href="/">');
+      expect(page).toMatch(
+        /<nav class="bar" aria-label="التنقّل"><a class="bar__back" href="\/" aria-label="وِردي، الرئيسية">/
+      );
     }
   });
 
@@ -150,12 +151,12 @@ describe('built site', () => {
     );
   });
 
-  it('opens a menu of every section from the bar of each list page, with no script', () => {
+  it('opens a menu of every section from the title in the bar of each list page, with no script', () => {
     const sections = [...OCCASION_IDS, 'ma-lam-yathbut'];
     for (const id of sections) {
       const bar = own(id).match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
       expect(bar).toMatch(
-        /<button class="section-menu__button" type="button" popovertarget="sections">\s*الأقسام\s*<svg/
+        /<button class="section-menu__button" type="button" popovertarget="sections" aria-label="الأقسام، [^"]+"><span class="section-menu__state section-menu__state--top"><span class="section-menu__words">الأقسام<\/span><svg[\s\S]*?<\/svg><\/span><span class="section-menu__state section-menu__state--title"><span class="section-menu__words">[^<]+<\/span><svg/
       );
       const panel = bar.match(
         /<div class="section-menu__panel" id="sections" popover>[\s\S]*?<\/div>/
@@ -171,8 +172,13 @@ describe('built site', () => {
     }
     const alone = own('nawm/ayat-al-kursi').match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
     expect(alone).not.toContain('section-menu');
-    expect(alone).toContain('<a class="bar__back" href="/nawm/#ayat-al-kursi">');
+    expect(alone).toContain(
+      '<a class="bar__back" href="/nawm/#ayat-al-kursi" aria-label="أذكار النوم">'
+    );
+    expect(alone).toContain('<a class="bar__crumb" href="/nawm/#ayat-al-kursi">أذكار النوم</a>');
     expect(css).toMatch(/@supports selector\(:popover-open\)/);
+    expect(css).toMatch(/@supports \(animation-timeline:scroll\(\)\)/);
+    expect(css).toMatch(/animation-timeline:scroll\(root\)/);
   });
 
   it('ships both wird variants, each with the other form struck', () => {
@@ -236,26 +242,27 @@ describe('built site', () => {
     expect(css).toMatch(/\.site-footer__tools\{[^}]*color:var\(--color-ink-faint\)/);
   });
 
-  it('names the occasion in the bar, and makes the bar mark a link home', () => {
+  it('names the occasion in the bar, and leads home from its back button', () => {
     for (const { id, heading } of OCCASIONS) {
       const bar = pages[id]!.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
+      expect(bar).toContain(`<span class="section-menu__words">${heading}</span>`);
       expect(bar).toContain(`<span class="bar__title" aria-hidden="true">${heading}</span>`);
       expect(bar).toMatch(
-        /<a class="icon-button" href="\/" aria-label="وِردي، الرئيسية"><span class="icon-button__face"><svg class="mark"/
+        /<a class="bar__back" href="\/" aria-label="وِردي، الرئيسية"><span class="bar__face"><svg class="icon/
+      );
+      expect(bar).toMatch(
+        /<span class="bar__trail"><a class="bar__brand" href="\/" aria-label="وِردي، الرئيسية"><svg class="mark"/
       );
     }
+    expect(css).toMatch(/@supports selector\(:popover-open\)\{\.bar__title\{display:none/);
   });
 
-  it('draws the bar mark in the two inks of the emblems, and the home mark in its own', () => {
+  it('draws the home mark in its own inks', () => {
     const home = html.match(/<svg class="mark"[\s\S]*?<\/svg>/)![0];
-    expect(home).toContain(PALETTE.petal);
-    for (const page of [...Object.values(pages), own('ma-lam-yathbut')]) {
-      const mark = page.match(/<svg class="mark"[\s\S]*?<\/svg>/)![0];
-      expect([...new Set([...mark.matchAll(/ fill="([^"]+)"/g)].map(([, ink]) => ink))]).toEqual([
-        PALETTE.eggshell,
-        PALETTE.shade,
-      ]);
-    }
+    expect([...new Set([...home.matchAll(/ fill="([^"]+)"/g)].map(([, ink]) => ink))]).toEqual([
+      PALETTE.petal,
+      PALETTE.disc,
+    ]);
   });
 
   it('switches between the morning and the evening form, and marks the one that shows', () => {
@@ -280,11 +287,6 @@ describe('built site', () => {
     expect(own('ma-lam-yathbut')).toContain(
       '<p class="banner__lede">أذكار مشهورة ضعّفها الألباني، أو ضعّف عددها أو وقتها</p>'
     );
-  });
-
-  it('fades the bar title in on scroll, with the timeline apart from the shorthand', () => {
-    expect(css).toContain('animation-timeline:scroll(root)');
-    expect(css).not.toMatch(/animation:[^;}]*scroll\(/);
   });
 
   it('lists the groups of each page, each with a Latin link', () => {
@@ -340,7 +342,9 @@ describe('built site', () => {
   });
 
   it('holds the text of each takhrij link in its own span, so the link grows with it', () => {
-    const links = all.match(/<a class="takhrij"[^>]*>[\s\S]*?<\/a>/g) ?? [];
+    const links = (all.match(/<a class="takhrij"[^>]*>[\s\S]*?<\/a>/g) ?? []).filter(
+      (link) => !link.includes('href="https://tanzil.net/"')
+    );
     expect(links.length).toBe(expected);
     for (const link of links) expect(link).toMatch(/^<a [^>]*><span class="takhrij__text">/);
     expect(css).toMatch(/\.takhrij\{[^}]*padding-block:/);
@@ -348,8 +352,9 @@ describe('built site', () => {
   });
 
   it('writes no takhrij with a middle dot', () => {
-    const values =
-      all.match(/<a class="takhrij"[^>]*><span class="takhrij__text">[^<]*<\/span>/g) ?? [];
+    const values = (
+      all.match(/<a class="takhrij"[^>]*><span class="takhrij__text">[^<]*<\/span>/g) ?? []
+    ).filter((value) => !value.includes('href="https://tanzil.net/"'));
     expect(values.length).toBe(expected);
     for (const value of values) expect(value).not.toContain('·');
   });
@@ -578,7 +583,8 @@ describe('built site', () => {
     const page = readFileSync(join(DIST, 'ma-lam-yathbut', 'index.html'), 'utf8');
     const bar = page.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0];
     expect(bar).toContain('<span class="bar__title" aria-hidden="true">ما لم يثبت</span>');
-    expect(bar).toContain('<a class="icon-button" href="/" aria-label="وِردي، الرئيسية">');
+    expect(bar).toContain('<span class="section-menu__words">ما لم يثبت</span>');
+    expect(bar).toContain('<a class="bar__back" href="/" aria-label="وِردي، الرئيسية">');
     expect(bar).not.toContain('github.com');
     const rulings = page.match(/<span class="badge">[^<]+<\/span>/g)!;
     expect(
@@ -634,9 +640,7 @@ describe('built site', () => {
       expect(page.match(/ data-status/g)).toHaveLength(1);
       expect(page).toMatch(/<a class="button" href="\/og\/[^"]+" download="wirdy-/);
       expect(pages[occasion!]).toMatch(
-        new RegExp(
-          `<a class="icon-button icon-button--quiet" href="/${slug}/" aria-label="صفحة الذكر: `
-        )
+        new RegExp(`<a class="entry__act" href="/${slug}/" aria-label="صفحة الذكر: `)
       );
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
@@ -943,19 +947,50 @@ describe('built site', () => {
     expect(rows.filter((row) => row.includes('class="search-row__ruling"'))).toHaveLength(
       unproven.length
     );
-    expect(html.match(/<header class="site-header container">[\s\S]*?<\/header>/)![0]).toContain(
-      'href="/bahth/"'
-    );
+    expect(page).not.toContain('href="/bahth/"');
+    expect(page).not.toContain('data-search-sheet');
+    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+    expect(sitemap).not.toContain('/bahth/');
+  });
+
+  it('opens search in place on every other page, from one index the browser keeps until a deploy', () => {
     const others = [
+      html,
       notFound,
-      own('bahth'),
       ...Object.values(pages),
       own('ma-lam-yathbut'),
       own('nawm/ayat-al-kursi'),
     ];
-    for (const other of others) expect(other).not.toContain('href="/bahth/"');
-    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
-    expect(sitemap).not.toContain('/bahth/');
+    const indexes = new Set<string>();
+    for (const page of others) {
+      expect(page).toContain(
+        '<a class="search-trigger search-trigger--field" href="/bahth/" data-search-open>'
+      );
+      expect(page.match(/<dialog class="search-sheet[^"]*"[^>]*>/g)).toHaveLength(1);
+      indexes.add(page.match(/data-search-index="(\/search\/[0-9a-f]{12}\.json)"/)![1]!);
+    }
+    expect(indexes.size).toBe(1);
+    const [index] = [...indexes];
+    const rows = JSON.parse(readFileSync(join(DIST, index!), 'utf8'));
+    const page = own('bahth');
+    expect(rows).toHaveLength(page.match(/<li class="search-row" data-search-row>/g)!.length);
+    const headers = readFileSync(join(DIST, '_headers'), 'utf8');
+    expect(headers).toContain('/search/*\n  Cache-Control: public, max-age=31536000, immutable');
+    for (const start of [html, notFound]) {
+      expect(start).toContain(
+        '<a class="search-trigger search-trigger--hero" href="/bahth/" data-search-open>'
+      );
+    }
+    for (const listed of [
+      ...Object.values(pages),
+      own('ma-lam-yathbut'),
+      own('nawm/ayat-al-kursi'),
+    ]) {
+      expect(listed.match(/<nav class="bar"[\s\S]*?<\/nav>/)![0]).toContain(
+        '<a class="search-trigger search-trigger--round" href="/bahth/" aria-label="ابحث في الأذكار" data-search-open>'
+      );
+    }
+    expect(own('nawm').match(/<dialog class="search-sheet search-sheet--tone"/g)).toHaveLength(1);
   });
 
   it('gives each entry of «ما لم يثبت» its own place to link to', () => {

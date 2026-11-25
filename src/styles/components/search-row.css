@@ -1,14 +1,38 @@
-.search-row + .search-row {
-  margin-top: var(--space-2);
+.search-row {
+  position: relative;
+}
+
+.search-row:not([hidden]) ~ .search-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: calc(var(--space-3-5) + var(--size-tile) + var(--space-3)) 0;
+  border-top: var(--border-hairline) solid var(--color-line-soft);
 }
 
 .search-row__link {
   display: grid;
-  gap: var(--space-0-5);
-  padding: var(--space-3) var(--space-3-5);
-  background: var(--color-panel);
-  border-radius: var(--radius-card);
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-3);
+  padding: var(--space-3) var(--space-3-5) var(--space-2-5);
   text-decoration: none;
+}
+
+.search-row__tile {
+  display: grid;
+  grid-row: 1 / span 3;
+  place-items: center;
+  width: var(--size-tile);
+  height: var(--size-tile);
+  margin-top: var(--space-0-5);
+  overflow: hidden;
+  background: var(--tone-fill);
+  border-radius: var(--radius-tile);
+}
+
+.search-row__tile svg {
+  width: 72%;
+  height: 72%;
 }
 
 .search-row__title {
@@ -18,34 +42,25 @@
 }
 
 .search-row__words {
-  max-height: calc(var(--leading-reading-small) * 2em);
   overflow: hidden;
   color: var(--color-ink-muted);
   font-family: var(--font-naskh);
   font-size: var(--text-reading-1);
   line-height: var(--leading-reading-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .search-row__place {
   display: flex;
   align-items: center;
-  gap: var(--space-1-5);
-  margin-top: var(--space-1);
+  gap: var(--space-2);
   color: var(--tone-text);
   font-size: var(--text-small);
   font-weight: var(--weight-medium);
 }
 
-.search-row__dot {
-  flex: none;
-  width: var(--space-2);
-  height: var(--space-2);
-  background: var(--tone-fill);
-  border-radius: var(--radius-round);
-}
-
 .search-row__ruling {
-  margin-inline-start: auto;
   padding: 0 var(--space-2) var(--space-lift);
   color: var(--color-eggshell);
   background: var(--tone-fill);
@@ -53,9 +68,17 @@
 }
 
 .search-row mark {
-  padding-block: var(--space-0-5);
   color: inherit;
   background: var(--color-mark);
   border-radius: var(--radius-focus);
-  box-decoration-break: clone;
+}
+
+.search-row__words mark {
+  background: linear-gradient(var(--color-mark), var(--color-mark)) center / 100% 1.25em no-repeat;
+}
+
+@media (hover: hover) {
+  .search-row__link:hover {
+    background: var(--color-line-soft);
+  }
 }

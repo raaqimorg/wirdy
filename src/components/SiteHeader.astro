@@ -1,23 +1,19 @@
 ---
-import Icon from './Icon.astro';
-import IconButton from './IconButton.astro';
 import Mark from './Mark.astro';
-import Tools from './Tools.astro';
+import SearchTrigger from './SearchTrigger.astro';
 import { SITE } from '../lib/site';
 
-const home = Astro.url.pathname === '/';
+const search = Astro.url.pathname !== '/bahth/';
 ---
 
 <header class="site-header container">
   <a class="site-header__brand" href="/">
     <Mark />
-    <span>{SITE.name}</span>
+    <span class="site-header__name">{SITE.name}</span>
   </a>
-  {home && (
-    <Tools>
-      <IconButton label="البحث" variant="panel" href="/bahth/">
-        <Icon name="search" />
-      </IconButton>
-    </Tools>
+  {search && (
+    <span class="site-header__search">
+      <SearchTrigger variant="field" />
+    </span>
   )}
 </header>

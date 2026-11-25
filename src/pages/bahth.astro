@@ -5,108 +5,12 @@ import { searchRows, sectionTiles } from '../lib/collection';
 import { SITE } from '../lib/site';
 ---
 
-<Home title="البحث" description={SITE.description} noindex faces={['naskh']}>
+<Home title="البحث" description={SITE.description} noindex faces={['naskh']} search={false}>
   <Search tiles={await sectionTiles()} rows={await searchRows()} />
 </Home>
 
 <script>
-  import { resultsLabel } from '../lib/arabic';
-  import { match, ranges, rowOf, windowOf, type Range } from '../lib/search';
+  import { mountSearch } from '../scripts/search';
 
-  const KEY = 'search';
-  const find = <T extends HTMLElement>(name: string, root: ParentNode = document) =>
-    root.querySelector<T>(`[data-search-${name}]`)!;
-
-  const input = find<HTMLInputElement>('input');
-  const clear = find<HTMLButtonElement>('clear');
-  const list = find('list');
-  const status = find('status');
-  const empty = find('empty');
-  const asked = find('query');
-  const browse = find('browse');
-
-  const entries = [...list.querySelectorAll<HTMLElement>('[data-search-row]')].map((item) => {
-    const title = find('title', item);
-    const words = find('words', item);
-    const text = { title: title.textContent!.trim(), words: words.textContent!.trim() };
-    const place = find('place', item).textContent!.trim();
-    return { item, title, words, text, row: rowOf({ ...text, also: words.dataset.also, place }) };
-  });
-  const rows = entries.map(({ row }) => row);
-
-  const paint = (
-    element: HTMLElement,
-    text: string,
-    found: Range[],
-    from = 0,
-    to = text.length
-  ) => {
-    const parts: (string | Node)[] = [from > 0 ? '… ' : ''];
-    let at = from;
-    for (const [start, end] of found) {
-      const a = Math.max(start, from);
-      let b = Math.min(end, to);
-      if (a >= b) continue;
-      while (b > a && text[b - 1] === ' ') b--;
-      const mark = document.createElement('mark');
-      mark.textContent = text.slice(a, b);
-      parts.push(text.slice(at, a), mark);
-      at = b;
-    }
-    parts.push(text.slice(at, to), to < text.length ? ' …' : '');
-    element.replaceChildren(...parts);
-  };
-
-  const save = (query: string) => {
-    try {
-      if (query) sessionStorage.setItem(KEY, query);
-      else sessionStorage.removeItem(KEY);
-    } catch {}
-  };
-
-  const render = () => {
-    const query = input.value;
-    clear.hidden = !query;
-    save(query);
-    const found = match(rows, query);
-    browse.hidden = Boolean(found);
-    empty.hidden = !found || found.hits.length > 0;
-    list.hidden = !found?.hits.length;
-    status.textContent = found?.hits.length ? resultsLabel(found.hits.length) : '';
-    if (!found?.hits.length) {
-      asked.textContent = query.trim();
-      return;
-    }
-    const shown = new Set(found.hits);
-    entries.forEach(({ item }, index) => {
-      item.hidden = !shown.has(index);
-    });
-    list.append(...found.hits.map((index) => entries[index]!.item));
-    for (const index of found.hits) {
-      const { title, words, text, row } = entries[index]!;
-      paint(title, text.title, ranges(text.title, row.title, found.words));
-      const marked = ranges(text.words, row.words, found.words);
-      const { from, to } = windowOf(text.words, marked);
-      paint(words, text.words, marked, from, to);
-    }
-  };
-
-  const navigation = performance.getEntriesByType('navigation')[0] as
-    PerformanceNavigationTiming | undefined;
-  if (navigation?.type === 'back_forward' && !input.value) {
-    try {
-      input.value = sessionStorage.getItem(KEY) ?? '';
-    } catch {}
-  }
-
-  input.addEventListener('input', render);
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') input.blur();
-  });
-  clear.addEventListener('click', () => {
-    input.value = '';
-    render();
-    input.focus();
-  });
-  render();
+  mountSearch(document.querySelector<HTMLElement>('[data-search]')!, { restore: true });
 </script>

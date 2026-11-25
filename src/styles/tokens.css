@@ -13,6 +13,8 @@
   --color-brighten: white;
   --color-track: rgb(0 0 0 / 0.24);
   --color-backdrop: rgb(0 0 0 / 0.12);
+  --color-glass: color-mix(in oklab, var(--color-eggshell), transparent 80%);
+  --color-glass-ink: color-mix(in oklab, var(--color-eggshell), transparent 25%);
   --color-mark: color-mix(in oklab, #d2a249, var(--color-panel) 62%);
   --tone-shade: 0%;
   --tone-ink: 30%;
@@ -68,7 +70,7 @@
   --space-gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
   --space-track: 3px;
   --space-lift: 0.14em;
-  --space-lift-brand: 0.24em;
+  --space-lift-brand: 0.3em;
   --space-badge-block: 0.2rem;
   --space-badge-inline: 0.7rem;
   --space-badge-inline-count: 0.6rem;
@@ -79,7 +81,6 @@
   --size-hero: 24em;
   --size-touch: 2.75rem;
   --size-button: 3rem;
-  --size-face: 2rem;
   --size-mark: 1.75rem;
   --size-icon: 0.75em;
   --size-icon-medium: 1rem;
@@ -92,12 +93,16 @@
   --size-action: 5.5rem;
   --size-action-wide: 9rem;
   --size-side: 18rem;
-  --size-menu: 16.5rem;
+  --size-menu: 20rem;
+  --size-popover: 30rem;
+  --size-bar: 3.25rem;
+  --size-control: 2.25rem;
+  --size-tile: 1.875rem;
+  --size-row: 3rem;
   --size-label: 3.5rem;
   --size-banner: 15rem;
   --size-under: 50vh;
   --size-words: 11rem;
-  --size-source: 8rem;
   --size-graphic-fluid: clamp(4.5rem, 24vw, 6.5rem);
   --size-graphic-small: 6.5rem;
   --size-graphic: 12rem;
@@ -106,12 +111,13 @@
 
   --radius-focus: 4px;
   --radius-card: 0.8rem;
+  --radius-tile: 0.5rem;
+  --radius-menu: 1.25rem;
   --radius-pill: 99px;
   --radius-round: 50%;
 
   --border-hairline: 1px;
   --border-ring: 2px;
-  --border-mark: 3px;
   --ring-gap: 0.25em;
   --ring-gap-small: 2px;
   --ring-inset: -2px;
@@ -119,7 +125,6 @@
   --underline-gap-wide: 0.35em;
   --strike: 0.06em;
   --drop: 0.07em;
-  --drop-brand: 0.12em;
 
   --layer-under: -1;
   --layer-raised: 1;

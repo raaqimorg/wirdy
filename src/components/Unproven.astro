@@ -15,21 +15,24 @@ const { data, body, slug } = Astro.props;
 const place = data.sound ? soundPlace(data.sound) : null;
 ---
 
-<Entry takhrij={data.takhrij} id={slug} lead={data.what} layout="split" kind="unproven">
+<Entry
+  takhrij={data.takhrij}
+  id={slug}
+  lead={data.what}
+  layout="split"
+  kind="unproven"
+  sound={Boolean(data.sound)}
+>
   {isOneWord(data.takhrij.ruling) && <Badge slot="badge">{data.takhrij.ruling}</Badge>}
   <Fragment>{body.trim()}</Fragment>
   {place && (
-    <p slot="note" class="entry__note entry__note--sound">
+    <Fragment slot="sound">
       {place.before}
-      <a class="entry__note-link" href={place.path}>
+      <a class="entry__link" href={place.path}>
         {place.name}
       </a>
       {place.after}
-    </p>
+    </Fragment>
   )}
-  {data.sound && !place && (
-    <p slot="note" class="entry__note">
-      {data.sound}
-    </p>
-  )}
+  {data.sound && !place && <Fragment slot="sound">{data.sound}</Fragment>}
 </Entry>

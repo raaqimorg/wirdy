@@ -13,7 +13,7 @@ export type IconName =
 type Icon = { size: number; stroke?: number; paths: string[] };
 
 export const ICONS: Record<IconName, Icon> = {
-  back: { size: 12, stroke: 1.6, paths: ['M1.5 6h9M7 2.5L10.5 6 7 9.5'] },
+  back: { size: 12, stroke: 1.6, paths: ['M4.5 2.5L8 6l-3.5 3.5'] },
   chevron: { size: 12, stroke: 1.6, paths: ['M2.5 4.5L6 8l3.5-3.5'] },
   check: { size: 12, stroke: 1.6, paths: ['M2 6.5l2.5 2.5L10 3'] },
   close: { size: 12, stroke: 1.6, paths: ['M3 3l6 6M9 3L3 9'] },

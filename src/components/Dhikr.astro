@@ -2,7 +2,6 @@
 import BeadRing from './BeadRing.astro';
 import Entry from './Entry.astro';
 import Icon from './Icon.astro';
-import IconButton from './IconButton.astro';
 import Phrase from './Phrase.astro';
 import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
@@ -45,6 +44,7 @@ const title = fullTitle(data);
   heading={heading}
   lead={lead}
   how={data.how}
+  fadl={data.fadl}
   layout={single ? 'single' : 'split'}
   nested={nested}
   kind={data.quran ? 'quran' : undefined}
@@ -61,33 +61,23 @@ const title = fullTitle(data);
     {phrases && phrases.map((phrase) => <Phrase {...phrase} />)}
     {!suwar && !phrases && <VariantText text={text} />}
   </Fragment>
-  {data.fadl && (
-    <p slot="note" class="entry__note">
-      {data.fadl}
-    </p>
-  )}
-  {data.quran && (
-    <p slot="note" class="entry__note entry__note--source">
-      النص من{' '}
-      <a class="entry__note-link" href="https://tanzil.net/" rel="noopener">
-        تنزيل
-      </a>
-    </p>
-  )}
   {!single && (
-    <div slot="actions" class="entry__actions">
+    <div slot="actions" class="entry__acts">
       <span class="entry__status" role="status" data-status />
-      <IconButton
-        label={`نسخ: ${title}`}
-        variant="quiet"
+      <button
+        class="entry__act"
+        type="button"
+        aria-label={`نسخ: ${title}`}
         data-copy={copy.sabah}
         data-copy-masaa={copy.masaa}
       >
         <Icon name="copy" />
-      </IconButton>
-      <IconButton label={`صفحة الذكر: ${title}`} variant="quiet" href={path}>
+        <span class="entry__act-label">نسخ</span>
+      </button>
+      <a class="entry__act" href={path} aria-label={`صفحة الذكر: ${title}`}>
+        <span class="entry__act-label">صفحة الذكر</span>
         <Icon name="open" />
-      </IconButton>
+      </a>
     </div>
   )}
 </Entry>

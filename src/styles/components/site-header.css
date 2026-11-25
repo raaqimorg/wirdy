@@ -8,14 +8,25 @@
 }
 
 .site-header__brand {
-  --icon-drop: var(--drop-brand);
-
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--size-touch);
-  padding-bottom: var(--space-lift-brand);
   font-size: var(--text-title-1);
   font-weight: var(--weight-bold);
   text-decoration: none;
+}
+
+.site-header__name {
+  translate: 0 calc(var(--space-lift-brand) * -1);
+}
+
+.site-header__search {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .site-header__search {
+    display: flex;
+  }
 }

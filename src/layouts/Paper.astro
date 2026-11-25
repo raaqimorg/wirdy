@@ -5,6 +5,7 @@ import plex400 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic
 import plex500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url';
 import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url';
 import '../styles/index.css';
+import SearchSheet from '../components/SearchSheet.astro';
 import { PALETTE } from '../lib/palette';
 import { SITE } from '../lib/site';
 
@@ -17,6 +18,7 @@ interface Props {
   noindex?: boolean;
   faces?: ('naskh' | 'quran')[];
   tone?: string;
+  search?: boolean;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
   noindex = false,
   faces = ['naskh'],
   tone,
+  search = true,
 } = Astro.props;
 const FACES = { naskh, quran };
 const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])];
@@ -279,5 +282,6 @@ const structuredData = {
   </head>
   <body class={tone && 'tone'} style={tone && `--tone: ${tone}`}>
     <slot />
+    {search && <SearchSheet tone={Boolean(tone)} />}
   </body>
 </html>

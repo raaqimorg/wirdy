@@ -1,9 +1,8 @@
 ---
 import Icon from './Icon.astro';
-import IconButton from './IconButton.astro';
 import Mark from './Mark.astro';
+import SearchTrigger from './SearchTrigger.astro';
 import SectionMenu from './SectionMenu.astro';
-import Tools from './Tools.astro';
 import { SITE } from '../lib/site';
 
 interface Props {
@@ -12,31 +11,42 @@ interface Props {
 }
 
 const { heading, back } = Astro.props;
+const home = `${SITE.name}، الرئيسية`;
+const up = back ?? { href: '/', label: home };
 ---
 
 <nav class="bar" aria-label="التنقّل">
-  {back ? (
-    <a class="bar__back" href={back.href}>
+  <a class="bar__back" href={up.href} aria-label={up.label}>
+    <span class="bar__face">
       <Icon name="back" />
-      {back.label}
+    </span>
+  </a>
+  <span class="bar__trail">
+    <a class="bar__brand" href="/" aria-label={home}>
+      <Mark inks="stage" />
+      <span class="bar__name">{SITE.name}</span>
     </a>
-  ) : (
-    <Fragment>
-      <SectionMenu />
-      <a class="bar__back bar__back--fallback" href="/">
-        <Icon name="back" />
-        كل الأقسام
+    <Icon name="open" class="bar__sep" />
+    {back && (
+      <a class="bar__crumb" href={back.href}>
+        {back.label}
       </a>
+    )}
+  </span>
+  {heading && (
+    <Fragment>
+      <SectionMenu heading={heading} />
+      <span class="bar__title" aria-hidden="true">
+        {heading}
+      </span>
     </Fragment>
   )}
-  {heading && (
-    <span class="bar__title" aria-hidden="true">
-      {heading}
+  <span class="bar__end">
+    <span class="bar__narrow">
+      <SearchTrigger variant="round" />
     </span>
-  )}
-  <Tools>
-    <IconButton label={`${SITE.name}، الرئيسية`} href="/">
-      <Mark inks="stage" />
-    </IconButton>
-  </Tools>
+    <span class="bar__wide">
+      <SearchTrigger variant="field" />
+    </span>
+  </span>
 </nav>

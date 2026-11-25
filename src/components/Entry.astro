@@ -1,6 +1,7 @@
 ---
 import Takhrij from './Takhrij.astro';
 import type { Dhikr } from '../lib/schema';
+import { takhrijLine } from '../lib/takhrij';
 
 interface Props {
   takhrij: Dhikr['takhrij'];
@@ -9,13 +10,28 @@ interface Props {
   heading?: 'h2' | 'h3' | 'h4';
   lead?: string;
   how?: string;
+  fadl?: string;
+  sound?: boolean;
   layout: 'split' | 'single';
   nested?: boolean;
   kind?: 'quran' | 'unproven';
   time?: 'sabah' | 'masaa';
 }
 
-const { takhrij, id, title, heading: Heading, lead, how, layout, nested, kind, time } = Astro.props;
+const {
+  takhrij,
+  id,
+  title,
+  heading: Heading,
+  lead,
+  how,
+  fadl,
+  sound,
+  layout,
+  nested,
+  kind,
+  time,
+} = Astro.props;
 ---
 
 <li
@@ -46,10 +62,36 @@ const { takhrij, id, title, heading: Heading, lead, how, layout, nested, kind, t
     </div>
   </div>
   <div class="entry__side">
-    <slot name="note" />
-    <div class="entry__foot">
-      <Takhrij takhrij={takhrij} />
-      <slot name="actions" />
-    </div>
+    <dl class="entry__info">
+      {fadl && (
+        <div class="entry__row">
+          <dt>الفضل</dt>
+          <dd class="entry__words">{fadl}</dd>
+        </div>
+      )}
+      {sound && (
+        <div class="entry__row entry__row--sound">
+          <dt>تنبيه</dt>
+          <dd class="entry__words">
+            <slot name="sound" />
+          </dd>
+        </div>
+      )}
+      <div class="entry__row">
+        <dt>التخريج</dt>
+        <dd>
+          <Takhrij href={takhrij.url} text={takhrijLine(takhrij)} />
+        </dd>
+      </div>
+      {kind === 'quran' && (
+        <div class="entry__row">
+          <dt>النص</dt>
+          <dd>
+            <Takhrij href="https://tanzil.net/" text="موقع تنزيل" />
+          </dd>
+        </div>
+      )}
+    </dl>
+    <slot name="actions" />
   </div>
 </li>

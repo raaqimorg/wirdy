@@ -1,36 +1,77 @@
 ---
 import CardGrid from './CardGrid.astro';
+import Emblem from './Emblem.astro';
 import Mark from './Mark.astro';
 import SearchField from './SearchField.astro';
 import SearchRow from './SearchRow.astro';
 import type { SearchRow as Row, Tile } from '../lib/collection';
+import type { EmblemName } from '../lib/emblems';
+import { OCCASIONS } from '../lib/occasions';
 
 interface Props {
-  tiles: Tile[];
-  rows: Row[];
+  tiles?: Tile[];
+  rows?: Row[];
+  sheet?: boolean;
 }
 
-const { tiles, rows } = Astro.props;
+const { tiles, rows = [], sheet = false } = Astro.props;
+const arts: EmblemName[] = [...OCCASIONS.map(({ id }) => id), 'unproven'];
+const tries = ['السفر', 'الاستخارة', 'الكرب', 'النوم', 'العافية', 'سيد الاستغفار'];
+const blank: Row = {
+  title: '',
+  words: '',
+  heading: '',
+  color: '',
+  emblem: 'unproven',
+  ruling: '…',
+  href: '/',
+};
 ---
 
-<div class="search">
-  <h1 class="search__title">البحث</h1>
-  <SearchField />
-  <p class="search__status" role="status" data-search-only data-search-status></p>
-  <div class="search__empty" role="status" hidden data-search-empty>
-    <Mark />
-    <p class="search__empty-title">
-      لا نتائج لـ «<bdi data-search-query></bdi>»
-    </p>
-    <p>جرّب كلمة من أول الذكر، أو كلمة أقصر، بلا تشكيل.</p>
+<div class:list={['search', sheet && 'search--sheet']} data-search>
+  {!sheet && <h1 class="search__title">البحث</h1>}
+  <SearchField variant={sheet ? 'bar' : 'page'} />
+  <div class="search__body">
+    {sheet && (
+      <div class="search__start" data-search-browse>
+        <p class="search__hint">اكتب كلمة من الذكر أو من اسمه، بلا تشكيل</p>
+        <p class="search__tries">
+          {tries.map((word) => (
+            <button class="search__try" type="button" data-search-try>
+              {word}
+            </button>
+          ))}
+        </p>
+      </div>
+    )}
+    <p class="search__status" role="status" data-search-only data-search-status></p>
+    <div class="search__empty" role="status" hidden data-search-empty>
+      <Mark />
+      <p class="search__empty-title">
+        لا نتائج لـ «<bdi data-search-query></bdi>»
+      </p>
+      <p>جرّب كلمة من أول الذكر، أو كلمة أقصر، بلا تشكيل.</p>
+    </div>
+    {tiles && (
+      <section class="search__browse" data-search-browse>
+        <h2 class="search__subtitle">تصفّح الأقسام</h2>
+        <CardGrid tiles={tiles} variant="browse" />
+      </section>
+    )}
+    <ul class="search__list" hidden data-search-list>
+      {rows.map((row) => (
+        <SearchRow row={row} />
+      ))}
+    </ul>
   </div>
-  <section class="search__browse" data-search-browse>
-    <h2 class="search__subtitle">تصفّح الأقسام</h2>
-    <CardGrid tiles={tiles} variant="browse" />
-  </section>
-  <ul class="search__list" hidden data-search-list>
-    {rows.map((row) => (
-      <SearchRow row={row} />
-    ))}
-  </ul>
+  {arts.map((name) => (
+    <template data-search-art={name}>
+      <Emblem name={name} motion="still" />
+    </template>
+  ))}
+  {sheet && (
+    <template data-search-template>
+      <SearchRow row={blank} />
+    </template>
+  )}
 </div>

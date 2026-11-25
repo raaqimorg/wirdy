@@ -1,16 +1,15 @@
 ---
 import Icon from './Icon.astro';
-import { takhrijLine } from '../lib/takhrij';
-import type { Dhikr } from '../lib/schema';
 
 interface Props {
-  takhrij: Dhikr['takhrij'];
+  href: string;
+  text: string;
 }
 
-const { takhrij } = Astro.props;
+const { href, text } = Astro.props;
 ---
 
-<a class="takhrij" href={takhrij.url} rel="noopener">
-  <span class="takhrij__text">{takhrijLine(takhrij)}</span>
+<a class="takhrij" href={href} rel="noopener">
+  <span class="takhrij__text">{text}</span>
   <Icon name="out" />
 </a>

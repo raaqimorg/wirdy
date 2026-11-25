@@ -1,0 +1,58 @@
+.search-sheet {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 0;
+}
+
+.search-sheet[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-sheet--tone {
+  --search-field-bar: var(--tone-fill);
+  --search-field-ink: var(--color-eggshell);
+  --search-field-box: var(--color-glass);
+  --search-field-faint: var(--color-glass-ink);
+  --search-field-clear: var(--tone-fill);
+}
+
+.search-sheet::backdrop {
+  background: var(--color-backdrop);
+}
+
+:root:has(.search-sheet[open]) {
+  overflow: hidden;
+}
+
+@media (min-width: 64rem) {
+  .search-sheet {
+    position: fixed;
+    inset: auto;
+    top: var(--space-1);
+    inset-inline-end: calc(
+      max(var(--space-gutter), calc((100% - var(--size-page)) / 2 + var(--space-4))) -
+        var(--space-1)
+    );
+    width: var(--size-popover);
+    height: fit-content;
+    max-height: calc(100dvh - var(--space-8));
+    border-radius: var(--radius-menu);
+    box-shadow: var(--shadow-menu);
+  }
+
+  .search-sheet:not(.search-sheet--tone) {
+    top: calc(var(--space-3) + var(--space-0-5));
+  }
+
+  .search-sheet::backdrop {
+    background: none;
+  }
+}

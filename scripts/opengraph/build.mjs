@@ -26,7 +26,7 @@ ${amiri()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
 body{font-family:"Plex",sans-serif;padding:${MARGIN}px}
-.domain{position:absolute;left:${MARGIN}px;direction:ltr;font-size:54px}`;
+.domain{margin-inline-start:auto;direction:ltr;font-size:54px;translate:0 -4px}`;
 
 const tiles = OCCASIONS.map(
   ({ id, color }) => `<div class="tile" style="background:${color}">${emblemSvg(id)}</div>`
@@ -36,18 +36,17 @@ const home = `${head}
 body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-direction:column}
 .brand{display:flex;align-items:center;gap:44px}
 .brand svg{width:208px;height:208px}
-.name{font-size:200px;font-weight:700;line-height:1.1}
+.name{font-size:200px;font-weight:700;line-height:1.1;translate:0 -61px}
 .hero{margin-top:56px;font-size:84px;line-height:1.5;white-space:nowrap}
 .salla{font-family:"Amiri",serif}
 .tiles{margin-top:auto;display:grid;grid-template-columns:repeat(${OCCASIONS.length},1fr);gap:36px}
 .tile{aspect-ratio:1;border-radius:26px;display:grid;place-items:center;padding:44px}
 .tile svg{height:100%}
-.domain{top:${MARGIN + 70}px;color:${PALETTE.inkMuted}}
+.domain{color:${PALETTE.inkMuted}}
 </style></head><body>
-<div class="brand">${markSvg()}<span class="name">${SITE.name}</span></div>
+<div class="brand">${markSvg()}<span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
 <p class="hero">أذكار اليوم والليلة، مما ثبت عن النبي&nbsp;<span class="salla">ﷺ</span>، ومع كل ذكر تخريجُه</p>
 <div class="tiles">${tiles}</div>
-<div class="domain">wirdy.site</div>
 </body></html>`;
 
 const occasion = ({ id, heading, color }) => `${head}
@@ -56,18 +55,16 @@ body{background:${color};color:${PALETTE.eggshell};display:grid;
 .brand{grid-column:1/-1;display:flex;align-items:center;gap:36px}
 .disc{width:150px;height:150px;border-radius:50%;background:${PALETTE.eggshell};display:grid;place-items:center}
 .disc svg{width:112px;height:112px}
-.name{font-size:120px;font-weight:700;line-height:1}
+.name{font-size:120px;font-weight:700;line-height:1;translate:0 -36px}
 .text{align-self:end;padding-bottom:24px}
 .heading{font-size:150px;font-weight:700;line-height:1.3;text-wrap:balance}
 .count{margin-top:28px;font-size:72px;font-weight:500}
 .emblem{align-self:end;width:820px;height:820px}
 .emblem svg{width:100%;height:100%}
-.domain{top:${MARGIN + 46}px}
 </style></head><body>
-<div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span></div>
+<div class="brand"><span class="disc">${markSvg()}</span><span class="name">${SITE.name}</span><span class="domain">wirdy.site</span></div>
 <div class="text"><p class="heading">${heading}</p><p class="count">${adhkarLabel(count(id))}</p></div>
 <div class="emblem">${emblemSvg(id)}</div>
-<div class="domain">wirdy.site</div>
 </body></html>`;
 
 const cards = [

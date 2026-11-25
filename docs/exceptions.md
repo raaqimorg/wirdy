@@ -45,9 +45,17 @@ The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alterna
 - The button of an open سورة is `position: sticky` under the bar, so a long سورة can be folded from anywhere in it. `.entry` clips with `overflow: clip`, not `overflow: hidden`, because a scroll container would stop the sticky button.
 - Consecutive سور are parted by an empty gap (`src/styles/components/surah.css`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
+## The section menu swaps «الأقسام» for the title as the page scrolls
+
+On a phone, the middle of the bar of a section page is a button that opens the menu of the sections (`components/SectionMenu.astro`, a `popover`). At the top of the page it says «الأقسام», because the large title is right under it. Once the large title has scrolled away, it says the title, as the bar of an iOS app does. The swap is CSS: `animation-timeline: scroll(root)` runs a fade between the two words over the scroll from 4.5rem to 8rem. The owner asked for it.
+
+- The ordinary way is a script that listens to the scroll, or a bar that always shows the title. A scroll timeline needs no script and runs off the main thread.
+- Where `animation-timeline` is not supported, the button keeps the title, and the swap is the only thing lost. Where `popover` is not supported, the bar shows the title as plain text.
+- The menu starts with a row for the home page, so the bar never hides the way home.
+
 ## A share link opens the device's share sheet
 
-The page of each dhikr has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it. In a list, the foot of a card has a copy button and a plain link to the dhikr's page, drawn as a chevron. A third button would put 100 of the 196 takhrij lines on two lines at 390 px, and two buttons put 16.
+The page of each dhikr has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it. In a list, the foot of a card has a copy button, «نسخ», and a plain link to the dhikr's page, «صفحة الذكر», on their own line under the takhrij.
 
 - The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
 - It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
@@ -75,14 +83,6 @@ When an iPhone bounces at the top of a page, it uncovers what is above the page 
 - `html { background }` does not change the color of the bounce, and an element above the page with a negative offset is not painted there.
 - The home and 404 pages have no color, so they have no layer.
 
-## The bar shows the page title after a scroll
-
-The bar of an occasion page repeats the heading, so the reader knows the page after the heading scrolls away. CSS fades it in with a scroll timeline (`animation-timeline: scroll(root)` in `src/styles/components/bar.css`), inside `@supports`. The owner asked for it.
-
-- The ordinary way is a title that always shows, next to the same heading. A browser without scroll timelines still does that.
-- The timeline sits in its own rule, apart from the `animation` shorthand. In one rule, the CSS minifier merges the two into a shorthand that browsers refuse. A build test checks it.
-- The bar of a dhikr's own page has no title, because the page is short and its heading stays near.
-
 ## Each dhikr has a card, named by its fingerprint
 
 `scripts/opengraph/adhkar.mjs` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, 2400 by 1260: a page of 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
@@ -100,13 +100,14 @@ The bar of an occasion page repeats the heading, so the reader knows the page af
 - The ordinary way is an image library such as `sharp`. That adds a native dependency for two scripts that run only when the mark or the card changes.
 - The OpenGraph cards draw the same mark, colors, and emblems as the site, from `src/lib/`, in the site's own fonts from `@fontsource`. The home card shows every occasion. Each occasion card shows its heading, its count, and its emblem on its color, as its page banner does. Run `bun run opengraph` after you change any of them, or after you add or remove a dhikr, because the cards print the count.
 
-## The search page has a module script
+## Search opens over the page, from a module script
 
-`/bahth/` (`src/pages/bahth.astro`) finds a dhikr as the reader types. The page holds one row for each dhikr and each entry of «ما لم يثبت», in its HTML, so the page is its own index. An ordinary Astro `<script>` imports `src/lib/search.ts`, hides the rows that do not match, puts the rest in order, and marks the match. The owner asked for search.
+Every page but `/bahth/` has a way into search (`components/SearchTrigger.astro`): a round button at the end of the bar on a phone, a field in the bar on a wide screen, and a large field under the title of the home page and the 404 page on a phone. A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone the bar turns into the field and the results fill the screen under it. On a wide screen the field grows into a panel in place. Before the reader types, it suggests six searches. The results change as the reader types, as in iOS Settings, and each row shows the emblem of its section. A tap on a result closes it and goes to the dhikr. `/`, or ⌘K and Ctrl+K, opens it from the keyboard. The owner asked for it.
 
-- The ordinary way is the inline script the other pages use. This one imports `search.ts`, so the folding, the matching, and the marking have unit tests like the rest of `src/lib/`. Nothing in it has to run before the first paint. Astro compiles it, and today it is small enough that Astro writes it into the page as a `<script type="module">` instead of a file in `_astro/`.
-- There is no index file to fetch and nothing to go stale. The browser asks for the page again on each visit, as for any page.
-- The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
+- The ordinary way is a link to a search page. The field still is one: without JavaScript, or with a modifier key, it opens `/bahth/`.
+- The rows come from one JSON file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). Its version is a hash of the rows, so it changes when any dhikr changes. `_headers` lets the browser keep it for a year, and a deploy that changes a dhikr changes its name, so no reader sees an old index. The sheet fetches it the first time it opens, so a page that is only read never loads it. If the fetch fails, the field opens `/bahth/`.
+- The emblems in the rows come from one `<template>` for each section in the page, so the index carries the section's id, not its drawing.
+- An ordinary Astro `<script>` imports `src/scripts/search.ts`, which imports `src/lib/search.ts`, so the folding, the matching, and the marking have unit tests like the rest of `src/lib/`. Astro bundles it into `_astro/`, which the browser keeps for a year. Nothing in it has to run before the first paint.
+- `/bahth/` holds one row for each dhikr and each entry of «ما لم يثبت» in its HTML, so the page is its own index, and it uses the same script. The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
 - قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens.
-- Without JavaScript, the field and the count are hidden (`<noscript>` in `src/layouts/Paper.astro`), and the page is a plain list of every row, which the browser's find can search.
-- The page is `noindex` and stays out of the sitemap.
+- Without JavaScript, `/bahth/` hides its field and its count (`<noscript>` in `src/layouts/Paper.astro`), and is a plain list of every row, which the browser's find can search. `/bahth/` is `noindex` and stays out of the sitemap.

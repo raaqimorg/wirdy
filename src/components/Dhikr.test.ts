@@ -228,7 +228,7 @@ describe('Dhikr', () => {
       '<p class="entry__lead">',
       '<p class="entry__how">متوضئًا</p>',
       '<div class="entry__text">',
-      '<p class="entry__note">كفته</p>',
+      '<dd class="entry__words">كفته</dd>',
       '<a class="takhrij"',
       'data-copy=',
       'href="/sabah-masaa/sayyid-al-istighfar/"',
@@ -261,7 +261,7 @@ describe('Dhikr', () => {
 
   it('leaves the buttons to its own page when it stands alone', async () => {
     const html = await render(base, 'سبحان الله', { single: true });
-    expect(html).not.toContain('entry__actions');
+    expect(html).not.toContain('entry__acts');
     expect(html).not.toContain('data-copy');
   });
 
@@ -297,10 +297,10 @@ describe('Dhikr', () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('<li class="entry entry--split" id="sayyid-al-istighfar">');
     expect(html).toMatch(
-      /<button class="icon-button icon-button--quiet" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">/
+      /<button class="entry__act" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">[\s\S]*?<span class="entry__act-label">نسخ<\/span>/
     );
     expect(html).toMatch(
-      /<a class="icon-button icon-button--quiet" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">/
+      /<a class="entry__act" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">\s*<span class="entry__act-label">صفحة الذكر<\/span>/
     );
     expect(html).not.toContain('data-share-title');
   });
@@ -315,7 +315,7 @@ describe('Dhikr', () => {
   it('has an empty status, next to the buttons, for saying that it was copied', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="icon-button/
+      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="entry__act"/
     );
   });
 });

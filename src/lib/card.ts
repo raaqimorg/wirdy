@@ -10,7 +10,7 @@ import type { Dhikr } from './schema';
 import { takhrijLine } from './takhrij';
 import { formOf } from './variants';
 
-const TEMPLATE = 3;
+const TEMPLATE = 4;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
 

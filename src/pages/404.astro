@@ -1,6 +1,7 @@
 ---
 import CardGrid from '../components/CardGrid.astro';
 import Hero from '../components/Hero.astro';
+import SearchTrigger from '../components/SearchTrigger.astro';
 import Home from '../layouts/Home.astro';
 import { occasionTiles } from '../lib/collection';
 import { SITE } from '../lib/site';
@@ -10,5 +11,6 @@ const description = `لم نجد هذه الصفحة في ${SITE.name}. اختر
 
 <Home title="الصفحة غير موجودة" description={description} noindex faces={[]}>
   <Hero>لم نجد هذه الصفحة، فاختر قسمًا من أقسام الأذكار</Hero>
+  <SearchTrigger variant="hero" />
   <CardGrid tiles={await occasionTiles()} variant="featured" />
 </Home>
