@@ -1,6 +1,6 @@
 const INSIDE_A_WORD = /[\p{M}ـۥۦ]/gu;
-const WORD = /[\p{L}\p{M}\p{N}]+/gu;
-const BETWEEN_WORDS = /[^\p{L}\p{N}]+/gu;
+const WORD = /[\p{L}\p{M}]+/gu;
+const BETWEEN_WORDS = /[^\p{L}]+/gu;
 const SAMAWAT = /سموات/g;
 const HONORIFIC = ['صلى', 'الله', 'عليه', 'وسلم'];
 const HONORIFICS = /(^| )(?:ﷺ|صلى الله عليه وسلم)(?= |$)/g;

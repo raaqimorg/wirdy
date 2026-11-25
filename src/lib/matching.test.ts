@@ -31,6 +31,10 @@ describe('normalize', () => {
     expect(normalize('اللهم صل على محمد')).toBe('اللهم صل على محمد');
   });
 
+  it('skips the footnote and page numbers of a printed book', () => {
+    expect(normalize('لا إله إلا الله (١) وحده ⦗٢٣٢٤⦘ لا شريك')).toBe('لا إله إلا الله وحده لا شريك');
+  });
+
   it('splits no word at a small Quranic letter', () => {
     expect(normalize('دَاوُۥدَ')).toBe('داود');
   });
@@ -94,6 +98,10 @@ describe('spanOf', () => {
   it('cuts across the words of ﷺ', () => {
     expect(spanOf('ومحمد صلى الله عليه وسلم حق', 'ومحمد ﷺ حق')).toBe('ومحمد صلى الله عليه وسلم حق');
     expect(spanOf('ومحمد ﷺ حق', 'ومحمد صلى الله عليه وسلم حق')).toBe('ومحمد ﷺ حق');
+  });
+
+  it('cuts across a footnote number', () => {
+    expect(spanOf('قال وحده (١) لا شريك له', 'وحده لا شريك')).toBe('وحده (١) لا شريك');
   });
 
   it('cuts at whole words only', () => {
