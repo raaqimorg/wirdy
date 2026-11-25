@@ -8,7 +8,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "ci": "bun run format:check && bun run lint && bun run check && bun run test && bun run test:scripts && bun run test:build",
+    "ci": "astro sync && bun run format:check && bun run lint && bun run check && bun run test && bun run test:scripts && bun run test:build",
     "check": "astro check",
     "lint": "oxlint --type-aware --deny-warnings && stylelint \"src/**/*.css\"",
     "format": "oxfmt && prettier --write \"src/**/*.astro\"",
