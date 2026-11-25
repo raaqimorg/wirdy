@@ -17,7 +17,8 @@
     "graft",
     "bun.lock",
     "**/*.svg",
-    "src/content/**/*.md"
+    "src/content/**/*.md",
+    "src/lib/fixtures"
   ],
   "overrides": [
     { "files": ["**/*.css"], "options": { "singleQuote": false } },
