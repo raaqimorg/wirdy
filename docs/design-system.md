@@ -44,13 +44,14 @@ An element in an occasion's color (its page `body`, or its card) has the class `
 
 No occasion color is typed by hand. `src/lib/tone.ts` computes each from a rule in OKLCH (lightness, chroma, hue):
 
-- Lightness is 0.52: the lightest at which eggshell text keeps 4.5:1 on every hue the rule gives.
-- Chroma is 0.086: the most every hue on the arc holds at that lightness, so no occasion looks louder.
+- Lightness has two depths. 0.52 is the lightest at which eggshell text keeps 4.5:1 on every hue the rule gives. 0.46 is the deepest at which `--tone-text` keeps 4.5:1 on the panel and on `--tone-wash` at night, where it mixes 45% ink.
+- Chroma is 0.086 at 0.52: the most every hue on the arc holds at that lightness. At 0.46 it keeps the same share of the lightness (0.0761), so no occasion looks louder.
+- The depths alternate along the arc in hue order, and the first occasion is light. Two hues next to each other on the arc never share a depth, so no two occasions look alike: any two tones sit at least 0.045 apart in OKLab.
 - The hue comes from the place on the list. The hues sit evenly on a 300° arc that starts at 135° and skips 75° to 135°, where tones turn olive. The first occasion has 47°, and the sunflower's disc takes its color (`PALETTE.disc`, kept equal by a test). The petals (`PALETTE.petal`, `#d2a249`, OKLCH 0.74 0.12 80°) are the one color outside the rule, because the rule skips yellow. The list walks the arc by the whole step nearest the golden ratio (3 of 8 places for 8 occasions), so neighbours sit about 112° apart and any two at least 300° ÷ their count apart.
 - At night, `--tone-shade` mixes 10% black in OKLab, which multiplies lightness and chroma by 0.9, so the hue does not glare on dark paper.
-- «الطب النبوي» is not an occasion, so it keeps its own color and moves no other: the same lightness and chroma at 80°, the hue of honey, in the band the rule skips. Its emblem is a honeycomb with one lit cell.
+- «الطب النبوي» is not an occasion, so it keeps its own color and moves no other: 80°, the hue of honey, in the band the rule skips. It takes the depth after the last hue on the arc. Its emblem is a honeycomb with one lit cell.
 
-To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color follows from the new count, and `src/lib/tone.test.ts` proves the rule for 2 to 16 occasions.
+To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color follows from the new count, and `src/lib/tone.test.ts` proves the rule for 2 to 16 occasions. `src/styles/styles.test.ts` reads the tokens and proves the tone text by day and night at both depths.
 
 ## Dark mode
 

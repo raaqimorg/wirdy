@@ -1,5 +1,5 @@
 import { Array, Record } from 'effect';
-import { toneOf } from './tone';
+import { hueAt, toneOf } from './tone';
 
 const SECTIONS = {
   'sabah-masaa': {
@@ -46,14 +46,14 @@ export const OCCASION_IDS: ReadonlyArray<Occasion> = Record.keys(SECTIONS);
 export const OCCASIONS: ReadonlyArray<Section> = Array.map(OCCASION_IDS, (id, index) => ({
   id,
   ...SECTIONS[id],
-  color: toneOf(index, OCCASION_IDS.length),
+  color: toneOf(hueAt(index, OCCASION_IDS.length), OCCASION_IDS.length),
 }));
 
 export function sectionOf(id: Occasion): Section {
   return {
     id,
     ...SECTIONS[id],
-    color: toneOf(OCCASION_IDS.indexOf(id), OCCASION_IDS.length),
+    color: toneOf(hueAt(OCCASION_IDS.indexOf(id), OCCASION_IDS.length), OCCASION_IDS.length),
   };
 }
 
