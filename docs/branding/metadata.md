@@ -22,7 +22,7 @@ On a dhikr or hadith page, the line over the title is the way back to its place 
 
 ## The head of every page
 
-- `<html lang="ar" dir="rtl">`.
+- `<html lang="ar" dir="rtl" translate="no">`, and `<meta name="google" content="notranslate">`, so neither Chrome nor Safari offers to translate a page.
 - `<title>`: the topic, then « | وِردي». No two indexed pages share a title.
 - `description`: one or two sentences in the voice of [Identity](identity.md). A section page keeps it between 90 and 160 letters.
 - `canonical`: the page's absolute URL, with its trailing slash, on an indexed page only. An unindexed page has `<meta name="robots" content="noindex">` and no canonical.

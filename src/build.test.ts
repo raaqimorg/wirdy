@@ -98,6 +98,13 @@ describe('built site', () => {
     }
   });
 
+  it('asks no browser to offer a translation of any page', () => {
+    for (const page of [html, ...Object.values(pages)]) {
+      expect(page).toContain('<html lang="ar" dir="rtl" translate="no">');
+      expect(page).toContain('<meta name="google" content="notranslate">');
+    }
+  });
+
   it('opens with a card for each occasion page and الطب النبوي', () => {
     for (const id of OCCASION_IDS) {
       expect(html).toMatch(cardTo(`/${id}/`));
