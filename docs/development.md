@@ -26,6 +26,8 @@ The icon and card scripts need a Chromium browser (Brave, Chrome, Chromium, or E
 | `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                     |
 | `bun run opengraph`        | Draws the cards of the home page and each section.             |
 | `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.         |
+| `bun run visits hourly`    | Sends the owner the visits of the last hour on Telegram.       |
+| `bun run visits morning`   | Sends the owner the visits of the day before on Telegram.      |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
 
@@ -37,6 +39,17 @@ Never run `bun run deploy`, or a `wrangler` command that changes the live site, 
 - `scripts/verification/capture.js` is the one JavaScript file in `scripts/`. It runs in the browser on dorar.net or sunnah.com ([`exceptions.md`](exceptions.md#the-proofs-are-json-files-in-git)).
 - A script imports from `src/lib/` with the `.ts` extension: `import { markSvg } from '../../src/lib/mark.ts'`.
 - On wrong arguments, a script prints its usage and exits with 1.
+
+## The visit reports
+
+`.github/workflows/visits.yml` sends the owner the site's visits on Telegram. It reads Cloudflare's own count, so no page changes ([`exceptions.md`](exceptions.md#a-scheduled-job-sends-the-owner-the-visits)).
+
+- At minute 17 of every hour: today so far in Riyadh time, and the last whole hour. An hour with no visits arrives silently.
+- At 07:07 in Riyadh: the day before, its change from the day before it, the section with the most visits, and a line when it was the best day of the last 4 weeks.
+- A manual run (Actions, Visits, Run workflow) sends the hourly report silently.
+- The secrets: `CLOUDFLARE_API_TOKEN` (Zone, Analytics, Read, for wirdy.site only), `CLOUDFLARE_ZONE_ID`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `RECIPIENT_NAME`, the name each report greets. To run a report locally, put them in `.env`, which git ignores.
+- The job logs no number. A failed run exits with 1, and GitHub emails the owner.
+- GitHub turns off a schedule after 60 days with no commit. When the reports stop, turn it on again in Actions, Visits.
 
 ## Git hooks
 
