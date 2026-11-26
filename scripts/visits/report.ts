@@ -1,5 +1,5 @@
 import { Array, Option } from 'effect';
-import { rememberersUnit, toArabicDigits } from '../../src/lib/arabic.ts';
+import { rememberersLabel, toArabicDigits } from '../../src/lib/arabic.ts';
 
 export type Window = { readonly from: Date; readonly to: Date };
 
@@ -34,9 +34,9 @@ export function nameOf(names: string, random: number): Option.Option<string> {
 const escaped = (text: string) =>
   text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
-const bold = (visits: number) => `<b>${toArabicDigits(visits)}</b>`;
+const bold = (text: string) => `<b>${text}</b>`;
 
-const counted = (visits: number) => `${bold(visits)} ${rememberersUnit(visits)}`;
+const BLESSING = 'كتب الله أجرك\n\nهنيئا لك هذا الأجر';
 
 export function hourlyText(
   windows: { readonly hour: Window; readonly day: Window },
@@ -44,18 +44,19 @@ export function hourlyText(
   dayVisits: number,
   name: Option.Option<string>
 ): string {
-  const title = Option.match(name, { onNone: () => 'وِردي', onSome: escaped });
+  const title = Option.match(name, { onNone: () => 'وردي', onSome: escaped });
   const finished = windows.day.to.getTime() - windows.day.from.getTime() === DAY;
   const day = finished ? 'أمس' : 'اليوم';
-  return `<b>${title}</b> 🌻\n\n${counted(hourVisits)} في آخر ساعة، و${bold(dayVisits)} ${day}\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر`;
+  const dayCount = hourVisits === 0 ? rememberersLabel(dayVisits) : toArabicDigits(dayVisits);
+  return `${bold(title)} 🌻\n\n${bold(rememberersLabel(hourVisits))} في آخر ساعة، و${bold(dayCount)} ${day}\n${BLESSING}`;
 }
 
 export function morningText(visits: number, name: Option.Option<string>): string {
   const greeting = Option.match(name, {
     onNone: () => 'صباح الخير',
-    onSome: (someone) => `صباح الخير يا ${escaped(someone)}`,
+    onSome: (someone) => `صباح الخير يا ${escaped(someone.replace(/^ال/u, ''))}`,
   });
-  return `<b>${greeting}</b> 🌻\n\n${counted(visits)} أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر`;
+  return `${bold(greeting)} 🌻\n\n${bold(rememberersLabel(visits))} أمس\n${BLESSING}`;
 }
 
 export function isSilent(hourVisits: number, forced: boolean): boolean {

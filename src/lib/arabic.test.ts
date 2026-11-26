@@ -7,7 +7,7 @@ import {
   toArabicDigits,
   timesLabel,
   timesUnit,
-  rememberersUnit,
+  rememberersLabel,
 } from './arabic';
 
 describe('adhkarLabel', () => {
@@ -109,20 +109,31 @@ describe('resultsLabel', () => {
   });
 });
 
-describe('rememberersUnit', () => {
-  it('counts the rememberers as Arabic counts them', () => {
-    expect(rememberersUnit(0)).toBe('ذاكر');
-    expect(rememberersUnit(1)).toBe('ذاكر');
-    expect(rememberersUnit(2)).toBe('ذاكران');
-    expect(rememberersUnit(7)).toBe('ذاكرين');
-    expect(rememberersUnit(18)).toBe('ذاكرًا');
-    expect(rememberersUnit(100)).toBe('ذاكر');
-    expect(rememberersUnit(342)).toBe('ذاكرًا');
+describe('rememberersLabel', () => {
+  it('says no one for zero', () => {
+    expect(rememberersLabel(0)).toBe('لا أحد');
+  });
+
+  it('names one and two in words', () => {
+    expect(rememberersLabel(1)).toBe('ذاكر واحد');
+    expect(rememberersLabel(2)).toBe('ذاكران');
+  });
+
+  it('uses the plural from three to ten', () => {
+    expect(rememberersLabel(3)).toBe('٣ ذاكرين');
+    expect(rememberersLabel(10)).toBe('١٠ ذاكرين');
+  });
+
+  it('uses the accusative singular from eleven to ninety nine', () => {
+    expect(rememberersLabel(11)).toBe('١١ ذاكرا');
+    expect(rememberersLabel(99)).toBe('٩٩ ذاكرا');
   });
 
   it('follows the last two digits of a large number', () => {
-    expect(rememberersUnit(103)).toBe('ذاكرين');
-    expect(rememberersUnit(1210)).toBe('ذاكرين');
-    expect(rememberersUnit(102)).toBe('ذاكر');
+    expect(rememberersLabel(100)).toBe('١٠٠ ذاكر');
+    expect(rememberersLabel(102)).toBe('١٠٢ ذاكر');
+    expect(rememberersLabel(103)).toBe('١٠٣ ذاكرين');
+    expect(rememberersLabel(342)).toBe('٣٤٢ ذاكرا');
+    expect(rememberersLabel(1210)).toBe('١٢١٠ ذاكرين');
   });
 });

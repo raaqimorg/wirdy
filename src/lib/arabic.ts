@@ -57,9 +57,11 @@ export function resultsLabel(n: number): string {
   return `${toArabicDigits(n)} نتيجة`;
 }
 
-export function rememberersUnit(n: number): string {
+export function rememberersLabel(n: number): string {
+  if (n === 0) return 'لا أحد';
+  if (n === 1) return 'ذاكر واحد';
   if (n === 2) return 'ذاكران';
   const rest = n % 100;
-  if (isFew(rest)) return 'ذاكرين';
-  return rest > 10 ? 'ذاكرًا' : 'ذاكر';
+  if (isFew(rest)) return `${toArabicDigits(n)} ذاكرين`;
+  return `${toArabicDigits(n)} ${rest > 10 ? 'ذاكرا' : 'ذاكر'}`;
 }

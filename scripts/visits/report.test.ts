@@ -72,25 +72,40 @@ describe('nameOf', () => {
 describe('hourlyText', () => {
   test('gives the last hour and today so far', () => {
     expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 18, 342, first)).toBe(
-      '<b>الأولى</b> 🌻\n\n<b>١٨</b> ذاكرًا في آخر ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+      '<b>الأولى</b> 🌻\n\n<b>١٨ ذاكرا</b> في آخر ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
     );
   });
 
-  test('shows a quiet hour as zero', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:17:00Z')), 0, 6, first)).toBe(
-      '<b>الأولى</b> 🌻\n\n<b>٠</b> ذاكر في آخر ساعة، و<b>٦</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+  test('names one and two in words', () => {
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 9, first)).toContain(
+      '<b>ذاكر واحد</b> في آخر ساعة، و<b>٩</b> اليوم'
+    );
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 2, 9, first)).toContain(
+      '<b>ذاكران</b> في آخر ساعة، و<b>٩</b> اليوم'
+    );
+  });
+
+  test('counts today in full after a quiet hour', () => {
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:17:00Z')), 0, 6, first)).toContain(
+      '<b>لا أحد</b> في آخر ساعة، و<b>٦ ذاكرين</b> اليوم'
+    );
+  });
+
+  test('says no one for a quiet day', () => {
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T22:17:00Z')), 0, 0, first)).toContain(
+      '<b>لا أحد</b> في آخر ساعة، و<b>لا أحد</b> اليوم'
     );
   });
 
   test('calls the total of a finished day yesterday', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:17:00Z')), 3, 412, first)).toBe(
-      '<b>الأولى</b> 🌻\n\n<b>٣</b> ذاكرين في آخر ساعة، و<b>٤١٢</b> أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:17:00Z')), 3, 412, first)).toContain(
+      '<b>٣ ذاكرين</b> في آخر ساعة، و<b>٤١٢</b> أمس'
     );
   });
 
   test('uses the site name when no name is set', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.none())).toBe(
-      '<b>وِردي</b> 🌻\n\n<b>١</b> ذاكر في آخر ساعة، و<b>٢</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.none())).toMatch(
+      /^<b>وردي<\/b> 🌻/u
     );
   });
 
@@ -99,23 +114,38 @@ describe('hourlyText', () => {
       hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.some('<i>&'))
     ).toContain('<b>&lt;i&gt;&amp;</b>');
   });
+
+  test('carries no diacritics', () => {
+    expect(
+      hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 18, 342, Option.none())
+    ).not.toMatch(/[\u064B-\u0652]/u);
+  });
 });
 
 describe('morningText', () => {
-  test('greets with the visits of yesterday', () => {
+  test('greets with the rememberers of yesterday', () => {
     expect(morningText(412, first)).toBe(
-      '<b>صباح الخير يا الأولى</b> 🌻\n\n<b>٤١٢</b> ذاكرًا أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+      '<b>صباح الخير يا أولى</b> 🌻\n\n<b>٤١٢ ذاكرا</b> أمس\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
     );
   });
 
+  test('drops the article after يا', () => {
+    expect(morningText(1, Option.some('المعلمة'))).toContain('<b>صباح الخير يا معلمة</b>');
+    expect(morningText(1, Option.some('أم أحمد'))).toContain('<b>صباح الخير يا أم أحمد</b>');
+  });
+
   test('counts a few rememberers in the plural', () => {
-    expect(morningText(5, first)).toContain('<b>٥</b> ذاكرين أمس');
+    expect(morningText(5, first)).toContain('<b>٥ ذاكرين</b> أمس');
   });
 
   test('greets without a name when none is set', () => {
     expect(morningText(0, Option.none())).toBe(
-      '<b>صباح الخير</b> 🌻\n\n<b>٠</b> ذاكر أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
+      '<b>صباح الخير</b> 🌻\n\n<b>لا أحد</b> أمس\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
     );
+  });
+
+  test('carries no diacritics', () => {
+    expect(morningText(412, Option.none())).not.toMatch(/[\u064B-\u0652]/u);
   });
 });
 
