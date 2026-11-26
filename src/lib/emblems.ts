@@ -156,36 +156,35 @@ const house: ReadonlyArray<Shape> = [
   lit('path', 'up', { d: 'M100 228V180A20 20 0 0 1 140 180V228Z', ...egg() }),
 ];
 
-const way: ReadonlyArray<Shape> = [
+const climb: ReadonlyArray<Shape> = [
   dark('path', {
-    d: 'M16 224C96 224 40 120 120 120S144 32 208 32',
-    ...line(PALETTE.shade, 20, 0.2),
+    d: 'M6 216L58 110L100 172L150 54L196 146L234 100',
+    ...line(PALETTE.shade, 16, 0.22),
     'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
   }),
-  ...times(3, (index) =>
-    dark('circle', { cx: 56 + index * 52, cy: 196 - index * 64, r: 6, ...shade(0.24) })
-  ),
-  lit('circle', 'grow', { cx: 208, cy: 32, r: 18, ...egg() }),
+  lit('circle', 'grow', { cx: 150, cy: 46, r: 20, ...egg() }),
 ];
 
-const relief: ReadonlyArray<Shape> = [
-  dark('rect', { x: 20, y: 20, width: 92, height: 200, rx: 4, ...shade(0.2) }),
-  dark('rect', { x: 128, y: 20, width: 92, height: 200, rx: 4, ...shade(0.2) }),
-  lit('path', 'grow', { d: 'M112 20H128L123 220H117Z', ...egg() }),
+const DEPTHS = [
+  [112, 0.14],
+  [80, 0.16],
+  [48, 0.2],
+] as const;
+
+const darkness: ReadonlyArray<Shape> = [
+  ...DEPTHS.map(([r, opacity]) => dark('circle', { cx: CENTER, cy: CENTER, r, ...shade(opacity) })),
+  lit('circle', 'grow', { cx: CENTER, cy: CENTER, r: 16, ...egg() }),
 ];
 
-const earth: ReadonlyArray<Shape> = [
-  ...times(4, (index) =>
-    dark('rect', {
-      x: 0,
-      y: 96 + index * 36,
-      width: 240,
-      height: 36,
-      ...shade(0.08 + index * 0.06),
-    })
-  ),
-  lit('rect', 'fade', { x: 64, y: 176, width: 112, height: 16, rx: 8, ...egg() }),
-];
+const TERMS = [180, 120, 204, 84, 150, 104] as const;
+
+const terms: ReadonlyArray<Shape> = TERMS.map((width, index) => {
+  const place = { x: 228 - width, y: 14 + index * 37, width, height: 24, rx: 12 };
+  return index === 3
+    ? lit('rect', 'across', { ...place, ...egg() })
+    : dark('rect', { ...place, ...shade(0.22) });
+});
 
 const rounds: ReadonlyArray<Shape> = [
   ...times(3, (index) =>
@@ -194,66 +193,55 @@ const rounds: ReadonlyArray<Shape> = [
   lit('rect', 'turn', { x: 96, y: 96, width: 48, height: 48, rx: 2, ...egg() }),
 ];
 
-const bowl: ReadonlyArray<Shape> = [
-  dark('path', { d: 'M24 120A96 96 0 0 0 216 120Z', ...shade(0.2) }),
-  dark('rect', { x: 84, y: 214, width: 72, height: 14, rx: 7, ...shade(0.2) }),
-  ...times(2, (index) => dark('circle', { cx: 84 + index * 72, cy: 96, r: 16, ...shade(0.16) })),
-  lit('circle', 'grow', { cx: CENTER, cy: 84, r: 24, ...egg() }),
-];
-
-const MEET = Math.round(Math.sqrt(72 ** 2 - 36 ** 2) * 10) / 10;
-
-const meeting: ReadonlyArray<Shape> = [
-  dark('circle', { cx: 84, cy: CENTER, r: 72, ...shade(0.16) }),
-  dark('circle', { cx: 156, cy: CENTER, r: 72, ...shade(0.16) }),
-  lit('path', 'fade', {
-    d: `M${CENTER} ${round(CENTER - MEET)}A72 72 0 0 1 ${CENTER} ${round(CENTER + MEET)}A72 72 0 0 1 ${CENTER} ${round(CENTER - MEET)}Z`,
+const covered: ReadonlyArray<Shape> = [
+  dark('path', { d: 'M28 124A92 92 0 0 0 212 124Z', ...shade(0.22) }),
+  dark('rect', { x: 88, y: 214, width: 64, height: 14, rx: 7, ...shade(0.22) }),
+  lit('path', 'up', {
+    d: 'M26 96H214A10 10 0 0 1 214 116H26A10 10 0 0 1 26 96ZM104 96A16 16 0 0 1 136 96Z',
     ...egg(),
   }),
 ];
 
-const pulse: ReadonlyArray<Shape> = [
-  ...times(5, (index) =>
-    dark('path', { d: `M0 ${40 + index * 40}H240`, ...line(PALETTE.shade, 4, 0.16) })
+const TURNS = [22, -34, 12, -16, 0, 30, -26, 40, -10] as const;
+
+const turned = (cx: number, cy: number, degrees: number): string =>
+  `M${times(4, (index) => {
+    const angle = ((degrees + 45 + index * 90) * Math.PI) / 180;
+    const reach = 52 / Math.SQRT2;
+    return `${round(cx + reach * Math.cos(angle))} ${round(cy + reach * Math.sin(angle))}`;
+  }).join('L')}Z`;
+
+const steady: ReadonlyArray<Shape> = [
+  ...TURNS.flatMap((degrees, index) =>
+    index === 4
+      ? []
+      : [
+          dark('path', {
+            d: turned(40 + (index % 3) * 80, 40 + Math.floor(index / 3) * 80, degrees),
+            ...shade(0.2),
+          }),
+        ]
   ),
-  lit('path', 'fade', {
-    d: 'M12 132H80L100 76L132 188L152 112L164 132H228',
-    ...line(EGG, 14),
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
-  }),
+  lit('rect', 'turn', { x: 92, y: 92, width: 56, height: 56, rx: 3, ...egg() }),
 ];
 
-const DROPS = [
-  [24, 20],
-  [70, 20],
-  [116, 20],
-  [162, 20],
-  [208, 20],
-  [40, 76],
-  [86, 76],
-  [132, 76],
-  [178, 76],
-  [224, 76],
-  [24, 132],
-  [70, 132],
-  [208, 132],
-  [40, 188],
-  [86, 188],
-  [178, 188],
-  [224, 188],
-] as const;
+const cure: ReadonlyArray<Shape> = [
+  dark('path', { d: 'M24 112H80A40 40 0 0 0 160 112H216V228H24Z', ...shade(0.22) }),
+  lit('path', 'up', { d: 'M80 56A40 40 0 0 0 160 56Z', ...egg() }),
+];
 
-const rain: ReadonlyArray<Shape> = [
-  ...DROPS.map(([x, y]) =>
-    dark('path', {
-      d: `M${x} ${y}L${x - 12} ${y + 30}`,
-      ...line(PALETTE.shade, 7, 0.26),
-      'stroke-linecap': 'round',
-    })
-  ),
+const cloud: ReadonlyArray<Shape> = [
+  dark('rect', { x: 0, y: 222, width: 240, height: 6, rx: 3, ...shade(0.24) }),
+  dark('path', {
+    d: 'M28 104A30 30 0 0 1 72 64A40 40 0 0 1 148 72A28 28 0 0 1 180 104Z',
+    ...shade(0.14),
+  }),
+  dark('path', {
+    d: 'M100 160A20 20 0 0 1 130 132A26 26 0 0 1 180 136A20 20 0 0 1 212 160Z',
+    ...shade(0.22),
+  }),
   lit('path', 'up', {
-    d: 'M124 92C124 92 98 132 98 148A26 26 0 0 0 150 148C150 132 124 92 124 92Z',
+    d: 'M120 222A23 23 0 0 1 152 190A30 30 0 0 1 210 196A22 22 0 0 1 232 222Z',
     ...egg(),
   }),
 ];
@@ -269,13 +257,13 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   istiqaz: light,
   mutlaq: unbroken,
   mawasim: rounds,
-  taam: bowl,
+  taam: covered,
   bayt: house,
-  safar: way,
-  nas: meeting,
-  hamm: relief,
-  marad: pulse,
-  janaiz: earth,
-  matar: rain,
+  safar: climb,
+  nas: steady,
+  hamm: darkness,
+  marad: cure,
+  janaiz: terms,
+  matar: cloud,
   tibb: comb,
 };
