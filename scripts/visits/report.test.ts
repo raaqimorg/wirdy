@@ -4,6 +4,7 @@ import {
   hourlyText,
   hourlyWindowsOf,
   isSilent,
+  messageOf,
   morningText,
   morningWindowsOf,
   occasionOf,
@@ -159,5 +160,19 @@ describe('isSilent', () => {
 
   test('silences a run asked to be silent', () => {
     expect(isSilent(5, true)).toBe(true);
+  });
+});
+
+describe('messageOf', () => {
+  test('greets the reader by name every hour', () => {
+    expect(messageOf('hourly', Option.some('الأولى'), 'نص')).toBe('أهلًا يا الأولى 👋\n\nنص');
+  });
+
+  test('wishes the reader a good morning', () => {
+    expect(messageOf('morning', Option.some('الأولى'), 'نص')).toBe('صباح الخير يا الأولى ☀️\n\nنص');
+  });
+
+  test('sends the body alone when no name is set', () => {
+    expect(messageOf('hourly', Option.none(), 'نص')).toBe('نص');
   });
 });

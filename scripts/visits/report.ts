@@ -23,7 +23,7 @@ export function hourlyWindowsOf(now: Date): { readonly hour: Window; readonly da
   };
 }
 
-export function morningWindowsOf(now: Date): ReadonlyArray<Window> {
+export function morningWindowsOf(now: Date): Array.NonEmptyReadonlyArray<Window> {
   const today = riyadhMidnightOf(now.getTime());
   return Array.makeBy(DAYS, (index) => ({
     from: new Date(today - (index + 1) * DAY),
@@ -96,4 +96,17 @@ export function morningText(days: ReadonlyArray<number>, top: Option.Option<stri
 
 export function isSilent(hourVisits: number, forced: boolean): boolean {
   return forced || hourVisits === 0;
+}
+
+export type Kind = 'hourly' | 'morning';
+
+export function greetingLabel(kind: Kind, name: string): string {
+  return kind === 'hourly' ? `أهلًا يا ${name} 👋` : `صباح الخير يا ${name} ☀️`;
+}
+
+export function messageOf(kind: Kind, name: Option.Option<string>, body: string): string {
+  return Option.match(name, {
+    onNone: () => body,
+    onSome: (someone) => `${greetingLabel(kind, someone)}\n\n${body}`,
+  });
 }

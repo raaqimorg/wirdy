@@ -1,0 +1,14 @@
+{
+  "data": {
+    "viewer": {
+      "zones": [
+        {
+          "w0": [{ "sum": { "visits": 18 } }],
+          "w1": [{ "sum": { "visits": 342 } }],
+          "w2": []
+        }
+      ]
+    }
+  },
+  "errors": null
+}

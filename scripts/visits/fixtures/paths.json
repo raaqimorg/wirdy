@@ -1,0 +1,17 @@
+{
+  "data": {
+    "viewer": {
+      "zones": [
+        {
+          "paths": [
+            { "dimensions": { "clientRequestPath": "/" }, "sum": { "visits": 40 } },
+            { "dimensions": { "clientRequestPath": "/sabah-masaa/" }, "sum": { "visits": 12 } },
+            { "dimensions": { "clientRequestPath": "/nawm/" }, "sum": { "visits": 3 } },
+            { "dimensions": { "clientRequestPath": "/robots.txt" }, "sum": { "visits": 0 } }
+          ]
+        }
+      ]
+    }
+  },
+  "errors": null
+}

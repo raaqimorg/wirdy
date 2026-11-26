@@ -1,0 +1,13 @@
+{
+  "data": null,
+  "errors": [
+    {
+      "message": "error parsing args for \"httpRequestsAdaptiveGroups\": filter: unknown arg visits_gt",
+      "path": null,
+      "extensions": {
+        "timestamp": "2026-11-26T18:58:47.560925751Z",
+        "ray_id": "a60b2066ffd8edc4-AMS"
+      }
+    }
+  ]
+}

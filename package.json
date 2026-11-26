@@ -37,6 +37,7 @@
     "verification:difference": "bun scripts/verification/difference.ts",
     "verification:absent": "bun scripts/verification/absent.ts",
     "verification:ruling": "bun scripts/verification/ruling.ts",
+    "visits": "bun scripts/visits/send.ts",
     "deploy": "bun run ci && wrangler pages deploy"
   },
   "dependencies": {
