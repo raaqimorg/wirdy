@@ -1,4 +1,5 @@
-import { CHROMA, hexFromOklch, LIGHTNESS } from './tone';
+import { OCCASION_IDS } from './occasions';
+import { toneOf } from './tone';
 
 export const SITE = {
   name: 'وِردي',
@@ -31,5 +32,5 @@ export const TIBB = {
   path: '/al-tibb-al-nabawi/',
   heading: 'الطب النبوي',
   title: 'الطب النبوي',
-  color: hexFromOklch(LIGHTNESS, CHROMA, 80),
+  color: toneOf(80, OCCASION_IDS.length),
 } as const;

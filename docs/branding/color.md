@@ -24,7 +24,8 @@ Dark mode changes the paper, the panel, and the ink in `tokens.css`, not the mar
 
 No section color is typed by hand. `src/lib/tone.ts` computes each in OKLCH from the section's place on the list:
 
-- Lightness `0.52` and chroma `0.086` for every section, so eggshell text keeps 4.5:1 or more, and no section looks louder.
+- Two depths: lightness `0.52` with chroma `0.086`, or lightness `0.46` with chroma in the same share (`0.0761`). Eggshell text keeps 4.5:1 or more on both, the colored text keeps 4.5:1 day and night, and no section looks louder.
+- The depths alternate along the arc in hue order, starting light at the first section, so the two nearest hues never share a depth and no two sections look alike.
 - The hue walks a 300° arc that skips the olive tones, from 47° for the first section, in steps near the golden ratio, so neighbours differ.
 
 The rule gives these now. A new section changes them all.
@@ -32,24 +33,24 @@ The rule gives these now. A new section changes them all.
 | Section       | Heading        | Color     | Hue  |
 | ------------- | -------------- | --------- | ---- |
 | `sabah-masaa` | الصباح والمساء | `#91593c` | 47°  |
-| `masjid`      | الأذان والمسجد  | `#337095` | 238° |
+| `masjid`      | الأذان والمسجد  | `#295e7e` | 238° |
 | `fi-al-salah` | أثناء الصلاة    | `#93535e` | 10°  |
-| `salah`       | بعد الصلاة      | `#0c777d` | 201° |
+| `salah`       | بعد الصلاة      | `#086469` | 201° |
 | `nawm`        | عند النوم      | `#86567f` | 332° |
-| `istiqaz`     | عند الاستيقاظ   | `#31785b` | 163° |
+| `istiqaz`     | عند الاستيقاظ   | `#28654c` | 163° |
 | `mutlaq`      | كل وقت         | `#6c5f95` | 295° |
-| `mawasim`     | المواسم والحج  | `#8b5e2e` | 66°  |
+| `mawasim`     | المواسم والحج  | `#754f26` | 66°  |
 | `taam`        | الطعام والشراب | `#486a9a` | 257° |
-| `bayt`        | البيت والأهل    | `#94554c` | 28°  |
+| `bayt`        | البيت والأهل    | `#7d4740` | 28°  |
 | `safar`       | الخروج والسفر  | `#1c748b` | 220° |
-| `nas`         | الناس والمجالس | `#8e536f` | 351° |
+| `nas`         | الناس والمجالس | `#78465d` | 351° |
 | `hamm`        | الهم والغضب    | `#1a796d` | 182° |
-| `marad`       | المرض والرقية  | `#7a5a8c` | 313° |
+| `marad`       | المرض والرقية  | `#674b76` | 313° |
 | `janaiz`      | الجنائز        | `#487649` | 145° |
-| `matar`       | المطر والريح   | `#5b649a` | 276° |
+| `matar`       | المطر والريح   | `#4c5482` | 276° |
 | `tibb`        | الطب النبوي    | `#836328` | 80°  |
 
-«الطب النبوي» has the same lightness as the occasions, and chroma at the petals' hue (80°), the yellow the arc skips, so it sits apart from the adhkar and beside the mark.
+«الطب النبوي» takes the depth after the last hue on the arc, at the petals' hue (80°), the yellow the arc skips, so it sits apart from the adhkar and beside the mark.
 
 ## Where the colors go
 

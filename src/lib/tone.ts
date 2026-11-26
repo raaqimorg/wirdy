@@ -1,13 +1,14 @@
 import { Array } from 'effect';
 
 export const LIGHTNESS = 0.52;
+export const DEEP_LIGHTNESS = 0.46;
 export const CHROMA = 0.086;
 export const NIGHT = 0.9;
 export const ARC = { from: 135, span: 300 } as const;
 export const FIRST_HUE = 47;
 export const INVERSE_GOLDEN = (3 - Math.sqrt(5)) / 2;
 
-type Triple = readonly [number, number, number];
+export type Triple = readonly [number, number, number];
 
 const toLinear = (channel: number) =>
   channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
@@ -15,10 +16,16 @@ const toGamma = (channel: number) =>
   channel <= 0.0031308 ? 12.92 * channel : 1.055 * channel ** (1 / 2.4) - 0.055;
 const fraction = (value: number) => value - Math.floor(value);
 
-export function linearFromOklch(lightness: number, chroma: number, hue: number): Triple {
-  const angle = (hue * Math.PI) / 180;
-  const a = chroma * Math.cos(angle);
-  const b = chroma * Math.sin(angle);
+const oklabFromOklch = (lightness: number, chroma: number, hue: number): Triple => [
+  lightness,
+  chroma * Math.cos((hue * Math.PI) / 180),
+  chroma * Math.sin((hue * Math.PI) / 180),
+];
+
+export const linearFromOklch = (lightness: number, chroma: number, hue: number) =>
+  linearFromOklab(oklabFromOklch(lightness, chroma, hue));
+
+function linearFromOklab([lightness, a, b]: Triple): Triple {
   const l = (lightness + 0.3963377774 * a + 0.2158037573 * b) ** 3;
   const m = (lightness - 0.1055613458 * a - 0.0638541728 * b) ** 3;
   const s = (lightness - 0.0894841775 * a - 1.291485548 * b) ** 3;
@@ -29,23 +36,33 @@ export function linearFromOklch(lightness: number, chroma: number, hue: number):
   ];
 }
 
-export function hexFromOklch(lightness: number, chroma: number, hue: number): string {
-  const channels = linearFromOklch(lightness, chroma, hue).map((channel) =>
+export function hexFromOklab(lab: Triple): string {
+  const channels = linearFromOklab(lab).map((channel) =>
     Math.round(toGamma(Math.min(1, Math.max(0, channel))) * 255)
   );
   return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 }
 
+export const hexFromOklch = (lightness: number, chroma: number, hue: number) =>
+  hexFromOklab(oklabFromOklch(lightness, chroma, hue));
+
 const channelAt = (hex: string, start: number) =>
   toLinear(Number.parseInt(hex.slice(start, start + 2), 16) / 255);
 
-export function hueOf(hex: string): number {
+export function oklabOf(hex: string): Triple {
   const [red, green, blue] = [channelAt(hex, 1), channelAt(hex, 3), channelAt(hex, 5)];
   const l = Math.cbrt(0.4122214708 * red + 0.5363769773 * green + 0.0514459929 * blue);
   const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue);
   const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue);
-  const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
-  const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+export function hueOf(hex: string): number {
+  const [, a, b] = oklabOf(hex);
   return fraction(Math.atan2(b, a) / (2 * Math.PI)) * 360;
 }
 
@@ -80,5 +97,20 @@ export function contrast(one: string, other: string): number {
   return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
 }
 
-export const toneOf = (index: number, count: number) =>
-  hexFromOklch(LIGHTNESS, CHROMA, hueAt(index, count));
+export const chromaOf = (lightness: number) => (lightness * CHROMA) / LIGHTNESS;
+
+const placeOf = (hue: number) => fraction((hue - ARC.from) / 360);
+
+const rankOf = (hue: number, count: number) =>
+  Array.filter(Array.range(0, count - 1), (index) => placeOf(hueAt(index, count)) < placeOf(hue))
+    .length;
+
+export function lightnessOf(hue: number, count: number): number {
+  const steps = rankOf(hue, count) - rankOf(hueAt(0, count), count);
+  return steps % 2 === 0 ? LIGHTNESS : DEEP_LIGHTNESS;
+}
+
+export function toneOf(hue: number, count: number): string {
+  const lightness = lightnessOf(hue, count);
+  return hexFromOklch(lightness, chromaOf(lightness), hue);
+}

@@ -3,23 +3,38 @@ import { PALETTE } from './palette';
 import {
   ARC,
   CHROMA,
+  DEEP_LIGHTNESS,
   FIRST_HUE,
   LIGHTNESS,
   NIGHT,
+  chromaOf,
   contrast,
   hexFromOklch,
   hueAt,
+  lightnessOf,
   linearFromOklch,
+  oklabOf,
   strideFor,
+  toneOf,
 } from './tone';
 
 const ARC_HUES = Array.from({ length: ARC.span + 1 }, (_, step) => (ARC.from + step) % 360);
-const DAY_AND_NIGHT = [
-  ['by day', LIGHTNESS, CHROMA],
-  ['by night', LIGHTNESS * NIGHT, CHROMA * NIGHT],
-] as const;
+const HONEY = 80;
+const HUES = [...ARC_HUES, HONEY];
+const DAY_AND_NIGHT = [LIGHTNESS, DEEP_LIGHTNESS].flatMap(
+  (lightness) =>
+    [
+      [`at ${String(lightness)} by day`, lightness, chromaOf(lightness)],
+      [`at ${String(lightness)} by night`, lightness * NIGHT, chromaOf(lightness) * NIGHT],
+    ] as const
+);
 const COUNTS = Array.from({ length: 15 }, (_, index) => index + 2);
 const huesFor = (count: number) => Array.from({ length: count }, (_, index) => hueAt(index, count));
+const placeOf = (hue: number) => (hue - ARC.from + 360) % 360;
+const distance = (one: string, other: string) => {
+  const [first, second] = [oklabOf(one), oklabOf(other)];
+  return Math.hypot(...first.map((value, index) => value - second[index]!));
+};
 const gap = (one: number, other: number) => {
   const turn = Math.abs(one - other) % 360;
   return Math.min(turn, 360 - turn);
@@ -30,8 +45,8 @@ describe('the tone of a section', () => {
     expect(hueAt(0, count)).toBeCloseTo(FIRST_HUE, 6);
   });
 
-  it.each(DAY_AND_NIGHT)('keeps every hue on the arc inside sRGB %s', (_, lightness, chroma) => {
-    for (const hue of ARC_HUES) {
+  it.each(DAY_AND_NIGHT)('keeps every hue inside sRGB %s', (_, lightness, chroma) => {
+    for (const hue of HUES) {
       for (const channel of linearFromOklch(lightness, chroma, hue)) {
         expect(channel).toBeGreaterThanOrEqual(0);
         expect(channel).toBeLessThanOrEqual(1);
@@ -40,9 +55,9 @@ describe('the tone of a section', () => {
   });
 
   it.each(DAY_AND_NIGHT)(
-    'keeps the eggshell text readable on every hue on the arc %s',
+    'keeps the eggshell text readable on every hue %s',
     (_, lightness, chroma) => {
-      for (const hue of ARC_HUES) {
+      for (const hue of HUES) {
         const tone = hexFromOklch(lightness, chroma, hue);
         expect(contrast(tone, PALETTE.eggshell)).toBeGreaterThanOrEqual(4.5);
       }
@@ -66,6 +81,32 @@ describe('the tone of a section', () => {
       hues.slice(index + 1).map((other) => gap(hue, other))
     );
     expect(Math.min(...gaps)).toBeCloseTo(ARC.span / count, 6);
+  });
+
+  it.each(COUNTS)('gives the first of %i sections the light depth', (count) => {
+    expect(lightnessOf(hueAt(0, count), count)).toBe(LIGHTNESS);
+  });
+
+  it.each(COUNTS)('alternates the depth of %i sections and the honey along the arc', (count) => {
+    const depths = [...huesFor(count), HONEY]
+      .toSorted((one, other) => placeOf(one) - placeOf(other))
+      .map((hue) => lightnessOf(hue, count));
+    for (const [index, depth] of depths.slice(1).entries()) {
+      expect(depth).not.toBe(depths[index]);
+    }
+  });
+
+  it('keeps the chroma of each depth in the same share of its lightness', () => {
+    expect(chromaOf(LIGHTNESS)).toBe(CHROMA);
+    expect(chromaOf(DEEP_LIGHTNESS) / DEEP_LIGHTNESS).toBeCloseTo(CHROMA / LIGHTNESS, 12);
+  });
+
+  it.each(COUNTS)('keeps any two of %i sections and the honey apart', (count) => {
+    const tones = [...huesFor(count), HONEY].map((hue) => toneOf(hue, count));
+    const distances = tones.flatMap((tone, index) =>
+      tones.slice(index + 1).map((other) => distance(tone, other))
+    );
+    expect(Math.min(...distances)).toBeGreaterThanOrEqual(0.045);
   });
 
   it('steps through the arc by the whole number nearest the golden ratio', () => {
