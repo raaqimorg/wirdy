@@ -26,14 +26,15 @@ Each section has one emblem in `src/lib/emblems.ts`. Every emblem is:
 
 Every page has a card for link previews: 1200 by 630, drawn at twice the scale (2400 by 1260), so it stays sharp after a chat app compresses it.
 
-| Card                         | File                                | What it shows                                                                   | Made by                    |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- | -------------------------- |
-| Home                         | `public/opengraph.png`              | The mark and name, the `promise`, and every occasion's emblem                   | `bun run opengraph`        |
-| A section                    | `public/opengraph-<id>.png`         | The mark and name, the section `title`, its count, and its emblem, on its color | `bun run opengraph`        |
-| A dhikr                      | `public/og/<id>/<slug>-<print>.png` | The section, the title, the count, the words, the moment, and the takhrij       | `bun run opengraph:adhkar` |
-| A hadith                     | `public/og/tibb/<slug>-<print>.png` | The section, the title, the words, the narrator, and the takhrij                | `bun run opengraph:adhkar` |
-| Search, الطب النبوي, and 404 | `public/opengraph.png`              | The home card                                                                   |                            |
+| Card           | File                                | What it shows                                                                                                 | Made by                    |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Home           | `public/opengraph/home-<print>.png` | The mark, the name, and the domain on paper, beside every section's emblem in a 3 by 3 mosaic of their colors | `bun run opengraph`        |
+| A section      | `public/opengraph/<id>-<print>.png` | The navbar's mark and name, the section `title`, its count, and its emblem, on its color                      | `bun run opengraph`        |
+| A dhikr        | `public/og/<id>/<slug>-<print>.png` | The section, the title, the count, the words, the moment, and the takhrij                                     | `bun run opengraph:adhkar` |
+| A hadith       | `public/og/tibb/<slug>-<print>.png` | The section, the title, the words, the narrator, and the takhrij                                              | `bun run opengraph:adhkar` |
+| Search and 404 | `public/opengraph/home-<print>.png` | The home card                                                                                                 |                            |
 
 - Every card shows the mark, «وِردي», and `wirdy.site`.
 - A dhikr card carries its takhrij, because an image travels without its page ([`exceptions.md`](../exceptions.md#each-dhikr-has-a-card-named-by-its-fingerprint)).
-- A section card shows its count, so run `bun run opengraph` when a dhikr comes in or goes out. A dhikr card is named by its fingerprint, and `content.test.ts` fails when one is missing.
+- Every card is named by its fingerprint, a hash of what it prints (`src/lib/card.ts`), so a changed card gets a new URL that no chat app or cache has kept. A page links the name it computes, and the build test fails when that file is missing: run `bun run opengraph` when a section's title, color, count, or emblem changes, and `bun run opengraph:adhkar` for a dhikr. Raise `SITE_TEMPLATE` or `TEMPLATE` when only the drawing changes.
+- Every element sits 64 px from the sides and 56 px from the top and bottom (at 1x), so X's 2:1 crop and rounded corners cut nothing but color. A section card draws the mark as its navbar does, in cream, and counts the adhkar as the home page does, leaving out the evening-only forms.

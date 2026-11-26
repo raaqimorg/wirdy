@@ -5,14 +5,15 @@ import { EMBLEMS, type EmblemName } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
 import { fullLeadOf, REST, suwarOf } from './lead';
 import { markSvg } from './mark';
-import { sectionOf } from './occasions';
+import { OCCASIONS, sectionOf } from './occasions';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
 import type { Dhikr, Tibb } from './schema';
-import { TIBB } from './site';
+import { SITE, TIBB } from './site';
 import { takhrijLine } from './takhrij';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
 
 const TEMPLATE = 4;
+const SITE_TEMPLATE = 1;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
 
@@ -117,4 +118,35 @@ export function cardFile(card: Card, occasion: EmblemName, slug: string): string
     .digest('hex')
     .slice(0, 8);
   return `og/${occasion}/${slug}-${print}.png`;
+}
+
+export type SectionCard = {
+  readonly id: EmblemName;
+  readonly title: string;
+  readonly color: string;
+  readonly note: string;
+};
+
+const fingerprint = (value: unknown): string =>
+  createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 8);
+
+export const SWATCHES: ReadonlyArray<{ readonly id: EmblemName; readonly color: string }> = [
+  ...OCCASIONS.map(({ id, color }) => ({ id, color })),
+  { id: 'tibb', color: TIBB.color },
+];
+
+export function sectionCardFile(card: SectionCard): string {
+  const print = fingerprint([SITE_TEMPLATE, card, EMBLEMS[card.id], markSvg('stage')]);
+  return `opengraph/${card.id}-${print}.png`;
+}
+
+export function homeCardFile(): string {
+  const print = fingerprint([
+    SITE_TEMPLATE,
+    SITE.name,
+    SITE.domain,
+    SWATCHES.map(({ id, color }) => [id, color, EMBLEMS[id]]),
+    markSvg(),
+  ]);
+  return `opengraph/home-${print}.png`;
 }

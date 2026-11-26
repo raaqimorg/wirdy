@@ -48,3 +48,5 @@ export function sectionOf(id: Occasion): Section {
     color: toneOf(OCCASION_IDS.indexOf(id), OCCASION_IDS.length),
   };
 }
+
+export const listed = (mode: 'both' | 'sabah' | 'masaa'): boolean => mode !== 'masaa';

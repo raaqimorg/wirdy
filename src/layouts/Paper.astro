@@ -7,9 +7,10 @@ import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic
 import '../styles/index.css';
 import SearchSheet from '../components/SearchSheet.astro';
 import SkipLink from '../components/SkipLink.astro';
+import { homeCardFile } from '../lib/card';
 import { ICON_VERSION } from '../lib/mark';
 import { PALETTE } from '../lib/palette';
-import { SITE } from '../lib/site';
+import { RAAQIM, SITE } from '../lib/site';
 
 interface Props {
   title: string;
@@ -26,7 +27,7 @@ interface Props {
 const {
   title: topic,
   description,
-  image = '/opengraph.png',
+  image = `/${homeCardFile()}`,
   imageSize: [imageWidth, imageHeight] = [2400, 1260],
   crumbs = [],
   noindex = false,
@@ -129,6 +130,7 @@ const structuredData = {
     <meta property="og:image:alt" content={title} />
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={RAAQIM.handle} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage.href} />

@@ -9,9 +9,10 @@ import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
 import Section from '../layouts/Section.astro';
 import { adhkarLabel } from '../lib/arabic';
+import { sectionCardFile } from '../lib/card';
 import { adhkarOf, sectionTiles } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
-import { OCCASIONS } from '../lib/occasions';
+import { listed, OCCASIONS } from '../lib/occasions';
 
 export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
@@ -35,7 +36,7 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
 <Section
   title={title}
   description={description}
-  image={`/opengraph-${id}.png`}
+  image={`/${sectionCardFile({ id, title, color, note: adhkarLabel(entries.filter(({ data }) => listed(data.mode)).length) })}`}
   crumbs={[{ name: title, path: `/${id}/` }]}
   faces={hasQuran ? ['naskh', 'quran'] : ['naskh']}
   emblem={id}

@@ -24,7 +24,7 @@ The icon and card scripts need a Chromium browser (Brave, Chrome, Chromium, or E
 | `bun run test`             | Runs the unit tests ([`testing.md`](testing.md)).              |
 | `bun run verification`     | Lists the proven adhkar, and what the others lack.             |
 | `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                     |
-| `bun run opengraph`        | Draws the cards of the home page and each occasion.            |
+| `bun run opengraph`        | Draws the cards of the home page and each section.             |
 | `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.         |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
@@ -53,6 +53,6 @@ The guards are in `scripts/check/`. [`CONTRIBUTING.md`](../.github/CONTRIBUTING.
 Never edit these by hand. Run their script.
 
 - `public/favicon.svg`, `favicon.ico`, the PNG icons, and `apple-touch-icon.png`: `bun run icons`.
-- `public/opengraph.png` and `public/opengraph-<occasion>.png`: `bun run opengraph`.
+- `public/opengraph/home-<fingerprint>.png` and `public/opengraph/<section>-<fingerprint>.png`: `bun run opengraph`.
 - `public/og/<occasion>/<slug>-<fingerprint>.png`: `bun run opengraph:adhkar`.
 - `.astro/` and `dist/`: Astro writes them, and git ignores them.

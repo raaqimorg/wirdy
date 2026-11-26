@@ -18,6 +18,7 @@ export const RAAQIM = {
   about: 'Raaqim builds Arabic and Islamic digital projects.',
   github: 'https://github.com/raaqimorg',
   x: 'https://x.com/raaqimorg',
+  handle: '@raaqimorg',
   email: 'contact@raaqim.org',
 } as const;
 

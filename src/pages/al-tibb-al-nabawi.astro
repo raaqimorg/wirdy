@@ -9,6 +9,7 @@ import ReadingProgress from '../components/ReadingProgress.astro';
 import Related from '../components/Related.astro';
 import Section from '../layouts/Section.astro';
 import { hadithLabel } from '../lib/arabic';
+import { sectionCardFile } from '../lib/card';
 import { sectionTiles, tibbEntries } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
 import { slugOf } from '../lib/permalink';
@@ -27,6 +28,7 @@ const description = `${title}: ${label} صحيحة عن النبي ﷺ في ال
 <Section
   title={title}
   description={description}
+  image={`/${sectionCardFile({ id: 'tibb', title, color, note: label })}`}
   crumbs={[{ name: title, path }]}
   emblem="tibb"
   color={color}

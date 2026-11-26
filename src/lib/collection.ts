@@ -4,7 +4,7 @@ import { Array, Effect, Option, Order } from 'effect';
 import { adhkarLabel, hadithLabel } from './arabic';
 import type { EmblemName } from './emblems';
 import { foldOf, suwarOf } from './lead';
-import { OCCASIONS, type Occasion } from './occasions';
+import { listed, OCCASIONS, type Occasion } from './occasions';
 import { dhikrAnchor, slugOf } from './permalink';
 import type { Dhikr } from './schema';
 import { TIBB } from './site';
@@ -54,7 +54,7 @@ export const occasionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
       id,
       heading,
       color,
-      note: adhkarLabel(entries.filter(({ data }) => data.mode !== 'masaa').length),
+      note: adhkarLabel(entries.filter(({ data }) => listed(data.mode)).length),
       href: `/${id}/`,
     })),
   { concurrency: 'unbounded' }

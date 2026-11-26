@@ -27,7 +27,7 @@ On a dhikr or hadith page, the line over the title is the way back to its place 
 - `description`: one or two sentences in the voice of [Identity](identity.md). A section page keeps it between 90 and 160 letters.
 - `canonical`: the page's absolute URL, with its trailing slash, on an indexed page only. An unindexed page has `<meta name="robots" content="noindex">` and no canonical.
 - `og:title`, `twitter:title`, `og:image:alt`, and `twitter:image:alt` are the title. `og:description` and `twitter:description` are the description. `og:url` is the page's URL.
-- `og:image` and `twitter:image` are the card's absolute URL, with `og:image:width` 2400 and `og:image:height` 1260. `twitter:card` is `summary_large_image`.
+- `og:image` and `twitter:image` are the card's absolute URL, with `og:image:width` 2400 and `og:image:height` 1260. `twitter:card` is `summary_large_image`, and `twitter:site` is Raaqim's account, `@raaqimorg`.
 - `og:type` is `website`, `og:locale` is `ar_AR`, and `og:site_name` is «وِردي».
 - `theme-color` is `paper` in light mode and `paperDark` in dark mode. The theme script changes both when the reader picks a mode.
 - Every page links the icons and the manifest ([Logo](logo.md#the-icons)), each with `?v=` and `ICON_VERSION` (`src/lib/mark.ts`), a hash of the mark and the touch-icon cream. `_headers` lets Cloudflare and browsers keep an icon for a week, so a changed mark needs a new URL, or the old icon stays.

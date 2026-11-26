@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import { OCCASIONS, OCCASION_IDS } from './lib/occasions';
 import { adhkarLabel } from './lib/arabic';
+import { homeCardFile } from './lib/card';
 import { ICON_VERSION, markSvg } from './lib/mark';
 import { PALETTE } from './lib/palette';
 import { RAAQIM, SITE, TIBB } from './lib/site';
@@ -467,23 +468,27 @@ describe('built site', () => {
   });
 
   it('points the opengraph card at an absolute image that is actually shipped', () => {
-    expect(html).toMatch(
-      /<meta property="og:image" content="https:\/\/wirdy\.site\/opengraph\.png"/u
-    );
-    expect(existsSync(join(DIST, 'opengraph.png'))).toBe(true);
+    expect(metaOf(html, 'property', 'og:image')).toBe(`https://wirdy.site/${homeCardFile()}`);
+    expect(existsSync(join(DIST, homeCardFile()))).toBe(true);
   });
 
-  it('gives each occasion page its own card, the same size as the home card', () => {
-    for (const id of OCCASION_IDS) {
-      const url = `https://wirdy.site/opengraph-${id}.png`;
-      expect(metaOf(pages[id]!, 'property', 'og:image')).toBe(url);
-      expect(metaOf(pages[id]!, 'name', 'twitter:image')).toBe(url);
-      expect(pngSize(`opengraph-${id}.png`)).toEqual([2400, 1260]);
+  it('gives each section page its own card, named by what it prints, the size of the home card', () => {
+    const tibb = readFileSync(join(DIST, 'al-tibb-al-nabawi', 'index.html'), 'utf8');
+    for (const [id, page] of [
+      ...OCCASION_IDS.map((occasion) => [occasion, pages[occasion]!]),
+      ['tibb', tibb],
+    ]) {
+      const url = metaOf(page!, 'property', 'og:image')!;
+      expect(url).toMatch(
+        new RegExp(`^https://wirdy\\.site/opengraph/${id}-[0-9a-f]{8}\\.png$`, 'u')
+      );
+      expect(metaOf(page!, 'name', 'twitter:image')).toBe(url);
+      expect(pngSize(url.replace(SITE.url, ''))).toEqual([2400, 1260]);
     }
   });
 
   it('keeps the card at 2x the platform minimum so it stays sharp on retina', () => {
-    const png = readFileSync(join(DIST, 'opengraph.png'));
+    const png = readFileSync(join(DIST, homeCardFile()));
     const width = png.readUInt32BE(16);
     const height = png.readUInt32BE(20);
     expect([width, height]).toEqual([2400, 1260]);
@@ -513,6 +518,7 @@ describe('built site', () => {
       expect(unescaped(metaOf(page, 'property', 'og:description')!)).toBe(description);
       expect(unescaped(metaOf(page, 'name', 'twitter:description')!)).toBe(description);
       expect(metaOf(page, 'name', 'twitter:image')).toBe(image);
+      expect(metaOf(page, 'name', 'twitter:site')).toBe(RAAQIM.handle);
       const shipped = image.replace(SITE.url, '');
       expect(existsSync(join(DIST, shipped))).toBe(true);
       expect(pngSize(shipped)).toEqual([
@@ -927,9 +933,8 @@ describe('built site', () => {
 
   it('asks for the large twitter card so the image is not cropped to a thumb', () => {
     expect(html).toMatch(/<meta name="twitter:card" content="summary_large_image"/u);
-    expect(html).toMatch(
-      /<meta name="twitter:image" content="https:\/\/wirdy\.site\/opengraph\.png"/u
-    );
+    expect(metaOf(html, 'name', 'twitter:image')).toBe(`https://wirdy.site/${homeCardFile()}`);
+    expect(metaOf(html, 'name', 'twitter:site')).toBe('@raaqimorg');
   });
 
   it('brackets every قرآن card and keeps a face that can draw the brackets', () => {
