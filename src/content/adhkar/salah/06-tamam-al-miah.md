@@ -5,7 +5,7 @@ order: 6
 count: 1
 mode: "both"
 quran: false
-how: "ثم يقول تمام المائة"
+how: "ثم يقول تمام المئة"
 group: "صيغ التسبيح"
 form: 1
 fadl: "غُفرت خطاياه وإن كانت مثل زبد البحر"

@@ -5,7 +5,6 @@ order: 5
 count: 1
 mode: "both"
 quran: false
-when: "حين يسمع النداء"
 group: "الأذان"
 fadl: "حلّت له شفاعتي يوم القيامة"
 takhrij:

@@ -5,7 +5,7 @@ order: 4
 count: 1
 mode: "both"
 quran: false
-when: "إذا تعارّ من الليل"
+when: "إذا استيقظ من الليل"
 group: "ما يعرض في الليل"
 fadl: "استُجيب له، فإن توضأ وصلّى قُبلت صلاته"
 takhrij:

@@ -1,0 +1,17 @@
+---
+import CardGrid from './CardGrid.astro';
+import type { BandTiles } from '../lib/collection';
+
+interface Props {
+  bands: ReadonlyArray<BandTiles>;
+}
+
+const { bands } = Astro.props;
+---
+
+{bands.map(({ heading, tiles }, index) => (
+  <section class="section-bands__band">
+    <h2 class="section-bands__title">{heading}</h2>
+    <CardGrid tiles={tiles} variant="featured" lead={index === 0} />
+  </section>
+))}

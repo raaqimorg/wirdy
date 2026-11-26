@@ -1,6 +1,6 @@
 # Emblem ideas
 
-The 49 emblems drawn in November 2026 and not chosen, so a new occasion can take one instead of starting from nothing. Each sits under the occasion it was drawn for, on that occasion's color, but belongs to none now.
+The 48 emblems drawn in November 2026 and not chosen, and one retired, so a new occasion can take one instead of starting from nothing. Each sits under the occasion it was drawn for, on that occasion's color, but belongs to none now.
 
 Each keeps the rules of the set: a 240-unit square, flat geometric shapes, black shade at low opacity, and one lit shape in full eggshell (`src/lib/palette.ts`). Each drawing is a still frame in `docs/emblem-ideas/`. The code that drew them is gone.
 
@@ -291,12 +291,6 @@ Nine small, different forms, like the states of a day: going out, coming in, rai
 
 «بسم الله ولجنا، وبسم الله خرجنا». A door open on a lit room, its light on the floor. Going out and coming in are the most common states of a day.
 
-### Rain
-
-<img src="emblem-ideas/rain.svg" width="160" alt="">
-
-«اللهم صيبا نافعا». Rain in slanted strokes, with one lit drop. Rain stands for every state that comes and goes.
-
 ### A ring of keys
 
 <img src="emblem-ideas/ring-of-keys.svg" width="160" alt="">
@@ -328,6 +322,12 @@ From the content: «اللهم صيبا نافعا» (المطر), and the group
 A house, and a lit path that leaves and returns: the two moments repeated most in a day.
 
 From the content: «فيقال له: حسبك، قد هُديت وكُفيت ووُقيت» (الخروج من المنزل).
+
+### Turning roads
+
+<img src="emblem-ideas/turning-roads.svg" width="160" alt="">
+
+A grid of turning roads, with one lit path across it. It was the emblem of «أحوال متفرقة» until the section was divided in November 2026.
 
 ## ما لم يثبت (`unproven`)
 

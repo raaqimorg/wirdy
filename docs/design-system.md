@@ -75,10 +75,12 @@ To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color f
 | `Dhikr`, `Hadith`                                                                                                                | What fills an `Entry`                                                              |
 | `Surah`, `Phrase`, `VariantText`                                                                                                 | The text inside an `Entry`                                                         |
 | `EntryList`, `Group`, `GroupIndex`, `Choices`, `Closing`                                                                         | How entries sit on a page                                                          |
-| `OccasionCard`, `CardGrid`, `Related`                                                                                            | The occasion cards                                                                 |
+| `OccasionCard`, `CardGrid`, `SectionBands`, `Related`                                                                            | The occasion cards, and the bands of the home page                                 |
 | `Search`, `SearchField`, `SearchHead`, `SearchRow`, `SearchSheet`                                                                | Search: the field, the results under each section head, the empty state, the sheet |
 | `SkipLink`, `Bar`, `SectionMenu`, `Banner`, `Hero`, `PageTools`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                |
 | `ReadingProgress`                                                                                                                | A line under the bar that grows as a long page is read                             |
+
+The home page and the 404 page show the sections in the three bands of `BANDS` (`src/lib/occasions.ts`), each under its heading in its own `CardGrid`. Only the first card of the first band leads and moves. `widthsOf` (`src/lib/grid.ts`) sets which cards of a grid are wide, so every row of two and of four is full.
 
 A card in a list shows its name in a small line above its lead, unless the text opens with that name (`isOpening` in `src/lib/title.ts`), so no words show twice. In a list the foot folds under the words behind one quiet line, «التخريج والمزيد» (a `<details>`, no script), which reads «إخفاء» while open, and the card is one column at every width. On the page of a dhikr or a hadith the foot is always open, and on a wide screen it is the card's side column.
 

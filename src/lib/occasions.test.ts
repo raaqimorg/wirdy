@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OCCASIONS } from './occasions';
+import { BANDS, OCCASION_IDS, OCCASIONS } from './occasions';
 import { PALETTE } from './palette';
 import { contrast, hueOf } from './tone';
 
@@ -20,5 +20,11 @@ describe('the occasion colors', () => {
 
   it('gives every occasion its own color', () => {
     expect(new Set(OCCASIONS.map(({ color }) => color)).size).toBe(OCCASIONS.length);
+  });
+});
+
+describe('the bands of the home page', () => {
+  it('hold every section once, and الطب النبوي, in the order of the list', () => {
+    expect(BANDS.flatMap(({ ids }) => ids)).toEqual([...OCCASION_IDS, 'tibb']);
   });
 });

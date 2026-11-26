@@ -1,0 +1,15 @@
+---
+title: "اللهم إني أعوذ بك من البرص والجنون"
+occasion: "mutlaq"
+order: 37
+count: 1
+mode: "both"
+quran: false
+group: "جوامع الاستعاذة"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح أبي داود ١٥٥٤"
+  ruling: "صحيح"
+  url: "https://dorar.net/h/WgKhPZyQ"
+---
+اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْبَرَصِ، وَالْجُنُونِ، وَالْجُذَامِ وَمِنْ سَيِّئِ الأَسْقَامِ

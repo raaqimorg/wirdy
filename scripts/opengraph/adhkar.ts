@@ -129,6 +129,12 @@ const program = Effect.gen(function* () {
         yield* fs.remove(path.join(ogDir, file));
       }
     }
+    const sections = new Set<string>(entries.map(({ occasion }) => occasion));
+    for (const dir of yield* fs.readDirectory(ogDir)) {
+      if (!sections.has(dir)) {
+        yield* fs.remove(path.join(ogDir, dir), { recursive: true });
+      }
+    }
   }
 
   for (const { card, occasion, file } of entries) {

@@ -4,7 +4,7 @@ import { Array, Effect, Option, Order } from 'effect';
 import { adhkarLabel, hadithLabel } from './arabic';
 import type { EmblemName } from './emblems';
 import { foldOf, suwarOf } from './lead';
-import { listed, OCCASIONS, type Occasion } from './occasions';
+import { BANDS, listed, OCCASIONS, type Occasion } from './occasions';
 import { dhikrAnchor, slugOf } from './permalink';
 import type { Dhikr } from './schema';
 import { TIBB } from './site';
@@ -74,6 +74,17 @@ export const sectionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.map(
       },
     ];
   }
+);
+
+export type BandTiles = { readonly heading: string; readonly tiles: ReadonlyArray<Tile> };
+
+export const bandTiles: Effect.Effect<ReadonlyArray<BandTiles>> = Effect.map(
+  sectionTiles,
+  (tiles) =>
+    Array.map(BANDS, ({ heading, ids }) => ({
+      heading,
+      tiles: Array.filter(tiles, (tile) => ids.includes(tile.id)),
+    }))
 );
 
 function shownAyat(data: Dhikr, text: string): string {

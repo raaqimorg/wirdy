@@ -5,7 +5,6 @@ order: 16
 count: 1
 mode: "both"
 quran: false
-when: "إذا صلّى"
 how: "وأقبل على الناس بوجهه"
 group: "أدعية بعد الصلاة"
 takhrij:

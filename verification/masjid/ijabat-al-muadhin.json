@@ -82,6 +82,15 @@
         }
       ]
     },
+    "fadl": {
+      "fingerprint": "6ab5863c83a618be",
+      "spans": [
+        {
+          "source": 0,
+          "text": "لا إلَهَ إلَّا اللهُ مِن قَلبِه، دَخَلَ الجَنَّةَ"
+        }
+      ]
+    },
     "takhrij": {
       "fingerprint": "99c403851ca67c59",
       "spans": []
