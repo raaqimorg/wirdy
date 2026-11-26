@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
@@ -82,7 +83,12 @@ const petals = (text: string) =>
   );
 
 beforeAll(() => {
-  execSync('bun run build', { stdio: 'inherit' });
+  const vitest = new Set(['DEV', 'PROD', 'MODE', 'SSR', 'BASE_URL']);
+  const shell = Object.entries(process.env).filter(([key]) => !vitest.has(key));
+  execSync('bun run build', {
+    stdio: 'inherit',
+    env: { ...Object.fromEntries(shell), NODE_ENV: 'production' },
+  });
   html = readFileSync(join(DIST, 'index.html'), 'utf8');
   pages = Object.fromEntries(
     OCCASION_IDS.map((id) => [id, readFileSync(join(DIST, id, 'index.html'), 'utf8')])
@@ -1106,5 +1112,45 @@ describe('built site', () => {
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
     expect(headers).toContain('/search/*\n  Cache-Control: public, max-age=31536000, immutable');
     expect(own('nawm').match(/<dialog class="search-sheet search-sheet--stage"/gu)).toHaveLength(1);
+  });
+  it('keeps the home page, its sections, and the search bundle on the device, and each other page once opened', () => {
+    const worker = readFileSync(join(DIST, 'service-worker.js'), 'utf8');
+    const manifest = JSON.parse(worker.match(/^self\.MANIFEST = (.*);\n/u)![1]!);
+    const sections = [...html.matchAll(/<a class="occasion-card [^"]*" href="(\/[^"]*)"/gu)].map(
+      ([, href]) => href
+    );
+    expect(sections).toHaveLength(OCCASION_IDS.length + 1);
+    const bundle = ['_astro', 'search']
+      .flatMap((folder) => readdirSync(join(DIST, folder)).map((file) => `/${folder}/${file}`))
+      .toSorted();
+    expect(manifest.files).toEqual(bundle);
+    expect(manifest.prefetch).toEqual(['/', ...sections, ...bundle]);
+    expect(manifest.hashes).toMatch(/^\/offline\/[0-9a-f]{16}\.json$/u);
+    expect(readdirSync(join(DIST, 'offline'))).toEqual([manifest.hashes.slice('/offline/'.length)]);
+    const hashes = JSON.parse(readFileSync(join(DIST, manifest.hashes), 'utf8'));
+    const shipped = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('index.html')
+    );
+    expect(Object.keys(hashes)).toHaveLength(shipped.length);
+    for (const file of shipped) {
+      const path = `/${file.slice(0, -'index.html'.length)}`;
+      const bytes = readFileSync(join(DIST, file));
+      expect(hashes[path]).toBe(createHash('sha256').update(bytes).digest('hex').slice(0, 16));
+    }
+    expect(hashes).not.toHaveProperty('/404.html');
+  });
+
+  it('registers the worker on every page once it loads, and asks for it again on each visit', () => {
+    const shipped = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    for (const file of shipped) {
+      expect(readFileSync(join(DIST, file), 'utf8')).toContain(
+        "navigator.serviceWorker.register('/service-worker.js')"
+      );
+    }
+    const headers = readFileSync(join(DIST, '_headers'), 'utf8');
+    expect(headers).toContain('/service-worker.js\n  Cache-Control: no-cache\n');
+    expect(headers).toContain('/offline/*\n  Cache-Control: public, max-age=31536000, immutable');
   });
 });
