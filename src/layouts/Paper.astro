@@ -7,6 +7,7 @@ import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic
 import '../styles/index.css';
 import SearchSheet from '../components/SearchSheet.astro';
 import SkipLink from '../components/SkipLink.astro';
+import { ICON_VERSION } from '../lib/mark';
 import { PALETTE } from '../lib/palette';
 import { SITE } from '../lib/site';
 
@@ -106,11 +107,11 @@ const structuredData = {
     ) : (
       <link rel="canonical" href={pageUrl.href} />
     )}
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href={`/favicon.ico?v=${ICON_VERSION}`} sizes="any" />
+    <link rel="icon" href={`/favicon.svg?v=${ICON_VERSION}`} type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href={`/favicon-32x32.png?v=${ICON_VERSION}`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`/apple-touch-icon.png?v=${ICON_VERSION}`} />
+    <link rel="manifest" href={`/site.webmanifest?v=${ICON_VERSION}`} />
     <meta name="apple-mobile-web-app-title" content={siteName} />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content={PALETTE.paperDark} />
     <meta name="theme-color" content={PALETTE.paper} />

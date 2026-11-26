@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import { OCCASIONS, OCCASION_IDS } from './lib/occasions';
 import { adhkarLabel } from './lib/arabic';
+import { ICON_VERSION, markSvg } from './lib/mark';
 import { PALETTE } from './lib/palette';
 import { RAAQIM, SITE, TIBB } from './lib/site';
 
@@ -68,6 +69,9 @@ const onlyAt = (mode: string) =>
       f.startsWith('sabah-masaa/') &&
       readFileSync(join(ADHKAR, f), 'utf8').includes(`mode: "${mode}"`)
   ).length;
+
+const fills = (text: string) =>
+  [...text.matchAll(/fill="(#[0-9a-f]{6})"/gu)].map(([, fill]) => fill);
 
 const cardTo = (path: string) => new RegExp(`<a class="occasion-card [^"]*" href="${path}"`, 'u');
 
@@ -535,14 +539,24 @@ describe('built site', () => {
   });
 
   it('declares a raster favicon and a touch icon, and ships every icon it declares', () => {
-    expect(html).toMatch(/<link rel="icon" href="\/favicon\.ico" sizes="any"/u);
-    expect(html).toMatch(/<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml"/u);
+    const v = `\\?v=${ICON_VERSION}`;
+    expect(html).toMatch(new RegExp(`<link rel="icon" href="/favicon\\.ico${v}" sizes="any"`, 'u'));
     expect(html).toMatch(
-      /<link rel="icon" type="image\/png" sizes="32x32" href="\/favicon-32x32\.png"/u
+      new RegExp(`<link rel="icon" href="/favicon\\.svg${v}" type="image/svg\\+xml"`, 'u')
     );
     expect(html).toMatch(
-      /<link rel="apple-touch-icon" sizes="180x180" href="\/apple-touch-icon\.png"/u
+      new RegExp(
+        `<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32\\.png${v}"`,
+        'u'
+      )
     );
+    expect(html).toMatch(
+      new RegExp(
+        `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon\\.png${v}"`,
+        'u'
+      )
+    );
+    expect(html).toMatch(new RegExp(`<link rel="manifest" href="/site\\.webmanifest${v}"`, 'u'));
     expect(html).toMatch(/<meta name="apple-mobile-web-app-title" content="وِردي"/u);
     for (const icon of [
       'favicon.ico',
@@ -552,6 +566,11 @@ describe('built site', () => {
     ]) {
       expect(existsSync(join(DIST, icon))).toBe(true);
     }
+  });
+
+  it('names each icon by the mark it draws, so no cache keeps an old one', () => {
+    expect(readFileSync(join(DIST, 'favicon.svg'), 'utf8')).toBe(markSvg());
+    expect(ICON_VERSION).toMatch(/^[0-9a-f]{8}$/u);
   });
 
   it('packs favicon.ico at the sizes search engines downscale from', () => {
@@ -573,6 +592,8 @@ describe('built site', () => {
     const mark = html.match(/<svg class="mark"[\s\S]*?<\/svg>/u)![0];
     expect(petals(mark)).toEqual(petals(svg));
     expect(petals(svg)).toHaveLength(12);
+    expect(new Set(fills(mark))).toEqual(new Set([PALETTE.petal, PALETTE.disc]));
+    expect(new Set(fills(svg))).toEqual(new Set([PALETTE.petal, PALETTE.disc]));
   });
 
   it('paints the mobile toolbar with the same paper the page uses, in both schemes', () => {
@@ -611,7 +632,7 @@ describe('built site', () => {
   });
 
   it('ships a manifest whose name and icons agree with the rest of the head', () => {
-    expect(html).toMatch(/<link rel="manifest" href="\/site\.webmanifest"/u);
+    expect(html).toMatch(/<link rel="manifest" href="\/site\.webmanifest\?v=[0-9a-f]{8}"/u);
     const manifest = JSON.parse(readFileSync(join(DIST, 'site.webmanifest'), 'utf8'));
     expect(manifest.short_name).toBe(
       html.match(/<meta property="og:site_name" content="([^"]+)"/u)![1]
@@ -619,7 +640,9 @@ describe('built site', () => {
     expect(manifest.dir).toBe('rtl');
     expect(manifest.theme_color).toBe('#d6d6cd');
     for (const icon of manifest.icons) {
-      expect(existsSync(join(DIST, icon.src))).toBe(true);
+      const [file, version] = icon.src.split('?v=');
+      expect(existsSync(join(DIST, file))).toBe(true);
+      expect(version).toBe(ICON_VERSION);
     }
     expect(manifest.icons.some((icon: { purpose: string }) => icon.purpose === 'maskable')).toBe(
       true

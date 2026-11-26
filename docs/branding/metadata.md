@@ -30,7 +30,7 @@ On a dhikr or hadith page, the line over the title is the way back to its place 
 - `og:image` and `twitter:image` are the card's absolute URL, with `og:image:width` 2400 and `og:image:height` 1260. `twitter:card` is `summary_large_image`.
 - `og:type` is `website`, `og:locale` is `ar_AR`, and `og:site_name` is «وِردي».
 - `theme-color` is `paper` in light mode and `paperDark` in dark mode. The theme script changes both when the reader picks a mode.
-- Every page links the icons and the manifest ([Logo](logo.md#the-icons)).
+- Every page links the icons and the manifest ([Logo](logo.md#the-icons)), each with `?v=` and `ICON_VERSION` (`src/lib/mark.ts`), a hash of the mark and the touch-icon cream. `_headers` lets Cloudflare and browsers keep an icon for a week, so a changed mark needs a new URL, or the old icon stays.
 
 ## Structured data
 

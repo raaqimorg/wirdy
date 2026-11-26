@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { ICON_VERSION } from '../lib/mark';
 import { OCCASIONS } from '../lib/occasions';
 import { PALETTE } from '../lib/palette';
 import { SITE } from '../lib/site';
@@ -17,9 +18,24 @@ export const GET: APIRoute = ({ site }) => {
     background_color: PALETTE.paper,
     theme_color: PALETTE.paper,
     icons: [
-      { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      {
+        src: `/icon-192.png?v=${ICON_VERSION}`,
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: `/icon-512.png?v=${ICON_VERSION}`,
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: `/icon-512.png?v=${ICON_VERSION}`,
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
     ],
     shortcuts: OCCASIONS.map(({ id, title }) => ({ name: title, url: `/${id}/` })),
   };
