@@ -10,10 +10,10 @@ import Section from '../../layouts/Section.astro';
 import { timesLabel } from '../../lib/arabic';
 import { cardFile, cardOf } from '../../lib/card';
 import { copyOf } from '../../lib/copy';
+import { descriptionOf } from '../../lib/description';
 import { adhkarOf } from '../../lib/collection';
 import { OCCASIONS, sectionOf } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
-import { phrasesLabel } from '../../lib/phrases';
 import { eveningTitle, fullTitle } from '../../lib/title';
 
 export async function getStaticPaths() {
@@ -43,10 +43,7 @@ const parts = [named, times].filter((part) => part !== undefined);
 const lede = parts.length === 0 ? occasion.title : parts.join(' · ');
 const evening = Effect.runSync(eveningTitle(data.title, body));
 
-const count = card.phrases ? phrasesLabel(card.phrases) : card.count;
-const description = [card.lead, count, data.fadl, card.takhrij]
-  .filter((part) => part !== undefined && part !== null && part !== '')
-  .join('. ');
+const description = descriptionOf(card, data.fadl);
 const links = [
   { label: 'التالي', entry: next },
   { label: 'السابق', entry: previous },

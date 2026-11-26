@@ -26,6 +26,12 @@ export function excerptClauses(text: string, limit: number): Excerpt {
   return { text: kept.join(' ').replace(/[،.]$/u, ''), cut };
 }
 
+export function excerptWords(text: string, limit: number): Excerpt {
+  if (letters(text) <= limit) return { text, cut: false };
+  const { kept, cut } = fill(String.split(text, /\s+/u), limit, ' ');
+  return { text: kept.join(' '), cut };
+}
+
 export function excerptAyat(
   ayat: Ayat,
   limit: number
