@@ -41,6 +41,17 @@
   width: var(--size-touch);
   height: var(--size-touch);
   margin-inline-end: calc((var(--size-touch) - var(--size-icon-bar)) / -2);
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-focus);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bar__search:active {
+  opacity: var(--opacity-pressed);
 }
 
 .bar__brand:focus-visible,

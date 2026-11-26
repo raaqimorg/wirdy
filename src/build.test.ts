@@ -181,7 +181,7 @@ describe('built site', () => {
 
   it('opens a menu of every section from an icon in the bar of each page but home, with no script', () => {
     const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'];
-    for (const path of [...sections, 'nawm/ayat-al-kursi', 'bahth']) {
+    for (const path of [...sections, 'nawm/ayat-al-kursi']) {
       const bar = barOf(own(path));
       expect(bar).toMatch(
         /<button class="section-menu__button" type="button" popovertarget="sections" aria-label="الأقسام">\s*<svg class="icon/u
@@ -202,12 +202,12 @@ describe('built site', () => {
   });
 
   it('keeps one bar and one height at the top of every page', () => {
-    for (const path of ['nawm', 'nawm/ayat-al-kursi', 'al-tibb-al-nabawi', 'bahth']) {
+    for (const path of ['nawm', 'nawm/ayat-al-kursi', 'al-tibb-al-nabawi']) {
       const page = own(path);
       expect(page.match(/<nav class="bar[ "]/gu)).toHaveLength(1);
       expect(page.match(/<div class="banner__inner container">/gu)).toHaveLength(1);
     }
-    for (const path of ['nawm/ayat-al-kursi', 'bahth']) {
+    for (const path of ['nawm/ayat-al-kursi']) {
       expect(own(path)).toMatch(/<p class="banner__lede">[^<]+<\/p>/u);
     }
     for (const path of ['nawm', 'al-tibb-al-nabawi']) {
@@ -246,7 +246,7 @@ describe('built site', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
     expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\('theme'\)[\s\S]*?<\/script>/u);
     expect(head).toMatch(
-      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-only\]\s*\{\s*display: none !important;\s*\}\s*\[data-search-list\]\s*\{\s*display: block !important;\s*\}\s*<\/style><\/noscript>/u
+      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
     );
   });
 
@@ -1030,9 +1030,16 @@ describe('built site', () => {
       .filter((file) => file.endsWith('.html'))
       .map((file) => readFileSync(join(DIST, file), 'utf8'))
       .join('');
-    const used = new Set(
-      [...shipped.matchAll(/class="([^"]*)"/gu)].flatMap(([, names]) => names!.split(' '))
-    );
+    const scripts = readdirSync(join(DIST, '_astro'))
+      .filter((file) => file.endsWith('.js'))
+      .map((file) => readFileSync(join(DIST, '_astro', file), 'utf8'))
+      .join('');
+    const used = new Set([
+      ...[...shipped.matchAll(/class="([^"]*)"/gu)].flatMap(([, names]) => names!.split(' ')),
+      ...[...scripts.matchAll(/classList\.(?:add|toggle)\(["'`]([\w-]+)["'`]/gu)].map(
+        ([, name]) => name!
+      ),
+    ]);
     const rules = css.replaceAll(/"[^"]*"|url\([^)]*\)/gu, '');
     const styled = new Set([...rules.matchAll(/\.([a-z][\w-]*)/gu)].map(([, name]) => name!));
     const withParts = new Set([...styled].flatMap((name) => [name, name.split(/__|--/u)[0]!]));
@@ -1045,7 +1052,6 @@ describe('built site', () => {
       .filter((file) => file.endsWith('.html'))
       .map((file) => readFileSync(join(DIST, file), 'utf8'))
       .join('');
-    expect(shipped).toContain(own('bahth'));
     const external =
       shipped.match(
         /(?:src|href)="https?:\/\/(?!(?:dorar\.net|sunnah\.com|shamela\.ws|usul\.ai|tanzil\.net|wirdy\.site|github\.com)[/"])[^"]+"/gu
@@ -1054,25 +1060,35 @@ describe('built site', () => {
     expect(shipped.match(/<script[^>]* src="(?!\/_astro\/)[^"]*"/gu) ?? []).toEqual([]);
   });
 
-  it('searches every dhikr and hadith from one page, linked from every page', () => {
-    const page = own('bahth');
+  it('opens search over every page, from one index that holds every dhikr and hadith', () => {
     const tibb = readdirSync(join(process.cwd(), 'src/content/tibb')).filter((f) =>
       f.endsWith('.md')
     );
-    expect(page).toContain('<meta name="robots" content="noindex">');
-    expect(page).not.toContain('rel="canonical"');
-    expect(page).toMatch(/<script type="module"[^>]*>/u);
-    expect(page).toMatch(
-      /<input class="search-field__input" type="search"[^>]*enterkeyhint="search"/u
-    );
-    expect(page).not.toMatch(/<input[^>]* name=/u);
-    const rows = [
-      ...page.matchAll(/<li class="search-row[^"]*" data-search-row[^>]*>[\s\S]*?<\/li>/gu),
-    ].map(([row]) => row);
+    expect(existsSync(join(DIST, 'bahth'))).toBe(false);
+    const indexes = new Set<string>();
+    for (const page of [
+      html,
+      notFound,
+      ...Object.values(pages),
+      own('al-tibb-al-nabawi'),
+      own('nawm/ayat-al-kursi'),
+    ]) {
+      expect(barOf(page)).toMatch(
+        /<button class="bar__search" type="button" aria-label="ابحث في الأذكار" data-search-open>/u
+      );
+      expect(page).not.toContain('href="/bahth/"');
+      expect(page.match(/<dialog class="search-sheet[^"]*"[^>]*>/gu)).toHaveLength(1);
+      expect(page).toMatch(
+        /<input class="search-field__input" type="search"[^>]*enterkeyhint="search"/u
+      );
+      expect(page).not.toMatch(/<input[^>]* name=/u);
+      indexes.add(page.match(/data-search-index="(\/search\/[0-9a-f]{12}\.json)"/u)![1]!);
+    }
+    expect(indexes.size).toBe(1);
+    const [index] = [...indexes];
+    const rows: { href: string }[] = JSON.parse(readFileSync(join(DIST, index!), 'utf8'));
     expect(rows).toHaveLength(expected + tibb.length);
-    const hrefs = rows.map(
-      (row) => row.match(/<a class="search-row__link[^"]*" href="([^"]+)"/u)![1]!
-    );
+    const hrefs = rows.map(({ href }) => href);
     expect(new Set(hrefs).size).toBe(hrefs.length);
     for (const href of hrefs) {
       const [path, id] = href.split('#');
@@ -1081,34 +1097,6 @@ describe('built site', () => {
     for (const file of contentFiles) {
       expect(hrefs).toContain(`/${file.replace(/\.md$/u, '').replace(/\/\d+-/u, '/#')}`);
     }
-    expect(page.match(/href="\/bahth\/"/gu)).toHaveLength(1);
-    expect(page).toMatch(/<a class="bar__search" href="\/bahth\/"[^>]* aria-current="page"/u);
-    expect(page).not.toContain('data-search-sheet');
-    const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
-    expect(sitemap).not.toContain('/bahth/');
-  });
-
-  it('opens search in place on every other page, from one index the browser keeps until a deploy', () => {
-    const others = [
-      html,
-      notFound,
-      ...Object.values(pages),
-      own('al-tibb-al-nabawi'),
-      own('nawm/ayat-al-kursi'),
-    ];
-    const indexes = new Set<string>();
-    for (const page of others) {
-      expect(page.match(/<nav class="bar[ "][\s\S]*?<\/nav>/u)![0]).toContain(
-        '<a class="bar__search" href="/bahth/" aria-label="ابحث في الأذكار" data-search-open>'
-      );
-      expect(page.match(/<dialog class="search-sheet[^"]*"[^>]*>/gu)).toHaveLength(1);
-      indexes.add(page.match(/data-search-index="(\/search\/[0-9a-f]{12}\.json)"/u)![1]!);
-    }
-    expect(indexes.size).toBe(1);
-    const [index] = [...indexes];
-    const rows = JSON.parse(readFileSync(join(DIST, index!), 'utf8'));
-    const page = own('bahth');
-    expect(rows).toHaveLength(page.match(/<li class="search-row[^"]*" data-search-row/gu)!.length);
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
     expect(headers).toContain('/search/*\n  Cache-Control: public, max-age=31536000, immutable');
     expect(own('nawm').match(/<dialog class="search-sheet search-sheet--stage"/gu)).toHaveLength(1);

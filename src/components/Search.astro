@@ -1,23 +1,15 @@
 ---
-import CardGrid from './CardGrid.astro';
 import Emblem from './Emblem.astro';
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
 import SearchField from './SearchField.astro';
 import SearchHead from './SearchHead.astro';
 import SearchRow from './SearchRow.astro';
-import type { SearchRow as Row, Tile } from '../lib/collection';
+import type { SearchRow as Row } from '../lib/collection';
 import type { EmblemName } from '../lib/emblems';
 import { OCCASIONS } from '../lib/occasions';
 import { TIBB } from '../lib/site';
 
-interface Props {
-  tiles?: ReadonlyArray<Tile> | undefined;
-  rows?: ReadonlyArray<Row> | undefined;
-  sheet?: boolean | undefined;
-}
-
-const { tiles, rows = [], sheet = false } = Astro.props;
 const sections: { id: EmblemName; heading: string; color: string }[] = [
   ...OCCASIONS,
   { id: 'tibb', heading: TIBB.heading, color: TIBB.color },
@@ -33,8 +25,8 @@ const blank: Row = {
 };
 ---
 
-<div class:list={['search', sheet && 'search--sheet']} data-search>
-  <SearchField variant={sheet ? 'bar' : 'page'} />
+<div class="search search--sheet" data-search>
+  <SearchField />
   <div class="search__body">
     <section class="search__recent" hidden data-search-recent>
       <div class="search__recent-head">
@@ -69,17 +61,10 @@ const blank: Row = {
     <p class="search__note" hidden data-search-note>
       لا نتائج لكل الكلمات معًا، وهذه نتائج «<bdi data-search-note-word></bdi>»
     </p>
-    {tiles && (
-      <section class="search__browse" data-search-browse>
-        <h2 class="search__subtitle">تصفّح الأقسام</h2>
-        <CardGrid tiles={tiles} variant="featured" />
-      </section>
-    )}
-    <ul class="search__list" hidden data-search-list>
-      {rows.map((row) => (
-        <SearchRow row={row} />
-      ))}
-    </ul>
+    <p class="search__note" hidden data-search-failed>
+      تعذّر تحميل البحث، فأعد تحميل الصفحة
+    </p>
+    <ul class="search__list" hidden data-search-list></ul>
   </div>
   {sections.map(({ id, heading, color }) => (
     <template data-search-section-head={id}>
@@ -88,9 +73,7 @@ const blank: Row = {
       </SearchHead>
     </template>
   ))}
-  {sheet && (
-    <template data-search-template>
-      <SearchRow row={blank} />
-    </template>
-  )}
+  <template data-search-template>
+    <SearchRow row={blank} />
+  </template>
 </div>

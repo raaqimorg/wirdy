@@ -28,7 +28,7 @@ The names of folders, files, functions, types, constants, tests, and scripts. Re
 - Put a type beside its schema: `Dhikr` with `dhikrSchema` in `schema.ts`.
 - Name a component file in PascalCase: `OccasionCard.astro`.
 - Name its stylesheet in kebab-case: `src/styles/components/occasion-card.css`.
-- Name a page for its URL, in transliterated Arabic: `bahth.astro` serves `/bahth/`. Name a route parameter for what it holds: `[occasion]`, `[dhikr]`.
+- Name a page for its URL, in transliterated Arabic: `al-tibb-al-nabawi.astro` serves `/al-tibb-al-nabawi/`. Name a route parameter for what it holds: `[occasion]`, `[dhikr]`.
 - Name an endpoint for the file it serves: `robots.txt.ts`, `sitemap.xml.ts`.
 - Name a script for its work: `scripts/verification/claim.ts` records a claim.
 - Move a file with `git mv`, so its history follows.

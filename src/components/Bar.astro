@@ -11,7 +11,6 @@ interface Props {
 
 const { menu = true, stage = false } = Astro.props;
 const label = 'ابحث في الأذكار';
-const here = Astro.url.pathname === '/bahth/';
 ---
 
 <nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقّل">
@@ -21,14 +20,8 @@ const here = Astro.url.pathname === '/bahth/';
       <span class="bar__name">{SITE.name}</span>
     </a>
     {menu && <SectionMenu />}
-    <a
-      class="bar__search"
-      href="/bahth/"
-      aria-label={label}
-      aria-current={here ? 'page' : undefined}
-      data-search-open
-    >
+    <button class="bar__search" type="button" aria-label={label} data-search-open>
       <Icon name="search" />
-    </a>
+    </button>
   </div>
 </nav>

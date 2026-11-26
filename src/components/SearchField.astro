@@ -1,14 +1,8 @@
 ---
 import Icon from './Icon.astro';
-
-interface Props {
-  variant?: 'page' | 'bar' | undefined;
-}
-
-const { variant = 'page' } = Astro.props;
 ---
 
-<div class:list={['search-field', variant === 'bar' && 'search-field--bar']} data-search-only>
+<div class="search-field search-field--bar">
   <label class="search-field__box">
     <Icon name="search" />
     <input
@@ -25,15 +19,11 @@ const { variant = 'page' } = Astro.props;
     <button class="search-field__clear" type="button" aria-label="مسح" hidden data-search-clear>
       <Icon name="erase" />
     </button>
-    {variant === 'bar' && (
-      <kbd class="search-field__key" aria-hidden="true">
-        Esc
-      </kbd>
-    )}
+    <kbd class="search-field__key" aria-hidden="true">
+      Esc
+    </kbd>
   </label>
-  {variant === 'bar' && (
-    <button class="search-field__close" type="button" data-search-close>
-      إلغاء
-    </button>
-  )}
+  <button class="search-field__close" type="button" data-search-close>
+    إلغاء
+  </button>
 </div>

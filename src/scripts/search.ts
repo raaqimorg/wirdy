@@ -21,7 +21,6 @@ import {
   type SearchRow,
 } from '../lib/search';
 
-const PAGE_KEY = 'search';
 const SHEET_KEY = 'search-sheet';
 
 export class MissingElement extends Data.TaggedError('MissingElement')<{
@@ -156,11 +155,6 @@ const history = {
   },
 };
 
-const isBackForward = (): boolean => {
-  const [navigation] = performance.getEntriesByType('navigation');
-  return navigation instanceof PerformanceNavigationTiming && navigation.type === 'back_forward';
-};
-
 type Entry = {
   readonly item: HTMLElement;
   readonly href: string;
@@ -214,12 +208,8 @@ const headOf = (template: Element): Effect.Effect<Head, MissingElement> =>
     return { section, head, count: yield* part(head, 'count', HTMLElement) };
   });
 
-export const mountSearch = (
-  root: HTMLElement,
-  { restore = false }: { readonly restore?: boolean } = {}
-): Effect.Effect<void, MissingElement> =>
+export const mountSearch = (root: HTMLElement): Effect.Effect<void, MissingElement> =>
   Effect.gen(function* () {
-    const key = restore ? PAGE_KEY : SHEET_KEY;
     const input = yield* part(root, 'input', HTMLInputElement);
     const clear = yield* part(root, 'clear', HTMLButtonElement);
     const list = yield* part(root, 'list', HTMLElement);
@@ -278,7 +268,7 @@ export const mountSearch = (
       const query = input.value;
       clear.hidden = query === '';
       showRecent(query.trim());
-      storage.write(key, query);
+      storage.write(SHEET_KEY, query);
       const exact = match(rows, query);
       const none = Option.match(exact, { onNone: () => false, onSome: (m) => m.hits.length === 0 });
       const near = none ? nearestOf(rows, query) : Option.none();
@@ -322,17 +312,6 @@ export const mountSearch = (
         paint(words, text.words, inWords, from, to);
       }
     };
-
-    if (restore && isBackForward() && input.value === '') {
-      input.value = Option.getOrElse(storage.read(key), () => '');
-    }
-    if (restore) {
-      window.addEventListener('pageshow', (event) => {
-        if (!event.persisted || input.value !== '') return;
-        input.value = Option.getOrElse(storage.read(key), () => '');
-        render();
-      });
-    }
 
     input.addEventListener('input', render);
     input.addEventListener('keydown', (event) => {
@@ -388,7 +367,11 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
     const input = yield* part(root, 'input', HTMLInputElement);
     const template = yield* part(root, 'template', HTMLTemplateElement);
     const list = yield* part(root, 'list', HTMLElement);
-    const index = sheet.dataset['searchIndex'] ?? '/bahth/';
+    const failed = yield* part(root, 'failed', HTMLElement);
+    const index = yield* Option.match(Option.fromUndefinedOr(sheet.dataset['searchIndex']), {
+      onSome: Effect.succeed,
+      onNone: () => Effect.fail(new MissingElement({ message: 'the search sheet has no index' })),
+    });
 
     const fill = Effect.gen(function* () {
       const rows = yield* loadRows(index);
@@ -406,7 +389,7 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
     if (document.readyState === 'complete') preload();
     else window.addEventListener('load', preload, { once: true });
 
-    const open = (fallback: string) => {
+    const open = () => {
       if (!sheet.open) sheet.showModal();
       if (input.value === '') {
         input.value = Option.getOrElse(storage.read(SHEET_KEY), () => '');
@@ -418,7 +401,7 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
         loading.pipe(
           Effect.catch(() =>
             Effect.sync(() => {
-              location.href = fallback;
+              failed.hidden = false;
             })
           )
         )
@@ -426,16 +409,8 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
     };
 
     document.addEventListener('click', (event) => {
-      if (!(event.target instanceof Element)) return;
-      const trigger = event.target.closest('[data-search-open]');
-      if (
-        trigger instanceof HTMLAnchorElement &&
-        !event.metaKey &&
-        !event.ctrlKey &&
-        !event.shiftKey
-      ) {
-        event.preventDefault();
-        open(trigger.href);
+      if (event.target instanceof Element && event.target.closest('[data-search-open]') !== null) {
+        open();
       }
     });
 
@@ -447,7 +422,7 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
       const command = event.key === 'k' && (event.metaKey || event.ctrlKey);
       if (!slash && !command) return;
       event.preventDefault();
-      open('/bahth/');
+      open();
     });
 
     sheet.addEventListener('click', (event) => {
@@ -456,4 +431,11 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
       if (target === sheet || target.closest('[data-search-close]') !== null) sheet.close();
       else if (target.closest('[data-search-row] a') !== null) sheet.close();
     });
+
+    const { dataset } = document.documentElement;
+    dataset['searchReady'] = '';
+    if (dataset['searchPending'] !== undefined) {
+      delete dataset['searchPending'];
+      open();
+    }
   });

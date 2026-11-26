@@ -79,10 +79,6 @@
   opacity: var(--opacity-pressed);
 }
 
-.search__browse {
-  margin-top: var(--space-4);
-}
-
 .search__note {
   padding: var(--space-1) var(--space-1) var(--space-2);
   color: var(--color-ink-muted);

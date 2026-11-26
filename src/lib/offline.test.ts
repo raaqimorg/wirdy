@@ -6,7 +6,10 @@ const bytes = (text: string) => new TextEncoder().encode(text);
 const card = (href: string) => `<a class="occasion-card occasion-card--featured" href="${href}">`;
 const built = (nawm: string): Built => ({
   pages: [
-    ['index.html', bytes(`${card('/sabah-masaa/')}${card('/nawm/')}<a href="/bahth/">`)],
+    [
+      'index.html',
+      bytes(`${card('/sabah-masaa/')}${card('/nawm/')}<a class="bar__brand" href="/">`),
+    ],
     ['nawm/index.html', bytes(nawm)],
     ['nawm/ayat-al-kursi/index.html', bytes('ayat')],
     ['sabah-masaa/index.html', bytes('sabah')],
@@ -30,7 +33,7 @@ describe('pathOf', () => {
 
 describe('prefetchOf', () => {
   it('takes each card the home page opens with, once, in its order', () => {
-    const home = `${card('/sabah-masaa/')}<a href="/bahth/">${card('/nawm/')}${card('/nawm/')}`;
+    const home = `${card('/sabah-masaa/')}<a class="bar__brand" href="/">${card('/nawm/')}${card('/nawm/')}`;
     expect(prefetchOf(home)).toEqual(['/sabah-masaa/', '/nawm/']);
   });
 });

@@ -26,11 +26,6 @@
   border-radius: var(--radius-card);
 }
 
-.search-field:not(.search-field--bar) .search-field__box:focus-within {
-  outline: var(--border-ring) solid var(--color-ink);
-  outline-offset: var(--ring-gap-small);
-}
-
 .search-field__input {
   flex: 1;
   min-width: 0;

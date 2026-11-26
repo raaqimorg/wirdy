@@ -21,7 +21,6 @@ interface Props {
   noindex?: boolean | undefined;
   faces?: ('naskh' | 'quran')[] | undefined;
   tone?: string | undefined;
-  search?: boolean | undefined;
 }
 
 const {
@@ -33,7 +32,6 @@ const {
   noindex = false,
   faces = ['naskh'],
   tone,
-  search = true,
 } = Astro.props;
 const FACES = { naskh, quran };
 const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])];
@@ -179,6 +177,10 @@ const structuredData = {
           mark();
         });
         document.addEventListener('touchstart', function () {}, { passive: true });
+        document.addEventListener('click', function (event) {
+          if (root.dataset.searchReady === undefined && event.target.closest('[data-search-open]'))
+            root.dataset.searchPending = '';
+        });
 
         const metas = document.querySelectorAll('meta[name="theme-color"]');
         const paper = {};
@@ -310,11 +312,8 @@ const structuredData = {
         [data-theme-toggle],
         [data-wird-switch],
         [data-copy],
-        [data-search-only] {
+        [data-search-open] {
           display: none !important;
-        }
-        [data-search-list] {
-          display: block !important;
         }
       </style>
     </noscript>
@@ -322,6 +321,6 @@ const structuredData = {
   <body class={tone && 'tone'} style={tone && `--tone: ${tone}`}>
     <SkipLink />
     <slot />
-    {search && <SearchSheet stage={Boolean(tone)} />}
+    <SearchSheet stage={Boolean(tone)} />
   </body>
 </html>
