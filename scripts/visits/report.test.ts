@@ -51,17 +51,21 @@ describe('yesterdayOf', () => {
 
 describe('nameOf', () => {
   test('picks one of the names by the random number', () => {
-    expect(Option.getOrNull(nameOf('الأولى الثانية', 0))).toBe('الأولى');
-    expect(Option.getOrNull(nameOf('الأولى الثانية', 0.99))).toBe('الثانية');
+    expect(Option.getOrNull(nameOf('الأولى_الثانية', 0))).toBe('الأولى');
+    expect(Option.getOrNull(nameOf('الأولى_الثانية', 0.99))).toBe('الثانية');
   });
 
-  test('ignores extra spaces', () => {
-    expect(Option.getOrNull(nameOf('  الأولى   الثانية ', 0.6))).toBe('الثانية');
+  test('keeps the spaces inside a name', () => {
+    expect(Option.getOrNull(nameOf('الأولى_أم محمد', 0.6))).toBe('أم محمد');
+  });
+
+  test('ignores extra underscores and spaces around a name', () => {
+    expect(Option.getOrNull(nameOf('_ الأولى __الثانية _', 0.6))).toBe('الثانية');
   });
 
   test('gives no name when none is set', () => {
     expect(Option.isNone(nameOf('', 0.5))).toBe(true);
-    expect(Option.isNone(nameOf('   ', 0.5))).toBe(true);
+    expect(Option.isNone(nameOf(' _ _', 0.5))).toBe(true);
   });
 });
 

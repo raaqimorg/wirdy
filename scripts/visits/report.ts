@@ -24,7 +24,10 @@ export function yesterdayOf(now: Date): Window {
 }
 
 export function nameOf(names: string, random: number): Option.Option<string> {
-  const given = names.split(/\s+/u).filter((name) => name !== '');
+  const given = names
+    .split('_')
+    .map((name) => name.trim())
+    .filter((name) => name !== '');
   return Array.get(given, Math.min(Math.floor(random * given.length), given.length - 1));
 }
 

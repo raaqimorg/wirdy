@@ -47,7 +47,7 @@ Never run `bun run deploy`, or a `wrangler` command that changes the live site, 
 - At minute 17 of every hour: the visits of the last whole hour, and of the day so far in Riyadh time. An hour with no visits arrives silently.
 - At 07:07 in Riyadh: the visits of the day before, and a question about the adhkar.
 - A manual run (Actions, Visits, Run workflow) sends the hourly report silently.
-- The secrets: `CLOUDFLARE_API_TOKEN` (Zone, Analytics, Read, for wirdy.site only), `CLOUDFLARE_ZONE_ID`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `RECIPIENT_NAME`, the names a report greets, separated by spaces (each report picks one at random). To run a report locally, put them in `.env`, which git ignores.
+- The secrets: `CLOUDFLARE_API_TOKEN` (Zone, Analytics, Read, for wirdy.site only), `CLOUDFLARE_ZONE_ID`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `RECIPIENT_NAME`, the names a report greets, separated by underscores, as in `الأولى_الثانية` (each report picks one at random, and a name may hold spaces). To run a report locally, put them in `.env`, which git ignores.
 - The job logs no number. A failed run exits with 1, and GitHub emails the owner.
 - GitHub turns off a schedule after 60 days with no commit. When the reports stop, turn it on again in Actions, Visits.
 
