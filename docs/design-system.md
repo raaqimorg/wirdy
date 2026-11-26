@@ -5,7 +5,7 @@ The shape of the styles and the components: tokens, then base styles, then one s
 ## Where things are
 
 - `src/styles/tokens.css`: every color, font, size, space, radius, and duration. No other stylesheet holds a raw value.
-- `src/styles/base.css`: the reset, the elements, the focus ring, the press, and the view transitions.
+- `src/styles/base.css`: the reset, the elements, the focus ring, and the press.
 - `src/styles/utilities.css`: four classes of no component: `container`, `visually-hidden`, `salawat`, and `page` (the paper of a page with a color).
 - `src/styles/components/`: one file for each component, with its name (`EntryList.astro`, `entry-list.css`).
 - `src/styles/index.css`: the imports, in order. A component comes before the ones that use it.

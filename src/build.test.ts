@@ -109,17 +109,8 @@ describe('built site', () => {
     expect(html.match(/occasion-card--row/gu)).toHaveLength(OCCASION_IDS.length);
   });
 
-  it('fades one page into the next with nothing moving, and not with reduced motion', () => {
-    expect(all + css).not.toContain('view-transition-name');
-    const motion = css.match(
-      /@media \(prefers-reduced-motion:no-preference\)\{@view-transition\{navigation:auto\}([^{}]*)\{([^{}]*)\}\}/u
-    )!;
-    expect(motion[1]).toBe(
-      '::view-transition-group(root),::view-transition-old(root),::view-transition-new(root)'
-    );
-    expect(motion[2]).toContain('animation-duration:var(--duration-fade)');
-    expect(motion[2]).toContain('animation-timing-function:linear');
-    expect(css.match(/@view-transition/gu)).toHaveLength(1);
+  it('opens the next page at once, with no transition to swallow a tap', () => {
+    expect(all + css).not.toContain('view-transition');
   });
 
   it('gives a page with a color its tone on the body, over a layer behind its top', () => {

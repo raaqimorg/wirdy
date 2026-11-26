@@ -1,11 +1,17 @@
 .occasion-card {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-card);
+  text-decoration: none;
+}
+
+.occasion-card__face {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
   background: var(--color-panel);
   border-radius: var(--radius-card);
-  text-decoration: none;
   transition: transform var(--duration-release) var(--spring);
 }
 
@@ -57,7 +63,7 @@
     opacity: 0.14;
   }
 
-  .occasion-card:hover {
+  .occasion-card:hover .occasion-card__face {
     transform: scale(1.02);
     transition-duration: var(--duration-hover);
   }
@@ -65,6 +71,9 @@
 
 .occasion-card:active {
   opacity: 1;
+}
+
+.occasion-card:active .occasion-card__face {
   transform: scale(0.97);
   transition: transform var(--duration-press) var(--ease-out);
 }
@@ -75,8 +84,8 @@
     aspect-ratio: 2 / 1;
   }
 
-  .occasion-card--row,
-  .occasion-card--compact {
+  .occasion-card--row .occasion-card__face,
+  .occasion-card--compact .occasion-card__face {
     flex-direction: row;
     align-items: stretch;
   }
@@ -117,12 +126,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .occasion-card {
+  .occasion-card__face {
     transition: none;
   }
 
-  .occasion-card:hover,
-  .occasion-card:active {
+  .occasion-card:hover .occasion-card__face,
+  .occasion-card:active .occasion-card__face {
     transform: none;
   }
 

@@ -13,11 +13,13 @@ const { id, heading, color, note, href } = tile;
 ---
 
 <a class={`occasion-card occasion-card--${variant} tone`} href={href} style={`--tone: ${color}`}>
-  <span class="occasion-card__stage">
-    <Emblem name={id} motion={motion} class="occasion-card__emblem" />
-  </span>
-  <span class="occasion-card__body">
-    <span class="occasion-card__title">{heading}</span>
-    <span class="occasion-card__note">{note}</span>
+  <span class="occasion-card__face">
+    <span class="occasion-card__stage">
+      <Emblem name={id} motion={motion} class="occasion-card__emblem" />
+    </span>
+    <span class="occasion-card__body">
+      <span class="occasion-card__title">{heading}</span>
+      <span class="occasion-card__note">{note}</span>
+    </span>
   </span>
 </a>
