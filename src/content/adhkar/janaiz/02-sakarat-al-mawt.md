@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "عند سكرات الموت"
 how: "يُدخل يديه في الماء فيمسح بهما وجهه"
-group: "الاحتضار"
+group: "الاحتضار والموت"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٦٥١٠"

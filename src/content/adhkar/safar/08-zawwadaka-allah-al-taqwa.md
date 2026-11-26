@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "يدعو لمن أراد سفرًا"
-group: "السفر"
+group: "وداع المسافر"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٤٤٤"

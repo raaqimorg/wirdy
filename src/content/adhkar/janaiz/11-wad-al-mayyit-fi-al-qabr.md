@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا وضع الميت في قبره"
-group: "الدفن"
+group: "الدفن والقبور"
 takhrij:
   grader: "الألباني"
   source: "أحكام الجنائز ١٩٢"

@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "في ليلة القدر"
-group: "رمضان"
+group: "الهلال والصيام"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٥١٣"

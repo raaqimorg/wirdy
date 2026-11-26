@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا شاتمه أحد أو قاتله وهو صائم"
-group: "الصيام"
+group: "الهلال والصيام"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ١١٥١"

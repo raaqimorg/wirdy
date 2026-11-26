@@ -27,23 +27,30 @@ When al-Albani changed his ruling (dorar.net shows «تراجع الشيخ»), t
 
 ## Occasions
 
-Each dhikr belongs to one occasion: its folder and its `occasion` field. `src/lib/occasions.ts` holds the order and the headings.
+Each dhikr belongs to one occasion: its folder and its `occasion` field. `src/lib/occasions.ts` holds the order, the headings, and the three bands of the home page.
 
-| Folder        | Heading        |
-| ------------- | -------------- |
-| `sabah-masaa` | الصباح والمساء |
-| `masjid`      | الأذان والمسجد  |
-| `fi-al-salah` | أثناء الصلاة    |
-| `salah`       | بعد الصلاة      |
-| `nawm`        | عند النوم      |
-| `istiqaz`     | عند الاستيقاظ   |
-| `mutlaq`      | كل وقت         |
-| `bayt`        | البيت والطعام  |
-| `safar`       | الخروج والسفر  |
-| `karb`        | الكرب والمرض   |
-| `janaiz`      | الجنائز        |
-| `mawasim`     | المواسم والحج  |
-| `ahwal`       | أحوال متفرقة   |
+A section answers one question a reader has in the moment: where am I, what am I doing, or what do I feel. Its name says what the reader looks for, and no section is «متفرقة». A section has three to five groups where it can, and a group two to six adhkar. The sections of worship keep the order of the day and the prayer.
+
+| Band           | Folder        | Heading        |
+| -------------- | ------------- | -------------- |
+| العبادة        | `sabah-masaa` | الصباح والمساء |
+|                | `masjid`      | الأذان والمسجد  |
+|                | `fi-al-salah` | أثناء الصلاة    |
+|                | `salah`       | بعد الصلاة      |
+|                | `nawm`        | عند النوم      |
+|                | `istiqaz`     | عند الاستيقاظ   |
+|                | `mutlaq`      | كل وقت         |
+|                | `mawasim`     | المواسم والحج  |
+| الحياة اليومية | `taam`        | الطعام والشراب |
+|                | `bayt`        | البيت والأهل    |
+|                | `safar`       | الخروج والسفر  |
+|                | `nas`         | الناس والمجالس |
+| ما يمر بك      | `hamm`        | الهم والغضب    |
+|                | `marad`       | المرض والرقية  |
+|                | `janaiz`      | الجنائز        |
+|                | `matar`       | المطر والريح   |
+
+«الطب النبوي» closes the last band.
 
 A dhikr of two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
 
@@ -54,7 +61,7 @@ A dhikr of two occasions, such as آية الكرسي, has one file in each, wit
 1. The order a hadith states. Examples: «تمام المائة» after the tasbih, and «اجعلهن آخر ما تتكلم به» last before sleep.
 2. The sequence of the moment: the adhan, then wudu, then going out, entering, and leaving the mosque.
 3. Adhkar of one kind stay together under a `group`. Every dhikr on a page has a `group`, so the page shows its index.
-4. Where no moment gives a sequence (the sections from البيت والطعام on, and الطب النبوي), the groups go from the most sacred down. البيت والطعام: الطعام, اللباس, the house at night, الخلاء last. الخروج والسفر: leaving the house, the market, riding, travel. الكرب والمرض: what pleases and what displeases, then الكرب, anger and fear, meeting the enemy, the whispers of الشيطان, and illness. الجنائز: from the deathbed to the grave. المواسم والحج: fasting and رمضان, then الأضحية, then the rites of الحج. أحوال متفرقة: الاستخارة, the signs in the sky and the prayer for rain, family and people, sneezing, then عوارض (الطيرة, the oath, the sounds of animals). الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
+4. Where no moment gives a sequence (the sections from المواسم والحج on, and الطب النبوي), the groups go from the most sacred down, or in the order of the need. المواسم والحج: the crescent and fasting, then الأضحية, then the rites of الحج. الطعام والشراب: before the meal, the blessing in it, after it, then the guest and the host. البيت والأهل: اللباس, the house at night, الخلاء, then marriage and children. الخروج والسفر: leaving the house and the market, riding, seeing a traveler off, then the journey and the return. الناس والمجالس: السلام, kindness and love, the gathering and the tongue, then sneezing. الهم والغضب: what pleases and what displeases, then worry, الكرب and debt, anger, fear and the enemy, the whispers of الشيطان and الطيرة, then الاستخارة. المرض والرقية: the sick person, then الرقية, then visiting the sick and seeing the afflicted. الجنائز: from the deathbed to the grave. المطر والريح: the wind and the clouds, the rain, the prayer for rain, then the sounds of animals. الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
 
 Each group has a Latin slug, such as `/sabah-masaa/#al-hifz`, in `GROUP_SLUGS` (`src/lib/groups.ts`), or the build fails. A slug is lowercase words joined by hyphens, and never equals a dhikr's slug on the same page.
 
@@ -140,4 +147,4 @@ A proof ends when what it proves changes. A change of order, title, group, form,
 - The groups follow rule 4 of "The order of a page": الرقية, the reward of the sick, the principles of treatment, the remedies, then keeping well (العافية, الطعام والشراب) and contagion. In a group, the general hadith comes before the particular.
 - `note` records a dispute over a ruling, with its source.
 - `takhrij.url` is the dorar.net page, or one of two other sources that agree, with `takhrij.also` the other. Two sources stand for dorar.net only when they are on two sites and each states the book, the number, and, for al-Albani, his ruling. sunnah.com prints his ruling on Abu Dawud and Mishkat al-Masabih, Shamela in its Sunan editions («[حكم الألباني]»), and usul.ai holds his own books, such as «صحيح وضعيف الجامع الصغير». A usul.ai page counts only for another book than the Shamela page, since both serve the Turath editions. The tests refuse a takhrij without dorar.net and without a second source on another site.
-- The adhkar of the sick (over a pain, on a visit) stay in `ahwal`, under «المرض والمصيبة». Do not copy them here.
+- What is said over the sick (a pain, a visit, and the words of الرقية) is a dhikr in `marad`, «المرض والرقية». Do not copy it here. الطب النبوي keeps the hadiths about الرقية: its permission, its virtue, and its ruling.

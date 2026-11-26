@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "إذا ركب خارجًا إلى سفر"
 how: "يكبّر ثلاثًا ثم يقول"
-group: "السفر"
+group: "في السفر والرجوع"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ١٣٤٢"

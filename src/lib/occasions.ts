@@ -21,12 +21,15 @@ const SECTIONS = {
     title: 'أذكار الاستيقاظ',
   },
   mutlaq: { heading: 'كل وقت', title: 'أذكار كل وقت' },
-  bayt: { heading: 'البيت والطعام', title: 'أذكار البيت والطعام' },
-  safar: { heading: 'الخروج والسفر', title: 'أذكار الخروج والسفر' },
-  karb: { heading: 'الكرب والمرض', title: 'أذكار الكرب والمرض' },
-  janaiz: { heading: 'الجنائز', title: 'أذكار الجنائز' },
   mawasim: { heading: 'المواسم والحج', title: 'أذكار المواسم والحج' },
-  ahwal: { heading: 'أحوال متفرقة', title: 'أذكار الأحوال' },
+  taam: { heading: 'الطعام والشراب', title: 'أذكار الطعام والشراب' },
+  bayt: { heading: 'البيت والأهل', title: 'أذكار البيت والأهل' },
+  safar: { heading: 'الخروج والسفر', title: 'أذكار الخروج والسفر' },
+  nas: { heading: 'الناس والمجالس', title: 'أذكار الناس والمجالس' },
+  hamm: { heading: 'الهم والغضب', title: 'أذكار الهم والغضب' },
+  marad: { heading: 'المرض والرقية', title: 'أذكار المرض والرقية' },
+  janaiz: { heading: 'الجنائز', title: 'أذكار الجنائز' },
+  matar: { heading: 'المطر والريح', title: 'أذكار المطر والريح' },
 } as const;
 
 export type Occasion = keyof typeof SECTIONS;
@@ -53,5 +56,16 @@ export function sectionOf(id: Occasion): Section {
     color: toneOf(OCCASION_IDS.indexOf(id), OCCASION_IDS.length),
   };
 }
+
+export type Band = { readonly heading: string; readonly ids: ReadonlyArray<Occasion | 'tibb'> };
+
+export const BANDS: ReadonlyArray<Band> = [
+  {
+    heading: 'العبادة',
+    ids: ['sabah-masaa', 'masjid', 'fi-al-salah', 'salah', 'nawm', 'istiqaz', 'mutlaq', 'mawasim'],
+  },
+  { heading: 'الحياة اليومية', ids: ['taam', 'bayt', 'safar', 'nas'] },
+  { heading: 'ما يمر بك', ids: ['hamm', 'marad', 'janaiz', 'matar', 'tibb'] },
+];
 
 export const listed = (mode: 'both' | 'sabah' | 'masaa'): boolean => mode !== 'masaa';

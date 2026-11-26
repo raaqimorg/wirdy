@@ -12,7 +12,7 @@ import {
 const stored = (value: unknown) => JSON.stringify(value);
 const parsed = (text: string) => Option.getOrNull(parseHistory(text));
 const many = (count: number) =>
-  Array.from({ length: count }, (_, index) => `/ahwal/#dhikr-${String(index)}`);
+  Array.from({ length: count }, (_, index) => `/hamm/#dhikr-${String(index)}`);
 
 describe('parseHistory', () => {
   it('reads what encodeHistory wrote', () => {
@@ -68,7 +68,7 @@ describe('remember', () => {
     const history = remember(many(HISTORY_SIZE), '/nawm/#new');
     expect(history).toHaveLength(HISTORY_SIZE);
     expect(history[0]).toBe('/nawm/#new');
-    expect(history).not.toContain(`/ahwal/#dhikr-${String(HISTORY_SIZE - 1)}`);
+    expect(history).not.toContain(`/hamm/#dhikr-${String(HISTORY_SIZE - 1)}`);
   });
 
   it('ignores a link that is not a path on the site', () => {

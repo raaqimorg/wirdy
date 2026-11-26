@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "إذا رجع من سفره"
 how: "يقول دعاء السفر ويزيد"
-group: "السفر"
+group: "في السفر والرجوع"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ١٣٤٢"

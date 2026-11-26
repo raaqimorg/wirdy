@@ -1,30 +1,34 @@
 ---
 import OccasionCard from './OccasionCard.astro';
 import type { Tile } from '../lib/collection';
+import { widthsOf } from '../lib/grid';
 
 interface Props {
   tiles: ReadonlyArray<Tile>;
   variant: 'featured' | 'compact';
+  lead?: boolean | undefined;
 }
 
-const { tiles, variant } = Astro.props;
+const { tiles, variant, lead = true } = Astro.props;
 
 const ANIMATED = 3;
 const ANIMATED_WIDE = 6;
+const widths = widthsOf(tiles.length);
 
 const motionOf = (index: number) => {
-  if (variant !== 'featured' || index >= ANIMATED_WIDE) return 'still';
+  if (variant !== 'featured' || !lead || index >= ANIMATED_WIDE) return 'still';
   return index < ANIMATED ? 'always' : 'wide-only';
 };
 const cardOf = (index: number) => {
   if (variant !== 'featured') return 'compact';
-  return index === 0 ? 'lead' : 'row';
+  return lead && index === 0 ? 'lead' : 'row';
 };
+const wide = (index: number) => variant === 'featured' && widths[index] === 'wide';
 ---
 
 <ul class={`card-grid card-grid--${variant}`}>
   {tiles.map((tile, index) => (
-    <li>
+    <li class:list={[wide(index) && 'card-grid__wide']}>
       <OccasionCard tile={tile} variant={cardOf(index)} motion={motionOf(index)} />
     </li>
   ))}

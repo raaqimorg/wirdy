@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا نزل منزلًا"
-group: "السفر"
+group: "في السفر والرجوع"
 fadl: "لم يضره شيء حتى يرتحل من منزله ذلك"
 takhrij:
   grader: "مسلم"

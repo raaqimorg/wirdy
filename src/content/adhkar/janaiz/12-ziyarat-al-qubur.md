@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا خرج إلى المقابر"
-group: "زيارة القبور"
+group: "الدفن والقبور"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٩٧٥"

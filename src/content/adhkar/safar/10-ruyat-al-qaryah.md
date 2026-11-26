@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا رأى قرية يريد دخولها"
-group: "السفر"
+group: "في السفر والرجوع"
 takhrij:
   grader: "الألباني"
   source: "الكلم الطيب ١٧٩"

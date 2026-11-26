@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا أغمض الميت"
-group: "عند الموت"
+group: "الاحتضار والموت"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٩٢٠"

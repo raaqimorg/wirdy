@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "عند الوفاة"
-group: "الاحتضار"
+group: "الاحتضار والموت"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٤٩٦"

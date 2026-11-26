@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "إذا عزّى من أصيب"
 how: "ويأمره بالصبر والاحتساب"
-group: "التعزية"
+group: "المصيبة والتعزية"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ١٢٨٤"

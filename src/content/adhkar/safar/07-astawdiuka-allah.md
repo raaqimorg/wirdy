@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا ودّع مسافرًا"
-group: "السفر"
+group: "وداع المسافر"
 takhrij:
   grader: "الألباني"
   source: "صحيح ابن ماجه ٢٢٩٥"

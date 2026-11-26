@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "في السفر وقت السَّحَر"
-group: "السفر"
+group: "في السفر والرجوع"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٢٧١٨"

@@ -122,21 +122,6 @@ const unbroken: ReadonlyArray<Shape> = [
   }),
 ];
 
-const roads: ReadonlyArray<Shape> = [
-  ...times(16, (index) => {
-    const x = (index % 4) * 60;
-    const y = Math.floor(index / 4) * 60;
-    return dark('path', {
-      d: `M${x} ${y + 30}A30 30 0 0 0 ${x + 30} ${y}M${x + 30} ${y + 60}A30 30 0 0 1 ${x + 60} ${y + 30}`,
-      ...line(PALETTE.shade, 16, 0.2),
-    });
-  }),
-  lit('path', 'fade', {
-    d: 'M240 30A30 30 0 0 0 210 60A30 30 0 0 1 180 90A30 30 0 0 0 150 120A30 30 0 0 1 120 150A30 30 0 0 0 90 180A30 30 0 0 1 60 210A30 30 0 0 0 30 240',
-    ...line(EGG, 16),
-  }),
-];
-
 const HEX = 30;
 const COMB_STEP = HEX * Math.sqrt(3);
 
@@ -209,6 +194,70 @@ const rounds: ReadonlyArray<Shape> = [
   lit('rect', 'turn', { x: 96, y: 96, width: 48, height: 48, rx: 2, ...egg() }),
 ];
 
+const bowl: ReadonlyArray<Shape> = [
+  dark('path', { d: 'M24 120A96 96 0 0 0 216 120Z', ...shade(0.2) }),
+  dark('rect', { x: 84, y: 214, width: 72, height: 14, rx: 7, ...shade(0.2) }),
+  ...times(2, (index) => dark('circle', { cx: 84 + index * 72, cy: 96, r: 16, ...shade(0.16) })),
+  lit('circle', 'grow', { cx: CENTER, cy: 84, r: 24, ...egg() }),
+];
+
+const MEET = Math.round(Math.sqrt(72 ** 2 - 36 ** 2) * 10) / 10;
+
+const meeting: ReadonlyArray<Shape> = [
+  dark('circle', { cx: 84, cy: CENTER, r: 72, ...shade(0.16) }),
+  dark('circle', { cx: 156, cy: CENTER, r: 72, ...shade(0.16) }),
+  lit('path', 'fade', {
+    d: `M${CENTER} ${round(CENTER - MEET)}A72 72 0 0 1 ${CENTER} ${round(CENTER + MEET)}A72 72 0 0 1 ${CENTER} ${round(CENTER - MEET)}Z`,
+    ...egg(),
+  }),
+];
+
+const pulse: ReadonlyArray<Shape> = [
+  ...times(5, (index) =>
+    dark('path', { d: `M0 ${40 + index * 40}H240`, ...line(PALETTE.shade, 4, 0.16) })
+  ),
+  lit('path', 'fade', {
+    d: 'M12 132H80L100 76L132 188L152 112L164 132H228',
+    ...line(EGG, 14),
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+  }),
+];
+
+const DROPS = [
+  [24, 20],
+  [70, 20],
+  [116, 20],
+  [162, 20],
+  [208, 20],
+  [40, 76],
+  [86, 76],
+  [132, 76],
+  [178, 76],
+  [224, 76],
+  [24, 132],
+  [70, 132],
+  [208, 132],
+  [40, 188],
+  [86, 188],
+  [178, 188],
+  [224, 188],
+] as const;
+
+const rain: ReadonlyArray<Shape> = [
+  ...DROPS.map(([x, y]) =>
+    dark('path', {
+      d: `M${x} ${y}L${x - 12} ${y + 30}`,
+      ...line(PALETTE.shade, 7, 0.26),
+      'stroke-linecap': 'round',
+    })
+  ),
+  lit('path', 'up', {
+    d: 'M124 92C124 92 98 132 98 148A26 26 0 0 0 150 148C150 132 124 92 124 92Z',
+    ...egg(),
+  }),
+];
+
 export type EmblemName = Occasion | 'tibb';
 
 export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
@@ -219,11 +268,14 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   nawm: sky,
   istiqaz: light,
   mutlaq: unbroken,
+  mawasim: rounds,
+  taam: bowl,
   bayt: house,
   safar: way,
-  karb: relief,
+  nas: meeting,
+  hamm: relief,
+  marad: pulse,
   janaiz: earth,
-  mawasim: rounds,
-  ahwal: roads,
+  matar: rain,
   tibb: comb,
 };

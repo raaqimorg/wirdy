@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا أصابته مصيبة"
-group: "المصيبة"
+group: "المصيبة والتعزية"
 fadl: "أخلف الله له خيرًا منها"
 takhrij:
   grader: "مسلم"

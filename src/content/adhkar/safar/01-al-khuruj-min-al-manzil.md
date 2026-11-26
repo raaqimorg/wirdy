@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا خرج من بيته"
-group: "الخروج من البيت"
+group: "الخروج والسوق"
 fadl: "فيقال له: حسبك، قد هُديت وكُفيت ووُقيت"
 takhrij:
   grader: "الألباني"

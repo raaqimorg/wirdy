@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "عند من حضرته الوفاة"
 how: "يلقّنها من حضره"
-group: "الاحتضار"
+group: "الاحتضار والموت"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٩١٧"
