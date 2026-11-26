@@ -39,7 +39,7 @@ Every TypeScript module uses [Effect](https://effect.website): `Effect` for work
 - Astro reads a collection schema only as zod. `src/content.config.ts` wraps each Effect `Schema` in `z.unknown().transform(...)`: Effect is the one source, zod the bridge.
 - The decoders refuse unknown fields (`STRICT` in `src/lib/schema.ts`), as zod's `strictObject` did. A record decodes to the same JSON, key for key, so fingerprints and cards do not change.
 - The search module carries the Effect runtime and `Schema`: about 30 KB gzipped, against 2 KB before. `components/SearchSheet.astro` loads it on every page but `/bahth/`, and the browser keeps it for a year.
-- Two files stay plain JavaScript. The inline script in `src/layouts/Paper.astro` runs before the first paint, and `scripts/verification/capture.js` is pasted into the browser on dorar.net or sunnah.com. Neither can import a module.
+- Three files stay plain JavaScript. The inline script in `src/layouts/Paper.astro` runs before the first paint, `src/scripts/service-worker.js` runs as the service worker, and `scripts/verification/capture.js` is pasted into the browser on dorar.net or sunnah.com. None can import a module.
 - A test runs the Effect at its edge (`Effect.runSync`, or `Effect.runPromise` with the Node services), so its assertions stay plain ([`testing.md`](testing.md#how-to-write-one)).
 
 ## The `{{morning|evening}}` markers
@@ -126,6 +126,20 @@ Before typing, search lists «آخر ما فتحت»: the last results opened fr
 - It keeps 8 links, each once. A link with no row in the index (a removed or renamed dhikr) does not show, and the next read drops it.
 - Each list row copies its index row, so a stored link never becomes markup. Every read and write is in a `try`, because Safari's private mode and a full storage throw.
 - Another tab's opened result updates the list through the `storage` event.
+
+## A service worker keeps the sections on the device
+
+The home page, the sections its cards open, and search open at once, and with no connection. A service worker (`src/scripts/service-worker.js`) keeps them on the device. Any other page is kept once it opens. A deploy drops only the pages it changed. The owner asked for it.
+
+- The ordinary way is the browser's cache alone. It cannot do this, measured on 2026-11-26 in Chrome, Brave, and Safari on iOS 26.4. Cloudflare Pages sends a page with `max-age=0, must-revalidate` and no `ETag`, so each visit downloads the whole page. Speculation rules prefetch only in Chrome (Brave turns them off, Safari has none). No browser applies `stale-while-revalidate` to a page.
+- The ordinary way to write a worker is Workbox (`@vite-pwa/astro`). It drops a prefetched page when its revision changes, but it knows no revision for a page kept on opening. This worker knows the fingerprint of every page.
+- `astro.config.ts` runs `writeServiceWorker` (`src/lib/offline.ts`) after the build. It writes `dist/service-worker.js`: one line naming the files to keep and `/offline/<hash>.json`, then the worker. That file holds the SHA-256 of every page, and its name is the hash of its content, so a changed page changes the worker.
+- On the first visit to any page, the worker downloads the home page, each section its cards open, and every file in `_astro/` and `search/`: about 270 KB, most of it in the browser's cache already. With Save-Data on, it downloads nothing ahead. It never keeps a card image (`/og/`).
+- A page comes from the device when its fingerprint matches, and from the network otherwise. With no connection, every kept page opens.
+- `_headers` asks for `service-worker.js` again on each visit (`no-cache`), and keeps `offline/` for a year. The browser compares the worker on each navigation: 1.4 KB, or a `304`. After a deploy, the first page opened still comes from the old worker. The new worker downloads only the changed pages, and the next page opened is new.
+- `bun run dev` renders a script that removes any worker, so a worker from `bun run preview` never serves old pages to the dev server. The choice reads `import.meta.env.PROD`. Vitest sets `DEV` and `PROD` in the environment, which turns it off, so `src/build.test.ts` builds without them: that build is the one `bun run deploy` ships.
+- To turn it off on the live site, remove the registration from `src/layouts/Paper.astro`, and ship a `service-worker.js` that deletes every cache and calls `self.registration.unregister()`.
+- Without JavaScript, or in a browser with no service workers, the site works as before.
 
 ## The proofs are JSON files in git
 

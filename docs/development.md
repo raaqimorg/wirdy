@@ -34,7 +34,7 @@ Never run `bun run deploy`, or a `wrangler` command that changes the live site, 
 ## Scripts
 
 - Every script in `scripts/` is TypeScript that Bun runs directly. Each is an Effect program that ends with `run(program)` from `scripts/run.ts`. The verification scripts read and write a record through `scripts/verification/record.ts`, which decodes it before writing.
-- `scripts/verification/capture.js` is the one JavaScript file. It runs in the browser on dorar.net or sunnah.com ([`exceptions.md`](exceptions.md#the-proofs-are-json-files-in-git)).
+- `scripts/verification/capture.js` is the one JavaScript file in `scripts/`. It runs in the browser on dorar.net or sunnah.com ([`exceptions.md`](exceptions.md#the-proofs-are-json-files-in-git)).
 - A script imports from `src/lib/` with the `.ts` extension: `import { markSvg } from '../../src/lib/mark.ts'`.
 - On wrong arguments, a script prints its usage and exits with 1.
 

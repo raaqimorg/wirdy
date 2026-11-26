@@ -1,6 +1,6 @@
 # Wirdy Agent Guidelines
 
-[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of eight occasions, a page per occasion, a page per dhikr, a page of الطب النبوي with a page per hadith, and a search page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, one small inline script per page, and one module script for search.
+[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of eight occasions, a page per occasion, a page per dhikr, a page of الطب النبوي with a page per hadith, and a search page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device.
 
 ## Layout
 
@@ -10,6 +10,7 @@
 - `src/components/`, `src/layouts/`, `src/styles/`: the design system ([`docs/design-system.md`](docs/design-system.md)).
 - `src/pages/`: the routes, the search index (`search/[version].json.ts`), and the `robots.txt`, `sitemap.xml`, `llms.txt`, and `site.webmanifest` endpoints.
 - `src/scripts/search.ts`: the search module, shared by the search page and the search sheet.
+- `src/scripts/service-worker.js`: the service worker. `src/lib/offline.ts` writes it into `dist/` after the build, with the fingerprint of every page ([`docs/exceptions.md`](docs/exceptions.md#a-service-worker-keeps-the-sections-on-the-device)).
 - `public/`: the generated icons and cards, and `_headers`. Run `bun run icons`, `bun run opengraph`, or `bun run opengraph:adhkar`. Never edit them by hand.
 - `scripts/`: the icon and card generators (headless Chromium), the verification scripts, the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
 - `verification/`: one JSON proof per proven dhikr, and `pending.json`, the adhkar not proven yet. The site does not read it ([`docs/content.md`](docs/content.md#the-proof)).

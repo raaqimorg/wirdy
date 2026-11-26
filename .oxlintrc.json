@@ -107,7 +107,7 @@
       }
     },
     {
-      "files": ["scripts/verification/capture.js"],
+      "files": ["scripts/verification/capture.js", "src/scripts/service-worker.js"],
       "rules": {
         "no-console": "off",
         "typescript/no-unsafe-assignment": "off",

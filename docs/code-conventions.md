@@ -7,10 +7,10 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 - Astro components render. Logic that can be a plain function goes in `src/lib/`, with a test beside it.
 - Validate content once, at the schema (`src/lib/schema.ts`). Then trust the types.
 - A build error beats a wrong page. Fail malformed content with a tagged error, as `parseVariants` does. The page runs the Effect, so the build stops.
-- Prefer CSS to JavaScript. Each page has one inline script ([`exceptions.md`](exceptions.md)), small enough to read at a glance. Search has one module script, `src/scripts/search.ts`, which imports `src/lib/search.ts`.
+- Prefer CSS to JavaScript. Each page has one inline script ([`exceptions.md`](exceptions.md)), small enough to read at a glance, and a one-statement script that registers the service worker. Search has one module script, `src/scripts/search.ts`, which imports `src/lib/search.ts`. The service worker is `src/scripts/service-worker.js`.
 - No page makes a third-party request. Fonts come from `@fontsource` (Amiri, Amiri Quran, IBM Plex Sans Arabic), bundled by Astro and declared in `src/styles/fonts.css`, WOFF2 only.
 - Nothing moves while a page loads, except the animations below. `src/layouts/Paper.astro` preloads the faces a page uses (`faces`), cached for a year, so they are ready before the first paint. On a first visit the text shows at once in the device's face, and the site's face replaces it on arrival.
-- A file cached for a year has its content in its name: Astro hashes `_astro/`, and `src/lib/card.ts` names the cards. `public/_headers` caches those for a year and the icons for a week. Pages are fetched on every visit, so a correction shows at once. The emblems are inline and cost no request.
+- A file cached for a year has its content in its name: Astro hashes `_astro/`, and `src/lib/card.ts` names the cards. `public/_headers` caches those for a year and the icons for a week. A service worker keeps pages on the device and drops a page a deploy changes, so a correction shows from the next page opened ([`exceptions.md`](exceptions.md#a-service-worker-keeps-the-sections-on-the-device)). The emblems are inline and cost no request.
 
 ## TypeScript
 
