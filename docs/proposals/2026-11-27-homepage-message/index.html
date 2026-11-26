@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>سطر الصفحة الرئيسية</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --paper: #d6d6cd;
+        --panel: hsl(60 10% 92%);
+        --ink: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --faint: hsl(200 12% 35%);
+        --line: hsl(200 30% 20% / 0.25);
+        --pick: #91593c;
+        --good: hsl(150 40% 28%);
+        --bad: hsl(5 55% 38%);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #060f13;
+          --panel: hsl(200 32% 12%);
+          --ink: hsl(55 62% 89%);
+          --muted: hsl(55 20% 75%);
+          --faint: hsl(55 10% 60%);
+          --line: hsl(55 30% 80% / 0.2);
+          --pick: #c98a63;
+          --good: hsl(150 45% 62%);
+          --bad: hsl(5 70% 70%);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          17px/1.75 'IBM Plex Sans Arabic',
+          'Geeza Pro',
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 74rem;
+        margin: 0 auto;
+        padding: 3rem 1rem 6rem;
+      }
+      h1 {
+        font-size: 2.2rem;
+        line-height: 1.3;
+        margin: 0 0 0.5rem;
+        font-weight: 500;
+      }
+      h2 {
+        font-size: 1.5rem;
+        margin: 3.5rem 0 1rem;
+        font-weight: 500;
+      }
+      h3 {
+        font-size: 1.2rem;
+        margin: 0 0 0.5rem;
+        font-weight: 500;
+      }
+      p {
+        margin: 0 0 1rem;
+        max-width: 46rem;
+      }
+      .lead {
+        font-size: 1.15rem;
+        color: var(--muted);
+      }
+      .label {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        color: var(--faint);
+      }
+      .reply {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.6rem 1.1rem;
+        border-radius: 0.8rem;
+        background: var(--panel);
+        font-size: 1.2rem;
+      }
+      .box {
+        background: var(--panel);
+        border-radius: 0.8rem;
+        padding: 1.25rem 1.5rem;
+      }
+      ol.flat {
+        margin: 0;
+        padding-inline-start: 1.6rem;
+        list-style: arabic-indic;
+      }
+      ol.flat li {
+        margin-bottom: 0.6rem;
+        max-width: 52rem;
+      }
+      .principles {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+      }
+      .principles .box p {
+        font-size: 0.95rem;
+        margin: 0;
+      }
+      .principles .src {
+        display: block;
+        margin-top: 0.6rem;
+      }
+      a {
+        color: inherit;
+      }
+      .option {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 0.8rem;
+        background: var(--panel);
+        border: 2px solid transparent;
+      }
+      .option.pick {
+        border-color: var(--pick);
+      }
+      .option header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        align-items: baseline;
+        margin-bottom: 1rem;
+      }
+      .letter {
+        font-size: 1.6rem;
+        font-weight: 500;
+      }
+      .badge {
+        font-size: 0.8rem;
+        padding: 0.15rem 0.7rem;
+        border-radius: 99px;
+        background: var(--pick);
+        color: #fff;
+      }
+      .quote {
+        font-size: 1.35rem;
+        line-height: 1.6;
+        margin: 0 0 0.25rem;
+        padding-inline-start: 1rem;
+        border-inline-start: 3px solid var(--line);
+      }
+      .quote small {
+        display: block;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: 15rem 1fr;
+        gap: 1rem;
+        align-items: start;
+        margin: 1.25rem 0;
+      }
+      .shots img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0.6rem;
+        border: 1px solid var(--line);
+      }
+      .shots figure {
+        margin: 0;
+      }
+      .shots figcaption {
+        margin-top: 0.3rem;
+      }
+      @media (max-width: 48rem) {
+        .shots {
+          grid-template-columns: 1fr;
+        }
+        .shots figure:first-child {
+          max-width: 20rem;
+        }
+      }
+      .why {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 2rem;
+      }
+      @media (max-width: 48rem) {
+        .why {
+          grid-template-columns: 1fr;
+        }
+      }
+      .why ul {
+        margin: 0;
+        padding-inline-start: 1.1rem;
+      }
+      .why li {
+        margin-bottom: 0.35rem;
+      }
+      .plus {
+        color: var(--good);
+      }
+      .minus {
+        color: var(--bad);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.95rem;
+      }
+      th,
+      td {
+        text-align: start;
+        padding: 0.55rem 0.6rem;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        font-weight: 500;
+      }
+      td.c {
+        text-align: center;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .decision {
+        margin-top: 1.5rem;
+      }
+      .decision ul {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0;
+      }
+      .decision li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .decision li b {
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="label">وِردي · الصفحة الرئيسية · ٢٧ نوفمبر ٢٠٢٦ · فرع worktree-homepage-message</p>
+      <h1>سطر الصفحة الرئيسية: أربعة مقترحات</h1>
+      <p class="lead">
+        كل مقترح مبني في الموقع الحقيقي (خطوطه وألوانه وبطاقاته)، ومصوّر على الهاتف وسطح المكتب. اختر
+        بسطر واحد في آخر الصفحة.
+      </p>
+
+      <h2>لماذا لا يوصلنا السطر الحالي</h2>
+      <p class="quote">أذكار اليوم والليلة، مما ثبت عن النبي ﷺ، ومع كل ذكر تخريجُه</p>
+      <ol class="flat">
+        <li>
+          <b>«اليوم والليلة» عنوان باب في كتب الحديث</b> (عمل اليوم والليلة للنسائي ولابن السني).
+          يعرفه طالب العلم، ويمر عليه غيره كأنه «أذكار ٢٤ ساعة». ولا يدخل فيه عند القارئ السفر والمرض
+          والمطر والجنائز، وكلها في الموقع.
+        </li>
+        <li>
+          <b>«تخريجُه» مصطلح.</b> الفائدة التي خلفه (تفتح الذكر فترى من رواه وما حكمه، برابط إلى
+          الدرر السنية) لا تصل إلى من لا يعرف الكلمة، وهم أكثر الزوار.
+        </li>
+        <li>
+          <b>«مما ثبت عن النبي ﷺ» يقولها كل موقع أذكار.</b> حصن المسلم يصف نفسه بأنه «من أذكار
+          وأدعية الكتاب والسنة». الذي ينفرد به وِردي هو <i>القاعدة</i>: ما في البخاري ومسلم، أو ما
+          صححه الألباني أو حسّنه، وما ضعّفه يُترك ولو قبله غيره. السطر لا يذكرها.
+        </li>
+        <li><b>ثلاث جمل في سطر</b>، والمعنى المميز في آخرها، حيث يتوقف أكثر القراء قبل أن يصلوا.</li>
+      </ol>
+
+      <h2>المبادئ التي بُنيت عليها المقترحات</h2>
+      <div class="principles">
+        <div class="box">
+          <h3>م١ · قل ما يميزك</h3>
+          <p>
+            السطر يقول ما يفعله الموقع وما ينفرد به. واختباران: هل يصلح السطر نفسه لمنافس؟ وهل يمكن
+            أن يدّعي أحدٌ عكسه؟ إن صلح للمنافس فهو لا يقول شيئًا.
+          </p>
+          <span class="label src"
+            ><a href="https://www.nngroup.com/articles/tagline-blues-whats-the-site-about/"
+              >Nielsen Norman Group · Tagline Blues</a
+            ></span
+          >
+        </div>
+        <div class="box">
+          <h3>م٢ · ما هذا؟ وماذا أفعل هنا؟</h3>
+          <p>
+            الصفحة الرئيسية تجيب عن هذين أولًا. والسطر الجيد واضح، قصير (نحو ست إلى ثماني كلمات)، يبيّن
+            الفرق والفائدة، وفيه روح لا عبارة عامة.
+          </p>
+          <span class="label src">Steve Krug · Don’t Make Me Think · الفصل السابع</span>
+        </div>
+        <div class="box">
+          <h3>م٣ · اختبار الخمس ثوانٍ</h3>
+          <p>
+            اعرض الصفحة خمس ثوانٍ ثم اسأل: ما هذا الموقع؟ ولمن؟ الكلمات العامة تنجح والمصطلحات تسقط.
+            العنوان يحمل الوضوح، والسطر تحته يشرح.
+          </p>
+          <span class="label src"
+            ><a
+              href="https://unbounce.com/landing-pages/increase-conversions-by-improving-the-clarity-of-your-value-proposition/"
+              >Unbounce · Clarity of your value proposition</a
+            ></span
+          >
+        </div>
+        <div class="box">
+          <h3>م٤ · جملة Laws of UX</h3>
+          <p>
+            قدوتنا في الشكل تفتح بجملة واحدة صريحة: «Laws of UX مجموعة من أفضل الممارسات يأخذ بها
+            المصممون حين يبنون الواجهات». اسم، ثم ما هو، ثم لمن، ثم متى.
+          </p>
+          <span class="label src"><a href="https://lawsofux.com/ar/">lawsofux.com/ar</a></span>
+        </div>
+        <div class="box">
+          <h3>م٥ · بلسان القارئ</h3>
+          <p>
+            Quran.com يصف نفسه بأفعال القارئ: «اقرأ واستمع وادرس القرآن الكريم». يبدأ بما يريده
+            الزائر، لا بما في المكتبة.
+          </p>
+          <span class="label src"><a href="https://quran.com/">quran.com</a></span>
+        </div>
+        <div class="box">
+          <h3>م٦ · لا تكرر ما تحته</h3>
+          <p>
+            تحت السطر مباشرة ستة عشر قسمًا في ثلاث فئات، بأسمائها وصورها. فالسطر لا يحتاج أن يعدّدها،
+            وأولى به أن يقول ما لا تقوله البطاقات: لماذا هنا لا غيرنا.
+          </p>
+          <span class="label src">من الصفحة نفسها</span>
+        </div>
+      </div>
+
+      <h2>القرار ١ · سطر الصفحة الرئيسية</h2>
+
+      <section class="option">
+        <header><span class="letter">الحالي</span><span class="label">للمقارنة</span></header>
+        <div class="shots">
+          <figure>
+            <img src="now-phone.png" alt="الحالي على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure>
+            <img src="now-desktop.png" alt="الحالي على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">أ</span>
+          <h3>لكل حال ذكرها</h3>
+          <span class="label">م٢ · م٥</span>
+        </header>
+        <p class="quote">
+          ما تقوله إذا أصبحت وأمسيت، وإذا نمت، وإذا سافرت أو مرضت<small
+            >أذكارٌ صحّت عن النبي ﷺ، ومع كل ذكر رابطٌ إلى مصدره وحكمه.</small
+          >
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="a-phone.png" alt="أ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure>
+            <img src="a-desktop.png" alt="أ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>يرى الزائر نفسه في أول كلمة: هذا ما أقوله حين أنام.</li>
+            <li>كلمات عامة، يفهمها من لم يقرأ كتابًا في الحديث.</li>
+          </ul>
+          <ul class="minus">
+            <li>يكرر البطاقات التي تحته (م٦).</li>
+            <li>المميز في السطر الصغير، والعنوان يصلح لأي موقع أذكار (يسقط في م١).</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option pick">
+        <header>
+          <span class="letter">ب</span>
+          <h3>لا ذكر إلا ما صح</h3>
+          <span class="badge">المقترح</span><span class="label">م١ · م٣ · م٦</span>
+        </header>
+        <p class="quote">
+          لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ<small
+            >من البخاري ومسلم، أو مما صحّحه الألباني أو حسّنه، ومع كل ذكر رابطٌ إلى مصدره وحكمه.</small
+          >
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="b-phone.png" alt="ب على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure>
+            <img src="b-desktop.png" alt="ب على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>
+              أسلوب القصر (النفي ثم الاستثناء) أقوى ما في العربية لقول «هذا وحده». سبع كلمات (م٢).
+            </li>
+            <li>يجتاز اختباري م١: موقع فيه الضعيف لا يستطيع قوله، وعكسه واقعٌ في مواقع كثيرة.</li>
+            <li>
+              السطر الصغير يذكر القاعدة كما هي في <code>docs/content.md</code>، فيستطيع القارئ أن
+              يتحقق منها، ويشرح «التخريج» بلا مصطلح.
+            </li>
+            <li>يترك للبطاقات أن تقول ما في الموقع (م٦).</li>
+          </ul>
+          <ul class="minus">
+            <li>لا يسمّي الأقسام في العنوان (البطاقات تحته مباشرة تسمّيها).</li>
+            <li>
+              ذكر الألباني باسمه صريح، وهو القاعدة الفعلية، لكنه قد يستوقف من يتبع غيره في التصحيح.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">ج</span>
+          <h3>جملة واحدة على طريقة Laws of UX</h3>
+          <span class="label">م٤ · م٣</span>
+        </header>
+        <p class="quote">
+          وِردي يجمع الأذكار الثابتة عن النبي ﷺ: لأوقات العبادة، ولشؤون اليوم، ولما يمر بك. ومع كل ذكر
+          مصدره وحكمه.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="c-phone.png" alt="ج على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure>
+            <img src="c-desktop.png" alt="ج على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>وصف كامل في جملة: الاسم، وما هو، وما فيه. الفئات الثلاث بأسماء فئات الصفحة نفسها.</li>
+            <li>أقرب الأربعة إلى صوت Laws of UX.</li>
+          </ul>
+          <ul class="minus">
+            <li>ثلاثة أسطر على الهاتف، ضعف ما يوصي به م٢.</li>
+            <li>وصفٌ لا وعد، و«الثابتة» يقولها غيرنا (م١).</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">د</span>
+          <h3>وِردك</h3>
+          <span class="label">م٢ · م٥</span>
+        </header>
+        <p class="quote">
+          وِردك كل يوم، كما ثبت عن النبي ﷺ<small>ومع كل ذكر رابطٌ إلى مصدره وحكمه.</small>
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="d-phone.png" alt="د على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure>
+            <img src="d-desktop.png" alt="د على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>أقصر الأربعة وأدفؤها، ويرد على اسم الموقع: وِردي، وِردك.</li>
+            <li>يخاطب القارئ مباشرة.</li>
+          </ul>
+          <ul class="minus">
+            <li>«كما ثبت» يقولها كل موقع (يسقط في م١).</li>
+            <li>«الوِرد» عند كثيرين قدرٌ ثابت كل يوم، فلا يوحي بأذكار السفر والمرض والمطر.</li>
+          </ul>
+        </div>
+      </section>
+
+      <h3 style="margin-top: 2.5rem">المقترحات أمام المبادئ</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>م١ يميّز</th>
+              <th>م٢ قصير وواضح</th>
+              <th>م٣ بلا مصطلح</th>
+              <th>م٤ يقول ما هو</th>
+              <th>م٥ بلسان القارئ</th>
+              <th>م٦ لا يكرر البطاقات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>الحالي</th>
+              <td class="c">✗</td>
+              <td class="c">✗</td>
+              <td class="c">✗</td>
+              <td class="c">نصف</td>
+              <td class="c">✗</td>
+              <td class="c">✓</td>
+            </tr>
+            <tr>
+              <th>أ</th>
+              <td class="c">نصف</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✗</td>
+            </tr>
+            <tr>
+              <th>ب</th>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">نصف</td>
+              <td class="c">✓</td>
+            </tr>
+            <tr>
+              <th>ج</th>
+              <td class="c">نصف</td>
+              <td class="c">✗</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">✗</td>
+              <td class="c">نصف</td>
+            </tr>
+            <tr>
+              <th>د</th>
+              <td class="c">✗</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+              <td class="c">نصف</td>
+              <td class="c">✓</td>
+              <td class="c">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>القرار ٢ و٣ · ما يتبع السطر</h2>
+      <div class="box decision">
+        <h3>٢ · عنوان التبويب في المتصفح وفي نتائج البحث</h3>
+        <p class="label">اليوم: «أذكار اليوم والليلة | وِردي»</p>
+        <ul>
+          <li>
+            <b>أ (المقترح):</b> «أذكار الصباح والمساء والنوم والصلاة | وِردي». هذه الكلمات التي يكتبها
+            الناس في البحث، والسطر في الصفحة يتولى التمييز.
+          </li>
+          <li>
+            <b>ب:</b> «الأذكار الصحيحة لكل وقت وحال | وِردي». يوافق المقترح ب، لكن قلّما يُبحث بهذه
+            الكلمات.
+          </li>
+          <li><b>ج:</b> يبقى كما هو.</li>
+        </ul>
+      </div>
+      <div class="box decision">
+        <h3>٣ · وصف الصفحة في نتائج البحث</h3>
+        <p class="label">اليوم: «… مما ثبت عن النبي ﷺ، مع تخريج كل ذكر.»</p>
+        <ul>
+          <li>
+            <b>أ (المقترح):</b> «… مما صحّ عن النبي ﷺ، ومع كل ذكر مصدره وحكمه.» نفس اللغة التي في
+            الصفحة، بلا مصطلح.
+          </li>
+          <li><b>ب:</b> يبقى كما هو.</li>
+        </ul>
+      </div>
+
+      <h2>ردّك</h2>
+      <p>اكتب السطر بالحروف التي تختارها، وعدّل عليه ما شئت (كلمة في العنوان، أو السطر الصغير):</p>
+      <p class="reply">١ب ٢أ ٣أ</p>
+      <p class="label" style="margin-top: 1.5rem">
+        الصفحات الحيّة (ما دام الخادم المحلي يعمل):
+        <a href="http://127.0.0.1:4417/p/now.html">الحالي</a> ·
+        <a href="http://127.0.0.1:4417/p/a.html">أ</a> ·
+        <a href="http://127.0.0.1:4417/p/b.html">ب</a> ·
+        <a href="http://127.0.0.1:4417/p/c.html">ج</a> ·
+        <a href="http://127.0.0.1:4417/p/d.html">د</a>
+      </p>
+    </main>
+  </body>
+</html>

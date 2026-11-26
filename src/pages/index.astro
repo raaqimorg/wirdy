@@ -10,7 +10,7 @@ const bands = await Effect.runPromise(bandTiles);
 ---
 
 <Home title={SITE.tagline} description={SITE.description} menu={false}>
-  <Hero>
+  <Hero more={SITE.promise.more}>
     {SITE.promise.before}&nbsp;<span class="salawat">ﷺ</span>
     {SITE.promise.after}
   </Hero>

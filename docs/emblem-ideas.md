@@ -1,8 +1,8 @@
 # Emblem ideas
 
-The 48 emblems drawn in November 2026 and not chosen, and one retired, so a new occasion can take one instead of starting from nothing. Each sits under the occasion it was drawn for, on that occasion's color, but belongs to none now.
+The 109 emblems drawn in November 2026 and not chosen, and eight retired, so any section can take one instead of starting from nothing. Each sits under the section it was drawn for, on that section's color, but belongs to none now: any of them fits any section whose content carries its meaning.
 
-Each keeps the rules of the set: a 240-unit square, flat geometric shapes, black shade at low opacity, and one lit shape in full eggshell (`src/lib/palette.ts`). Each drawing is a still frame in `docs/emblem-ideas/`. The code that drew them is gone.
+Each keeps the rules of the set: a 240-unit square, flat geometric shapes, black shade at low opacity, and one lit shape in full eggshell (`src/lib/palette.ts`). Each drawing is a still frame in `docs/emblem-ideas/`, and its shapes are the ones to draw again. The 68 of the second round are also in [`proposals/2026-11-27-emblems/index.html`](proposals/2026-11-27-emblems/index.html), with an Arabic caption each, on a page that tries any emblem on any section.
 
 To use one:
 
@@ -69,6 +69,30 @@ A battlemented wall with the sun on it. The morning adhkar keep the one who says
 
 From the content: «وكان في حرز من الشيطان حتى يمسي» (لا إله إلا الله وحده).
 
+### The hourglass
+
+<img src="emblem-ideas/hourglass.svg" width="160" alt="">
+
+The day turns over like an hourglass, once at morning and once at evening. The lit sand is what the day has gathered. «أصبحنا وأصبح الملك لله».
+
+### The master of istighfar
+
+<img src="emblem-ideas/master-of-istighfar.svg" width="160" alt="">
+
+A row of bars, the tallest lit in the middle: «سيد الاستغفار».
+
+### The arc of the sun
+
+<img src="emblem-ideas/sun-arc.svg" width="160" alt="">
+
+Nine places of the sun on its arc from east to west, the lit one at the horizon: the morning adhkar at the day's start, the evening adhkar at its end.
+
+### Upright
+
+<img src="emblem-ideas/fitrah.svg" width="160" alt="">
+
+A grid of strokes, each leaning its own way, and one lit stroke standing straight. «أصبحنا على فطرة الإسلام».
+
 ## الأذان والمسجد (`masjid`)
 
 ### The call
@@ -101,6 +125,30 @@ A dome on its drum, three small windows below, and a lit crescent on its point: 
 
 «لو يعلم الناس ما في النداء والصف الأول». Rows of worshippers behind the mihrab, the first row lit.
 
+### Light on every side
+
+<img src="emblem-ideas/light-on-every-side.svg" width="160" alt="">
+
+A lit centre with arms of shade above, below, and to each side. «اللهم اجعل في قلبي نورا», said on the way to the prayer.
+
+### The call and its answer
+
+<img src="emblem-ideas/call-and-answer.svg" width="160" alt="">
+
+The muezzin says a phrase and the listener answers with its like, line after line. The last answer is lit. «إجابة المؤذن».
+
+### The drops of wudu
+
+<img src="emblem-ideas/drops-of-wudu.svg" width="160" alt="">
+
+Twelve drops in rows, one limb after another, the last drop lit. Then come «الشهادتان بعد الوضوء».
+
+### The door ajar
+
+<img src="emblem-ideas/door-ajar.svg" width="160" alt="">
+
+«اللهم افتح لي أبواب رحمتك». An arched door pushed open, and the light through its gap.
+
 ## أثناء الصلاة (`fi-al-salah`)
 
 ### Standing, bowing, prostrating
@@ -120,6 +168,24 @@ The three postures of a rakʿah, from the right. The prostration is lit: «أق�
 <img src="emblem-ideas/toward-one-centre.svg" width="160" alt="">
 
 Rows around the Kaʿbah from above: squares inside squares, all facing one lit centre.
+
+### East and west
+
+<img src="emblem-ideas/east-and-west.svg" width="160" alt="">
+
+«اللهم باعد بيني وبين خطاياي كما باعدت بين المشرق والمغرب». A dark point and a lit one at opposite corners, dots between them.
+
+### Water, snow, and hail
+
+<img src="emblem-ideas/water-snow-hail.svg" width="160" alt="">
+
+«اللهم اغسل خطاياي بالماء والثلج والبرد». Four squares, each washed lighter than the last, until the fourth is white.
+
+### The circle of the rakʿah
+
+<img src="emblem-ideas/circle-of-the-rakah.svg" width="160" alt="">
+
+A ring in four arcs: standing, bowing, prostrating, sitting. The prostration is lit, where «سبحان ربي الأعلى» is said.
 
 ## بعد الصلاة (`salah`)
 
@@ -179,6 +245,30 @@ Three lanes, the lit one ahead. A few words after each prayer, and the one who s
 
 From the content: «تدركون من كان قبلكم، وتسبقون من جاء بعدكم» (التسبيح عشرًا).
 
+### Three thirds
+
+<img src="emblem-ideas/three-thirds.svg" width="160" alt="">
+
+A ring in three shades of thirty three, and the lit centre: «تمام المئة».
+
+### Salam to the right and the left
+
+<img src="emblem-ideas/salam-right-and-left.svg" width="160" alt="">
+
+Arcs going out to both sides of a lit centre: the taslim, then «اللهم أنت السلام، ومنك السلام».
+
+### Three times
+
+<img src="emblem-ideas/three-istighfar.svg" width="160" alt="">
+
+Three tall bars, the third lit: «أستغفر الله» three times, the first words after the salam.
+
+### Remembrance, thanks, and worship
+
+<img src="emblem-ideas/remembrance-thanks-worship.svg" width="160" alt="">
+
+«اللهم أعني على ذكرك وشكرك وحسن عبادتك». Three circles bound in a triangle, the top one lit.
+
 ## عند النوم (`nawm`)
 
 ### The closing eye
@@ -192,6 +282,30 @@ From the content: «تدركون من كان قبلكم، وتسبقون من ج
 <img src="emblem-ideas/night-comes-down.svg" width="160" alt="">
 
 «والليل إذا يغشى». Bands of dark coming down the sky, each lighter than the one above, and a crescent low in the last light.
+
+### Lying down
+
+<img src="emblem-ideas/lying-down.svg" width="160" alt="">
+
+«باسمك رب وضعت جنبي». Five bars fan from standing to lying, the lying one lit. A pair with Rising.
+
+### Leaning
+
+<img src="emblem-ideas/leaning.svg" width="160" alt="">
+
+«وألجأت ظهري إليك». A lit slab rests against a wall that does not move.
+
+### Four graces
+
+<img src="emblem-ideas/four-graces.svg" width="160" alt="">
+
+«الحمد لله الذي أطعمنا وسقانا، وكفانا وآوانا». Four circles, the last one, the shelter, lit.
+
+### I die and I live
+
+<img src="emblem-ideas/die-and-live.svg" width="160" alt="">
+
+«باسمك اللهم أموت وأحيا». A curve goes down into the night and up again, with the lit point at its depth.
 
 ## عند الاستيقاظ (`istiqaz`)
 
@@ -212,6 +326,30 @@ A window with its shutters pushed open, and the lit sun of the new day behind.
 <img src="emblem-ideas/three-knots.svg" width="160" alt="">
 
 «يعقد الشيطان على قافية رأس أحدكم ثلاث عقد». A cord with three knots. Remembering Allah on waking loosens the first, lit and open.
+
+### Rising
+
+<img src="emblem-ideas/rising.svg" width="160" alt="">
+
+«الحمد لله الذي أحيانا بعد ما أماتنا». Five bars fan from lying to standing, the standing one lit. A pair with Lying down.
+
+### The soul returned
+
+<img src="emblem-ideas/soul-returned.svg" width="160" alt="">
+
+«الحمد لله الذي عافاني في جسدي، ورد علي روحي». A broken ring, and the lit point that closes it.
+
+### A window at night
+
+<img src="emblem-ideas/window-at-night.svg" width="160" alt="">
+
+A grid of dark windows and one lit: «من تعار من الليل» and remembered Allah.
+
+### First light
+
+<img src="emblem-ideas/first-light.svg" width="160" alt="">
+
+Bands of night, lighter as they go down, and the first lit line at the horizon.
 
 ## كل وقت (`mutlaq`)
 
@@ -270,6 +408,296 @@ From the content: «كنز من كنوز الجنة» (لا حول ولا قوة
 Four lit squares for the four words that remain, and two fading rings of dots around them: what the sun rises over, which passes.
 
 From the content: الباقيات الصالحات, «أحبّ إليّ مما طلعت عليه الشمس». سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر.
+
+### One into many
+
+<img src="emblem-ideas/tenfold.svg" width="160" alt="">
+
+One lit point and ten rays from it, each ending in a dot. From the content: «يكتب له ألف حسنة» for a hundred tasbih.
+
+### Any hour
+
+<img src="emblem-ideas/any-hour.svg" width="160" alt="">
+
+Twelve dots around a ring, the lit one is now. Remembrance at any time has no hour.
+
+## المواسم والحج (`mawasim`)
+
+### The new moon
+
+<img src="emblem-ideas/hilal.svg" width="160" alt="">
+
+«اللهم أهله علينا باليمن والإيمان». A full moon in shade, and its thin lit edge.
+
+### Seven runs
+
+<img src="emblem-ideas/seven-runs.svg" width="160" alt="">
+
+Two hills at the sides and seven lines between them, the seventh lit: the saʿy between الصفا and المروة.
+
+### The mount
+
+<img src="emblem-ideas/arafah.svg" width="160" alt="">
+
+The day of Arafah: a mountain with a lit pillar on its top. «لا إله إلا الله وحده لا شريك له».
+
+### The last ten nights
+
+<img src="emblem-ideas/last-ten-nights.svg" width="160" alt="">
+
+Ten nights in two rows, and one lit, not known which. «اللهم إنك عفو تحب العفو فاعف عني».
+
+### The thirst is gone
+
+<img src="emblem-ideas/thirst-gone.svg" width="160" alt="">
+
+«ذهب الظمأ، وابتلت العروق». A vessel outlined in shade, filled with light at the fast's breaking.
+
+## الطعام والشراب (`taam`)
+
+### A bowl and dates
+
+<img src="emblem-ideas/bowl-and-dates.svg" width="160" alt="">
+
+A bowl, two dates beside it, and a lit date above. It was the emblem of «الطعام والشراب» until November 2026.
+
+### Its first and its last
+
+<img src="emblem-ideas/its-first-and-last.svg" width="160" alt="">
+
+A bar with a dark point at each end, and a lit arc over it from end to start: «بسم الله في أوله وآخره».
+
+### The first fruit
+
+<img src="emblem-ideas/first-fruit.svg" width="160" alt="">
+
+A stem with fruit on both sides, and the first fruit lit at its top: the dua on seeing the first fruit.
+
+### Barakah spreads
+
+<img src="emblem-ideas/barakah.svg" width="160" alt="">
+
+«اللهم بارك لنا فيه وزدنا منه». One lit point at the root, then two, four, and eight.
+
+### Feed who fed me
+
+<img src="emblem-ideas/feed-who-fed-me.svg" width="160" alt="">
+
+«اللهم أطعم من أطعمني وأسق من أسقاني». Two vessels facing each other, the lower one lit: what is given comes back.
+
+## البيت والأهل (`bayt`)
+
+### The new garment
+
+<img src="emblem-ideas/new-garment.svg" width="160" alt="">
+
+«الحمد لله الذي كساني هذا الثوب». Folded garments in a pile, the new one lit on top.
+
+### A ring around the children
+
+<img src="emblem-ideas/ring-around-the-children.svg" width="160" alt="">
+
+«أعوذ بكلمات الله التامة، من كل شيطان وهامة». A lit ring around three small circles.
+
+### Joined
+
+<img src="emblem-ideas/joined.svg" width="160" alt="">
+
+«بارك الله لك، وبارك عليك، وجمع بينكما في خير». Two paths meeting at a lit point.
+
+## الخروج والسفر (`safar`)
+
+### The winding road
+
+<img src="emblem-ideas/winding-road.svg" width="160" alt="">
+
+A winding road with three stops, and a lit traveler at its end. It was the emblem of «الخروج والسفر» until November 2026.
+
+### The deposit
+
+<img src="emblem-ideas/deposit.svg" width="160" alt="">
+
+«أستودع الله دينك وأمانتك وخواتيم عملك». Three things kept inside a lit frame.
+
+### Coming home
+
+<img src="emblem-ideas/homecoming.svg" width="160" alt="">
+
+«آيبون تائبون عابدون لربنا حامدون». Four steps, each higher than the one before, the fourth lit.
+
+### The halt
+
+<img src="emblem-ideas/halt.svg" width="160" alt="">
+
+«أعوذ بكلمات الله التامات من شر ما خلق», said on stopping at a place: a lit dome over a tent.
+
+## الناس والمجالس (`nas`)
+
+### The meeting
+
+<img src="emblem-ideas/meeting.svg" width="160" alt="">
+
+Two circles that meet, with the lit space they share. It was the emblem of «الناس والمجالس» until November 2026.
+
+### The bond
+
+<img src="emblem-ideas/bond.svg" width="160" alt="">
+
+«إني أحبك في الله». Two circles joined by a lit bar.
+
+### The circle of a gathering
+
+<img src="emblem-ideas/circle-of-sitters.svg" width="160" alt="">
+
+Eight seats in a ring, and the lit one is who stood and said «كفارة المجلس».
+
+### The sneeze and its reply
+
+<img src="emblem-ideas/sneeze-and-reply.svg" width="160" alt="">
+
+«الحمد لله», then «يرحمك الله», then «يهديكم الله ويصلح بالكم»: three circles in a line, each answering the one before, the last lit.
+
+### A favour returned
+
+<img src="emblem-ideas/favour-returned.svg" width="160" alt="">
+
+Two arrows in a circle, the returning one lit: a favour goes, and «جزاك الله خيرا» comes back.
+
+## الهم والغضب (`hamm`)
+
+### Relief
+
+<img src="emblem-ideas/relief.svg" width="160" alt="">
+
+Two heavy walls, with a lit opening between them. It was the emblem of «الهم والغضب» until November 2026.
+
+### Sufficient
+
+<img src="emblem-ideas/sufficient.svg" width="160" alt="">
+
+«حسبنا الله ونعم الوكيل». Heavy blocks carried by one lit pillar.
+
+### A fork in the road
+
+<img src="emblem-ideas/fork-in-the-road.svg" width="160" alt="">
+
+One road becomes two, and one of them is lit: «دعاء الاستخارة».
+
+### In every state
+
+<img src="emblem-ideas/every-state.svg" width="160" alt="">
+
+«الحمد لله على كل حال». A wave rises and falls, and a lit straight line runs through it.
+
+### The spring of the heart
+
+<img src="emblem-ideas/spring-of-the-heart.svg" width="160" alt="">
+
+«أن تجعل القرآن ربيع قلبي، ونور صدري، وجلاء حزني». A lit sprout under heavy bands.
+
+### Anger calms
+
+<img src="emblem-ideas/anger-calms.svg" width="160" alt="">
+
+«أعوذ بالله من الشيطان الرجيم» in anger: a sharp line that settles into a lit straight one.
+
+## المرض والرقية (`marad`)
+
+### The pulse
+
+<img src="emblem-ideas/pulse.svg" width="160" alt="">
+
+A lit pulse across faint lines. It was the emblem of «المرض والرقية» until November 2026.
+
+### Mended
+
+<img src="emblem-ideas/mended.svg" width="160" alt="">
+
+«شفاء لا يغادر سقما». A ring of twelve parts, and the lit one is the last to heal.
+
+### Where it hurts
+
+<img src="emblem-ideas/where-it-hurts.svg" width="160" alt="">
+
+«أعوذ بالله وقدرته من شر ما أجد وأحاذر». A place on the body, ringed in light.
+
+### Purified
+
+<img src="emblem-ideas/purified.svg" width="160" alt="">
+
+«لا بأس، طهور إن شاء الله». A lit square, and small squares falling away from it.
+
+## الجنائز (`janaiz`)
+
+### Layers of earth
+
+<img src="emblem-ideas/layers-of-earth.svg" width="160" alt="">
+
+Layers of earth, darker as they go down, with a lit resting place. It was the emblem of «الجنائز» until November 2026.
+
+### To Him we return
+
+<img src="emblem-ideas/to-him-we-return.svg" width="160" alt="">
+
+«إنا لله وإنا إليه راجعون». A ring that starts at a lit point and comes back to it.
+
+### The highest companion
+
+<img src="emblem-ideas/highest-companion.svg" width="160" alt="">
+
+«وألحقني بالرفيق الأعلى». Dots rising from the earth, the highest lit.
+
+### The abodes
+
+<img src="emblem-ideas/abodes.svg" width="160" alt="">
+
+«السلام عليكم أهل الديار من المؤمنين والمسلمين». Rows of graves, and the visitor's lit path between them.
+
+## المطر والريح (`matar`)
+
+### Slanted rain
+
+<img src="emblem-ideas/slanted-rain.svg" width="160" alt="">
+
+Rain in slanted strokes, with one lit drop. It was the emblem of «المطر والريح» until November 2026.
+
+### Around us
+
+<img src="emblem-ideas/around-us.svg" width="160" alt="">
+
+«اللهم حوالينا ولا علينا». Rain all around, and a dry lit circle in the middle.
+
+### Beneficial rain
+
+<img src="emblem-ideas/beneficial-rain.svg" width="160" alt="">
+
+«اللهم صيبا نافعا». Rain falling into a lit pool.
+
+### The wind
+
+<img src="emblem-ideas/wind.svg" width="160" alt="">
+
+Three gusts that curl at their ends, the middle one lit. «اللهم إني أسألك خيرها».
+
+## الطب النبوي (`tibb`)
+
+### A third for breath
+
+<img src="emblem-ideas/third-for-breath.svg" width="160" alt="">
+
+«فثلث لطعامه، وثلث لشرابه، وثلث لنفسه». A vessel in three thirds, the breath lit.
+
+### Seven dates
+
+<img src="emblem-ideas/seven-dates.svg" width="160" alt="">
+
+«من تصبح كل يوم سبع تمرات عجوة». Seven around a ring, the seventh lit.
+
+### Three breaths
+
+<img src="emblem-ideas/three-breaths.svg" width="160" alt="">
+
+«كان يتنفس في الشراب ثلاثا». A cup with three arcs over it, the third lit.
 
 ## أحوال متفرقة (`ahwal`)
 

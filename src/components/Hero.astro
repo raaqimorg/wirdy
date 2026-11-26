@@ -1,5 +1,13 @@
+---
+interface Props {
+  more: string;
+}
+
+const { more } = Astro.props;
+---
+
 <h1 class="hero">
   <span class="hero__words">
-    <slot />
+    <slot /> <span class="hero__more">{more}</span>
   </span>
 </h1>

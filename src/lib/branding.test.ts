@@ -33,7 +33,7 @@ describe('the identity doc', () => {
     ['url', SITE.url],
     ['domain', SITE.domain],
     ['tagline', SITE.tagline],
-    ['promise', `${SITE.promise.before} ﷺ${SITE.promise.after}`],
+    ['promise', `${SITE.promise.before} ﷺ${SITE.promise.after} ${SITE.promise.more}`],
     ['title', SITE.title],
     ['description', SITE.description],
   ])('says the %s that src/lib/site.ts holds', (key, value) => {
