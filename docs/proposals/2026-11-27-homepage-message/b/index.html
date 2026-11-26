@@ -190,6 +190,25 @@
       th {
         font-weight: 500;
       }
+      .sample {
+        font-size: 1.35rem;
+        line-height: 1.6;
+        margin: 0 0 0.5rem;
+        max-width: 40rem;
+      }
+      .sample .rest {
+        color: color-mix(in oklab, var(--ink), var(--panel) 52%);
+      }
+      .rules {
+        padding-inline-start: 1.6rem;
+        list-style: arabic-indic;
+      }
+      .rules li {
+        margin-bottom: 0.3rem;
+      }
+      .shots.strip {
+        grid-template-columns: 15rem 1fr;
+      }
       .reply {
         display: inline-block;
         margin-top: 0.5rem;
@@ -202,13 +221,170 @@
   </head>
   <body>
     <main>
-      <p class="label">وِردي · الصفحة الرئيسية · الجولتان الثانية والثالثة · ٢٧ نوفمبر ٢٠٢٦</p>
+      <p class="label">وِردي · الصفحة الرئيسية · الجولات الثانية إلى الرابعة · ٢٧ نوفمبر ٢٠٢٦</p>
       <h1>طريق ب، بلا عنوان وسطر تحته</h1>
       <p class="lead">
         الجملة واحدة في كل المقترحات: «لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ». الذي يتغير هو أين تذهب
         القاعدة (البخاري ومسلم والألباني) وكيف تظهر. كل مقترح مبني في الموقع الحقيقي ومصوّر على الهاتف
         وسطح المكتب.
       </p>
+
+      <h2>الجولة الرابعة · نص ب١</h2>
+      <p>
+        الشكل ثابت: جملة واحدة، الدعوى بالحبر الكامل وتكملتها بحبر باهت. الذي يتغير هو الكلام. قواعد
+        النص:
+      </p>
+      <ol class="rules">
+        <li>النصف الباهت يضيف معلومة جديدة، لا يعيد الأول بكلمات أهدأ.</li>
+        <li>سطران أو ثلاثة على الهاتف، لا أربعة.</li>
+        <li>كلمات القارئ: «رواه» و«مصدره» بدل «تخريجه» و«حكمه».</li>
+        <li>شيء حقيقي (اسم، رقم، قاعدة) بدل صفة («موثوق»، «شامل»).</li>
+        <li>كل كلمة صادقة كما في <code>docs/content.md</code>.</li>
+      </ol>
+      <section class="option">
+        <header><span class="letter">ت١</span></header>
+        <p class="sample">
+          <span class="ink">لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ،</span>
+          <span class="rest">ومع كل ذكر رابطٌ إلى من رواه.</span>
+        </p>
+        <p class="idea">«من رواه» بدل «تخريجه»: الكلمة التي يفهمها كل قارئ.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t1-phone.png" alt="ت١ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t1-desktop.png" alt="ت١ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option pick">
+        <header><span class="letter">ت٢</span><span class="badge">المقترح</span></header>
+        <p class="sample">
+          <span class="ink">لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ.</span>
+          <span class="rest">ما ضعّفه الألباني تُرك، ولو قبله غيره.</span>
+        </p>
+        <p class="idea">النصف الباهت يقول القاعدة الصارمة التي لا يقولها غيرنا. سطران على الهاتف.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t2-phone.png" alt="ت٢ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t2-desktop.png" alt="ت٢ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٣</span></header>
+        <p class="sample">
+          <span class="ink">لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ،</span>
+          <span class="rest">في البخاري ومسلم أو بتصحيح الألباني، ومصدر كل ذكر معه.</span>
+        </p>
+        <p class="idea">القاعدة كاملة بأقصر عبارة، لكنها ثلاثة أسطر.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t3-phone.png" alt="ت٣ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t3-desktop.png" alt="ت٣ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٤</span></header>
+        <p class="sample">
+          <span class="ink">لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ،</span>
+          <span class="rest">وكل ذكر يدلّك على مصدره لتتحقق بنفسك.</span>
+        </p>
+        <p class="idea">الفائدة للقارئ لا للموقع: لا تأخذ كلامنا، تحقّق.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t4-phone.png" alt="ت٤ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t4-desktop.png" alt="ت٤ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٥</span></header>
+        <p class="sample">
+          <span class="ink">لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ.</span>
+          <span class="rest">والمصدر مع كل ذكر.</span>
+        </p>
+        <p class="idea">أقصرها. النصف الباهت أربع كلمات.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t5-phone.png" alt="ت٥ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t5-desktop.png" alt="ت٥ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٦</span></header>
+        <p class="sample">
+          <span class="ink">٢٤٨ ذكرًا صحّت عن النبي ﷺ،</span>
+          <span class="rest">ومع كل واحد منها رابطٌ إلى مصدره.</span>
+        </p>
+        <p class="idea">رقم حقيقي بدل الحصر. يُحسب عند البناء.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t6-phone.png" alt="ت٦ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t6-desktop.png" alt="ت٦ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٧</span></header>
+        <p class="sample">
+          <span class="ink">أذكار يومك كما صحّت عن النبي ﷺ،</span>
+          <span class="rest">ولا شيء غيرها. ما ضعّفه الألباني تُرك.</span>
+        </p>
+        <p class="idea">يبدأ بالقارئ («يومك») ويختم بالقاعدة.</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t7-phone.png" alt="ت٧ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t7-desktop.png" alt="ت٧ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="option">
+        <header><span class="letter">ت٨</span></header>
+        <p class="sample">
+          <span class="ink">ما صحّ عن النبي ﷺ من الأذكار، وحده.</span>
+          <span class="rest">في الصباح والمساء والنوم والصلاة، وفي السفر والمرض والهم.</span>
+        </p>
+        <p class="idea">النصف الباهت يسمّي ما في الموقع، والدعوى في كلمة «وحده».</p>
+        <div class="shots strip">
+          <figure>
+            <img src="t8-phone.png" alt="ت٨ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="t8-desktop.png" alt="ت٨ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+      </section>
 
       <h2>ما الذي يجعل الواجهة تبدو مصنوعة بالذكاء الاصطناعي</h2>
       <p>
@@ -281,11 +457,10 @@
         خمسة مقترحات بلا شيء من العلامات أعلاه. كلها بالجملة نفسها، ولا عنصر جديد في التصميم إلا ما يُذكر.
       </p>
 
-      <section class="option pick">
+      <section class="option">
         <header>
           <span class="letter">ب٦</span>
           <h3>الذكر نفسه دليلًا</h3>
-          <span class="badge">المقترح</span>
         </header>
         <p class="idea">
           تحت الجملة ذكرٌ حقيقي من الموقع، ببطاقته كما هي في صفحة الصباح والمساء، مفتوحةً على تخريجه:
@@ -621,7 +796,7 @@
         اكتب رقم المقترح، وإن شئت اخلط بين اثنين (مثلًا «ب٦ بجملة ب٧»، أي الرقم في الجملة والذكر
         تحتها):
       </p>
-      <p class="reply">ب٦</p>
+      <p class="reply">ت٢</p>
       <p class="label" style="margin-top: 1.5rem">
         الصفحات الحيّة (ما دام الخادم المحلي يعمل):
         <a href="http://127.0.0.1:4417/p/b1.html">ب١</a> ·
