@@ -4,23 +4,22 @@ What each page tells search engines and link previews: the title, the descriptio
 
 ## Each page
 
-| Page                  | Title                                  | Description                                           | Card        | Breadcrumbs                          | Indexed |
-| --------------------- | -------------------------------------- | ----------------------------------------------------- | ----------- | ------------------------------------ | ------- |
-| `/`                   | `tagline` \| وِردي                      | `description`                                         | Home        | None                                 | Yes     |
-| `/<id>/`              | section `title` \| وِردي                | The title, the count, and what the page holds         | The section | وِردي › section `title`               | Yes     |
-| `/<id>/<slug>/`       | dhikr title \| section `title` \| وِردي | Its lead, its first words, count, virtue, and takhrij | The dhikr   | وِردي › section `title` › dhikr title | Yes     |
-| `/ma-lam-yathbut/`    | ما لم يثبت \| وِردي                     | The count, and why each one stays out                 | Home        | وِردي › ما لم يثبت                    | Yes     |
-| `/al-tibb-al-nabawi/` | الطب النبوي \| وِردي                    | The count of its hadiths, and their topics            | Home        | وِردي › الطب النبوي                   | Yes     |
-| `/bahth/`             | البحث \| وِردي                          | `description`                                         | Home        | None                                 | No      |
-| 404                   | الصفحة غير موجودة \| وِردي              | A way back to the sections                            | Home        | None                                 | No      |
+| Page                         | Title                                  | Description                                           | Card        | Breadcrumbs                          | Indexed |
+| ---------------------------- | -------------------------------------- | ----------------------------------------------------- | ----------- | ------------------------------------ | ------- |
+| `/`                          | `tagline` \| وِردي                      | `description`                                         | Home        | None                                 | Yes     |
+| `/<id>/`                     | section `title` \| وِردي                | The title, the count, and what the page holds         | The section | وِردي › section `title`               | Yes     |
+| `/<id>/<slug>/`              | dhikr title \| section `title` \| وِردي | Its lead, its first words, count, virtue, and takhrij | The dhikr   | وِردي › section `title` › dhikr title | Yes     |
+| `/ma-lam-yathbut/`           | ما لم يثبت \| وِردي                     | The count, and why each one stays out                 | Home        | وِردي › ما لم يثبت                    | Yes     |
+| `/al-tibb-al-nabawi/`        | الطب النبوي \| وِردي                    | The count of its hadiths, and their topics            | Home        | وِردي › الطب النبوي                   | Yes     |
+| `/al-tibb-al-nabawi/<slug>/` | hadith title \| الطب النبوي \| وِردي    | Its first words, its narrator, and its takhrij        | Home        | وِردي › الطب النبوي › hadith title    | Yes     |
+| `/bahth/`                    | البحث \| وِردي                          | `description`                                         | Home        | None                                 | No      |
+| 404                          | الصفحة غير موجودة \| وِردي              | A way back to the sections                            | Home        | None                                 | No      |
 
 The dhikr title is its `title` with its `context` in brackets (`fullTitle` in `src/lib/title.ts`).
 
-A dhikr description quotes its first words in «», so a search for the words finds the page (`src/lib/description.ts`). The words stop at a clause end near 110 letters, or between words when no clause ends in time, and a cut ends in «…». A قرآن quote keeps whole آيات, as the card does. A dhikr whose phrases each have a count gives them in the count instead.
+A dhikr or hadith description quotes its first words in «», so a search for the words finds the page (`src/lib/description.ts`). The words stop at a clause end near 110 letters, or between words when no clause ends in time, and a cut ends in «…». A قرآن quote keeps whole آيات, as the card does. A dhikr whose phrases each have a count gives them in the count instead.
 
-On a dhikr page, the line over the title is the way back to its place in its section, in a `<nav>` named «مسار الصفحة». It is the visible trail: the bar's mark leads home, and the title is the page itself, so the name shows once.
-
-On a dhikr page, the line over the title is the way back to its place in its section, in a `<nav>` named «مسار الصفحة». It is the visible trail: the bar's mark leads home, and the title is the page itself, so the name shows once.
+On a dhikr or hadith page, the line over the title is the way back to its place in its section, in a `<nav>` named «مسار الصفحة». It is the visible trail: the bar's mark leads home, and the title is the page itself, so the name shows once.
 
 ## The head of every page
 

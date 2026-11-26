@@ -125,7 +125,7 @@ A proof ends when what it proves changes. A change of order, title, group, form,
 
 ## الطب النبوي
 
-`src/content/tibb/` holds the hadiths of الطب النبوي: what the Prophet ﷺ said and did about treatment, healing, and keeping well (honey, black seed, Zamzam, ajwa dates, cupping, fever, ruqyah, contagion, eating and drinking). They show on one page, `/al-tibb-al-nabawi/`, under a heading for each `group`. They are hadiths to read, not adhkar to say: no count, moment, copy button, or page of their own.
+`src/content/tibb/` holds the hadiths of الطب النبوي: what the Prophet ﷺ said and did about treatment, healing, and keeping well (honey, black seed, Zamzam, ajwa dates, cupping, fever, ruqyah, contagion, eating and drinking). They show on one page, `/al-tibb-al-nabawi/`, under a heading for each `group`. Each also has a page of its own, `/al-tibb-al-nabawi/<slug>/`, with its place on the list (`/al-tibb-al-nabawi/#<slug>`), and the previous and next hadith. Its link is permanent like a dhikr's, and is in `src/lib/permalinks.json`. They are hadiths to read, not adhkar to say: no count, moment, copy button, or card of their own.
 
 - The same rule lets a hadith in. The tests refuse a ruling of weakness.
 - `title`: a short name, such as «الحبة السوداء». `rawi`: the narrating Companion, in the genitive, since the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.

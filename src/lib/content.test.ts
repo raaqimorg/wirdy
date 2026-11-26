@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { cardFile, cardOf as cardEffect } from './card';
 import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
-import { dhikrPath, slugOf } from './permalink';
+import { dhikrPath, hadithPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
 import { dhikrSchema, STRICT, tibbSchema, unprovenSchema, type Dhikr } from './schema';
 import { phrasesOf as phrasesEffect } from './phrases';
@@ -304,9 +304,12 @@ const pathOf = ({ path, data }: (typeof entries)[number]) =>
   dhikrPath(data.occasion, slugOf(path.replace(/\.md$/u, '')));
 
 describe('the permalinks', () => {
-  const current = entries.map((entry) => pathOf(entry));
+  const current = [
+    ...entries.map((entry) => pathOf(entry)),
+    ...tibb.map(({ path }) => hadithPath(slugOf(path.replace(/\.md$/u, '')))),
+  ];
 
-  it('gives each dhikr its own link', () => {
+  it('gives each dhikr and each hadith of الطب النبوي its own link', () => {
     expect(new Set(current).size).toBe(current.length);
   });
 
@@ -323,6 +326,11 @@ describe('the permalinks', () => {
 
   it('gives each dhikr its own title, with its context', () => {
     const titles = entries.map((entry) => fullTitle(entry.data));
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it('gives each hadith of الطب النبوي its own title', () => {
+    const titles = tibb.map(({ data }) => data.title);
     expect(new Set(titles).size).toBe(titles.length);
   });
 });

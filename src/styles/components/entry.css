@@ -106,6 +106,10 @@
   padding-bottom: var(--space-1);
 }
 
+.entry__act:last-child {
+  margin-inline-start: auto;
+}
+
 .entry__act {
   --icon-size: var(--size-icon-medium);
   --icon-drop: 0;

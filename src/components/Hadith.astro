@@ -1,23 +1,35 @@
 ---
 import Entry from './Entry.astro';
+import Icon from './Icon.astro';
+import { hadithPath } from '../lib/permalink';
 import type { Tibb } from '../lib/schema';
 
 interface Props {
   data: Tibb;
   body: string;
   slug: string;
+  single?: boolean | undefined;
 }
 
-const { data, body, slug } = Astro.props;
+const { data, body, slug, single = false } = Astro.props;
 ---
 
 <Entry
   takhrij={data.takhrij}
   id={slug}
   title={data.title}
-  heading="h3"
-  lead={data.title}
+  heading={single ? undefined : 'h3'}
+  lead={single ? undefined : data.title}
   how={`عن ${data.rawi}`}
+  single={single}
 >
   <p>{body.trim()}</p>
+  {!single && (
+    <div slot="actions" class="entry__acts">
+      <a class="entry__act" href={hadithPath(slug)} aria-label={`صفحة الحديث: ${data.title}`}>
+        <span class="entry__act-label">صفحة الحديث</span>
+        <Icon name="open" />
+      </a>
+    </div>
+  )}
 </Entry>

@@ -80,7 +80,7 @@ To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color f
 | `Search`, `SearchField`, `SearchHead`, `SearchRow`, `SearchSheet`                                                                | Search: the field, the results under each section head, the empty state, the sheet |
 | `SkipLink`, `Bar`, `SectionMenu`, `Banner`, `Hero`, `PageTools`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                |
 
-The foot of an `Entry` is a list of labelled rows, in one order on every card: «الفضل» when the hadith states a virtue, «تنبيه» on «ما لم يثبت» when a note names what is sound, «التخريج», and «النص» (موقع تنزيل) under every قرآن. The labels share one column, so values line up across cards. Below the rows, «نسخ» and «صفحة الذكر» sit at the two ends of their own line. On a wide screen the foot is the card's side column, with the buttons at its bottom.
+The foot of an `Entry` is a list of labelled rows, in one order on every card: «الفضل» when the hadith states a virtue, «تنبيه» on «ما لم يثبت» when a note names what is sound, «التخريج», and «النص» (موقع تنزيل) under every قرآن. The labels share one column, so values line up across cards. Below the rows, «نسخ» and «صفحة الذكر» sit at the two ends of their own line. A hadith of الطب النبوي has only «صفحة الحديث», at the same end. On a wide screen the foot is the card's side column, with the buttons at its bottom.
 
 Every page opens with «تخطَّ إلى المحتوى» (`SkipLink`), a link to `#main` that shows only while it has the focus, so a keyboard skips the bar. Every link and button shows the focus ring.
 

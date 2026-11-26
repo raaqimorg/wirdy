@@ -21,6 +21,11 @@ const contentFiles = readdirSync(ADHKAR, { recursive: true, encoding: 'utf8' }).
 );
 const expected = contentFiles.length;
 
+const hadiths = readdirSync(join(process.cwd(), 'src/content/tibb'))
+  .filter((f) => f.endsWith('.md'))
+  .toSorted()
+  .map((f) => f.replace(/\.md$/u, '').replace(/^\d+-/u, ''));
+
 const countOf = (id: string) => contentFiles.filter((f) => f.startsWith(`${id}/`)).length;
 const graphOf = (page: string) =>
   JSON.parse(page.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/u)![1]!)[
@@ -650,7 +655,12 @@ describe('built site', () => {
     }
     expect(sitemap).toContain('<loc>https://wirdy.site/al-tibb-al-nabawi/</loc>');
     expect(sitemap).toContain('<loc>https://wirdy.site/ma-lam-yathbut/</loc>');
-    expect(sitemap.match(/<loc>/gu)).toHaveLength(OCCASION_IDS.length + 3 + expected);
+    for (const slug of hadiths) {
+      expect(sitemap).toContain(`<loc>https://wirdy.site/al-tibb-al-nabawi/${slug}/</loc>`);
+    }
+    expect(sitemap.match(/<loc>/gu)).toHaveLength(
+      OCCASION_IDS.length + 3 + expected + hadiths.length
+    );
   });
 
   it('lists what did not come in, each with its weak ruling on dorar.net, linked from home', () => {
@@ -731,6 +741,33 @@ describe('built site', () => {
     expect(images.size).toBe(expected);
   });
 
+  it('gives each hadith of الطب النبوي a page with breadcrumbs, its place, and its neighbours', () => {
+    const list = own('al-tibb-al-nabawi');
+    for (const [index, slug] of hadiths.entries()) {
+      const path = `/al-tibb-al-nabawi/${slug}/`;
+      const page = own(path);
+      expect(page).toContain(`<link rel="canonical" href="https://wirdy.site${path}">`);
+      expect(page.match(/<h1[ >]/gu)).toHaveLength(1);
+      expect(page.match(/<li class="entry entry--single"/gu)).toHaveLength(1);
+      expect(page).toContain(`href="/al-tibb-al-nabawi/#${slug}"`);
+      const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
+      expect((crumbs['itemListElement'] as { item: string }[]).map(({ item }) => item)).toEqual([
+        'https://wirdy.site/',
+        'https://wirdy.site/al-tibb-al-nabawi/',
+        `https://wirdy.site${path}`,
+      ]);
+      const links = [
+        ...page.match(/<nav class="neighbours"[\s\S]*?<\/nav>/u)![0].matchAll(/href="([^"]+)"/gu),
+      ].map((link) => link[1]);
+      expect(links).toEqual(
+        [hadiths[index + 1], hadiths[index - 1]]
+          .filter(Boolean)
+          .map((other) => `/al-tibb-al-nabawi/${other!}/`)
+      );
+      expect(list).toContain(`<a class="entry__act" href="${path}" aria-label="صفحة الحديث: `);
+    }
+  });
+
   it('leads from the top of every page past the bar to its content', () => {
     const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
       file.endsWith('.html')
@@ -743,10 +780,12 @@ describe('built site', () => {
     }
   });
 
-  it('marks the way back from a dhikr as the trail of the page', () => {
-    expect(own('nawm/ayat-al-kursi')).toMatch(
-      /<nav class="banner__kicker" aria-label="مسار الصفحة">\s*<a class="banner__up"/u
-    );
+  it('marks the way back from a dhikr or a hadith as the trail of the page', () => {
+    for (const path of ['nawm/ayat-al-kursi', `al-tibb-al-nabawi/${hadiths[0]!}`]) {
+      expect(own(path)).toMatch(
+        /<nav class="banner__kicker" aria-label="مسار الصفحة">\s*<a class="banner__up"/u
+      );
+    }
   });
 
   it('shows the context of a dhikr under its name, and in parentheses in plain text', () => {

@@ -1,11 +1,11 @@
 # Wirdy Agent Guidelines
 
-[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of eight occasions, a page per occasion, a page per dhikr, a page of الطب النبوي, a page of the well-known adhkar that stay out («ما لم يثبت»), and a search page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, one small inline script per page, and one module script for search.
+[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of eight occasions, a page per occasion, a page per dhikr, a page of الطب النبوي with a page per hadith, a page of the well-known adhkar that stay out («ما لم يثبت»), and a search page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, one small inline script per page, and one module script for search.
 
 ## Layout
 
 - `src/content/adhkar/<occasion>/`: one Markdown file per dhikr. The frontmatter holds the count, the occasion, the takhrij, and optional fields; the body is the text. [`docs/content.md`](docs/content.md) is the standard.
-- `src/content/tibb/`: the hadiths of الطب النبوي, one file each, on one page ([`docs/content.md`](docs/content.md#الطب-النبوي)).
+- `src/content/tibb/`: the hadiths of الطب النبوي, one file each, on one page and a page per hadith ([`docs/content.md`](docs/content.md#الطب-النبوي)).
 - `src/content/unproven/`: the well-known adhkar that stay out, each with its al-Albani ruling.
 - `src/lib/`: one topic per file, each with a test beside it (`content.test.ts` covers `schema.ts`, the build test covers `collection.ts`, `proofs.test.ts` covers `records.ts`). The proofs are `proof.ts`, `matching.ts`, `fingerprint.ts`, `verification.ts`, `baseline.ts`, and `records.ts`.
 - `src/components/`, `src/layouts/`, `src/styles/`: the design system ([`docs/design-system.md`](docs/design-system.md)).

@@ -1,0 +1,50 @@
+---
+import { Effect } from 'effect';
+import EntryList from '../../components/EntryList.astro';
+import Hadith from '../../components/Hadith.astro';
+import Neighbours from '../../components/Neighbours.astro';
+import Section from '../../layouts/Section.astro';
+import { tibbEntries } from '../../lib/collection';
+import { hadithDescriptionOf } from '../../lib/description';
+import { hadithAnchor, hadithPath, slugOf } from '../../lib/permalink';
+import { TIBB } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const list = await Effect.runPromise(tibbEntries);
+  return list.map((entry, index) => ({
+    params: { hadith: slugOf(entry.id) },
+    props: { entry, previous: list[index - 1], next: list[index + 1] },
+  }));
+}
+
+const { entry, previous, next } = Astro.props;
+const { data, body = '' } = entry;
+const slug = slugOf(entry.id);
+const links = [
+  { label: 'التالي', entry: next },
+  { label: 'السابق', entry: previous },
+].flatMap(({ label, entry: neighbour }) =>
+  neighbour === undefined
+    ? []
+    : [{ label, title: neighbour.data.title, href: hadithPath(slugOf(neighbour.id)) }]
+);
+---
+
+<Section
+  title={`${data.title} | ${TIBB.title}`}
+  description={hadithDescriptionOf(data, body)}
+  crumbs={[
+    { name: TIBB.title, path: TIBB.path },
+    { name: data.title, path: hadithPath(slug) },
+  ]}
+  emblem="tibb"
+  color={TIBB.color}
+  heading={data.title}
+  lede={data.group}
+  up={{ href: hadithAnchor(slug), label: TIBB.heading }}
+>
+  <EntryList variant="single">
+    <Hadith data={data} body={body} slug={slug} single />
+  </EntryList>
+  <Neighbours links={links} />
+</Section>
