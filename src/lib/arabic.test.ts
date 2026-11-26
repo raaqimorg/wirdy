@@ -7,7 +7,7 @@ import {
   toArabicDigits,
   timesLabel,
   timesUnit,
-  visitsUnit,
+  rememberersUnit,
 } from './arabic';
 
 describe('adhkarLabel', () => {
@@ -109,17 +109,20 @@ describe('resultsLabel', () => {
   });
 });
 
-describe('visitsUnit', () => {
-  it('counts visits as Arabic counts them', () => {
-    expect(visitsUnit(1)).toBe('زيارة');
-    expect(visitsUnit(2)).toBe('زيارتان');
-    expect(visitsUnit(7)).toBe('زيارات');
-    expect(visitsUnit(11)).toBe('زيارة');
-    expect(visitsUnit(342)).toBe('زيارة');
+describe('rememberersUnit', () => {
+  it('counts the rememberers as Arabic counts them', () => {
+    expect(rememberersUnit(0)).toBe('ذاكر');
+    expect(rememberersUnit(1)).toBe('ذاكر');
+    expect(rememberersUnit(2)).toBe('ذاكران');
+    expect(rememberersUnit(7)).toBe('ذاكرين');
+    expect(rememberersUnit(18)).toBe('ذاكرًا');
+    expect(rememberersUnit(100)).toBe('ذاكر');
+    expect(rememberersUnit(342)).toBe('ذاكرًا');
   });
 
-  it('uses the plural when the last two digits are three to ten', () => {
-    expect(visitsUnit(103)).toBe('زيارات');
-    expect(visitsUnit(1210)).toBe('زيارات');
+  it('follows the last two digits of a large number', () => {
+    expect(rememberersUnit(103)).toBe('ذاكرين');
+    expect(rememberersUnit(1210)).toBe('ذاكرين');
+    expect(rememberersUnit(102)).toBe('ذاكر');
   });
 });

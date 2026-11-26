@@ -72,25 +72,25 @@ describe('nameOf', () => {
 describe('hourlyText', () => {
   test('gives the last hour and today so far', () => {
     expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 18, 342, first)).toBe(
-      '<b>الأولى</b> 🌻\nآخر ساعة <b>١٨</b> · اليوم <b>٣٤٢</b>\nكتب الله أجرك'
+      '<b>الأولى</b> 🌻\n\n<b>١٨</b> ذاكرًا في آخر ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 
   test('shows a quiet hour as zero', () => {
     expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:17:00Z')), 0, 6, first)).toBe(
-      '<b>الأولى</b> 🌻\nآخر ساعة <b>٠</b> · اليوم <b>٦</b>\nكتب الله أجرك'
+      '<b>الأولى</b> 🌻\n\n<b>٠</b> ذاكر في آخر ساعة، و<b>٦</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 
   test('calls the total of a finished day yesterday', () => {
     expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:17:00Z')), 3, 412, first)).toBe(
-      '<b>الأولى</b> 🌻\nآخر ساعة <b>٣</b> · أمس <b>٤١٢</b>\nكتب الله أجرك'
+      '<b>الأولى</b> 🌻\n\n<b>٣</b> ذاكرين في آخر ساعة، و<b>٤١٢</b> أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 
   test('uses the site name when no name is set', () => {
     expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.none())).toBe(
-      '<b>وِردي</b> 🌻\nآخر ساعة <b>١</b> · اليوم <b>٢</b>\nكتب الله أجرك'
+      '<b>وِردي</b> 🌻\n\n<b>١</b> ذاكر في آخر ساعة، و<b>٢</b> اليوم\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 
@@ -102,19 +102,19 @@ describe('hourlyText', () => {
 });
 
 describe('morningText', () => {
-  test('greets with the visits of yesterday and asks about the adhkar', () => {
+  test('greets with the visits of yesterday', () => {
     expect(morningText(412, first)).toBe(
-      '<b>صباح الخير يا الأولى</b> 🌻\nأمس <b>٤١٢</b> زيارة\nكتب الله أجرك، قرأتِ أذكارك؟'
+      '<b>صباح الخير يا الأولى</b> 🌻\n\n<b>٤١٢</b> ذاكرًا أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 
-  test('counts a few visits in the plural', () => {
-    expect(morningText(5, first)).toContain('أمس <b>٥</b> زيارات');
+  test('counts a few rememberers in the plural', () => {
+    expect(morningText(5, first)).toContain('<b>٥</b> ذاكرين أمس');
   });
 
   test('greets without a name when none is set', () => {
     expect(morningText(0, Option.none())).toBe(
-      '<b>صباح الخير</b> 🌻\nأمس <b>٠</b> زيارة\nكتب الله أجرك، قرأتِ أذكارك؟'
+      '<b>صباح الخير</b> 🌻\n\n<b>٠</b> ذاكر أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر'
     );
   });
 });

@@ -57,7 +57,9 @@ export function resultsLabel(n: number): string {
   return `${toArabicDigits(n)} نتيجة`;
 }
 
-export function visitsUnit(n: number): string {
-  if (n === 2) return 'زيارتان';
-  return isFew(n % 100) ? 'زيارات' : 'زيارة';
+export function rememberersUnit(n: number): string {
+  if (n === 2) return 'ذاكران';
+  const rest = n % 100;
+  if (isFew(rest)) return 'ذاكرين';
+  return rest > 10 ? 'ذاكرًا' : 'ذاكر';
 }

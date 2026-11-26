@@ -1,5 +1,5 @@
 import { Array, Option } from 'effect';
-import { toArabicDigits, visitsUnit } from '../../src/lib/arabic.ts';
+import { rememberersUnit, toArabicDigits } from '../../src/lib/arabic.ts';
 
 export type Window = { readonly from: Date; readonly to: Date };
 
@@ -36,6 +36,8 @@ const escaped = (text: string) =>
 
 const bold = (visits: number) => `<b>${toArabicDigits(visits)}</b>`;
 
+const counted = (visits: number) => `${bold(visits)} ${rememberersUnit(visits)}`;
+
 export function hourlyText(
   windows: { readonly hour: Window; readonly day: Window },
   hourVisits: number,
@@ -45,7 +47,7 @@ export function hourlyText(
   const title = Option.match(name, { onNone: () => 'وِردي', onSome: escaped });
   const finished = windows.day.to.getTime() - windows.day.from.getTime() === DAY;
   const day = finished ? 'أمس' : 'اليوم';
-  return `<b>${title}</b> 🌻\nآخر ساعة ${bold(hourVisits)} · ${day} ${bold(dayVisits)}\nكتب الله أجرك`;
+  return `<b>${title}</b> 🌻\n\n${counted(hourVisits)} في آخر ساعة، و${bold(dayVisits)} ${day}\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر`;
 }
 
 export function morningText(visits: number, name: Option.Option<string>): string {
@@ -53,7 +55,7 @@ export function morningText(visits: number, name: Option.Option<string>): string
     onNone: () => 'صباح الخير',
     onSome: (someone) => `صباح الخير يا ${escaped(someone)}`,
   });
-  return `<b>${greeting}</b> 🌻\nأمس ${bold(visits)} ${visitsUnit(visits)}\nكتب الله أجرك، قرأتِ أذكارك؟`;
+  return `<b>${greeting}</b> 🌻\n\n${counted(visits)} أمس\nكتب الله أجرك\n\nهنيئًا لكِ هذا الأجر`;
 }
 
 export function isSilent(hourVisits: number, forced: boolean): boolean {
