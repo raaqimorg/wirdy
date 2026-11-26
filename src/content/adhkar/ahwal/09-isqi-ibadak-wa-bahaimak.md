@@ -1,0 +1,16 @@
+---
+title: "اللهم اسق عبادك وبهائمك"
+occasion: "ahwal"
+order: 9
+count: 1
+mode: "both"
+quran: false
+when: "إذا استسقى"
+group: "الهلال والريح والمطر"
+takhrij:
+  grader: "الألباني"
+  source: "صحيح أبي داود ١١٧٦"
+  ruling: "حسن"
+  url: "https://dorar.net/h/DMCVXgCr"
+---
+اللَّهُمَّ اسْقِ عِبَادَكَ وَبَهَائِمَكَ، وَانْشُرْ رَحْمَتَكَ، وَأَحْيِ بَلَدَكَ الْمَيِّتَ

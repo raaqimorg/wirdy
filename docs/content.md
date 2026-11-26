@@ -38,6 +38,11 @@ Each dhikr belongs to one occasion: its folder and its `occasion` field. `src/li
 | `nawm`        | عند النوم      |
 | `istiqaz`     | عند الاستيقاظ   |
 | `mutlaq`      | كل وقت         |
+| `bayt`        | البيت والطعام  |
+| `safar`       | الخروج والسفر  |
+| `karb`        | الكرب والمرض   |
+| `janaiz`      | الجنائز        |
+| `mawasim`     | المواسم والحج  |
 | `ahwal`       | أحوال متفرقة   |
 
 A dhikr of two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
@@ -49,7 +54,7 @@ A dhikr of two occasions, such as آية الكرسي, has one file in each, wit
 1. The order a hadith states. Examples: «تمام المائة» after the tasbih, and «اجعلهن آخر ما تتكلم به» last before sleep.
 2. The sequence of the moment: the adhan, then wudu, then going out, entering, and leaving the mosque.
 3. Adhkar of one kind stay together under a `group`. Every dhikr on a page has a `group`, so the page shows its index.
-4. Where no moment gives a sequence (أحوال متفرقة, الطب النبوي), the groups go from the most sacred down. أحوال متفرقة: worship (الاستخارة, الإفطار), then the signs in the sky, the heart in ease and hardship (الكرب, المرض, المقابر), family and people, the day from dressing to closing the door at night, then عوارض, and الخلاء last. الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
+4. Where no moment gives a sequence (the sections from البيت والطعام on, and الطب النبوي), the groups go from the most sacred down. البيت والطعام: الطعام, اللباس, the house at night, الخلاء last. الخروج والسفر: leaving the house, the market, riding, travel. الكرب والمرض: what pleases and what displeases, then الكرب, anger and fear, meeting the enemy, the whispers of الشيطان, and illness. الجنائز: from the deathbed to the grave. المواسم والحج: fasting and رمضان, then الأضحية, then the rites of الحج. أحوال متفرقة: الاستخارة, the signs in the sky and the prayer for rain, family and people, sneezing, then عوارض (الطيرة, the oath, the sounds of animals). الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
 
 Each group has a Latin slug, such as `/sabah-masaa/#al-hifz`, in `GROUP_SLUGS` (`src/lib/groups.ts`), or the build fails. A slug is lowercase words joined by hyphens, and never equals a dhikr's slug on the same page.
 

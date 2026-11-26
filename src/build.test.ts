@@ -902,7 +902,7 @@ describe('built site', () => {
     expect(facesOf(pages['ahwal']!)).toEqual([...ui, naskh]);
     expect(facesOf(pages['nawm']!)).toEqual([...ui, naskh, quran]);
     expect(facesOf(own('nawm/ayat-al-kursi'))).toEqual([...ui, quran]);
-    expect(facesOf(own('ahwal/al-karb'))).toEqual([...ui, naskh]);
+    expect(facesOf(own('karb/al-karb'))).toEqual([...ui, naskh]);
   });
 
   it('keeps short and long pages the same width where a scroll bar takes space', () => {

@@ -32,13 +32,18 @@ The rule gives these now. A new section changes them all.
 | Section       | Heading        | Color     | Hue  |
 | ------------- | -------------- | --------- | ---- |
 | `sabah-masaa` | الصباح والمساء | `#91593c` | 47°  |
-| `masjid`      | الأذان والمسجد  | `#1c748b` | 220° |
-| `fi-al-salah` | أثناء الصلاة    | `#86567f` | 332° |
-| `salah`       | بعد الصلاة      | `#487649` | 145° |
-| `nawm`        | عند النوم      | `#486a9a` | 257° |
-| `istiqaz`     | عند الاستيقاظ   | `#93535e` | 10°  |
-| `mutlaq`      | كل وقت         | `#1a796d` | 182° |
-| `ahwal`       | أحوال متفرقة   | `#6c5f95` | 295° |
+| `masjid`      | الأذان والمسجد  | `#1f748d` | 222° |
+| `fi-al-salah` | أثناء الصلاة    | `#89557a` | 338° |
+| `salah`       | بعد الصلاة      | `#3e7751` | 153° |
+| `nawm`        | عند النوم      | `#54679b` | 269° |
+| `istiqaz`     | عند الاستيقاظ   | `#945450` | 24°  |
+| `mutlaq`      | كل وقت         | `#0c787c` | 199° |
+| `bayt`        | البيت والطعام  | `#7b598b` | 315° |
+| `safar`       | الخروج والسفر  | `#88602c` | 70°  |
+| `karb`        | الكرب والمرض   | `#3b6e97` | 245° |
+| `janaiz`      | الجنائز        | `#915366` | 1°   |
+| `mawasim`     | المواسم والحج  | `#217967` | 176° |
+| `ahwal`       | أحوال متفرقة   | `#6a5f97` | 292° |
 | `tibb`        | الطب النبوي    | `#836328` | 80°  |
 
 «الطب النبوي» has the same lightness as the occasions, and chroma at the petals' hue (80°), the yellow the arc skips, so it sits apart from the adhkar and beside the mark.

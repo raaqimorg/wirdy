@@ -164,6 +164,51 @@ const comb: ReadonlyArray<Shape> = [
   lit('path', 'grow', { d: hexagon(CENTER, CENTER), ...egg() }),
 ];
 
+const house: ReadonlyArray<Shape> = [
+  dark('path', { d: 'M24 228V104L120 28L216 104V228Z', ...shade(0.16) }),
+  dark('rect', { x: 52, y: 124, width: 36, height: 36, rx: 2, ...shade(0.16) }),
+  dark('rect', { x: 152, y: 124, width: 36, height: 36, rx: 2, ...shade(0.16) }),
+  lit('path', 'up', { d: 'M100 228V180A20 20 0 0 1 140 180V228Z', ...egg() }),
+];
+
+const way: ReadonlyArray<Shape> = [
+  dark('path', {
+    d: 'M16 224C96 224 40 120 120 120S144 32 208 32',
+    ...line(PALETTE.shade, 20, 0.2),
+    'stroke-linecap': 'round',
+  }),
+  ...times(3, (index) =>
+    dark('circle', { cx: 56 + index * 52, cy: 196 - index * 64, r: 6, ...shade(0.24) })
+  ),
+  lit('circle', 'grow', { cx: 208, cy: 32, r: 18, ...egg() }),
+];
+
+const relief: ReadonlyArray<Shape> = [
+  dark('rect', { x: 20, y: 20, width: 92, height: 200, rx: 4, ...shade(0.2) }),
+  dark('rect', { x: 128, y: 20, width: 92, height: 200, rx: 4, ...shade(0.2) }),
+  lit('path', 'grow', { d: 'M112 20H128L123 220H117Z', ...egg() }),
+];
+
+const earth: ReadonlyArray<Shape> = [
+  ...times(4, (index) =>
+    dark('rect', {
+      x: 0,
+      y: 96 + index * 36,
+      width: 240,
+      height: 36,
+      ...shade(0.08 + index * 0.06),
+    })
+  ),
+  lit('rect', 'fade', { x: 64, y: 176, width: 112, height: 16, rx: 8, ...egg() }),
+];
+
+const rounds: ReadonlyArray<Shape> = [
+  ...times(3, (index) =>
+    dark('circle', { cx: CENTER, cy: CENTER, r: 108 - index * 24, ...line(PALETTE.shade, 12, 0.2) })
+  ),
+  lit('rect', 'turn', { x: 96, y: 96, width: 48, height: 48, rx: 2, ...egg() }),
+];
+
 export type EmblemName = Occasion | 'tibb';
 
 export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
@@ -174,6 +219,11 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   nawm: sky,
   istiqaz: light,
   mutlaq: unbroken,
+  bayt: house,
+  safar: way,
+  karb: relief,
+  janaiz: earth,
+  mawasim: rounds,
   ahwal: roads,
   tibb: comb,
 };

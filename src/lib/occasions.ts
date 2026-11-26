@@ -21,6 +21,11 @@ const SECTIONS = {
     title: 'أذكار الاستيقاظ',
   },
   mutlaq: { heading: 'كل وقت', title: 'أذكار كل وقت' },
+  bayt: { heading: 'البيت والطعام', title: 'أذكار البيت والطعام' },
+  safar: { heading: 'الخروج والسفر', title: 'أذكار الخروج والسفر' },
+  karb: { heading: 'الكرب والمرض', title: 'أذكار الكرب والمرض' },
+  janaiz: { heading: 'الجنائز', title: 'أذكار الجنائز' },
+  mawasim: { heading: 'المواسم والحج', title: 'أذكار المواسم والحج' },
   ahwal: { heading: 'أحوال متفرقة', title: 'أذكار الأحوال' },
 } as const;
 

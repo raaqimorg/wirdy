@@ -1,6 +1,6 @@
 # Wirdy Agent Guidelines
 
-[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of eight occasions, a page per occasion, a page per dhikr, and a page of الطب النبوي with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device.
+[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of thirteen occasions, a page per occasion, a page per dhikr, and a page of الطب النبوي with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device.
 
 ## Layout
 

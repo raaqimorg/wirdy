@@ -1,0 +1,17 @@
+---
+title: "مطرنا بفضل الله ورحمته"
+occasion: "ahwal"
+order: 6
+count: 1
+mode: "both"
+quran: false
+when: "بعد نزول المطر"
+group: "الهلال والريح والمطر"
+fadl: "فذلك مؤمن بي وكافر بالكوكب"
+takhrij:
+  grader: "البخاري"
+  source: "صحيح البخاري ٨٤٦"
+  ruling: "صحيح"
+  url: "https://dorar.net/h/Ggb0KKd4"
+---
+مُطِرْنَا بِفَضْلِ اللَّهِ وَرَحْمَتِهِ
