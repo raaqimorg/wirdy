@@ -1,5 +1,5 @@
 import { Array, Data, Effect, Option, Redacted, Schedule, Schema } from 'effect';
-import type { PathVisits, Window } from './report.ts';
+import type { Window } from './report.ts';
 
 export class AnalyticsFailed extends Data.TaggedError('AnalyticsFailed')<{
   readonly message: string;
@@ -8,7 +8,6 @@ export class AnalyticsFailed extends Data.TaggedError('AnalyticsFailed')<{
 export type Analytics = { readonly token: Redacted.Redacted; readonly zone: string };
 
 const ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql';
-const PAGE = 10_000;
 
 const filterOf = (window: Window) =>
   `{ datetime_geq: "${window.from.toISOString()}", datetime_lt: "${window.to.toISOString()}", requestSource: "eyeball" }`;
@@ -27,15 +26,8 @@ export function totalsQueryOf(windows: ReadonlyArray<Window>): string {
   );
 }
 
-export function pathsQueryOf(window: Window): string {
-  return queryOf(
-    `paths: httpRequestsAdaptiveGroups(limit: ${String(PAGE)}, orderBy: [sum_visits_DESC], filter: ${filterOf(window)}) { sum { visits } dimensions { clientRequestPath } }`
-  );
-}
-
 const groupSchema = Schema.Struct({
   sum: Schema.Struct({ visits: Schema.Number }),
-  dimensions: Schema.optionalKey(Schema.Struct({ clientRequestPath: Schema.String })),
 });
 
 type Group = typeof groupSchema.Type;
@@ -86,16 +78,6 @@ export const decodeTotals = (json: unknown, count: number) =>
     );
   });
 
-export const decodePaths = (json: unknown) =>
-  Effect.gen(function* () {
-    const groups = yield* groupsOf(yield* zoneOf(json), 'paths');
-    return groups.flatMap((group): ReadonlyArray<PathVisits> =>
-      group.sum.visits > 0 && group.dimensions !== undefined
-        ? [{ path: group.dimensions.clientRequestPath, visits: group.sum.visits }]
-        : []
-    );
-  });
-
 const post = (analytics: Analytics, query: string) =>
   Effect.gen(function* () {
     const reason = (cause: unknown) =>
@@ -124,6 +106,3 @@ export const visitsOf = (analytics: Analytics, windows: ReadonlyArray<Window>) =
   Effect.flatMap(post(analytics, totalsQueryOf(windows)), (json) =>
     decodeTotals(json, windows.length)
   );
-
-export const pathVisitsOf = (analytics: Analytics, window: Window) =>
-  Effect.flatMap(post(analytics, pathsQueryOf(window)), decodePaths);

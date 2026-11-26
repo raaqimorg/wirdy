@@ -39,7 +39,12 @@ export const sendMessage = (chat: Chat, text: string, silent: boolean) =>
         fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ chat_id: chat.id, text, disable_notification: silent }),
+          body: JSON.stringify({
+            chat_id: chat.id,
+            text,
+            parse_mode: 'HTML',
+            disable_notification: silent,
+          }),
           signal: AbortSignal.timeout(30_000),
         }),
       catch: reason,

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { Effect } from 'effect';
-import { decodePaths, decodeTotals, pathsQueryOf, totalsQueryOf } from './cloudflare.ts';
+import { decodeTotals, totalsQueryOf } from './cloudflare.ts';
 
 const failureOf = <A>(effect: Effect.Effect<A, Error>): Promise<string> =>
   Effect.runPromise(Effect.map(Effect.flip(effect), (error) => error.message));
@@ -35,14 +35,6 @@ describe('totalsQueryOf', () => {
   });
 });
 
-describe('pathsQueryOf', () => {
-  test('groups the visits of a window by path, most first', () => {
-    expect(pathsQueryOf(day)).toContain(
-      'paths: httpRequestsAdaptiveGroups(limit: 10000, orderBy: [sum_visits_DESC], filter: { datetime_geq: "2026-11-25T21:00:00.000Z", datetime_lt: "2026-11-26T11:00:00.000Z", requestSource: "eyeball" }) { sum { visits } dimensions { clientRequestPath } }'
-    );
-  });
-});
-
 describe('decodeTotals', () => {
   test('reads the visits of each window, and an empty one as 0', async () => {
     expect(await Effect.runPromise(decodeTotals(await fixture('totals'), 3))).toEqual([18, 342, 0]);
@@ -61,22 +53,6 @@ describe('decodeTotals', () => {
   test('fails on an answer of another shape', async () => {
     expect(await failureOf(decodeTotals({ data: { viewer: { zones: [] } } }, 1))).toContain(
       'cloudflare'
-    );
-  });
-});
-
-describe('decodePaths', () => {
-  test('reads each path with visits, and drops those with none', async () => {
-    expect(await Effect.runPromise(decodePaths(await fixture('paths')))).toEqual([
-      { path: '/', visits: 40 },
-      { path: '/sabah-masaa/', visits: 12 },
-      { path: '/nawm/', visits: 3 },
-    ]);
-  });
-
-  test('fails with the message Cloudflare gives', async () => {
-    expect(await failureOf(decodePaths(await fixture('errors')))).toContain(
-      'unknown arg visits_gt'
     );
   });
 });

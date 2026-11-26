@@ -57,10 +57,7 @@ export function resultsLabel(n: number): string {
   return `${toArabicDigits(n)} نتيجة`;
 }
 
-export function visitsLabel(n: number): string {
-  if (n === 0) return 'لا زيارات';
-  if (n === 1) return 'زيارة واحدة';
+export function visitsUnit(n: number): string {
   if (n === 2) return 'زيارتان';
-  if (isFew(n % 100)) return `${toArabicDigits(n)} زيارات`;
-  return `${toArabicDigits(n)} زيارة`;
+  return isFew(n % 100) ? 'زيارات' : 'زيارة';
 }

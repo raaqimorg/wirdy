@@ -155,4 +155,4 @@ The home page, the sections its cards open, and search open at once, and with no
 - The ordinary way is a web analytics script in each page. It would make a third-party request and track readers, which `docs/branding/identity.md` refuses. Cloudflare counts the visits at its edge anyway, so the pages stay as they are.
 - A beacon to a Pages Function would add a script to every page and a server to a static site.
 - The job keeps no state. Each run asks Cloudflare again, so a run that GitHub drops or delays changes nothing after it. The hour reported is fixed by the clock, and a retry of a Telegram send never happens, so nothing is sent twice.
-- Every window is at most 28 days back. The free plan keeps 31.
+- Every window is at most one day back. The free plan keeps 31.

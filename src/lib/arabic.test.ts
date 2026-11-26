@@ -7,7 +7,7 @@ import {
   toArabicDigits,
   timesLabel,
   timesUnit,
-  visitsLabel,
+  visitsUnit,
 } from './arabic';
 
 describe('adhkarLabel', () => {
@@ -109,18 +109,17 @@ describe('resultsLabel', () => {
   });
 });
 
-describe('visitsLabel', () => {
+describe('visitsUnit', () => {
   it('counts visits as Arabic counts them', () => {
-    expect(visitsLabel(0)).toBe('لا زيارات');
-    expect(visitsLabel(1)).toBe('زيارة واحدة');
-    expect(visitsLabel(2)).toBe('زيارتان');
-    expect(visitsLabel(7)).toBe('٧ زيارات');
-    expect(visitsLabel(11)).toBe('١١ زيارة');
-    expect(visitsLabel(342)).toBe('٣٤٢ زيارة');
+    expect(visitsUnit(1)).toBe('زيارة');
+    expect(visitsUnit(2)).toBe('زيارتان');
+    expect(visitsUnit(7)).toBe('زيارات');
+    expect(visitsUnit(11)).toBe('زيارة');
+    expect(visitsUnit(342)).toBe('زيارة');
   });
 
   it('uses the plural when the last two digits are three to ten', () => {
-    expect(visitsLabel(103)).toBe('١٠٣ زيارات');
-    expect(visitsLabel(1210)).toBe('١٢١٠ زيارات');
+    expect(visitsUnit(103)).toBe('زيارات');
+    expect(visitsUnit(1210)).toBe('زيارات');
   });
 });
