@@ -28,21 +28,25 @@ const long = title.length > 24;
 >
   <div class="banner__inner container">
     <div class="banner__words">
-      <p class="banner__kicker">
-        {up ? (
+      {up ? (
+        <nav class="banner__kicker" aria-label="مسار الصفحة">
           <a class="banner__up" href={up.href}>
             <Icon name="back" />
             <span class="banner__up-label">{up.label}</span>
           </a>
-        ) : eveningKicker ? (
-          <Fragment>
-            <span class="variant-text variant-text--sabah">{kicker}</span>
-            <span class="variant-text variant-text--masaa">{eveningKicker}</span>
-          </Fragment>
-        ) : (
-          kicker
-        )}
-      </p>
+        </nav>
+      ) : (
+        <p class="banner__kicker">
+          {eveningKicker ? (
+            <Fragment>
+              <span class="variant-text variant-text--sabah">{kicker}</span>
+              <span class="variant-text variant-text--masaa">{eveningKicker}</span>
+            </Fragment>
+          ) : (
+            kicker
+          )}
+        </p>
+      )}
       <h1 class="banner__title">
         {evening ? (
           <Fragment>

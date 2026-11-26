@@ -125,11 +125,14 @@ describe('built site', () => {
       { id: 'ma-lam-yathbut', color: UNPROVEN.color },
     ]) {
       expect(own(id)).toMatch(
-        new RegExp(`<body class="tone" style="--tone: ${color}"> ?<div class="page">`, 'u')
+        new RegExp(
+          `<body class="tone" style="--tone: ${color}"> ?<a class="skip-link"[^<]*</a> ?<div class="page">`,
+          'u'
+        )
       );
     }
     expect(own('nawm/ayat-al-kursi')).toMatch(
-      /<body class="tone" style="--tone: #[0-9a-f]{6}"> ?<div class="page">/u
+      /<body class="tone" style="--tone: #[0-9a-f]{6}"> ?<a class="skip-link"[^<]*<\/a> ?<div class="page">/u
     );
     for (const page of [html, notFound]) {
       expect(page).toContain('<body>');
@@ -726,6 +729,24 @@ describe('built site', () => {
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
     expect(images.size).toBe(expected);
+  });
+
+  it('leads from the top of every page past the bar to its content', () => {
+    const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    for (const file of files) {
+      const page = readFileSync(join(DIST, file), 'utf8');
+      const body = page.slice(page.indexOf('<body'));
+      expect(body.indexOf('<a class="skip-link" href="#main">')).toBe(body.indexOf('<a '));
+      expect(page.match(/<main [^>]*id="main"/gu)).toHaveLength(1);
+    }
+  });
+
+  it('marks the way back from a dhikr as the trail of the page', () => {
+    expect(own('nawm/ayat-al-kursi')).toMatch(
+      /<nav class="banner__kicker" aria-label="مسار الصفحة">\s*<a class="banner__up"/u
+    );
   });
 
   it('shows the context of a dhikr under its name, and in parentheses in plain text', () => {

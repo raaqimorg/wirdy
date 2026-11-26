@@ -67,20 +67,22 @@ To add an occasion, put it in its place in `src/lib/occasions.ts`. Every color f
 
 ## Components
 
-| Component                                                                                                            | What it is                                                                         |
-| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `Icon`, `Mark`, `Emblem`                                                                                             | Drawings. Their shapes are in `src/lib/`                                           |
-| `Button`, `Badge`, `BeadRing`                                                                                        | Small parts. A button without `href` is a `<button>`                               |
-| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                               | Controls and links with one job                                                    |
-| `Entry`                                                                                                              | The card around a text: count, lead, text, notes, and foot                         |
-| `Dhikr`, `Unproven`                                                                                                  | What fills an `Entry`                                                              |
-| `Surah`, `Phrase`, `VariantText`                                                                                     | The text inside an `Entry`                                                         |
-| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                        | How entries sit on a page                                                          |
-| `OccasionCard`, `CardGrid`, `Related`                                                                                | The occasion cards                                                                 |
-| `Search`, `SearchField`, `SearchHead`, `SearchRow`, `SearchSheet`                                                    | Search: the field, the results under each section head, the empty state, the sheet |
-| `Bar`, `SectionMenu`, `Banner`, `Hero`, `PageTools`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                |
+| Component                                                                                                                        | What it is                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `Icon`, `Mark`, `Emblem`                                                                                                         | Drawings. Their shapes are in `src/lib/`                                           |
+| `Button`, `Badge`, `BeadRing`                                                                                                    | Small parts. A button without `href` is a `<button>`                               |
+| `ThemeToggle`, `WirdSwitch`, `Takhrij`                                                                                           | Controls and links with one job                                                    |
+| `Entry`                                                                                                                          | The card around a text: count, lead, text, notes, and foot                         |
+| `Dhikr`, `Unproven`                                                                                                              | What fills an `Entry`                                                              |
+| `Surah`, `Phrase`, `VariantText`                                                                                                 | The text inside an `Entry`                                                         |
+| `EntryList`, `Group`, `GroupIndex`, `Choices`                                                                                    | How entries sit on a page                                                          |
+| `OccasionCard`, `CardGrid`, `Related`                                                                                            | The occasion cards                                                                 |
+| `Search`, `SearchField`, `SearchHead`, `SearchRow`, `SearchSheet`                                                                | Search: the field, the results under each section head, the empty state, the sheet |
+| `SkipLink`, `Bar`, `SectionMenu`, `Banner`, `Hero`, `PageTools`, `DhikrActions` (share, copy, image), `Neighbours`, `SiteFooter` | The parts of a page                                                                |
 
 The foot of an `Entry` is a list of labelled rows, in one order on every card: «الفضل» when the hadith states a virtue, «تنبيه» on «ما لم يثبت» when a note names what is sound, «التخريج», and «النص» (موقع تنزيل) under every قرآن. The labels share one column, so values line up across cards. Below the rows, «نسخ» and «صفحة الذكر» sit at the two ends of their own line. On a wide screen the foot is the card's side column, with the buttons at its bottom.
+
+Every page opens with «تخطَّ إلى المحتوى» (`SkipLink`), a link to `#main` that shows only while it has the focus, so a keyboard skips the bar. Every link and button shows the focus ring.
 
 One bar, with the same places on every page and width: the sunflower and «وِردي» lead home at the start, and the section and search icons sit at the end. The home page drops the sections, because it shows them. The bar is solid: the paper, or the section's color, with the mark and icons in eggshell. The section menu does not dim the page.
 

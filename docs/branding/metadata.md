@@ -16,6 +16,8 @@ What each page tells search engines and link previews: the title, the descriptio
 
 The dhikr title is its `title` with its `context` in brackets (`fullTitle` in `src/lib/title.ts`).
 
+On a dhikr page, the line over the title is the way back to its place in its section, in a `<nav>` named «مسار الصفحة». It is the visible trail: the bar's mark leads home, and the title is the page itself, so the name shows once.
+
 ## The head of every page
 
 - `<html lang="ar" dir="rtl">`.
