@@ -67,18 +67,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.search-field__clear-face {
-  --icon-size: var(--size-icon);
-
-  display: grid;
-  place-items: center;
-  width: var(--space-5);
-  height: var(--space-5);
-  color: var(--color-panel);
-  background: var(--color-ink-faint);
-  border-radius: var(--radius-round);
-}
-
 .search-field__key {
   display: none;
 }
@@ -157,10 +145,5 @@
 
   .search-field__box:has(.search-field__input:not(:placeholder-shown)) .search-field__key {
     display: none;
-  }
-
-  .search-field--bar .search-field__clear-face {
-    color: var(--color-ink-muted);
-    background: var(--color-line-soft);
   }
 }

@@ -13,15 +13,15 @@ The name, its meaning, the words that present the site, and its voice. Read it b
 
 `src/lib/site.ts` holds these. `src/lib/branding.test.ts` checks each against the code.
 
-| Key           | Value                                                                                                                                                          | Where it shows                                                        |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `name`        | وِردي                                                                                                                                                           | The bar, the end of every title, the sharing cards, the touch icon    |
-| `url`         | https://wirdy.site                                                                                                                                             | `astro.config.ts`, every absolute URL                                 |
-| `domain`      | wirdy.site                                                                                                                                                     | The sharing cards                                                     |
-| `tagline`     | أذكار اليوم والليلة                                                                                                                                            | The title of the home page                                            |
-| `promise`     | أذكار اليوم والليلة، مما ثبت عن النبي ﷺ، ومع كل ذكر تخريجُه                                                                                                     | The large line of the home page, and the home sharing card            |
-| `title`       | وِردي: أذكار الصباح والمساء والنوم وأدبار الصلوات                                                                                                               | The installed app (`name` in the manifest), and the site in JSON-LD   |
-| `description` | أذكار الصباح والمساء، والأذان والمسجد، والصلاة وأدبارها، والنوم والاستيقاظ، والأحوال، مما ثبت عن النبي ﷺ، بالتشكيل، وتحت كل ذكر تخريجه من الدرر السنية. بلا إعلانات. | The home page, the search page, the manifest, and the site in JSON-LD |
+| Key           | Value                                                                    | Where it shows                                                        |
+| ------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| `name`        | وِردي                                                                     | The bar, the end of every title, the sharing cards, the touch icon    |
+| `url`         | https://wirdy.site                                                       | `astro.config.ts`, every absolute URL                                 |
+| `domain`      | wirdy.site                                                               | The sharing cards                                                     |
+| `tagline`     | أذكار اليوم والليلة                                                      | The title of the home page, and the home sharing card                 |
+| `promise`     | أذكار اليوم والليلة، مما ثبت عن النبي ﷺ، ومع كل ذكر تخريجُه               | The large line of the home page                                       |
+| `title`       | وِردي: أذكار الصباح والمساء والنوم وأدبار الصلوات                         | The installed app (`name` in the manifest), and the site in JSON-LD   |
+| `description` | أذكار الصباح والمساء والنوم والصلاة، مما ثبت عن النبي ﷺ، مع تخريج كل ذكر. | The home page, the search page, the manifest, and the site in JSON-LD |
 
 The `title` and `description` name the most searched occasions, in the searchers' words. The `tagline` and `promise` say what the site is in the fewest words.
 

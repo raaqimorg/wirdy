@@ -34,25 +34,17 @@ html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
 body{font-family:"Plex",sans-serif;padding:${MARGIN}px}
 .domain{margin-inline-start:auto;direction:ltr;font-size:54px;translate:0 -4px}`;
 
-const tiles = OCCASIONS.map(
-  ({ id, color }) => `<div class="tile" style="background:${color}">${emblemSvg(id)}</div>`
-).join('');
-
 const home = `${head}
-body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-direction:column}
-.brand{display:flex;align-items:center;gap:44px}
-.brand svg{width:208px;height:208px}
-.name{font-size:200px;font-weight:700;line-height:1.1;translate:0 -61px}
-.hero{margin-top:56px;font-size:84px;line-height:1.5;white-space:nowrap}
-.salla{font-family:"Amiri",serif}
-.tiles{margin-top:auto;display:grid;grid-template-columns:repeat(${OCCASIONS.length},1fr);gap:36px}
-.tile{aspect-ratio:1;border-radius:26px;display:grid;place-items:center;padding:44px}
-.tile svg{height:100%}
-.domain{color:${PALETTE.inkMuted}}
+body{background:${PALETTE.paper};color:${PALETTE.ink};display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.brand{display:flex;align-items:center;gap:56px}
+.brand svg{width:240px;height:240px}
+.name{font-size:240px;font-weight:700;line-height:1;translate:0 -60px}
+.tagline{margin-top:40px;font-size:96px;font-weight:500}
+.domain{position:absolute;bottom:${MARGIN}px;margin:0;color:${PALETTE.inkMuted}}
 </style></head><body>
-<div class="brand">${markSvg()}<span class="name">${SITE.name}</span><span class="domain">${SITE.domain}</span></div>
-<p class="hero">${SITE.promise.before}&nbsp;<span class="salla">ﷺ</span>${SITE.promise.after}</p>
-<div class="tiles">${tiles}</div>
+<div class="brand">${markSvg()}<span class="name">${SITE.name}</span></div>
+<p class="tagline">${SITE.tagline}</p>
+<span class="domain">${SITE.domain}</span>
 </body></html>`;
 
 const occasion = ({ id, title, color }: Section, count: number) => `${head}

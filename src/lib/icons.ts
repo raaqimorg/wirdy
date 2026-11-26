@@ -2,8 +2,8 @@ export type IconName =
   | 'back'
   | 'check'
   | 'chevron'
-  | 'close'
   | 'copy'
+  | 'erase'
   | 'open'
   | 'out'
   | 'save'
@@ -21,7 +21,11 @@ export const ICONS: Readonly<Record<IconName, Icon>> = {
   back: { size: 12, stroke: 1.6, paths: ['M4.5 2.5L8 6l-3.5 3.5'] },
   chevron: { size: 12, stroke: 1.6, paths: ['M2.5 4.5L6 8l3.5-3.5'] },
   check: { size: 12, stroke: 1.6, paths: ['M2 6.5l2.5 2.5L10 3'] },
-  close: { size: 12, stroke: 1.6, paths: ['M3 3l6 6M9 3L3 9'] },
+  erase: {
+    size: 24,
+    stroke: 2.2,
+    paths: ['M14 4l6 6-9 9-6-6z', 'M8.5 9.5l6 6', 'M13 20h7'],
+  },
   search: {
     size: 24,
     stroke: 2.2,

@@ -23,9 +23,7 @@ const { variant = 'page' } = Astro.props;
       data-search-input
     />
     <button class="search-field__clear" type="button" aria-label="مسح" hidden data-search-clear>
-      <span class="search-field__clear-face">
-        <Icon name="close" />
-      </span>
+      <Icon name="erase" />
     </button>
     {variant === 'bar' && (
       <kbd class="search-field__key" aria-hidden="true">
