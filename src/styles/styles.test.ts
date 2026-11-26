@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { OCCASIONS } from '../lib/occasions';
 import { PALETTE } from '../lib/palette';
 import { NIGHT } from '../lib/tone';
 
@@ -64,11 +63,6 @@ describe('the tokens', () => {
   it('darken the tones at night by the same share as the tone rule', () => {
     expect(light).toContain('--tone-shade: 0%;');
     expect(dark.chosen).toContain(`--tone-shade: ${Math.round((1 - NIGHT) * 100)}%;`);
-  });
-
-  it('mark what is sound in the color of the adhkar after the prayers', () => {
-    const { color } = OCCASIONS.find(({ id }) => id === 'salah')!;
-    expect(light).toContain(`--color-sound: color-mix(in oklab, ${color},`);
   });
 });
 

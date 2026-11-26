@@ -1,11 +1,11 @@
 import { Console, Effect, FileSystem, Path } from 'effect';
 import { toArabicDigits } from '../../src/lib/arabic.ts';
-import { cardFile, cardOf, type Card } from '../../src/lib/card.ts';
+import { cardFile, cardOf, hadithCardOf, type Card } from '../../src/lib/card.ts';
+import type { EmblemName } from '../../src/lib/emblems.ts';
 import { markSvg } from '../../src/lib/mark.ts';
-import type { Occasion } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import type { Phrase } from '../../src/lib/phrases.ts';
-import { readAdhkar } from '../../src/lib/records.ts';
+import { readAdhkar, readTibb } from '../../src/lib/records.ts';
 import { SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
 import { run } from '../run.ts';
@@ -44,7 +44,7 @@ const leading = (card: Card) => {
 
 const page = (
   card: Card,
-  occasion: Occasion
+  occasion: EmblemName
 ) => `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
 ${plexArabic(500)}
 ${plexArabic(700)}
@@ -105,13 +105,21 @@ const program = Effect.gen(function* () {
   const path = yield* Path.Path;
   const publicDir = path.join(root, 'public');
 
-  const entries = yield* Effect.forEach(yield* readAdhkar, ({ id, data, body }) =>
+  const adhkar = yield* Effect.forEach(yield* readAdhkar, ({ id, data, body }) =>
     Effect.map(cardOf(data, body), (card) => ({
       card,
       occasion: data.occasion,
       file: cardFile(card, data.occasion, id.slice(data.occasion.length + 1)),
     }))
   );
+  const hadiths = (yield* readTibb).map(({ slug, data, body }) => {
+    const card = hadithCardOf(data, body);
+    return { card, occasion: 'tibb' as const, file: cardFile(card, 'tibb', slug) };
+  });
+  const entries: ReadonlyArray<{ card: Card; occasion: EmblemName; file: string }> = [
+    ...adhkar,
+    ...hadiths,
+  ];
 
   const wanted = new Set(entries.map(({ file }) => file));
   const ogDir = path.join(publicDir, 'og');

@@ -137,21 +137,6 @@ const roads: ReadonlyArray<Shape> = [
   }),
 ];
 
-const NARRATORS = [20, 86.7, 153.3, 220] as const;
-
-const disc = (x: number, y: number): string =>
-  `M${round(x - 20)} ${y}A20 20 0 0 1 ${round(x + 20)} ${y}A20 20 0 0 1 ${round(x - 20)} ${y}Z`;
-
-const chain = (y: number): string =>
-  [`M20 ${y - 4}H220V${y + 4}H20Z`, ...NARRATORS.map((x) => disc(x, y))].join('');
-
-const chains: ReadonlyArray<Shape> = [
-  ...[30, 90, 210].map((y) => dark('path', { d: chain(y), ...shade(0.22) })),
-  lit('rect', 'across', { x: 20, y: 146, width: 46, height: 8, ...egg() }),
-  lit('rect', 'across', { x: 153, y: 146, width: 67, height: 8, ...egg() }),
-  ...[20, 153.3, 220].map((cx) => lit('circle', 'grow', { cx, cy: 150, r: 20, ...egg() })),
-];
-
 const HEX = 30;
 const COMB_STEP = HEX * Math.sqrt(3);
 
@@ -179,7 +164,7 @@ const comb: ReadonlyArray<Shape> = [
   lit('path', 'grow', { d: hexagon(CENTER, CENTER), ...egg() }),
 ];
 
-export type EmblemName = Occasion | 'tibb' | 'unproven';
+export type EmblemName = Occasion | 'tibb';
 
 export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   'sabah-masaa': halves,
@@ -191,5 +176,4 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   mutlaq: unbroken,
   ahwal: roads,
   tibb: comb,
-  unproven: chains,
 };

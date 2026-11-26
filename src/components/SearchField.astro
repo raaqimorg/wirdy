@@ -27,6 +27,11 @@ const { variant = 'page' } = Astro.props;
         <Icon name="close" />
       </span>
     </button>
+    {variant === 'bar' && (
+      <kbd class="search-field__key" aria-hidden="true">
+        Esc
+      </kbd>
+    )}
   </label>
   {variant === 'bar' && (
     <button class="search-field__close" type="button" data-search-close>

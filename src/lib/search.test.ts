@@ -1,6 +1,15 @@
 import { Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { fold, match as matchOption, ranges, rowOf, windowOf } from './search';
+import {
+  fold,
+  markedOf,
+  match as matchOption,
+  nearestOf,
+  ranges,
+  rowOf,
+  windowOf,
+  wordsOf,
+} from './search';
 
 const words = 'رَضِيتُ بِاللَّهِ';
 
@@ -17,6 +26,21 @@ describe('fold', () => {
     expect(fold('\u0623\u0625\u0622\u0671\u0649\u0629\u0624\u0626').out).toBe(
       '\u0627\u0627\u0627\u0627\u064A\u0647\u0648\u064A'
     );
+  });
+
+  it('reads the Persian kaf and yeh as the Arabic letters', () => {
+    expect(fold('کرسی').out).toBe('كرسي');
+  });
+});
+
+describe('wordsOf', () => {
+  it('leaves out the words that only say a dhikr is wanted', () => {
+    expect(wordsOf('دعاء النوم')).toEqual(['النوم']);
+    expect(wordsOf('أذكار عند النوم')).toEqual(['النوم']);
+  });
+
+  it('keeps those words when they are all the query has', () => {
+    expect(wordsOf('دعاء')).toEqual(['دعاء']);
   });
 });
 
@@ -47,11 +71,52 @@ describe('match', () => {
     expect(match(rows, 'delta')!.hits).toEqual([2]);
   });
 
+  it('finds a dhikr by the moment it is said, after the words and the place', () => {
+    const said = [
+      rowOf({ title: 'افتح', words: 'اللهم افتح لي', about: 'إذا دخل المسجد', place: 'masjid' }),
+    ];
+    expect(match(said, 'المسجد')!.hits).toEqual([0]);
+  });
+
+  it('finds a word by another form of it from the list', () => {
+    const said = [rowOf({ title: 'افتح', words: '', about: 'إذا دخل المسجد', place: '' })];
+    expect(match(said, 'دخول المسجد')!.hits).toEqual([0]);
+  });
+
+  it('finds the same rows for a query with or without the word دعاء', () => {
+    const arabic = [rowOf({ title: 'النوم', words: 'باسمك', place: '' })];
+    expect(match(arabic, 'دعاء النوم')!.hits).toEqual(match(arabic, 'النوم')!.hits);
+  });
+
   it('folds the query as it folds the rows', () => {
     const arabic = [rowOf({ title: words, words: '', place: '' })];
     expect(match(arabic, 'رَضِيتُ')!.hits).toEqual([0]);
     expect(match(arabic, 'رضيت')!.hits).toEqual([0]);
     expect(match(arabic, 'بالله')!.hits).toEqual([0]);
+  });
+});
+
+describe('nearestOf', () => {
+  const rows = [
+    rowOf({ title: 'افتح', words: 'اللهم افتح لي', place: 'المسجد' }),
+    rowOf({ title: 'السوق', words: 'من دخل السوق', place: '' }),
+  ];
+
+  it('falls back to the longest word that finds something', () => {
+    expect(Option.getOrNull(nearestOf(rows, 'نسيت المسجد'))).toEqual({
+      word: 'المسجد',
+      match: { words: ['المسجد'], hits: [0] },
+    });
+  });
+
+  it('has nothing to offer for a single word', () => {
+    expect(Option.isNone(nearestOf(rows, 'المسجد'))).toBe(true);
+  });
+});
+
+describe('markedOf', () => {
+  it('marks the other forms of a word too', () => {
+    expect(markedOf(['دخول'])).toEqual(['دخول', 'دخل']);
   });
 });
 

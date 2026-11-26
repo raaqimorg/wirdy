@@ -1,8 +1,10 @@
 ---
 import { Effect, Option } from 'effect';
+import Closing from '../components/Closing.astro';
 import Group from '../components/Group.astro';
 import GroupIndex from '../components/GroupIndex.astro';
 import PageTools from '../components/PageTools.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
 import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
 import Section from '../layouts/Section.astro';
@@ -15,7 +17,7 @@ export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
 }
 
-const { id, heading, title, color, lede } = Astro.props.occasion;
+const { id, heading, title, color } = Astro.props.occasion;
 const entries = await Effect.runPromise(adhkarOf(id));
 const runs = runsByGroup(entries);
 const groups = runs.flatMap(({ group }) => Option.toArray(group));
@@ -41,9 +43,9 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
   heading={heading}
   kicker={hasVariants ? labelAt('sabah') : label}
   eveningKicker={hasVariants ? labelAt('masaa') : undefined}
-  lede={lede}
   turns={hasVariants}
 >
+  <ReadingProgress />
   <PageTools>
     {hasVariants && <WirdSwitch />}
     {hasIndex && <GroupIndex groups={groups} />}
@@ -51,5 +53,6 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
   {runs.map(({ group, items }) => (
     <Group title={Option.getOrUndefined(group)} entries={items} />
   ))}
+  <Closing text={hasVariants ? 'تمّت أذكار {{الصباح|المساء}}' : `تمّت ${title}`} />
   <Related slot="after" tiles={others} />
 </Section>

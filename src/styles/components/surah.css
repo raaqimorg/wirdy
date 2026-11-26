@@ -38,9 +38,6 @@
 }
 
 .surah__more {
-  position: sticky;
-  top: calc(env(safe-area-inset-top) + var(--size-touch));
-  z-index: var(--layer-raised);
   display: flex;
   align-items: center;
   justify-content: center;

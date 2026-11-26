@@ -48,8 +48,8 @@ const description = [card.lead, count, data.fadl, card.takhrij]
   .filter((part) => part !== undefined && part !== null && part !== '')
   .join('. ');
 const links = [
-  { label: 'التالي', entry: next },
   { label: 'السابق', entry: previous },
+  { label: 'التالي', entry: next },
 ].flatMap(({ label, entry: neighbour }) =>
   neighbour === undefined
     ? []

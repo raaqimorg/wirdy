@@ -1,5 +1,8 @@
 .theme-toggle {
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch);
+  padding: 0 var(--space-2);
   color: inherit;
   font-family: var(--font-ui);
   font-size: var(--text-small);
@@ -12,6 +15,6 @@
 
 @media (hover: hover) {
   .theme-toggle:hover {
-    color: var(--color-ink-muted);
+    color: var(--color-ink);
   }
 }

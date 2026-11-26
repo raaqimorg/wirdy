@@ -216,6 +216,19 @@ const structuredData = {
           announce();
         });
 
+        const resetting = new WeakMap();
+        function copied(button, words) {
+          say(button, words);
+          const { dataset } = button;
+          dataset.copied = 'yes';
+          clearTimeout(resetting.get(button));
+          resetting.set(
+            button,
+            setTimeout(function () {
+              dataset.copied = 'no';
+            }, 1200)
+          );
+        }
         function say(from, words) {
           const said = from.parentElement.querySelector('[data-status]');
           said.textContent = words;
@@ -239,7 +252,7 @@ const structuredData = {
               : Promise.reject(new Error('no clipboard'));
             done.then(
               function () {
-                return say(copy, 'نُسخ الذكر');
+                return copied(copy, 'نُسخ الذكر');
               },
               function () {
                 say(copy, 'تعذّر النسخ');
@@ -256,7 +269,7 @@ const structuredData = {
             event.preventDefault();
             navigator.clipboard.writeText(url).then(
               function () {
-                return say(share, 'نُسخ الرابط');
+                return copied(share, 'نُسخ الرابط');
               },
               function () {
                 location.href = url;

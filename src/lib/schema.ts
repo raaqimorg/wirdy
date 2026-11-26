@@ -47,20 +47,6 @@ export type Dhikr = typeof dhikrSchema.Type;
 export type Mode = Dhikr['mode'];
 export type Takhrij = Dhikr['takhrij'];
 
-export const unprovenSchema = Schema.Struct({
-  order: positive,
-  what: text,
-  takhrij: Schema.Struct({
-    grader: Schema.Literal('الألباني'),
-    source: text,
-    ruling: text,
-    url: dorarUrl,
-  }),
-  sound: Schema.optionalKey(text),
-});
-
-export type Unproven = typeof unprovenSchema.Type;
-
 const SOURCE =
   /^https:\/\/(dorar\.net\/(hadith\/sharh|h)\/[A-Za-z0-9]+|sunnah\.com\/[a-z]+:[0-9]+[a-z]?|shamela\.ws\/book\/[0-9]+\/[0-9]+|usul\.ai\/t\/[a-z0-9-]+\/[0-9]+)$/u;
 
@@ -88,3 +74,5 @@ export const tibbSchema = Schema.Struct({
 export type Tibb = typeof tibbSchema.Type;
 
 export const decodeDhikr = Schema.decodeUnknownEffect(dhikrSchema, STRICT);
+
+export const decodeTibb = Schema.decodeUnknownEffect(tibbSchema, STRICT);

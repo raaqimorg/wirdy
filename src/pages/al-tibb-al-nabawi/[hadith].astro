@@ -1,0 +1,65 @@
+---
+import { Effect } from 'effect';
+import DhikrActions from '../../components/DhikrActions.astro';
+import EntryList from '../../components/EntryList.astro';
+import Hadith from '../../components/Hadith.astro';
+import Neighbours from '../../components/Neighbours.astro';
+import Section from '../../layouts/Section.astro';
+import { cardFile, hadithCardOf } from '../../lib/card';
+import { tibbEntries } from '../../lib/collection';
+import { hadithCopyOf } from '../../lib/copy';
+import { hadithAnchor, hadithPath, slugOf } from '../../lib/permalink';
+import { TIBB } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const list = await Effect.runPromise(tibbEntries);
+  return list.map((entry, index) => ({
+    params: { hadith: slugOf(entry.id) },
+    props: { entry, previous: list[index - 1], next: list[index + 1] },
+  }));
+}
+
+const { entry, previous, next } = Astro.props;
+const { data, body = '' } = entry;
+const slug = slugOf(entry.id);
+const path = hadithPath(slug);
+const card = hadithCardOf(data, body);
+const image = `/${cardFile(card, 'tibb', slug)}`;
+const description = [data.title, card.lead, card.takhrij].join('. ');
+const links = [
+  { label: 'السابق', entry: previous },
+  { label: 'التالي', entry: next },
+].flatMap(({ label, entry: neighbour }) =>
+  neighbour === undefined
+    ? []
+    : [{ label, title: neighbour.data.title, href: hadithPath(slugOf(neighbour.id)) }]
+);
+---
+
+<Section
+  title={`${data.title} | ${TIBB.title}`}
+  description={description}
+  image={image}
+  faces={['naskh']}
+  crumbs={[
+    { name: TIBB.title, path: TIBB.path },
+    { name: data.title, path },
+  ]}
+  emblem="tibb"
+  color={TIBB.color}
+  heading={data.title}
+  lede={data.group}
+  up={{ href: hadithAnchor(slug), label: TIBB.heading }}
+>
+  <EntryList variant="single">
+    <Hadith data={data} body={body} slug={slug} single />
+  </EntryList>
+  <DhikrActions
+    href={path}
+    title={data.title}
+    image={image}
+    file={`wirdy-${slug}.png`}
+    copy={hadithCopyOf(data, body)}
+  />
+  <Neighbours links={links} />
+</Section>

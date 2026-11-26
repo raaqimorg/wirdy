@@ -80,9 +80,3 @@ describe('the emblem of the adhkar inside the prayer', () => {
     expect(lit('fi-al-salah')).toEqual([EMBLEMS['fi-al-salah'].at(-1)]);
   });
 });
-
-describe('the emblem of «ما لم يثبت»', () => {
-  it('misses one narrator from the lit chain', () => {
-    expect(lit('unproven').filter(({ tag }) => tag === 'circle')).toHaveLength(3);
-  });
-});

@@ -15,17 +15,22 @@
 .site-footer__tools {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: var(--space-1-5);
-  color: var(--color-ink-faint);
+  color: var(--color-ink-muted);
   font-size: var(--text-small);
 }
 
 .site-footer__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch);
+  padding-inline: var(--space-2);
   text-decoration: none;
 }
 
 @media (hover: hover) {
   .site-footer__link:hover {
-    color: var(--color-ink-muted);
+    color: var(--color-ink);
   }
 }

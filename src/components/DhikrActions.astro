@@ -16,13 +16,15 @@ const { href, title, image, file, copy } = Astro.props;
 ---
 
 <p class="dhikr-actions">
-  <span class="dhikr-actions__status" role="status" data-status></span>
+  <span class="visually-hidden" role="status" data-status></span>
   <Button href={href} variant="primary" data-share-title={title}>
-    <Icon name="share" />
+    <Icon name="share" class="icon--idle" />
+    <Icon name="check" class="icon--done" />
     مشاركة
   </Button>
   <Button data-copy={copy.sabah} data-copy-masaa={Option.getOrUndefined(copy.masaa)}>
-    <Icon name="copy" />
+    <Icon name="copy" class="icon--idle" />
+    <Icon name="check" class="icon--done" />
     نسخ
   </Button>
   <Button href={image} download={file}>

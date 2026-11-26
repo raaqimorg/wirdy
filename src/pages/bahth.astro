@@ -8,12 +8,7 @@ import { SITE } from '../lib/site';
 ---
 
 <Home title="البحث" description={SITE.description} noindex faces={['naskh']} search={false}>
-  <Banner
-    slot="top"
-    title="البحث"
-    kicker="كل الأذكار"
-    lede="اكتب كلمة من الذكر أو من اسمه، بلا تشكيل"
-  />
+  <Banner slot="top" title="البحث" kicker="كل الأذكار" lede="اكتب كلمة من الذكر أو من اسمه" />
   <Search
     tiles={await Effect.runPromise(sectionTiles)}
     rows={await Effect.runPromise(searchRows)}

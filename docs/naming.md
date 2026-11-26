@@ -7,7 +7,7 @@ This doc holds the names of folders, files, functions, types, constants, tests, 
 - A name says what the thing holds or does. Rename a name that is vague or no longer true.
 - Use one word for one idea, everywhere. A dhikr is a `dhikr` in the schema, the page, the route, and the test.
 - Use the domain words of [`content.md`](content.md): dhikr (plural adhkar), occasion, takhrij, ruling, proof, source, claim, span.
-- Write an Arabic word in its transliteration, with no diacritics and words joined by `-`: `sabah-masaa`, `ma-lam-yathbut`, `ayat-al-kursi`.
+- Write an Arabic word in its transliteration, with no diacritics and words joined by `-`: `sabah-masaa`, `al-tibb-al-nabawi`, `ayat-al-kursi`.
 - If a function or a type is hard to name, do not add it.
 
 ## Folders

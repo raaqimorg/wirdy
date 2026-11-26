@@ -1,0 +1,32 @@
+.reading-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    position: fixed;
+    top: calc(env(safe-area-inset-top) + var(--size-bar));
+    inset-inline: 0;
+    z-index: var(--layer-bar);
+    display: block;
+    height: var(--space-track);
+    background: var(--tone-text);
+    transform-origin: right;
+    animation: reading-progress linear both;
+    animation-duration: auto;
+    animation-timeline: scroll(root);
+    animation-range: var(--size-banner) normal;
+  }
+
+  @media (min-width: 64rem) {
+    .reading-progress {
+      animation-range: var(--size-banner-wide) normal;
+    }
+  }
+}
+
+@keyframes reading-progress {
+  from {
+    transform: scaleX(0);
+  }
+}

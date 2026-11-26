@@ -49,6 +49,7 @@ The motion follows Apple's rules (WWDC18 "Designing Fluid Interfaces", WWDC23 "A
 - The sun of the morning and the evening turns half a circle when the form changes, so its lit half is above in the morning and below in the evening. With reduced motion it changes at once.
 - The menu of the sections grows from the bar, from 94% to full size, as it fades in. With reduced motion it appears at once.
 - With reduced motion, the emblem only fades, and nothing scales or moves. On hover, the color still brightens, so the pointer gets an answer.
+- On a long page, once the top of the page has scrolled away, a line under the bar grows from the start of the line as the reader scrolls (`components/ReadingProgress.astro`). It is a CSS scroll-driven animation (`animation-timeline: scroll(root)`), so it needs no script, and a browser without them shows no line.
 - A page fades into the next one in 200 ms, with nothing moving, so no element has a `view-transition-name`. A browser without view transitions between pages opens the page as usual. With reduced motion there is no transition.
 
 ## Comments

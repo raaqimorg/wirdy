@@ -35,7 +35,3 @@ export function takhrijLine({ grader, source, ruling }: Takhrij): string {
       }),
   });
 }
-
-export function isOneWord(ruling: string): boolean {
-  return !ruling.includes(' ');
-}

@@ -12,7 +12,8 @@ import { foldOf, leadOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
 import { phrasesOf } from '../lib/phrases';
 import type { Dhikr } from '../lib/schema';
-import { fullTitle } from '../lib/title';
+import { fullTitle, isOpening } from '../lib/title';
+import { formOf } from '../lib/variants';
 
 interface Props {
   data: Dhikr;
@@ -40,12 +41,14 @@ const path = dhikrPath(data.occasion, slug);
 const phrases = data.counts === undefined ? [] : Effect.runSync(phrasesOf(text, data.counts));
 const plain = Option.isNone(suwar) && data.counts === undefined;
 const title = fullTitle(data);
+const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
 ---
 
 <Entry
   takhrij={data.takhrij}
   id={slug}
   title={title}
+  name={opening ? undefined : data.title}
   heading={heading}
   lead={lead}
   how={data.how}
@@ -72,7 +75,7 @@ const title = fullTitle(data);
   </Fragment>
   {!single && (
     <div slot="actions" class="entry__acts">
-      <span class="entry__status" role="status" data-status />
+      <span class="visually-hidden" role="status" data-status />
       <button
         class="entry__act"
         type="button"
@@ -80,7 +83,8 @@ const title = fullTitle(data);
         data-copy={copy.sabah}
         data-copy-masaa={Option.getOrUndefined(copy.masaa)}
       >
-        <Icon name="copy" />
+        <Icon name="copy" class="icon--idle" />
+        <Icon name="check" class="icon--done" />
         <span class="entry__act-label">نسخ</span>
       </button>
       <a class="entry__act" href={path} aria-label={`صفحة الذكر: ${title}`}>

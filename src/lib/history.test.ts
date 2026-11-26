@@ -16,7 +16,7 @@ const many = (count: number) =>
 
 describe('parseHistory', () => {
   it('reads what encodeHistory wrote', () => {
-    const history = ['/nawm/#ayat-al-kursi', '/ma-lam-yathbut/#al-kafirun'];
+    const history = ['/nawm/#ayat-al-kursi', '/al-tibb-al-nabawi/#al-ayn-haqq'];
     expect(parsed(encodeHistory(history))).toEqual(history);
   });
 

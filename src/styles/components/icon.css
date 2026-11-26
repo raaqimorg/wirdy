@@ -6,6 +6,32 @@
   translate: 0 var(--icon-drop, 0);
 }
 
+.icon--done {
+  display: none;
+}
+
+[data-copied="yes"] .icon--idle {
+  display: none;
+}
+
+[data-copied="yes"] .icon--done {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-copied="yes"] .icon--done,
+  [data-copied="no"] .icon--idle {
+    animation: icon-swap var(--duration-release) var(--spring);
+  }
+}
+
+@keyframes icon-swap {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
 .icon--line {
   fill: none;
   stroke: currentColor;

@@ -7,9 +7,6 @@ export const ARC = { from: 135, span: 300 } as const;
 export const FIRST_HUE = 47;
 export const INVERSE_GOLDEN = (3 - Math.sqrt(5)) / 2;
 
-const NEUTRAL_CHROMA = 0.025;
-const NEUTRAL_HUE = 250;
-
 type Triple = readonly [number, number, number];
 
 const toLinear = (channel: number) =>
@@ -85,5 +82,3 @@ export function contrast(one: string, other: string): number {
 
 export const toneOf = (index: number, count: number) =>
   hexFromOklch(LIGHTNESS, CHROMA, hueAt(index, count));
-
-export const NEUTRAL = hexFromOklch(LIGHTNESS, NEUTRAL_CHROMA, NEUTRAL_HUE);

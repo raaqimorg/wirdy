@@ -1,23 +1,50 @@
 ---
 import Entry from './Entry.astro';
+import Icon from './Icon.astro';
+import { hadithCopyOf } from '../lib/copy';
+import { hadithPath } from '../lib/permalink';
 import type { Tibb } from '../lib/schema';
+import { isOpening } from '../lib/title';
 
 interface Props {
   data: Tibb;
   body: string;
   slug: string;
+  single?: boolean | undefined;
 }
 
-const { data, body, slug } = Astro.props;
+const { data, body, slug, single = false } = Astro.props;
+const copy = hadithCopyOf(data, body);
+const path = hadithPath(slug);
 ---
 
 <Entry
   takhrij={data.takhrij}
   id={slug}
   title={data.title}
-  heading="h3"
-  lead={data.title}
+  name={isOpening(data.title, body) ? undefined : data.title}
+  heading={single ? undefined : 'h3'}
   how={`عن ${data.rawi}`}
+  single={single}
 >
   <p>{body.trim()}</p>
+  {!single && (
+    <div slot="actions" class="entry__acts">
+      <span class="visually-hidden" role="status" data-status />
+      <button
+        class="entry__act"
+        type="button"
+        aria-label={`نسخ: ${data.title}`}
+        data-copy={copy.sabah}
+      >
+        <Icon name="copy" class="icon--idle" />
+        <Icon name="check" class="icon--done" />
+        <span class="entry__act-label">نسخ</span>
+      </button>
+      <a class="entry__act" href={path} aria-label={`صفحة الحديث: ${data.title}`}>
+        <span class="entry__act-label">صفحة الحديث</span>
+        <Icon name="open" />
+      </a>
+    </div>
+  )}
 </Entry>

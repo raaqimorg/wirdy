@@ -9,7 +9,10 @@ import {
   type History,
 } from '../lib/history';
 import {
+  fold,
+  markedOf,
   match,
+  nearestOf,
   ranges,
   rowOf,
   searchRowSchema,
@@ -18,7 +21,8 @@ import {
   type SearchRow,
 } from '../lib/search';
 
-const KEY = 'search';
+const PAGE_KEY = 'search';
+const SHEET_KEY = 'search-sheet';
 
 export class MissingElement extends Data.TaggedError('MissingElement')<{
   readonly message: string;
@@ -48,6 +52,9 @@ const part = <T extends Element>(root: ParentNode, name: string, kind: Kind<T>) 
 
 const textOf = (node: Node): string => (node.textContent ?? '').trim();
 
+const typedOf = (query: string, word: string): string =>
+  query.split(/\s+/u).find((typed) => fold(typed).out === word) ?? word;
+
 export const fillRow = (
   template: HTMLTemplateElement,
   row: SearchRow
@@ -71,9 +78,10 @@ export const fillRow = (
     words.textContent = row.words;
     if (row.also === undefined) delete words.dataset['also'];
     else words.dataset['also'] = row.also;
+    if (row.about === undefined) delete words.dataset['about'];
+    else words.dataset['about'] = row.about;
     (yield* part(item, 'where', HTMLElement)).textContent =
       row.group === undefined ? row.heading : `${row.heading}، ${row.group}`;
-    (yield* part(item, 'ruling', HTMLElement)).textContent = row.ruling ?? '';
     return item;
   });
 
@@ -118,12 +126,12 @@ function paint(
 }
 
 const storage = {
-  read: (): Option.Option<string> =>
-    Option.flatMap(Option.liftThrowable(() => sessionStorage.getItem(KEY))(), Option.fromNullishOr),
-  write: (query: string): void => {
+  read: (key: string): Option.Option<string> =>
+    Option.flatMap(Option.liftThrowable(() => sessionStorage.getItem(key))(), Option.fromNullishOr),
+  write: (key: string, query: string): void => {
     Option.liftThrowable(() => {
-      if (query === '') sessionStorage.removeItem(KEY);
-      else sessionStorage.setItem(KEY, query);
+      if (query === '') sessionStorage.removeItem(key);
+      else sessionStorage.setItem(key, query);
     })();
   },
 };
@@ -177,7 +185,12 @@ const entryOf = (item: HTMLElement): Effect.Effect<Entry, MissingElement> =>
       title,
       words,
       text,
-      row: rowOf({ ...text, also: words.dataset['also'], place: textOf(place) }),
+      row: rowOf({
+        ...text,
+        also: words.dataset['also'],
+        about: words.dataset['about'],
+        place: textOf(place),
+      }),
     };
   });
 
@@ -206,13 +219,18 @@ export const mountSearch = (
   { restore = false }: { readonly restore?: boolean } = {}
 ): Effect.Effect<void, MissingElement> =>
   Effect.gen(function* () {
+    const key = restore ? PAGE_KEY : SHEET_KEY;
     const input = yield* part(root, 'input', HTMLInputElement);
     const clear = yield* part(root, 'clear', HTMLButtonElement);
     const list = yield* part(root, 'list', HTMLElement);
     const status = yield* part(root, 'status', HTMLElement);
     const empty = yield* part(root, 'empty', HTMLElement);
     const asked = yield* part(root, 'query', HTMLElement);
-    const browse = lookup(root, '[data-search-browse]', HTMLElement);
+    const note = yield* part(root, 'note', HTMLElement);
+    const noteWord = yield* part(root, 'note-word', HTMLElement);
+    const browse = [...root.querySelectorAll('[data-search-browse]')].filter(
+      (item): item is HTMLElement => item instanceof HTMLElement
+    );
 
     const items = [...list.querySelectorAll('[data-search-row]')].filter(
       (item): item is HTMLElement => item instanceof HTMLElement
@@ -260,17 +278,26 @@ export const mountSearch = (
       const query = input.value;
       clear.hidden = query === '';
       showRecent(query.trim());
-      if (restore) storage.write(query);
-      const found = match(rows, query);
+      storage.write(key, query);
+      const exact = match(rows, query);
+      const none = Option.match(exact, { onNone: () => false, onSome: (m) => m.hits.length === 0 });
+      const near = none ? nearestOf(rows, query) : Option.none();
+      const found = Option.isSome(near) ? Option.some(near.value.match) : exact;
       const hits = Option.match(found, { onNone: () => [], onSome: ({ hits: all }) => all });
-      if (Option.isSome(browse)) browse.value.hidden = Option.isSome(found);
+      for (const section of browse) section.hidden = Option.isSome(found);
       empty.hidden = Option.isNone(found) || hits.length > 0;
+      note.hidden = Option.isNone(near);
+      noteWord.textContent = Option.match(near, {
+        onNone: () => '',
+        onSome: ({ word }) => typedOf(query, word),
+      });
       list.hidden = hits.length === 0;
       status.textContent = hits.length > 0 ? resultsLabel(hits.length) : '';
       if (Option.isNone(found) || hits.length === 0) {
         asked.textContent = query.trim();
         return;
       }
+      const marked = markedOf(found.value.words);
       const shown = new Set(hits);
       for (const [index, { item }] of entries.entries()) item.hidden = !shown.has(index);
       const hitEntries = hits.flatMap((index) => entries.slice(index, index + 1));
@@ -289,15 +316,22 @@ export const mountSearch = (
         list.append(head, ...group.map(({ item }) => item));
       }
       for (const { title, words, text, row } of hitEntries) {
-        paint(title, text.title, ranges(text.title, row.title, found.value.words));
-        const marked = ranges(text.words, row.words, found.value.words);
-        const { from, to } = windowOf(text.words, marked);
-        paint(words, text.words, marked, from, to);
+        paint(title, text.title, ranges(text.title, row.title, marked));
+        const inWords = ranges(text.words, row.words, marked);
+        const { from, to } = windowOf(text.words, inWords);
+        paint(words, text.words, inWords, from, to);
       }
     };
 
     if (restore && isBackForward() && input.value === '') {
-      input.value = Option.getOrElse(storage.read(), () => '');
+      input.value = Option.getOrElse(storage.read(key), () => '');
+    }
+    if (restore) {
+      window.addEventListener('pageshow', (event) => {
+        if (!event.persisted || input.value !== '') return;
+        input.value = Option.getOrElse(storage.read(key), () => '');
+        render();
+      });
     }
 
     input.addEventListener('input', render);
@@ -364,9 +398,22 @@ export const mountSheet = (sheet: HTMLDialogElement): Effect.Effect<void, Missin
     const loading = yield* Effect.cached(fill);
     const run = Effect.runForkWith(yield* Effect.context());
 
+    const preload = () => {
+      setTimeout(() => {
+        run(Effect.ignore(loading));
+      }, 1000);
+    };
+    if (document.readyState === 'complete') preload();
+    else window.addEventListener('load', preload, { once: true });
+
     const open = (fallback: string) => {
       if (!sheet.open) sheet.showModal();
+      if (input.value === '') {
+        input.value = Option.getOrElse(storage.read(SHEET_KEY), () => '');
+        input.dispatchEvent(new Event('input'));
+      }
       input.focus();
+      input.select();
       run(
         loading.pipe(
           Effect.catch(() =>

@@ -228,16 +228,34 @@ describe('Dhikr', () => {
     await expect(render({ ...base, counts: [33, 33] }, 'سبحان الله')).rejects.toThrow('2 counts');
   });
 
-  it('carries its title as a hidden heading in a list, and none on its own page', async () => {
+  it('shows its name over the card in a list, and no heading on its own page', async () => {
     const listed = await render(base, 'سبحان الله', { heading: 'h3' });
-    expect(listed).toContain('<h3 class="visually-hidden">سيد الاستغفار</h3>');
+    expect(listed).toMatch(/<h3 class="entry__name">\s*سيد الاستغفار\s*<\/h3>/u);
     expect(await render(base, 'سبحان الله', { single: true })).not.toMatch(/<h\d/u);
+  });
+
+  it('hides its name when the text opens with it, so the words are not said twice', async () => {
+    const listed = await render({ ...base, title: 'سبحان الله' }, 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ', {
+      heading: 'h3',
+    });
+    expect(listed).toContain('<h3 class="visually-hidden">سبحان الله</h3>');
   });
 
   it('leaves the buttons to its own page when it stands alone', async () => {
     const html = await render(base, 'سبحان الله', { single: true });
     expect(html).not.toContain('entry__acts');
     expect(html).not.toContain('data-copy');
+  });
+
+  it('folds its takhrij and buttons under one line in a list, and keeps them open on its own page', async () => {
+    const listed = await render(base, 'سبحان الله', { heading: 'h3' });
+    expect(listed).toMatch(
+      /<details class="entry__more">\s*<summary class="entry__toggle">[\s\S]*?التخريج والمزيد[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?data-copy=/u
+    );
+    expect(listed).not.toMatch(/<details class="entry__more" open/u);
+    const alone = await render(base, 'سبحان الله', { single: true });
+    expect(alone).not.toContain('entry__more');
+    expect(alone).toContain('class="takhrij"');
   });
 
   it('omits the lead when there is no cue', async () => {
@@ -287,10 +305,13 @@ describe('Dhikr', () => {
     expect(await render(base, 'سبحان الله')).not.toContain('data-copy-masaa');
   });
 
-  it('has an empty status, next to the buttons, for saying that it was copied', async () => {
+  it('says that it was copied to a screen reader only, and turns its icon into a check', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="entry__status" role="status" data-status><\/span>\s*<button class="entry__act"/u
+      /<span class="visually-hidden" role="status" data-status><\/span>\s*<button class="entry__act"/u
+    );
+    expect(html).toMatch(
+      /class="icon icon--line icon--idle"[\s\S]*?class="icon icon--line icon--done"/u
     );
   });
 });

@@ -53,12 +53,11 @@ A dhikr that changes between the morning and the evening is one file with marker
 The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
 
 - A folded سورة (`ayat: "fold"`) ends what shows with ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when the سورة is open.
-- The button of an open سورة is `position: sticky` under the bar, so a long سورة can be folded from anywhere in it. `.entry` clips with `overflow: clip`, not `overflow: hidden`, because a scroll container would stop the sticky button.
 - Consecutive سور are parted by an empty gap (`src/styles/components/surah.css`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
 
 ## A share link opens the device's share sheet
 
-The page of each dhikr has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link and says «نُسخ الرابط». The owner asked for it. In a list, the foot of a card has a copy button, «نسخ», and a plain link to the dhikr's page, «صفحة الذكر», on their own line under the takhrij.
+The page of each dhikr, and of each hadith of «الطب النبوي», has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link, and its icon turns into a check for a moment. The owner asked for it. In a list, the foot of a card has a copy button, «نسخ», and a plain link to the dhikr's page, «صفحة الذكر» (or «صفحة الحديث»), on their own line under the takhrij.
 
 - The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
 - It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
@@ -67,14 +66,13 @@ The page of each dhikr has a share button, next to «نسخ» and «الصورة
 
 ## A button copies a dhikr with its takhrij
 
-Each dhikr has a copy button, in the foot of its card and on its own page. It copies the words, then the count and the moment when there are any, then the takhrij, so a dhikr does not travel without its source. The owner asked for it.
+Each dhikr has a copy button, in the foot of its card and on its own page. It copies the words, then the count and the moment when there are any, then the takhrij, so a dhikr does not travel without its source. A hadith of «الطب النبوي» copies its words, its narrator, and its takhrij. The owner asked for it.
 
 - The ordinary way is to select the text. That still works, and it also gives the count once.
 - `src/lib/copy.ts` writes what to copy at build time, into `data-copy`. A dhikr with a morning and an evening form also has `data-copy-masaa`, and the script copies the form that shows. So the words are in the page twice.
 - قرآن is copied as Tanzil gives it: one آية on each line, a blank line between سور, and no ornaments. A dhikr with `counts` gives one phrase on each line, with its count.
-- The message («نُسخ الذكر», or «تعذّر النسخ» when the browser refuses) is a `role="status"`. In a card it lies over the foot, beside the buttons, so nothing moves under the finger.
+- When the copy works, the icon of the button turns into a check, grows from 60% to its size, and turns back after 1.2 seconds (`data-copied` on the button, `icon--idle` and `icon--done` in `src/styles/components/icon.css`). No text shows. A screen reader hears «نُسخ الذكر», or «تعذّر النسخ» when the browser refuses, from a hidden `role="status"`.
 - Without JavaScript, the button is hidden (`<noscript>`), because it would do nothing.
-- «ما لم يثبت» has no copy button, so a weak dhikr does not travel without its ruling.
 
 ## A colored layer sits behind the top of a page with a color
 
@@ -89,7 +87,7 @@ When an iPhone bounces at the top of a page, it uncovers what is above the page 
 
 ## Each dhikr has a card, named by its fingerprint
 
-`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, 2400 by 1260: a page of 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
+`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/tibb/<slug>-<fingerprint>.png` for each hadith of «الطب النبوي» (`hadithCardOf`), 2400 by 1260: a page of 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
 
 - The name changes when the card changes, so an app that cached the old image fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only the cards that changed.
 - Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.
@@ -106,19 +104,22 @@ When an iPhone bounces at the top of a page, it uncovers what is above the page 
 
 ## Search opens over the page, from a module script
 
-The bar of every page ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the color of the page, because Safari keeps that color behind the clock. On a wide screen it is a panel in the middle, over a dimmed page. Before the reader types, it lists six suggestions. The results change as the reader types, and they are grouped by section, each group under its emblem, its name, and its count. The arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, or ⌘K and Ctrl+K, opens it from the keyboard. The owner asked for it.
+The bar of every page ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the color of the page, because Safari keeps that color behind the clock. On a wide screen it is a panel in the middle, over a dimmed page. Before the reader types, it lists six suggestions, as `/bahth/` does above its section cards. The results change as the reader types, and they are grouped by section, each group under its emblem, its name, and its count. The arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, or ⌘K and Ctrl+K, opens it from the keyboard, and on a wide screen an empty field shows «Esc», the way to close it, which gives its place to the clear button once the reader types. The owner asked for it.
 
 - The ordinary way is a link to a search page. The icon still is one: without JavaScript, or with a modifier key, it opens `/bahth/`.
-- The rows come from one JSON file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). Its version is a hash of the rows, so it changes when any dhikr changes. `_headers` lets the browser keep it for a year, and a deploy that changes a dhikr changes its name, so no reader sees an old index. The sheet fetches it the first time it opens, so a page that is only read never loads it. If the fetch fails, the field opens `/bahth/`.
+- The rows come from one JSON file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). Its version is a hash of the rows, so it changes when any dhikr changes. `_headers` lets the browser keep it for a year, and a deploy that changes a dhikr changes its name, so no reader sees an old index. The sheet fetches it a second after the page loads, so the results are there as soon as the reader types. Each page asks for it, but the browser keeps it for a year, so it costs one download for each version. If the fetch fails, opening the sheet opens `/bahth/`.
 - The head of each group comes from one `<template>` for each section in the page, so the index carries the section's id, not its drawing.
 - An ordinary Astro `<script>` imports `src/scripts/search.ts`, which imports `src/lib/search.ts`, so the folding, the matching, and the marking have unit tests like the rest of `src/lib/`. Astro bundles it into `_astro/`, which the browser keeps for a year. Nothing in it has to run before the first paint.
-- `/bahth/` holds one row for each dhikr and each entry of «ما لم يثبت» in its HTML, so the page is its own index, and it uses the same script. The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
+- `/bahth/` holds one row for each dhikr and each hadith in its HTML, so the page is its own index, and it uses the same script. The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. Safari empties the field when it shows the page from that cache, so on a `pageshow` from the cache the script writes the last query back. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
+- The sheet keeps its own last query in `sessionStorage` under `search-sheet`. When it opens with an empty field, it writes that query back and selects it, so the reader who opened one result can see the others, and typing replaces it.
+- Search reads more than the name, the words, and the section. A row carries `about`: the moment and the manner of a dhikr (`when` and `how`), so «إذا دخل المسجد» finds it. The words «دعاء», «ذكر», «أذكار», «عند», and «إذا» are left out of a query that has other words, Persian ک and ی are read as ك and ي, and a short list of other forms (`SYNONYMS` in `src/lib/search.ts`) lets «دخول» find «دخل» and «الأكل» find «الطعام». The list is short on purpose: a stemmer found more, but it turned «اية الكرسي» from 3 results into 40.
+- When every word together finds nothing, search shows the results of the longest word that finds something, under a line that says so, rather than an empty page.
 - قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens, and shows only its name, so no آية is cut.
 - Without JavaScript, `/bahth/` hides its field and its count (`<noscript>` in `src/layouts/Paper.astro`), and is a plain list of every row, which the browser's find can search. `/bahth/` is `noindex` and stays out of the sitemap.
 
 ## Search remembers the results the reader opens
 
-Before the reader types, search lists «آخر ما فتحت»: the last results the reader opened from search, newest first, with a «مسح» button that forgets them. The browser keeps them in `localStorage` under `search-history`. They never leave the device. The owner asked for it.
+Before the reader types, search lists «آخر ما فتحت»: the last results the reader opened from search, newest first, with a «مسح السجل» button that forgets them. The browser keeps them in `localStorage` under `search-history`. They never leave the device. The owner asked for it.
 
 - The ordinary way is no history, or the browser's own history of the field.
 - It keeps the link of a result that the reader opened, not the words the reader typed, because an opened result is a search that found its dhikr.

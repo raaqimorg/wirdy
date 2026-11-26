@@ -3,12 +3,12 @@ import { basename, dirname, join, relative } from 'node:path';
 import { Effect, Exit, Schema } from 'effect';
 import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
-import { cardFile, cardOf as cardEffect } from './card';
+import { cardFile, cardOf as cardEffect, hadithCardOf } from './card';
 import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
 import { dhikrPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
-import { dhikrSchema, STRICT, tibbSchema, unprovenSchema, type Dhikr } from './schema';
+import { dhikrSchema, STRICT, tibbSchema, type Dhikr } from './schema';
 import { phrasesOf as phrasesEffect } from './phrases';
 import { fullTitle } from './title';
 import { parseVariants as variantsEffect } from './variants';
@@ -219,42 +219,6 @@ it('reads every file under the adhkar folder', () => {
   expect(entries.map((entry) => relative(ROOT, join(ROOT, entry.path)))).toEqual(files.toSorted());
 });
 
-const UNPROVEN = join(process.cwd(), 'src/content/unproven');
-
-const unproven = readdirSync(UNPROVEN, { encoding: 'utf8' })
-  .filter((path) => path.endsWith('.md'))
-  .toSorted()
-  .map((path) => {
-    const file = matter(readFileSync(join(UNPROVEN, path), 'utf8'));
-    return { path, raw: file.data, body: file.content };
-  });
-
-it('lists at least one dhikr that did not come in', () => {
-  expect(unproven.length).toBeGreaterThan(0);
-});
-
-describe.each(unproven)('unproven/$path', ({ path, raw, body }) => {
-  const data = Schema.decodeUnknownSync(unprovenSchema, STRICT)(raw);
-
-  it('has valid frontmatter', () => {
-    expect(issuesOf(unprovenSchema, raw)).toBeUndefined();
-  });
-
-  it('starts its file name with its order', () => {
-    const order = String(data.order).padStart(2, '0');
-    expect(path).toMatch(new RegExp(`^${order}-[a-z0-9]+(-[a-z0-9]+)*\\.md$`, 'u'));
-  });
-
-  it('carries a ruling of weakness', () => {
-    expect(data.takhrij.ruling).toMatch(/ضعيف|موضوع|منكر|لا أصل|شاذ|باطل|دون/u);
-  });
-
-  it('has a text on one line', () => {
-    expect(body.trim().length).toBeGreaterThan(0);
-    expect(body.trim()).not.toContain('\n');
-  });
-});
-
 it('lists at least one hadith of الطب النبوي', () => {
   expect(tibb.length).toBeGreaterThan(0);
 });
@@ -332,11 +296,16 @@ describe('the sharing cards', () => {
   const drawn = readdirSync(og, { recursive: true, encoding: 'utf8' })
     .filter((path) => path.endsWith('.png'))
     .map((path) => `og/${path}`);
-  const wanted = entries.map(({ path, body, data }) =>
-    cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/u, '')))
-  );
+  const wanted = [
+    ...entries.map(({ path, body, data }) =>
+      cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/u, '')))
+    ),
+    ...tibb.map(({ path, body, data }) =>
+      cardFile(hadithCardOf(data, body), 'tibb', slugOf(path.replace(/\.md$/u, '')))
+    ),
+  ];
 
-  it('is drawn for each dhikr as it is now (run bun run opengraph:adhkar)', () => {
+  it('is drawn for each dhikr and each hadith as it is now (run bun run opengraph:adhkar)', () => {
     expect(wanted.filter((file) => !drawn.includes(file))).toEqual([]);
   });
 

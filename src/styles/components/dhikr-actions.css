@@ -6,17 +6,6 @@
   margin-top: var(--space-4);
 }
 
-.dhikr-actions__status {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  color: var(--color-ink-muted);
-  font-size: var(--text-small);
-}
-
-.dhikr-actions__status:empty {
-  display: none;
-}
-
 @media (min-width: 64rem) {
   .dhikr-actions {
     grid-template-columns: repeat(auto-fit, var(--size-action-wide));

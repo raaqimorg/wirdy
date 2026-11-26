@@ -26,7 +26,9 @@ h3,
 h4,
 p,
 ol,
-ul {
+ul,
+dl,
+dd {
   margin: 0;
   padding: 0;
 }
@@ -47,12 +49,12 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-a:focus-visible {
+:is(a, button):focus-visible {
   outline: var(--border-ring) solid var(--color-ink);
   outline-offset: var(--ring-gap);
 }
 
-:where(a:focus-visible) {
+:where(a, button):focus-visible {
   border-radius: var(--radius-focus);
 }
 

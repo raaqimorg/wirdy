@@ -9,7 +9,7 @@ import SearchRow from './SearchRow.astro';
 import type { SearchRow as Row, Tile } from '../lib/collection';
 import type { EmblemName } from '../lib/emblems';
 import { OCCASIONS } from '../lib/occasions';
-import { TIBB, UNPROVEN } from '../lib/site';
+import { TIBB } from '../lib/site';
 
 interface Props {
   tiles?: ReadonlyArray<Tile> | undefined;
@@ -21,7 +21,6 @@ const { tiles, rows = [], sheet = false } = Astro.props;
 const sections: { id: EmblemName; heading: string; color: string }[] = [
   ...OCCASIONS,
   { id: 'tibb', heading: TIBB.heading, color: TIBB.color },
-  { id: 'unproven', heading: UNPROVEN.heading, color: UNPROVEN.color },
 ];
 const tries = ['السفر', 'الاستخارة', 'الكرب', 'النوم', 'العافية', 'سيد الاستغفار'];
 const blank: Row = {
@@ -29,7 +28,7 @@ const blank: Row = {
   words: '',
   heading: '',
   color: '',
-  emblem: 'unproven',
+  emblem: 'tibb',
   href: '/',
 };
 ---
@@ -41,34 +40,35 @@ const blank: Row = {
       <div class="search__recent-head">
         <h2 class="search__subtitle">آخر ما فتحت</h2>
         <button class="search__forget" type="button" data-search-forget>
-          مسح
+          مسح السجل
         </button>
       </div>
       <ul class="search__list" data-search-recent-list></ul>
     </section>
-    {sheet && (
-      <div data-search-browse>
-        <p class="search__subtitle">اقتراحات</p>
-        <ul class="search__tries">
-          {tries.map((word) => (
-            <li>
-              <button class="search__try" type="button" data-search-try>
-                <Icon name="search" />
-                <span class="search__try-word">{word}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    <div data-search-browse>
+      <h2 class="search__subtitle">اقتراحات</h2>
+      <ul class="search__tries">
+        {tries.map((word) => (
+          <li>
+            <button class="search__try" type="button" data-search-try>
+              <Icon name="search" />
+              <span class="search__try-word">{word}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
     <p class="visually-hidden" role="status" data-search-status></p>
     <div class="search__empty" role="status" hidden data-search-empty>
       <Mark />
       <p class="search__empty-title">
         لا نتائج لـ «<bdi data-search-query></bdi>»
       </p>
-      <p>جرّب كلمة من أول الذكر، أو كلمة أقصر، بلا تشكيل.</p>
+      <p>جرّب كلمة من أول الذكر، أو كلمة أقصر</p>
     </div>
+    <p class="search__note" hidden data-search-note>
+      لا نتائج لكل الكلمات معًا، وهذه نتائج «<bdi data-search-note-word></bdi>»
+    </p>
     {tiles && (
       <section class="search__browse" data-search-browse>
         <h2 class="search__subtitle">تصفّح الأقسام</h2>

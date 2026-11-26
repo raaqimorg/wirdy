@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import Takhrij from './Takhrij.astro';
 import type { Dhikr } from '../lib/schema';
 import { takhrijLine } from '../lib/takhrij';
@@ -7,14 +8,14 @@ interface Props {
   takhrij: Dhikr['takhrij'];
   id?: string | undefined;
   title?: string | undefined;
+  name?: string | undefined;
   heading?: 'h2' | 'h3' | 'h4' | undefined;
   lead?: string | undefined;
   how?: string | undefined;
   fadl?: string | undefined;
-  sound?: boolean | undefined;
   single?: boolean | undefined;
   nested?: boolean | undefined;
-  kind?: 'quran' | 'unproven' | undefined;
+  kind?: 'quran' | undefined;
   time?: 'sabah' | 'masaa' | undefined;
 }
 
@@ -22,16 +23,18 @@ const {
   takhrij,
   id,
   title,
+  name,
   heading: Heading,
   lead,
   how,
   fadl,
-  sound,
   single,
   nested,
   kind,
   time,
 } = Astro.props;
+const Fold = single ? Fragment : 'details';
+const fold = single ? {} : { class: 'entry__more' };
 ---
 
 <li
@@ -44,8 +47,16 @@ const {
   ]}
   id={id}
 >
-  {Heading && <Heading class="visually-hidden">{title}</Heading>}
   <div class="entry__main">
+    {Heading && name === undefined && <Heading class="visually-hidden">{title}</Heading>}
+    {Heading && name !== undefined && (
+      <Heading class="entry__name">
+        {name}
+        {title !== undefined && title.startsWith(name) && title !== name && (
+          <span class="visually-hidden">{title.slice(name.length)}</span>
+        )}
+      </Heading>
+    )}
     {lead && (
       <div class="entry__head">
         <slot name="count" />
@@ -53,7 +64,6 @@ const {
           <slot name="number" />
           {lead}
         </p>
-        <slot name="badge" />
       </div>
     )}
     {how && <p class="entry__how">{how}</p>}
@@ -61,37 +71,38 @@ const {
       <slot />
     </div>
   </div>
-  <div class="entry__side">
-    <dl class="entry__info">
-      {fadl && (
+  <Fold {...fold}>
+    {!single && (
+      <summary class="entry__toggle">
+        <span class="entry__toggle-closed">التخريج والمزيد</span>
+        <span class="entry__toggle-open">إخفاء</span>
+        <Icon name="chevron" />
+      </summary>
+    )}
+    <div class="entry__side">
+      <dl class="entry__info">
+        {fadl && (
+          <div class="entry__row">
+            <dt>الفضل</dt>
+            <dd class="entry__words">{fadl}</dd>
+          </div>
+        )}
         <div class="entry__row">
-          <dt>الفضل</dt>
-          <dd class="entry__words">{fadl}</dd>
-        </div>
-      )}
-      {sound && (
-        <div class="entry__row entry__row--sound">
-          <dt>تنبيه</dt>
-          <dd class="entry__words">
-            <slot name="sound" />
-          </dd>
-        </div>
-      )}
-      <div class="entry__row">
-        <dt>التخريج</dt>
-        <dd>
-          <Takhrij href={takhrij.url} text={takhrijLine(takhrij)} />
-        </dd>
-      </div>
-      {kind === 'quran' && (
-        <div class="entry__row">
-          <dt>النص</dt>
+          <dt>التخريج</dt>
           <dd>
-            <Takhrij href="https://tanzil.net/" text="موقع تنزيل" />
+            <Takhrij href={takhrij.url} text={takhrijLine(takhrij)} />
           </dd>
         </div>
-      )}
-    </dl>
-    <slot name="actions" />
-  </div>
+        {kind === 'quran' && (
+          <div class="entry__row">
+            <dt>النص</dt>
+            <dd>
+              <Takhrij href="https://tanzil.net/" text="موقع تنزيل" />
+            </dd>
+          </div>
+        )}
+      </dl>
+      <slot name="actions" />
+    </div>
+  </Fold>
 </li>

@@ -6,7 +6,7 @@ import type { EmblemName } from '../lib/emblems';
 interface Props {
   title: string;
   evening?: string | undefined;
-  lede: string;
+  lede?: string | undefined;
   kicker?: string | undefined;
   eveningKicker?: string | undefined;
   up?: { href: string; label: string } | undefined;
@@ -53,7 +53,7 @@ const long = title.length > 24;
           title
         )}
       </h1>
-      <p class="banner__lede">{lede}</p>
+      {lede !== undefined && <p class="banner__lede">{lede}</p>}
     </div>
     {emblem && (
       <div class="banner__graphic">

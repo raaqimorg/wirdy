@@ -1,13 +1,14 @@
 import { createHash } from 'node:crypto';
 import { Array, Effect, Option, Schema } from 'effect';
 import { timesLabel } from './arabic';
-import { EMBLEMS } from './emblems';
+import { EMBLEMS, type EmblemName } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
 import { fullLeadOf, REST, suwarOf } from './lead';
 import { markSvg } from './mark';
-import { sectionOf, type Occasion } from './occasions';
+import { sectionOf } from './occasions';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
-import type { Dhikr } from './schema';
+import type { Dhikr, Tibb } from './schema';
+import { TIBB } from './site';
 import { takhrijLine } from './takhrij';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
 
@@ -93,7 +94,24 @@ export const cardOf = (
     };
   });
 
-export function cardFile(card: Card, occasion: Occasion, slug: string): string {
+export const hadithCardOf = (data: Tibb, body: string): Card => {
+  const { text, cut } = excerptClauses(body.trim(), LIMIT);
+  return {
+    heading: TIBB.title,
+    color: TIBB.color,
+    title: data.title,
+    context: null,
+    lead: `عن ${data.rawi}`,
+    quran: false,
+    blocks: [[text]],
+    evening: null,
+    cut,
+    count: null,
+    takhrij: takhrijLine(data.takhrij),
+  };
+};
+
+export function cardFile(card: Card, occasion: EmblemName, slug: string): string {
   const print = createHash('sha256')
     .update(JSON.stringify([TEMPLATE, card, EMBLEMS[occasion], markSvg()]))
     .digest('hex')

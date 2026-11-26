@@ -1,7 +1,23 @@
 import { Effect, Option } from 'effect';
+import { fold } from './search';
 import { formOf, hasVariants, type Form, type MalformedMarker } from './variants';
 
 const TASHKEEL = /[\u064B-\u0652\u0670]/gu;
+
+const lettersOf = (text: string): string =>
+  fold(text)
+    .out.replaceAll(/[^\p{L}\s]/gu, '')
+    .replaceAll(/\s+/gu, ' ')
+    .trim();
+
+export const isOpening = (title: string, text: string): boolean => {
+  const name = lettersOf(title);
+  const opening = lettersOf(text)
+    .split(' ')
+    .slice(0, name.split(' ').length + 2)
+    .join(' ');
+  return opening.includes(name);
+};
 
 export function fullTitle({
   title,

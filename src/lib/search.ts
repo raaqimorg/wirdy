@@ -5,11 +5,11 @@ export const searchRowSchema = Schema.Struct({
   title: Schema.String,
   words: Schema.String,
   also: Schema.optionalKey(Schema.String),
+  about: Schema.optionalKey(Schema.String),
   heading: Schema.String,
   color: Schema.String,
-  emblem: Schema.Literals([...OCCASION_IDS, 'tibb', 'unproven']),
+  emblem: Schema.Literals([...OCCASION_IDS, 'tibb']),
   group: Schema.optionalKey(Schema.String),
-  ruling: Schema.optionalKey(Schema.String),
   quran: Schema.optionalKey(Schema.Boolean),
   href: Schema.String,
 });
@@ -22,12 +22,15 @@ export type Row = {
   readonly title: Folded;
   readonly words: Folded;
   readonly also: string;
+  readonly about: string;
   readonly place: string;
 };
 
 export type Range = readonly [number, number];
 
 export type Match = { readonly words: ReadonlyArray<string>; readonly hits: ReadonlyArray<number> };
+
+export type Nearest = { readonly word: string; readonly match: Match };
 
 const DROP = /[ؐ-ًؚ-ٰٟۖ-ۭـ]/u;
 const FOLD: Readonly<Record<string, string>> = {
@@ -39,6 +42,25 @@ const FOLD: Readonly<Record<string, string>> = {
   ة: 'ه',
   ؤ: 'و',
   ئ: 'ي',
+  ک: 'ك',
+  ی: 'ي',
+  ۀ: 'ه',
+};
+
+const FILLER = new Set(['دعاء', 'الدعاء', 'ذكر', 'الذكر', 'اذكار', 'الاذكار', 'عند', 'اذا']);
+
+const SYNONYMS: Readonly<Record<string, ReadonlyArray<string>>> = {
+  دخول: ['دخل'],
+  الدخول: ['دخل'],
+  خروج: ['خرج'],
+  الخروج: ['خرج'],
+  المنزل: ['بيت'],
+  منزل: ['بيت'],
+  الاكل: ['الطعام'],
+  اكل: ['الطعام'],
+  زواج: ['تزوج'],
+  الزواج: ['تزوج'],
+  عطس: ['العاطس'],
 };
 
 export function fold(text: string): Folded {
@@ -57,22 +79,28 @@ export function rowOf(entry: {
   readonly title: string;
   readonly words: string;
   readonly also?: string | undefined;
+  readonly about?: string | undefined;
   readonly place: string;
 }): Row {
   return {
     title: fold(entry.title),
     words: fold(entry.words),
     also: fold(entry.also ?? '').out,
+    about: fold(entry.about ?? '').out,
     place: fold(entry.place).out,
   };
 }
 
+const formsOf = (word: string): ReadonlyArray<string> => [word, ...(SYNONYMS[word] ?? [])];
+
+const has = (text: string, word: string) => formsOf(word).some((form) => text.includes(form));
+
 function rankOf(row: Row, words: ReadonlyArray<string>): Option.Option<number> {
   let rank = 0;
   for (const word of words) {
-    if (row.title.out.includes(word)) continue;
-    if (row.words.out.includes(word) || row.also.includes(word)) rank = Math.max(rank, 1);
-    else if (row.place.includes(word)) rank = 2;
+    if (has(row.title.out, word)) continue;
+    if (has(row.words.out, word) || has(row.also, word)) rank = Math.max(rank, 1);
+    else if (has(row.place, word) || has(row.about, word)) rank = 2;
     else return Option.none();
   }
   return Option.some(rank);
@@ -80,16 +108,43 @@ function rankOf(row: Row, words: ReadonlyArray<string>): Option.Option<number> {
 
 const byRank = Order.mapInput(Order.Number, (hit: { readonly rank: number }) => hit.rank);
 
-export function match(rows: ReadonlyArray<Row>, query: string): Option.Option<Match> {
+export function wordsOf(query: string): ReadonlyArray<string> {
   const words = fold(query)
     .out.split(/\s+/u)
     .filter((word) => word !== '');
-  if (words.length === 0) return Option.none();
-  const ranked = Array.getSomes(
-    rows.map((row, index) => Option.map(rankOf(row, words), (rank) => ({ index, rank })))
-  );
-  return Option.some({ words, hits: Array.sort(ranked, byRank).map(({ index }) => index) });
+  const kept = words.filter((word) => !FILLER.has(word));
+  return kept.length === 0 ? words : kept;
 }
+
+const hitsOf = (rows: ReadonlyArray<Row>, words: ReadonlyArray<string>) =>
+  Array.sort(
+    Array.getSomes(
+      rows.map((row, index) => Option.map(rankOf(row, words), (rank) => ({ index, rank })))
+    ),
+    byRank
+  ).map(({ index }) => index);
+
+export function match(rows: ReadonlyArray<Row>, query: string): Option.Option<Match> {
+  const words = wordsOf(query);
+  if (words.length === 0) return Option.none();
+  return Option.some({ words, hits: hitsOf(rows, words) });
+}
+
+const byLength = Order.mapInput(Order.flip(Order.Number), (word: string) => word.length);
+
+export function nearestOf(rows: ReadonlyArray<Row>, query: string): Option.Option<Nearest> {
+  const words = wordsOf(query);
+  if (words.length < 2) return Option.none();
+  return Array.findFirst(Array.sort(words, byLength), (word) => {
+    const hits = hitsOf(rows, [word]);
+    return hits.length === 0
+      ? Option.none()
+      : Option.some({ word, match: { words: [word], hits } });
+  });
+}
+
+export const markedOf = (words: ReadonlyArray<string>): ReadonlyArray<string> =>
+  words.flatMap((word) => formsOf(word));
 
 const byStart = Order.mapInput(Order.Number, (range: Range) => range[0]);
 

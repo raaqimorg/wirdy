@@ -2,7 +2,7 @@ import { Array, Effect, Option } from 'effect';
 import { timesLabel } from './arabic';
 import { foldOf, leadOf, REST, suwarOf, type Suwar } from './lead';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
-import type { Dhikr } from './schema';
+import type { Dhikr, Tibb } from './schema';
 import { takhrijLine } from './takhrij';
 import { formOf, hasVariants, type Form, type MalformedMarker } from './variants';
 
@@ -34,6 +34,11 @@ const wordsOf = (
             phrases.map((phrase) => `${phrase.text} (${timesLabel(phrase.count)})`).join('\n')
           ),
   });
+
+export const hadithCopyOf = (data: Tibb, body: string): Copy => ({
+  sabah: `${body.trim()}\n\nعن ${data.rawi}\n${takhrijLine(data.takhrij)}`,
+  masaa: Option.none(),
+});
 
 export const copyOf = (
   data: Dhikr,

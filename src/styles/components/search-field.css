@@ -26,6 +26,11 @@
   border-radius: var(--radius-card);
 }
 
+.search-field:not(.search-field--bar) .search-field__box:focus-within {
+  outline: var(--border-ring) solid var(--color-ink);
+  outline-offset: var(--ring-gap-small);
+}
+
 .search-field__input {
   flex: 1;
   min-width: 0;
@@ -72,6 +77,10 @@
   color: var(--color-panel);
   background: var(--color-ink-faint);
   border-radius: var(--radius-round);
+}
+
+.search-field__key {
+  display: none;
 }
 
 .search-field__clear[hidden] {
@@ -121,7 +130,7 @@
 
   .search-field--bar .search-field__box {
     gap: var(--space-3);
-    padding: var(--space-1) var(--space-5) var(--space-1) var(--space-2);
+    padding: var(--space-1) var(--space-5);
     background: none;
   }
 
@@ -132,5 +141,26 @@
 
   .search-field__close {
     display: none;
+  }
+
+  .search-field__key {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: var(--size-touch);
+    height: var(--size-touch);
+    color: var(--color-ink-faint);
+    font-family: var(--font-ui);
+    font-size: var(--text-small);
+    line-height: var(--leading-snug);
+  }
+
+  .search-field__box:has(.search-field__input:not(:placeholder-shown)) .search-field__key {
+    display: none;
+  }
+
+  .search-field--bar .search-field__clear-face {
+    color: var(--color-ink-muted);
+    background: var(--color-line-soft);
   }
 }

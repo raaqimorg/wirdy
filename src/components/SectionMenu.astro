@@ -6,10 +6,7 @@ import { sectionTiles } from '../lib/collection';
 
 const tiles = await Effect.runPromise(sectionTiles);
 const here = Astro.url.pathname;
-const groups = [
-  tiles.filter(({ id }) => id !== 'unproven'),
-  tiles.filter(({ id }) => id === 'unproven'),
-];
+const groups = [tiles.filter(({ id }) => id !== 'tibb'), tiles.filter(({ id }) => id === 'tibb')];
 ---
 
 <div class="section-menu">

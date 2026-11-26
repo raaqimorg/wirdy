@@ -1,0 +1,13 @@
+---
+import VariantText from './VariantText.astro';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="closing">
+  <VariantText text={text} />
+</p>
