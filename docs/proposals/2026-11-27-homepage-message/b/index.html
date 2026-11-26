@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>طريق ب</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --paper: #d6d6cd;
+        --panel: hsl(60 10% 92%);
+        --ink: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --faint: hsl(200 12% 35%);
+        --line: hsl(200 30% 20% / 0.25);
+        --pick: #23485e;
+        --good: hsl(150 40% 28%);
+        --bad: hsl(5 55% 38%);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #060f13;
+          --panel: hsl(200 32% 12%);
+          --ink: hsl(55 62% 89%);
+          --muted: hsl(55 20% 75%);
+          --faint: hsl(55 10% 60%);
+          --line: hsl(55 30% 80% / 0.2);
+          --pick: #6f9fbd;
+          --good: hsl(150 45% 62%);
+          --bad: hsl(5 70% 70%);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          17px/1.75 'IBM Plex Sans Arabic',
+          'Geeza Pro',
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 74rem;
+        margin: 0 auto;
+        padding: 3rem 1rem 6rem;
+      }
+      h1 {
+        font-size: 2.2rem;
+        line-height: 1.3;
+        margin: 0 0 0.5rem;
+        font-weight: 500;
+      }
+      h2 {
+        font-size: 1.5rem;
+        margin: 3.5rem 0 1rem;
+        font-weight: 500;
+      }
+      h3 {
+        font-size: 1.2rem;
+        margin: 0;
+        font-weight: 500;
+      }
+      p {
+        margin: 0 0 1rem;
+        max-width: 46rem;
+      }
+      a {
+        color: inherit;
+      }
+      .lead {
+        font-size: 1.15rem;
+        color: var(--muted);
+      }
+      .label {
+        font-size: 0.8rem;
+        color: var(--faint);
+      }
+      .box {
+        background: var(--panel);
+        border-radius: 0.8rem;
+        padding: 1.25rem 1.5rem;
+      }
+      .option {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 0.8rem;
+        background: var(--panel);
+        border: 2px solid transparent;
+      }
+      .option.pick {
+        border-color: var(--pick);
+      }
+      .option header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        align-items: baseline;
+        margin-bottom: 0.75rem;
+      }
+      .letter {
+        font-size: 1.6rem;
+        font-weight: 500;
+      }
+      .badge {
+        font-size: 0.8rem;
+        padding: 0.15rem 0.7rem;
+        border-radius: 99px;
+        background: var(--pick);
+        color: #fff;
+      }
+      .idea {
+        font-size: 1.05rem;
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: 15rem 1fr;
+        gap: 1rem;
+        align-items: start;
+        margin: 1.25rem 0;
+      }
+      .shots.three {
+        grid-template-columns: 15rem 15rem 1fr;
+      }
+      .shots img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0.6rem;
+        border: 1px solid var(--line);
+      }
+      .shots figure {
+        margin: 0;
+      }
+      .shots figcaption {
+        margin-top: 0.3rem;
+      }
+      @media (max-width: 56rem) {
+        .shots,
+        .shots.three {
+          grid-template-columns: 1fr 1fr;
+        }
+        .shots figure.wide {
+          grid-column: 1 / -1;
+        }
+      }
+      .why {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 2rem;
+      }
+      @media (max-width: 48rem) {
+        .why {
+          grid-template-columns: 1fr;
+        }
+      }
+      .why ul {
+        margin: 0;
+        padding-inline-start: 1.1rem;
+      }
+      .why li {
+        margin-bottom: 0.35rem;
+      }
+      .plus {
+        color: var(--good);
+      }
+      .minus {
+        color: var(--bad);
+      }
+      .reply {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.6rem 1.1rem;
+        border-radius: 0.8rem;
+        background: var(--panel);
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="label">وِردي · الصفحة الرئيسية · الجولة الثانية · ٢٧ نوفمبر ٢٠٢٦</p>
+      <h1>طريق ب، بلا عنوان وسطر تحته</h1>
+      <p class="lead">
+        الجملة واحدة في كل المقترحات: «لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ». الذي يتغير هو أين تذهب
+        القاعدة (البخاري ومسلم والألباني) وكيف تظهر. كل مقترح مبني في الموقع الحقيقي ومصوّر على الهاتف
+        وسطح المكتب.
+      </p>
+
+      <section class="option">
+        <header>
+          <span class="letter">ب١</span>
+          <h3>جملة واحدة بحبرين</h3>
+        </header>
+        <p class="idea">
+          لا عنوان ولا سطر تحته: جملة واحدة متصلة بحجم واحد. الدعوى بالحبر الكامل، وتكملتها (القاعدة)
+          بحبر باهت. تقرأ العين الدعوى وحدها في لمحة، ومن أراد أكمل.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="b1-phone.png" alt="ب١ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="b1-desktop.png" alt="ب١ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>أبسطها في البناء: عنصر واحد، ولا شيء جديد في التصميم.</li>
+            <li>القاعدة كاملة ظاهرة، بلا نقرة.</li>
+          </ul>
+          <ul class="minus">
+            <li>أربعة أسطر على الهاتف.</li>
+            <li>هادئة، لا تلفت كما يلفت ب٥.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">ب٢</span>
+          <h3>الدعوى ثم فهرس مرقّم</h3>
+        </header>
+        <p class="idea">
+          الدعوى كبيرة، وتحتها القاعدة في ثلاثة بنود مرقّمة بينها خطوط شعرية، كما ترقّم Laws of UX
+          قوائمها. على سطح المكتب تصير البنود ثلاثة أعمدة.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="b2-phone.png" alt="ب٢ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="b2-desktop.png" alt="ب٢ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>القاعدة مقسّمة، تُقرأ بنظرة.</li>
+            <li>من لغة Laws of UX نفسها (القوائم المرقّمة بالخطوط الشعرية).</li>
+          </ul>
+          <ul class="minus">
+            <li>يأخذ أكثر الطول على الهاتف، فتنزل البطاقات.</li>
+            <li>ثلاثة بنود لثلاث معلومات صغيرة، فيه شيء من الثِّقل.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">ب٣</span>
+          <h3>الحاشية</h3>
+        </header>
+        <p class="idea">
+          على طريقة الكتب العربية: متن وحاشية. على كلمة «صحّ» رقم صغير، وفي الحاشية معناه. على سطح
+          المكتب تقف الحاشية في الطرف الآخر بخط فاصل، وعلى الهاتف تحت الجملة.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="b3-phone.png" alt="ب٣ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="b3-desktop.png" alt="ب٣ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>الشرح معلّق على الكلمة التي يسأل عنها القارئ.</li>
+            <li>شكل مألوف لقارئ كتب الحديث، وفيه شخصية.</li>
+            <li>تقول الحاشية أيضًا «وما ضعّفه تُرك، ولو قبله غيره».</li>
+          </ul>
+          <ul class="minus">
+            <li>على الهاتف تعود قريبة من «عنوان ثم سطر».</li>
+            <li>الحاشية صغيرة الخط.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option">
+        <header>
+          <span class="letter">ب٤</span>
+          <h3>الدعوى وسؤال يُفتح</h3>
+        </header>
+        <p class="idea">
+          الدعوى وحدها، وتحتها زر «ما معنى «صحّ» هنا؟». يُفتح فيظهر الجواب. مبني بـ<code
+            >&lt;details&gt;</code
+          >
+          من HTML، بلا JavaScript.
+        </p>
+        <div class="shots three">
+          <figure>
+            <img src="b4-phone.png" alt="ب٤ مغلق على الهاتف" />
+            <figcaption class="label">الهاتف، مغلق</figcaption>
+          </figure>
+          <figure>
+            <img src="b4o-phone.png" alt="ب٤ مفتوح على الهاتف" />
+            <figcaption class="label">الهاتف، مفتوح</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="b4o-desktop.png" alt="ب٤ مفتوح على سطح المكتب" />
+            <figcaption class="label">سطح المكتب، مفتوح</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>أنظف شكل في اللمحة الأولى: سطر واحد.</li>
+            <li>السؤال بصيغة القارئ، والجواب لمن يريده.</li>
+          </ul>
+          <ul class="minus">
+            <li>أكثر الزوار لن يفتحوه، فالقاعدة شبه مخفية.</li>
+            <li>زر في رأس الصفحة يزاحم البطاقات على الانتباه.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="option pick">
+        <header>
+          <span class="letter">ب٥</span>
+          <h3>المسرح الملوّن</h3>
+          <span class="badge">المقترح</span>
+        </header>
+        <p class="idea">
+          الصفحة الرئيسية تأخذ رأس صفحات الأقسام نفسه: لون كامل العرض من خلف الشريط، والجملة بالأبيض
+          البيضي، وفوقها أسماء المصادر الثلاثة مكان عدد الأذكار. وصورة جديدة بقواعد البطاقات: نقاط
+          كثيرة فوق خط، وثلاث مضيئة تحته. كثير يُعرض، وقليل يمرّ.
+        </p>
+        <div class="shots">
+          <figure>
+            <img src="b5-phone.png" alt="ب٥ على الهاتف" />
+            <figcaption class="label">الهاتف</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="b5-desktop.png" alt="ب٥ على سطح المكتب" />
+            <figcaption class="label">سطح المكتب</figcaption>
+          </figure>
+        </div>
+        <div class="why">
+          <ul class="plus">
+            <li>
+              لا عنوان وسطر: الجملة وحدها، و«البخاري · مسلم · الألباني» في موضع الكلمة الصغيرة فوق
+              العنوان، كما في كل قسم.
+            </li>
+            <li>الرئيسية تشبه بقية الموقع، فيعرفها الزائر بعد أي صفحة.</li>
+            <li>
+              الصورة تقول الدعوى بلا كلام، بقواعد البطاقات (حبران، شكل مجرد، عنصر مضيء واحد). ويمكن أن
+              تتحرك النقاط الثلاث وحدها، على قاعدة «لا يتحرك إلا المضيء».
+            </li>
+          </ul>
+          <ul class="minus">
+            <li>لون جديد (أزرق حبري) وصورة جديدة، وكلاهما يحتاج رضاك قبل البناء.</li>
+            <li>القاعدة أسماء فقط، بلا «صحّحه أو حسّنه».</li>
+            <li>بطاقات الأقسام تنزل نحو سطرين على الهاتف.</li>
+          </ul>
+        </div>
+      </section>
+
+      <h2>ردّك</h2>
+      <p>
+        اكتب رقم المقترح، وإن شئت اخلط بين اثنين (مثلًا «ب٥ مع حاشية ب٣ تحته»)، أو عدّل اللون والصورة:
+      </p>
+      <p class="reply">ب٥</p>
+      <p class="label" style="margin-top: 1.5rem">
+        الصفحات الحيّة (ما دام الخادم المحلي يعمل):
+        <a href="http://127.0.0.1:4417/p/b1.html">ب١</a> ·
+        <a href="http://127.0.0.1:4417/p/b2.html">ب٢</a> ·
+        <a href="http://127.0.0.1:4417/p/b3.html">ب٣</a> ·
+        <a href="http://127.0.0.1:4417/p/b4.html">ب٤</a> ·
+        <a href="http://127.0.0.1:4417/p/b5.html">ب٥</a> · <a href="../index.html">الجولة الأولى</a>
+      </p>
+    </main>
+  </body>
+</html>
