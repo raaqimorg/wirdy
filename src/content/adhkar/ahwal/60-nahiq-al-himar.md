@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا سمع نهيق الحمار"
-group: "عوارض"
+group: "أصوات الحيوان"
 fadl: "فإنه رأى شيطانًا"
 takhrij:
   grader: "البخاري"

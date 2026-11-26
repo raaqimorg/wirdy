@@ -85,15 +85,6 @@
         }
       ]
     },
-    "manner": {
-      "fingerprint": "5fccc73b01f614e8",
-      "spans": [
-        {
-          "source": 0,
-          "text": "رفع طَرْفَه إلى السماءِ"
-        }
-      ]
-    },
     "takhrij": {
       "fingerprint": "d50d8dba4345f3dd",
       "spans": []

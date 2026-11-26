@@ -1,11 +1,11 @@
 ---
-title: "ما يقول إذا تضوّر من الليل"
+title: "لا إله إلا الله الواحد القهار"
 occasion: "istiqaz"
 order: 5
 count: 1
 mode: "both"
 quran: false
-when: "إذا تضوّر من الليل"
+when: "إذا تقلّب في فراشه من الليل"
 group: "ما يعرض في الليل"
 takhrij:
   grader: "الألباني"

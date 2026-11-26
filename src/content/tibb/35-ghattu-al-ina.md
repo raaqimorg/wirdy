@@ -1,7 +1,7 @@
 ---
 title: "غطوا الإناء"
 order: 35
-group: "حفظ الصحة"
+group: "الطعام والشراب"
 rawi: "جابر بن عبد الله"
 takhrij:
   grader: "مسلم"

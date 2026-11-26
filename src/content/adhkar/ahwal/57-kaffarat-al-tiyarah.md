@@ -5,8 +5,8 @@ order: 57
 count: 1
 mode: "both"
 quran: false
-when: "إذا ردّته الطِّيَرة"
-group: "عوارض"
+when: "إذا ردّه التشاؤم عن حاجته"
+group: "الطيرة والحلف"
 takhrij:
   grader: "الألباني"
   source: "السلسلة الصحيحة ٣/٥٤"

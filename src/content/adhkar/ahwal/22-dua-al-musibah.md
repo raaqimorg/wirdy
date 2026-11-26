@@ -7,7 +7,7 @@ mode: "both"
 quran: false
 when: "إذا أصابته مصيبة"
 group: "المرض والمصيبة"
-fadl: "إلا أخلف الله له خيرًا منها"
+fadl: "أخلف الله له خيرًا منها"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٩١٨"

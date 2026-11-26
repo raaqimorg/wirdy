@@ -84,6 +84,15 @@
         }
       ]
     },
+    "moment": {
+      "fingerprint": "945ab116f187c5b1",
+      "spans": [
+        {
+          "source": 0,
+          "text": "أن يَكسِبَ كُلَّ يَومٍ ألفَ حَسَنةٍ"
+        }
+      ]
+    },
     "fadl": {
       "fingerprint": "a7d8aff6d406c6e7",
       "spans": [

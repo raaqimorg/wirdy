@@ -1,5 +1,5 @@
 ---
-title: "ما يقول من وجد وجعًا في جسده"
+title: "أعوذ بالله وقدرته"
 occasion: "ahwal"
 order: 18
 count: 1

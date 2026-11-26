@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا سمع صياح الديكة"
-group: "عوارض"
+group: "أصوات الحيوان"
 fadl: "فإنها رأت ملَكًا"
 takhrij:
   grader: "البخاري"

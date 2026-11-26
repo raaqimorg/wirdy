@@ -1,5 +1,5 @@
 ---
-title: "ما يقول إذا رأى مبتلى"
+title: "الحمد لله الذي عافاني"
 occasion: "ahwal"
 order: 21
 count: 1

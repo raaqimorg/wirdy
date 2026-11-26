@@ -5,7 +5,7 @@ order: 29
 count: 1
 mode: "both"
 quran: false
-when: "يقولها العاطس"
+when: "إذا عطس"
 group: "العطاس"
 takhrij:
   grader: "البخاري"

@@ -1,7 +1,7 @@
 ---
 title: "الذباب"
 order: 36
-group: "حفظ الصحة"
+group: "الطعام والشراب"
 rawi: "أبي هريرة"
 takhrij:
   grader: "البخاري"

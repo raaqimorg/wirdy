@@ -6,6 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا خرج من المسجد"
+how: "يسلّم على النبي ﷺ ثم يقول"
 group: "المسجد"
 takhrij:
   grader: "الألباني"

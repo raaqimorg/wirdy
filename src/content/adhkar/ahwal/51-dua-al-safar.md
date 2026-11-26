@@ -5,8 +5,8 @@ order: 51
 count: 1
 mode: "both"
 quran: false
-when: "إذا استوى على بعيره خارجًا إلى سفر"
-how: "كبّر ثلاثًا ثم قال"
+when: "إذا ركب خارجًا إلى سفر"
+how: "يكبّر ثلاثًا ثم يقول"
 group: "السفر"
 takhrij:
   grader: "مسلم"

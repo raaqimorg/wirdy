@@ -1,7 +1,7 @@
 ---
 title: "الصحة والفراغ"
 order: 31
-group: "حفظ الصحة"
+group: "العافية"
 rawi: "ابن عباس"
 takhrij:
   grader: "البخاري"

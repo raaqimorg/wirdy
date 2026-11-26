@@ -6,7 +6,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا رجع من سفره"
-how: "قال دعاء السفر وزاد"
+how: "يقول دعاء السفر ويزيد"
 group: "السفر"
 takhrij:
   grader: "مسلم"

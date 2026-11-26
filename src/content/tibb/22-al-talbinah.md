@@ -1,7 +1,7 @@
 ---
 title: "التلبينة"
 order: 22
-group: "أغذية وأدوية"
+group: "أدوية وأغذية أخرى"
 rawi: "عائشة"
 takhrij:
   grader: "البخاري"

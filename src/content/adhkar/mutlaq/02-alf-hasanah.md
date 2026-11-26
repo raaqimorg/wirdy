@@ -5,6 +5,7 @@ order: 2
 count: 100
 mode: "both"
 quran: false
+when: "كل يوم"
 group: "التسبيح"
 fadl: "يُكتب له ألف حسنة، أو يُحطّ عنه ألف خطيئة"
 takhrij:

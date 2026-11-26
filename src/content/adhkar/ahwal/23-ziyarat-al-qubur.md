@@ -1,5 +1,5 @@
 ---
-title: "ما يقول إذا خرج إلى المقابر"
+title: "السلام عليكم أهل الديار"
 occasion: "ahwal"
 order: 23
 count: 1

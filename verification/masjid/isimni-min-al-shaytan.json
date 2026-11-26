@@ -73,6 +73,15 @@
         }
       ]
     },
+    "manner": {
+      "fingerprint": "edc28352a61ab039",
+      "spans": [
+        {
+          "source": 0,
+          "text": "وإذا خرجَ، فليُسلِّم علَى النَّبيِّ"
+        }
+      ]
+    },
     "takhrij": {
       "fingerprint": "743ba56dc49dcee1",
       "spans": []

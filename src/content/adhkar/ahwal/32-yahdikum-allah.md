@@ -5,7 +5,7 @@ order: 32
 count: 1
 mode: "both"
 quran: false
-when: "يردّ بها العاطس"
+when: "يردّ بها العاطس على من شمّته"
 group: "العطاس"
 takhrij:
   grader: "البخاري"

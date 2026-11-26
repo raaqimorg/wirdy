@@ -5,7 +5,7 @@ order: 31
 count: 1
 mode: "both"
 quran: false
-when: "يقولها من سمعه"
+when: "لمن عطس فحمد الله"
 group: "العطاس"
 takhrij:
   grader: "البخاري"

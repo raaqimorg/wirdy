@@ -5,7 +5,7 @@ order: 54
 count: 1
 mode: "both"
 quran: false
-when: "إذا كان في سفر وأسحر"
+when: "في السفر وقت السَّحَر"
 group: "السفر"
 takhrij:
   grader: "مسلم"

@@ -1,7 +1,7 @@
 ---
 title: "الكمأة"
 order: 24
-group: "أغذية وأدوية"
+group: "أدوية وأغذية أخرى"
 rawi: "سعيد بن زيد"
 takhrij:
   grader: "البخاري"

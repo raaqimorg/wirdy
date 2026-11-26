@@ -6,7 +6,7 @@ order: 30
 count: 1
 mode: "both"
 quran: false
-when: "أو يقول العاطس"
+when: "إذا عطس"
 group: "العطاس"
 takhrij:
   grader: "الألباني"

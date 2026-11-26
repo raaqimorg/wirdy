@@ -5,7 +5,7 @@ order: 28
 count: 1
 mode: "both"
 quran: false
-when: "إذا قام من مجلسه"
+when: "قبل أن يقوم من مجلسه"
 group: "مع الناس"
 fadl: "غُفر له ما كان في مجلسه ذلك"
 takhrij:
