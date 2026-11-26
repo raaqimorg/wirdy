@@ -20,14 +20,14 @@ Each section has one emblem in `src/lib/emblems.ts`. Every emblem is:
 | `istiqaz`     | A sun rising at the foot, with its rays                                      |
 | `mutlaq`      | One unbroken line that turns inward, with no end                             |
 | `mawasim`     | Three rings around a lit square, as the طواف goes around the Kaaba           |
-| `taam`        | A bowl, two dates beside it, and a lit date above                            |
+| `taam`        | A bowl with a lit lid over it                                                |
 | `bayt`        | A house with two windows, and a lit door at its foot                         |
-| `safar`       | A winding road with three stops, and a lit traveler at its end               |
-| `nas`         | Two circles that meet, with the lit space they share                         |
-| `hamm`        | Two heavy walls, with a lit opening between them                             |
-| `marad`       | A lit pulse across faint lines                                               |
-| `janaiz`      | Layers of earth, darker as they go down, with a lit resting place            |
-| `matar`       | Rain in slanted strokes, with one lit drop                                   |
+| `safar`       | A road that climbs and falls, lit at its highest pass                        |
+| `nas`         | Squares turned every way around one lit square that holds still              |
+| `hamm`        | Darkness inside darkness inside darkness, with a lit point at the heart      |
+| `marad`       | A block with a round gap, and the lit piece that fits it                     |
+| `janaiz`      | Lives of different lengths from one edge, and one lit, ended at its term     |
+| `matar`       | Clouds rising over the horizon, the lit one nearest                          |
 | `tibb`        | A honeycomb of hexagons, with the centre cell lit                            |
 
 ## The sharing cards
