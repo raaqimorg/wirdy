@@ -56,3 +56,11 @@ export function resultsLabel(n: number): string {
   if (isFew(n)) return `${toArabicDigits(n)} نتائج`;
   return `${toArabicDigits(n)} نتيجة`;
 }
+
+export function visitsLabel(n: number): string {
+  if (n === 0) return 'لا زيارات';
+  if (n === 1) return 'زيارة واحدة';
+  if (n === 2) return 'زيارتان';
+  if (isFew(n % 100)) return `${toArabicDigits(n)} زيارات`;
+  return `${toArabicDigits(n)} زيارة`;
+}
