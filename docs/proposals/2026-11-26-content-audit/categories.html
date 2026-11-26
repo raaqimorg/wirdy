@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>أقسام أوضح</title>
+    <style>
+      :root {
+        --bg: #faf8f4;
+        --fg: #1d1b18;
+        --muted: #6b665e;
+        --line: #e4ded3;
+        --card: #fff;
+        --acc: #1f6f5c;
+        --accbg: #e6f2ee;
+        --warn: #9a5b00;
+        --warnbg: #fbf1df;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16150f;
+          --fg: #ece7dd;
+          --muted: #a39d92;
+          --line: #34312a;
+          --card: #1f1d17;
+          --acc: #6cc3a8;
+          --accbg: #18302a;
+          --warn: #e0a84a;
+          --warnbg: #33280f;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          17px/1.85 'Geeza Pro',
+          'Noto Naskh Arabic',
+          serif;
+      }
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 24px 16px 80px;
+      }
+      h2 {
+        border-bottom: 2px solid var(--line);
+        margin-top: 2em;
+      }
+      h3 small {
+        color: var(--muted);
+      }
+      h4 {
+        margin: 0.2em 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      a {
+        color: var(--acc);
+        word-break: break-all;
+      }
+      code {
+        font:
+          12px ui-monospace,
+          Menlo,
+          monospace;
+        direction: ltr;
+        unicode-bidi: embed;
+        color: var(--muted);
+      }
+      .c,
+      .sec {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin: 10px 0;
+      }
+      .meta {
+        font-size: 0.85em;
+        color: var(--muted);
+      }
+      .tag {
+        display: inline-block;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 0 9px;
+        margin-left: 5px;
+        font-size: 0.85em;
+      }
+      .tag.ok {
+        background: var(--accbg);
+        color: var(--acc);
+        border-color: transparent;
+      }
+      .tag.cmd {
+        border-color: var(--acc);
+        color: var(--acc);
+      }
+      .tag.warn {
+        background: var(--warnbg);
+        color: var(--warn);
+        border-color: transparent;
+      }
+      .dhikr {
+        font-size: 1.2em;
+        line-height: 2.05;
+      }
+      .new {
+        color: var(--acc);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.88em;
+        display: block;
+        overflow-x: auto;
+      }
+      td,
+      th {
+        border: 1px solid var(--line);
+        padding: 4px 8px;
+        vertical-align: top;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 10px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+      }
+      .card b {
+        display: block;
+        font-size: 1.7em;
+        color: var(--acc);
+      }
+      .card span {
+        font-size: 0.85em;
+        color: var(--muted);
+      }
+      details summary {
+        cursor: pointer;
+      }
+      ul.out li,
+      ul.site li {
+        margin-bottom: 6px;
+      }
+      ul.site {
+        columns: 2;
+        font-size: 0.9em;
+      }
+      @media (max-width: 600px) {
+        ul.site {
+          columns: 1;
+        }
+      }
+
+      .band {
+        margin-top: 2rem;
+        padding: 0.35rem 0.8rem;
+        background: var(--accbg);
+        color: var(--acc);
+        border-radius: 8px;
+        font-size: 1.05rem;
+      }
+      .sec {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        margin: 0.8rem 0;
+      }
+      .sec h4 {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+      }
+      .groups {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 0.6rem;
+      }
+      .grp {
+        border-top: 2px solid var(--line);
+        padding-top: 0.4rem;
+      }
+      .grp ul {
+        margin: 0.3rem 0 0;
+        padding-inline-start: 1.1rem;
+        font-size: 0.95rem;
+      }
+      .grp li {
+        margin: 0.15rem 0;
+      }
+      li.new {
+        color: var(--acc);
+        list-style: none;
+        margin-inline-start: -1.1rem;
+      }
+      .dec > li {
+        margin: 0.8rem 0;
+      }
+      .opts {
+        list-style: none;
+        padding: 0;
+        margin: 0.3rem 0 0;
+      }
+      .opts li {
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        margin: 0.2rem 0;
+      }
+      .opts li.rec {
+        background: var(--accbg);
+      }
+      .tag {
+        font-size: 0.8rem;
+        color: var(--acc);
+        border: 1px solid var(--acc);
+        border-radius: 999px;
+        padding: 0 0.5rem;
+        margin-inline-start: 0.4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>أقسام أوضح: تذهب إلى ما تحتاجه</h1>
+      <p class="muted">
+        اقتراح على فرع content-audit، ٢٧ نوفمبر ٢٠٢٦. لم يتغير شيء في الموقع بعد. اليوم ١٣ قسمًا،
+        والمقترح 16 قسمًا بلا «أحوال متفرقة»، وكل ذكر من الأذكار 245 له مكان فيها.
+      </p>
+
+      <h2>هل عندنا شيء للغضب؟</h2>
+      <p>
+        عندنا ذكر واحد: «أعوذ بالله من الشيطان الرجيم» عند الغضب (صحيح البخاري ٦١١٥)، وهو الآن في
+        «الكرب والمرض» تحت «الغضب والخوف». وهو الذكر الوحيد الثابت في الغضب.
+      </p>
+      <p>وراجعت ما يُذكر غيره على الدرر:</p>
+      <ul>
+        <li>الوضوء عند الغضب: ضعّفه الألباني (ضعيف أبي داود ٤٧٨٤، ضعيف الجامع ٣٩٣٣).</li>
+        <li>
+          الجلوس ثم الاضطجاع لمن غضب: صحّحه الألباني في صحيح الجامع (٦٩٤)، ثم ضعّفه في السلسلة الضعيفة
+          (٦٦٦٤) وضعيف الترغيب (١٦٤٥). وقاعدة الموقع ألّا يدخل ما ضعّفه الألباني، فلا يدخل.
+        </li>
+      </ul>
+      <p>
+        فقسم للغضب وحده يكون فيه بطاقتان. الأنفع مجموعة «الغضب» ظاهرة في قسم «حالات النفس»، فيها
+        الاستعاذة، و«اللهم فأيما مؤمن سببته» لمن سبّ في غضبه. ومن فتح «حالات النفس» وجد الغضب بجانب
+        الهم والخوف والوسوسة، وهي ما يُبحث عنه في لحظته.
+      </p>
+
+      <h2>المبدأ</h2>
+      <ul>
+        <li>
+          كل قسم جواب عن سؤال واحد: أين أنا الآن، أو ماذا أشعر. الطعام وحده، والأهل وحدهم، والمشاعر
+          وحدها.
+        </li>
+        <li>
+          في القسم من ٣ إلى ٥ مجموعات، وفي المجموعة من ٢ إلى ٦ أذكار في الغالب. ما كان أصغر ضُمّ إلى
+          جاره، وما كان أكبر قُسم.
+        </li>
+        <li>
+          يختفي «أحوال متفرقة»: لا أحد يبحث عن «متفرقة». كل ذكر فيه ذهب إلى قسم يُسمّى بما يحتاجه
+          القارئ.
+        </li>
+        <li>
+          أقسام العبادة اليومية السبعة لا تتغير، فترتيبها ترتيب اليوم والصلاة، وهو أوضح ما يكون.
+        </li>
+      </ul>
+
+      <h2>القرارات</h2>
+      <ol class="dec">
+        <li>
+          <b>حذف «أحوال متفرقة» وتوزيع أذكاره الثمانية والعشرين</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> يُحذف، وتذهب أذكاره إلى الناس والمجالس، والبيت والأهل، والآيات والأصوات، وحالات
+              النفس، والاستخارة إلى بعد الصلاة <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> يبقى بما لا يجد له مكانًا</li>
+          </ul>
+        </li>
+        <li>
+          <b>الغضب</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> مجموعة «الغضب» في «حالات النفس» <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> قسم مستقل للغضب، فيه بطاقتان</li>
+          </ul>
+        </li>
+        <li>
+          <b>اسم قسم المشاعر</b>
+          <ul class="opts">
+            <li class="rec"><b>أ.</b> «حالات النفس» <span class="tag">المقترح</span></li>
+            <li class=""><b>ب.</b> «الهم والغضب»</li>
+            <li class=""><b>ج.</b> «المشاعر»</li>
+          </ul>
+        </li>
+        <li>
+          <b>الطعام في قسم وحده</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> قسم «الطعام والشراب»، ويدخله «أفطر عندكم الصائمون» لأنه دعاء الضيف لمضيفه
+              <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> يبقى «البيت والطعام» قسمًا واحدًا</li>
+          </ul>
+        </li>
+        <li>
+          <b>نصوص الرقية التي تقال</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> تنقل من الطب النبوي إلى «المرض والرقية» أذكارًا لها بطاقة وعدد، بعد إثبات
+              كامل، ويبقى في الطب النبوي فضل الرقية وأحكامها <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> تبقى في الطب النبوي وحده</li>
+          </ul>
+        </li>
+        <li>
+          <b>الصفحة الرئيسية</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> تُعرض الأقسام الستة عشر تحت أربعة عناوين: العبادة اليومية، الحياة اليومية، ما
+              يمر بك، المناسبات. أبنيها وأريك قبلها وبعدها <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> قائمة واحدة كما هي الآن</li>
+          </ul>
+        </li>
+        <li>
+          <b>الأذكار المقترحة لملء المجموعات</b>
+          <ul class="opts">
+            <li class="rec">
+              <b>أ.</b> أضيف الآن ما في الصحيحين (أربعة، عليها «جاهز»)، بإثبات كامل، وأترك ما يحتاج
+              صفحة من خارج الكتب الستة لجولة لاحقة <span class="tag">المقترح</span>
+            </li>
+            <li class=""><b>ب.</b> أضيفها كلها، وأبحث عن صفحات ما هو خارج الكتب الستة الآن</li>
+          </ul>
+        </li>
+      </ol>
+      <h2>الخريطة المقترحة</h2>
+      <h3 class="band">العبادة اليومية</h3>
+      <div class="sec">
+        <h4>1. الصباح والمساء <span class="muted">· 16 ذكرًا · كما هو</span></h4>
+        <p class="muted">
+          القرآن (2)، أصبحنا وأمسينا (4)، الاستغفار والدعاء (5)، الحفظ (2)، التهليل والتسبيح (3)
+        </p>
+      </div>
+      <div class="sec">
+        <h4>2. الأذان والمسجد <span class="muted">· 13 ذكرًا · كما هو</span></h4>
+        <p class="muted">الأذان (5)، الوضوء (3)، المسجد (5)</p>
+      </div>
+      <div class="sec">
+        <h4>3. أثناء الصلاة <span class="muted">· 37 ذكرًا · كما هو</span></h4>
+        <p class="muted">
+          الاستفتاح (5)، الركوع (2)، الركوع والسجود (3)، الرفع من الركوع (4)، السجود (4)، سجود التلاوة
+          (1)، بين السجدتين (2)، التشهد (7)، الذكر والدعاء في الصلاة (3)، ما يعرض في الصلاة (2)، قيام
+          الليل والوتر (4)
+        </p>
+      </div>
+      <div class="sec">
+        <h4>4. بعد الصلاة <span class="muted">· 20 ذكرًا · كما هو</span></h4>
+        <p class="muted">
+          بعد السلام (4)، صيغ التسبيح (5)، القرآن (2)، أدعية بعد الصلاة (5)، بعد صلوات بعينها (4)
+        </p>
+        <p class="muted">يدخله دعاء الاستخارة في «بعد صلوات بعينها»، فهو يقال بعد ركعتي الاستخارة.</p>
+      </div>
+      <div class="sec">
+        <h4>5. عند النوم <span class="muted">· 18 ذكرًا · كما هو</span></h4>
+        <p class="muted">القرآن (5)، عند الفراش (7)، الحمد والتسبيح (4)، آخر ما يقال (2)</p>
+      </div>
+      <div class="sec">
+        <h4>6. عند الاستيقاظ <span class="muted">· 7 ذكرًا · كما هو</span></h4>
+        <p class="muted">عند الاستيقاظ (3)، ما يعرض في الليل (4)</p>
+      </div>
+      <div class="sec">
+        <h4>
+          7. كل وقت
+          <span class="muted"
+            >· 38 ذكرًا · كما هو، ويخرج منه «اللهم فأيما مؤمن سببته» إلى الغضب</span
+          >
+        </h4>
+        <p class="muted">
+          التسبيح (5)، التهليل (4)، التحميد والتكبير والحوقلة (4)، الاستغفار (4)، الصلاة على النبي ﷺ
+          (1)، الرضا والدعاء (5)، جوامع السؤال (9)، جوامع الاستعاذة (6)
+        </p>
+      </div>
+      <h3 class="band">الحياة اليومية</h3>
+      <div class="sec">
+        <h4>8. الطعام والشراب <span class="muted">· 10 ذكرًا · جديد، من «البيت والطعام»</span></h4>
+        <div class="groups">
+          <div class="grp">
+            <b>قبل الطعام</b>
+            <ul>
+              <li>بسم الله قبل الطعام <span class="muted">(قبل الطعام)</span></li>
+              <li>بسم الله في أوله وآخره <span class="muted">(إذا نسي التسمية في أوله)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>بعد الطعام</b>
+            <ul>
+              <li>
+                اللهم بارك لنا فيه وأطعمنا خيرًا منه <span class="muted">(إذا أكل طعامًا)</span>
+              </li>
+              <li>الحمد لله كثيرًا طيبًا مباركًا فيه <span class="muted">(إذا رُفعت المائدة)</span></li>
+              <li>الحمد لله الذي أطعمني هذا <span class="muted">(إذا فرغ من الطعام)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>اللبن والثمر</b>
+            <ul>
+              <li>اللهم بارك لنا فيه وزدنا منه <span class="muted">(إذا شرب لبنًا)</span></li>
+              <li>اللهم بارك لنا في ثمارنا <span class="muted">(إذا رأى أول الثمر)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الضيف والمضيف</b>
+            <ul>
+              <li>اللهم بارك لهم فيما رزقتهم <span class="muted">(يدعو الضيف لأهل الطعام)</span></li>
+              <li>اللهم أطعم من أطعمني <span class="muted">(لمن أطعمه وسقاه)</span></li>
+              <li>أفطر عندكم الصائمون <span class="muted">(إذا أكل عند قوم)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>
+          9. البيت والأهل
+          <span class="muted">· 11 ذكرًا · باقي «البيت والطعام» والأهل من «أحوال متفرقة»</span>
+        </h4>
+        <div class="groups">
+          <div class="grp">
+            <b>اللباس</b>
+            <ul>
+              <li>الحمد لله الذي كساني هذا الثوب <span class="muted">(إذا لبس ثوبًا)</span></li>
+              <li>اللهم لك الحمد، وأنت كسوتنيه <span class="muted">(إذا لبس ثوبًا جديدًا)</span></li>
+              <li>البس جديدًا وعش حميدًا <span class="muted">(يدعو لمن رأى عليه ثوبًا)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>البيت ليلًا</b>
+            <ul>
+              <li>
+                بسم الله
+                <span class="muted"
+                  >(إذا جنح الليل، عند إغلاق الباب وإطفاء المصباح وتغطية الإناء)</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الخلاء</b>
+            <ul>
+              <li>التسمية عند دخول الخلاء <span class="muted">(إذا دخل الخلاء)</span></li>
+              <li>أعوذ بك من الخبث والخبائث <span class="muted">(إذا دخل الخلاء)</span></li>
+              <li>غفرانك <span class="muted">(إذا خرج من الخلاء)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الزواج والأولاد</b>
+            <ul>
+              <li>الدعاء للمتزوج <span class="muted">(يدعو للمتزوج)</span></li>
+              <li>
+                اللهم إني أسألك خيرها وخير ما جبلتها عليه
+                <span class="muted">(إذا تزوج امرأة أو اشترى خادمًا)</span>
+              </li>
+              <li>ما يقول إذا أتى أهله <span class="muted">(إذا أتى أهله)</span></li>
+              <li>تعويذ الأولاد <span class="muted">(يعوّذ بها أولاده)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>10. الخروج والسفر <span class="muted">· 13 ذكرًا · كما هو، بمجموعات أقل</span></h4>
+        <div class="groups">
+          <div class="grp">
+            <b>الخروج والسوق</b>
+            <ul>
+              <li>بسم الله، توكلت على الله <span class="muted">(إذا خرج من بيته)</span></li>
+              <li>أعوذ بك أن أضل أو أُضل <span class="muted">(إذا خرج من بيته)</span></li>
+              <li>دعاء دخول السوق <span class="muted">(إذا دخل السوق)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الركوب</b>
+            <ul>
+              <li>دعاء الركوب <span class="muted">(إذا ركب)</span></li>
+              <li>قل: بسم الله، ولا تقل: تعس الشيطان <span class="muted">(إذا عثرت دابته)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>وداع المسافر</b>
+            <ul>
+              <li>أستودع الله دينك <span class="muted">(إذا ودّع مسافرًا)</span></li>
+              <li>أستودعك الله الذي لا تضيع ودائعه <span class="muted">(إذا ودّع مسافرًا)</span></li>
+              <li>زوّدك الله التقوى <span class="muted">(يدعو لمن أراد سفرًا)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>في السفر والرجوع</b>
+            <ul>
+              <li>دعاء السفر <span class="muted">(إذا ركب خارجًا إلى سفر)</span></li>
+              <li>اللهم رب السماوات السبع <span class="muted">(إذا رأى قرية يريد دخولها)</span></li>
+              <li>أعوذ بكلمات الله التامات <span class="muted">(إذا نزل منزلًا)</span></li>
+              <li>سمع سامع بحمد الله <span class="muted">(في السفر وقت السَّحَر)</span></li>
+              <li>آيبون تائبون عابدون <span class="muted">(إذا رجع من سفره)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>
+          11. الناس والمجالس
+          <span class="muted">· 12 ذكرًا + 1 مقترحًا · جديد، من «أحوال متفرقة»</span>
+        </h4>
+        <div class="groups">
+          <div class="grp">
+            <b>السلام</b>
+            <ul>
+              <li>السلام عليكم ورحمة الله وبركاته <span class="muted">(إذا سلّم)</span></li>
+              <li>وعليكم <span class="muted">(إذا سلّم عليه أهل الكتاب)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الدعاء للناس</b>
+            <ul>
+              <li>جزاك الله خيرًا <span class="muted">(لمن صنع إليه معروفًا)</span></li>
+              <li>إني أحبك في الله <span class="muted">(إذا أحب أخاه في الله)</span></li>
+              <li>أحسب فلانًا والله حسيبه <span class="muted">(إذا مدح أحدًا)</span></li>
+              <li class="new">
+                + بارك الله لك في أهلك ومالك (لمن قضى دينه)
+                <span class="muted">· صحيح النسائي ٤٦٩٧ · ينقصه صفحة الشاملة</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>المجلس واللسان</b>
+            <ul>
+              <li>كفارة المجلس <span class="muted">(قبل أن يقوم من مجلسه)</span></li>
+              <li>اللهم اقسم لنا من خشيتك <span class="muted">(إذا قام من مجلسه)</span></li>
+              <li>
+                كفارة الحلف بغير الله <span class="muted">(من حلف فقال في حلفه: واللات والعزى)</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>العطاس</b>
+            <ul>
+              <li>حمد العاطس <span class="muted">(إذا عطس)</span></li>
+              <li>الحمد لله على كل حال <span class="muted">(إذا عطس)</span></li>
+              <li>يرحمك الله <span class="muted">(لمن عطس فحمد الله)</span></li>
+              <li>
+                يهديكم الله ويصلح بالكم <span class="muted">(يردّ بها العاطس على من شمّته)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <h3 class="band">ما يمر بك</h3>
+      <div class="sec">
+        <h4>
+          12. حالات النفس
+          <span class="muted">· 17 ذكرًا + 2 مقترحًا · جديد، من «الكرب والمرض»: هنا يقع الغضب</span>
+        </h4>
+        <div class="groups">
+          <div class="grp">
+            <b>ما يسر وما يكره</b>
+            <ul>
+              <li>
+                الحمد لله الذي بنعمته تتم الصالحات <span class="muted">(إذا رأى ما يحب)</span>
+              </li>
+              <li>الحمد لله على كل حال <span class="muted">(إذا رأى ما يكره)</span></li>
+              <li>قدر الله وما شاء فعل <span class="muted">(إذا أصابه ما يكره)</span></li>
+              <li class="new">
+                + سبحان الله! (عند التعجب)
+                <span class="muted">· صحيح البخاري ٢٨٥ · جاهز: في الصحيح</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الهم والكرب والدين</b>
+            <ul>
+              <li>دعاء الكرب <span class="muted">(عند الكرب)</span></li>
+              <li>الله الله ربي <span class="muted">(عند الكرب)</span></li>
+              <li>دعوات المكروب <span class="muted">(عند الكرب)</span></li>
+              <li>يا حي يا قيوم <span class="muted">(إذا كربه أمر)</span></li>
+              <li>دعاء الهم والحزن <span class="muted">(إذا أصابه همّ أو حزن)</span></li>
+              <li>دعاء قضاء الدَّين <span class="muted">(إذا كان عليه دَين)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الغضب</b>
+            <ul>
+              <li>الاستعاذة عند الغضب <span class="muted">(عند الغضب)</span></li>
+              <li>اللهم فأيما مؤمن سببته</li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الخوف والعدو</b>
+            <ul>
+              <li>اللهم إنا نجعلك في نحورهم <span class="muted">(إذا خاف قومًا)</span></li>
+              <li>حسبنا الله ونعم الوكيل <span class="muted">(إذا خوّفه الناس)</span></li>
+              <li>اللهم أنت عضدي ونصيري <span class="muted">(إذا غزا)</span></li>
+              <li>اللهم منزل الكتاب <span class="muted">(إذا لقي العدو)</span></li>
+              <li class="new">
+                + اللهم اكفنيهم بما شئت
+                <span class="muted">· صحيح مسلم ٣٠٠٥ · ينقصه صفحة الشاملة</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الوسوسة والطيرة</b>
+            <ul>
+              <li>آمنت بالله <span class="muted">(إذا وسوس له الشيطان: من خلق الله؟)</span></li>
+              <li>كفارة الطِّيَرة <span class="muted">(إذا ردّه التشاؤم عن حاجته)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>
+          13. المرض والرقية <span class="muted">· 4 ذكرًا + 3 مقترحًا · باقي «الكرب والمرض»</span>
+        </h4>
+        <div class="groups">
+          <div class="grp">
+            <b>إذا مرض أو تألم</b>
+            <ul>
+              <li>أعوذ بالله وقدرته <span class="muted">(إذا وجد وجعًا في جسده)</span></li>
+              <li class="new">
+                + أذهب البأس رب الناس
+                <span class="muted"
+                  >· صحيح البخاري ٥٧٤٣ · في الطب النبوي الآن، ينقل ذكرًا بإثبات كامل</span
+                >
+              </li>
+              <li class="new">
+                + رقية جبريل: بسم الله أرقيك
+                <span class="muted"
+                  >· صحيح مسلم ٢١٨٦ · في الطب النبوي الآن، ينقل ذكرًا بإثبات كامل</span
+                >
+              </li>
+              <li class="new">
+                + بسم الله، تربة أرضنا
+                <span class="muted"
+                  >· صحيح البخاري ٥٧٤٥ · في الطب النبوي الآن، ينقل ذكرًا بإثبات كامل</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>عيادة المريض</b>
+            <ul>
+              <li>لا بأس، طهور إن شاء الله <span class="muted">(إذا عاد مريضًا)</span></li>
+              <li>
+                أسأل الله العظيم أن يشفيك <span class="muted">(إذا عاد مريضًا لم يحضر أجله)</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>رؤية المبتلى</b>
+            <ul>
+              <li>الحمد لله الذي عافاني <span class="muted">(إذا رأى مبتلى)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>14. الجنائز <span class="muted">· 12 ذكرًا · كما هو، بمجموعات أقل</span></h4>
+        <div class="groups">
+          <div class="grp">
+            <b>الاحتضار والموت</b>
+            <ul>
+              <li>اللهم اغفر لي وألحقني بالرفيق الأعلى <span class="muted">(عند الوفاة)</span></li>
+              <li>إن للموت سكرات <span class="muted">(عند سكرات الموت)</span></li>
+              <li>تلقين المحتضر <span class="muted">(عند من حضرته الوفاة)</span></li>
+              <li>اللهم اغفر لأبي سلمة <span class="muted">(إذا أغمض الميت)</span></li>
+              <li>اللهم اغفر لي وله <span class="muted">(إذا مات له أحد)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>المصيبة والتعزية</b>
+            <ul>
+              <li>دعاء المصيبة <span class="muted">(إذا أصابته مصيبة)</span></li>
+              <li>إن لله ما أخذ وله ما أعطى <span class="muted">(إذا عزّى من أصيب)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>صلاة الجنازة</b>
+            <ul>
+              <li>اللهم اغفر له وارحمه <span class="muted">(في الصلاة على الميت)</span></li>
+              <li>اللهم اغفر لحينا وميتنا <span class="muted">(في الصلاة على الميت)</span></li>
+              <li>اللهم إن فلان بن فلان في ذمتك <span class="muted">(في الصلاة على الميت)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الدفن والقبور</b>
+            <ul>
+              <li>
+                بسم الله وعلى سنة رسول الله <span class="muted">(إذا وضع الميت في قبره)</span>
+              </li>
+              <li>السلام عليكم أهل الديار <span class="muted">(إذا خرج إلى المقابر)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>
+          15. الآيات والأصوات
+          <span class="muted">· 10 ذكرًا + 2 مقترحًا · جديد، من «أحوال متفرقة»</span>
+        </h4>
+        <div class="groups">
+          <div class="grp">
+            <b>الهلال</b>
+            <ul>
+              <li>دعاء رؤية الهلال <span class="muted">(إذا رأى الهلال)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الريح والسحاب</b>
+            <ul>
+              <li>دعاء الريح <span class="muted">(إذا عصفت الريح)</span></li>
+              <li>
+                اللهم إني أعوذ بك من شرها <span class="muted">(إذا رأى ناشئًا في أفق السماء)</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>المطر والاستسقاء</b>
+            <ul>
+              <li>اللهم صيبًا نافعًا <span class="muted">(إذا رأى المطر)</span></li>
+              <li>مطرنا بفضل الله ورحمته <span class="muted">(بعد نزول المطر)</span></li>
+              <li>اللهم أغثنا <span class="muted">(إذا استسقى)</span></li>
+              <li>اللهم اسقنا غيثًا مغيثًا <span class="muted">(إذا استسقى)</span></li>
+              <li>اللهم اسق عبادك وبهائمك <span class="muted">(إذا استسقى)</span></li>
+              <li class="new">
+                + اللهم حوالينا ولا علينا (إذا كثر المطر)
+                <span class="muted">· صحيح البخاري ١٠١٤ · جاهز: في الصحيح</span>
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>أصوات الحيوان</b>
+            <ul>
+              <li>
+                سؤال الله من فضله عند صياح الديك <span class="muted">(إذا سمع صياح الديكة)</span>
+              </li>
+              <li>التعوذ عند نهيق الحمار <span class="muted">(إذا سمع نهيق الحمار)</span></li>
+              <li class="new">
+                + التعوذ عند نباح الكلاب ليلًا
+                <span class="muted">· هداية الرواة ٤٢٣٢ · يحتاج صفحة من خارج الكتب الستة</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <h3 class="band">المناسبات</h3>
+      <div class="sec">
+        <h4>16. المواسم والحج <span class="muted">· 7 ذكرًا + 3 مقترحًا · كما هو</span></h4>
+        <div class="groups">
+          <div class="grp">
+            <b>الصيام ورمضان</b>
+            <ul>
+              <li>ذهب الظمأ <span class="muted">(إذا أفطر الصائم)</span></li>
+              <li>إني صائم <span class="muted">(إذا شاتمه أحد أو قاتله وهو صائم)</span></li>
+              <li>اللهم إنك عفو تحب العفو <span class="muted">(في ليلة القدر)</span></li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>العيد والأضحية</b>
+            <ul>
+              <li>باسم الله، اللهم تقبل <span class="muted">(إذا ذبح أضحيته)</span></li>
+              <li class="new">
+                + التسمية والتكبير عند الذبح
+                <span class="muted"
+                  >· صحيح البخاري ٥٥٦٥ · الصفحة تقول «سمّى وكبّر»، واللفظ يحتاج صفحة تنص عليه</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="grp">
+            <b>الحج والعمرة</b>
+            <ul>
+              <li>التلبية <span class="muted">(من أحرم بالحج أو العمرة)</span></li>
+              <li>على الصفا والمروة <span class="muted">(على الصفا وعلى المروة)</span></li>
+              <li>دعاء يوم عرفة <span class="muted">(يوم عرفة)</span></li>
+              <li class="new">
+                + الله أكبر عند الركن في الطواف
+                <span class="muted">· صحيح البخاري ١٦١٣ · جاهز: في الصحيح</span>
+              </li>
+              <li class="new">
+                + الله أكبر مع كل حصاة <span class="muted">· صحيح مسلم ١٢٩٦ · جاهز: في الصحيح</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="muted">
+        الأخضر المبدوء بـ + ذكر مقترح ليس في الموقع. «جاهز» أي في الصحيحين وصفحته على الدرر محفوظة،
+        ويبقى إثباته الكامل قبل إضافته.
+      </p>
+
+      <h2>ما يتغير عند التنفيذ</h2>
+      <ul>
+        <li>كل ذكر ينتقل يبقى برابطه القديم محوَّلًا (301) إلى مكانه الجديد، فلا ينكسر رابط نُشر.</li>
+        <li>
+          الإثباتات تبقى. يتغير فيها إثبات «الموضع» فقط لأن القسم جزء منه، فأعيد تسجيله من الصفحات
+          المحفوظة.
+        </li>
+        <li>الأقسام الجديدة تأخذ شارة ولونًا من نظام الألوان، وتُعاد بطاقات المشاركة.</li>
+        <li>لا يتغير نص ذكر ولا عدده ولا حكمه.</li>
+      </ul>
+    </main>
+  </body>
+</html>
