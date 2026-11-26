@@ -1,7 +1,7 @@
 ---
 title: "ما يقول إذا خرج إلى المقابر"
 occasion: "ahwal"
-order: 59
+order: 23
 count: 1
 mode: "both"
 quran: false

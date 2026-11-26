@@ -1,7 +1,7 @@
 ---
 title: "اللهم إنا نجعلك في نحورهم"
 occasion: "ahwal"
-order: 53
+order: 17
 count: 1
 mode: "both"
 quran: false

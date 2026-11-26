@@ -1,7 +1,7 @@
 ---
 title: "بسم الله قبل الطعام"
 occasion: "ahwal"
-order: 12
+order: 36
 count: 1
 mode: "both"
 quran: false

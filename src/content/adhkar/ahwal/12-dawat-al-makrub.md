@@ -1,7 +1,7 @@
 ---
 title: "دعوات المكروب"
 occasion: "ahwal"
-order: 48
+order: 12
 count: 1
 mode: "both"
 quran: false

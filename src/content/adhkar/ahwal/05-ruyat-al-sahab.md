@@ -1,7 +1,7 @@
 ---
 title: "اللهم إني أعوذ بك من شرها"
 occasion: "ahwal"
-order: 41
+order: 5
 count: 1
 mode: "both"
 quran: false

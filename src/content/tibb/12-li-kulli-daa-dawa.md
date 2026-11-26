@@ -1,6 +1,6 @@
 ---
 title: "لكل داء دواء"
-order: 2
+order: 12
 group: "مبادئ التداوي"
 rawi: "جابر بن عبد الله"
 takhrij:

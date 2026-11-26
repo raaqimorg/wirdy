@@ -1,7 +1,7 @@
 ---
 title: "أفطر عندكم الصائمون"
 occasion: "ahwal"
-order: 19
+order: 43
 count: 1
 mode: "both"
 quran: false

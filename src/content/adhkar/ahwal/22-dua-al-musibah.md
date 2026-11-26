@@ -1,7 +1,7 @@
 ---
 title: "دعاء المصيبة"
 occasion: "ahwal"
-order: 58
+order: 22
 count: 1
 mode: "both"
 quran: false

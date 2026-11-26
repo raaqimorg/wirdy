@@ -1,7 +1,7 @@
 ---
 title: "سمع سامع بحمد الله"
 occasion: "ahwal"
-order: 37
+order: 54
 count: 1
 mode: "both"
 quran: false

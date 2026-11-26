@@ -1,7 +1,7 @@
 ---
 title: "الحمد لله الذي بنعمته تتم الصالحات"
 occasion: "ahwal"
-order: 44
+order: 8
 count: 1
 mode: "both"
 quran: false

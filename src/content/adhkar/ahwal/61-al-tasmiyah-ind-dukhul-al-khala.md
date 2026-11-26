@@ -1,7 +1,7 @@
 ---
 title: "التسمية عند دخول الخلاء"
 occasion: "ahwal"
-order: 1
+order: 61
 count: 1
 mode: "both"
 quran: false

@@ -1,7 +1,7 @@
 ---
 title: "اللهم لك الحمد، وأنت كسوتنيه"
 occasion: "ahwal"
-order: 5
+order: 34
 count: 1
 mode: "both"
 quran: false

@@ -1,7 +1,7 @@
 ---
 title: "سؤال الله من فضله عند صياح الديك"
 occasion: "ahwal"
-order: 62
+order: 59
 count: 1
 mode: "both"
 quran: false

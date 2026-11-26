@@ -1,7 +1,7 @@
 ---
 title: "حمد العاطس"
 occasion: "ahwal"
-order: 21
+order: 29
 count: 1
 mode: "both"
 quran: false

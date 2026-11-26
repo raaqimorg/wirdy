@@ -1,7 +1,7 @@
 ---
 title: "الحمد لله على كل حال"
 occasion: "ahwal"
-order: 45
+order: 9
 count: 1
 mode: "both"
 quran: false

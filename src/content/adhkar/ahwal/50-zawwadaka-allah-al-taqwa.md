@@ -1,7 +1,7 @@
 ---
 title: "زوّدك الله التقوى"
 occasion: "ahwal"
-order: 33
+order: 50
 count: 1
 mode: "both"
 quran: false

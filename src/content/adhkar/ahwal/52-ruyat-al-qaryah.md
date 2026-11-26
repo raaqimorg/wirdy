@@ -1,7 +1,7 @@
 ---
 title: "ما يقول إذا رأى قرية يريد دخولها"
 occasion: "ahwal"
-order: 35
+order: 52
 count: 1
 mode: "both"
 quran: false

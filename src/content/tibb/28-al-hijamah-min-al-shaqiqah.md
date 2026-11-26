@@ -1,6 +1,6 @@
 ---
 title: "الحجامة من الشقيقة"
-order: 27
+order: 28
 group: "الحجامة"
 rawi: "ابن عباس"
 takhrij:

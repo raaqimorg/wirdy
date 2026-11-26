@@ -1,6 +1,6 @@
 ---
 title: "الحجامة والقسط البحري"
-order: 26
+order: 27
 group: "الحجامة"
 rawi: "أنس بن مالك"
 takhrij:

@@ -1,6 +1,6 @@
 ---
 title: "الفاتحة رقية"
-order: 35
+order: 3
 group: "الرقية"
 rawi: "أبي سعيد الخدري"
 takhrij:

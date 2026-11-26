@@ -1,7 +1,7 @@
 ---
 title: "بسم الله في أوله وآخره"
 occasion: "ahwal"
-order: 13
+order: 37
 count: 1
 mode: "both"
 quran: false

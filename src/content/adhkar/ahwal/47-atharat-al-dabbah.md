@@ -1,7 +1,7 @@
 ---
 title: "بسم الله إذا عثرت الدابة"
 occasion: "ahwal"
-order: 10
+order: 47
 count: 1
 mode: "both"
 quran: false

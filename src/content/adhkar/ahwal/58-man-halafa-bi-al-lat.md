@@ -1,7 +1,7 @@
 ---
 title: "لا إله إلا الله لمن حلف باللات والعزى"
 occasion: "ahwal"
-order: 61
+order: 58
 count: 1
 mode: "both"
 quran: false

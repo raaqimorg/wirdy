@@ -1,7 +1,7 @@
 ---
 title: "أستودع الله دينك"
 occasion: "ahwal"
-order: 32
+order: 49
 count: 1
 mode: "both"
 quran: false

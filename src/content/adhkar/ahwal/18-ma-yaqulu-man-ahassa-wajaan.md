@@ -1,7 +1,7 @@
 ---
 title: "ما يقول من وجد وجعًا في جسده"
 occasion: "ahwal"
-order: 54
+order: 18
 count: 1
 counts: [3, 7]
 mode: "both"

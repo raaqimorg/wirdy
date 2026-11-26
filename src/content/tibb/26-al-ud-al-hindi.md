@@ -1,6 +1,6 @@
 ---
 title: "العود الهندي"
-order: 25
+order: 26
 group: "أغذية وأدوية"
 rawi: "أم قيس بنت محصن"
 takhrij:

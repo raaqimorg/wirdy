@@ -1,7 +1,7 @@
 ---
 title: "يهديكم الله ويصلح بالكم"
 occasion: "ahwal"
-order: 24
+order: 32
 count: 1
 mode: "both"
 quran: false

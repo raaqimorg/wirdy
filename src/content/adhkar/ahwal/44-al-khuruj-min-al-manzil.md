@@ -1,7 +1,7 @@
 ---
 title: "بسم الله، توكلت على الله"
 occasion: "ahwal"
-order: 7
+order: 44
 count: 1
 mode: "both"
 quran: false

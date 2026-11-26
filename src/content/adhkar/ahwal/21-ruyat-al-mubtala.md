@@ -1,7 +1,7 @@
 ---
 title: "ما يقول إذا رأى مبتلى"
 occasion: "ahwal"
-order: 57
+order: 21
 count: 1
 mode: "both"
 quran: false

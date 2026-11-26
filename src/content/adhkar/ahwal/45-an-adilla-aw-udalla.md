@@ -1,7 +1,7 @@
 ---
 title: "أعوذ بك أن أضل أو أُضل"
 occasion: "ahwal"
-order: 8
+order: 45
 count: 1
 mode: "both"
 quran: false

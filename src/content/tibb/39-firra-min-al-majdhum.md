@@ -1,6 +1,6 @@
 ---
 title: "فر من المجذوم"
-order: 14
+order: 39
 group: "العدوى والأوبئة"
 rawi: "أبي هريرة"
 takhrij:

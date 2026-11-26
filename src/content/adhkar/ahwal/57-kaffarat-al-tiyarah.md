@@ -1,7 +1,7 @@
 ---
 title: "كفارة الطِّيَرة"
 occasion: "ahwal"
-order: 60
+order: 57
 count: 1
 mode: "both"
 quran: false

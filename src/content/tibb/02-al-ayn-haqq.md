@@ -1,6 +1,6 @@
 ---
 title: "العين حق"
-order: 34
+order: 2
 group: "الرقية"
 rawi: "ابن عباس"
 takhrij:

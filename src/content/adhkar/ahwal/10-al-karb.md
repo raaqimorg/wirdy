@@ -1,7 +1,7 @@
 ---
 title: "دعاء الكرب"
 occasion: "ahwal"
-order: 46
+order: 10
 count: 1
 mode: "both"
 quran: false

@@ -1,7 +1,7 @@
 ---
 title: "أعوذ بكلمات الله التامات"
 occasion: "ahwal"
-order: 36
+order: 53
 count: 1
 mode: "both"
 quran: false

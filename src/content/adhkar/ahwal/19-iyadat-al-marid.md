@@ -1,7 +1,7 @@
 ---
 title: "لا بأس، طهور إن شاء الله"
 occasion: "ahwal"
-order: 55
+order: 19
 count: 1
 mode: "both"
 quran: false

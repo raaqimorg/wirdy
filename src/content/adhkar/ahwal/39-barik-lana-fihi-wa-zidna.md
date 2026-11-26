@@ -1,7 +1,7 @@
 ---
 title: "اللهم بارك لنا فيه وزدنا منه"
 occasion: "ahwal"
-order: 15
+order: 39
 count: 1
 mode: "both"
 quran: false

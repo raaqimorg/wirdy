@@ -1,7 +1,7 @@
 ---
 title: "آيبون تائبون عابدون"
 occasion: "ahwal"
-order: 38
+order: 55
 count: 1
 mode: "both"
 quran: false

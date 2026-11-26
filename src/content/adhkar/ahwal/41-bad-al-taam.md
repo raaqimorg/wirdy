@@ -1,7 +1,7 @@
 ---
 title: "الحمد لله الذي أطعمني هذا"
 occasion: "ahwal"
-order: 17
+order: 41
 count: 1
 mode: "both"
 quran: false

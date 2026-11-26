@@ -1,7 +1,7 @@
 ---
 title: "ذكر اسم الله عند إغلاق الباب وإطفاء المصباح"
 occasion: "ahwal"
-order: 31
+order: 56
 count: 1
 mode: "both"
 quran: false

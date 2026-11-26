@@ -1,6 +1,6 @@
 ---
 title: "الزيت"
-order: 22
+order: 23
 group: "أغذية وأدوية"
 rawi: "عمر بن الخطاب"
 takhrij:

@@ -1,7 +1,7 @@
 ---
 title: "الحمد لله الذي كساني هذا الثوب"
 occasion: "ahwal"
-order: 4
+order: 33
 count: 1
 mode: "both"
 quran: false

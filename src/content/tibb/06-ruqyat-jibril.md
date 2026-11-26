@@ -1,6 +1,6 @@
 ---
 title: "رقية جبريل"
-order: 38
+order: 6
 group: "الرقية"
 rawi: "أبي سعيد الخدري"
 takhrij:

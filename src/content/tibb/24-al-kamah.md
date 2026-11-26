@@ -1,6 +1,6 @@
 ---
 title: "الكمأة"
-order: 23
+order: 24
 group: "أغذية وأدوية"
 rawi: "سعيد بن زيد"
 takhrij:

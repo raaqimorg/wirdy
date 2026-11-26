@@ -1,7 +1,7 @@
 ---
 title: "دعاء السفر"
 occasion: "ahwal"
-order: 34
+order: 51
 count: 1
 mode: "both"
 quran: false

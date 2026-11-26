@@ -1,7 +1,7 @@
 ---
 title: "أسأل الله العظيم أن يشفيك"
 occasion: "ahwal"
-order: 56
+order: 20
 count: 7
 mode: "both"
 quran: false

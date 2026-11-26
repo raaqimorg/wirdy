@@ -1,7 +1,7 @@
 ---
 title: "البس جديدًا وعش حميدًا"
 occasion: "ahwal"
-order: 6
+order: 35
 count: 1
 mode: "both"
 quran: false

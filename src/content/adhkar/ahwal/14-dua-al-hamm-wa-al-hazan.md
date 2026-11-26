@@ -1,7 +1,7 @@
 ---
 title: "دعاء الهم والحزن"
 occasion: "ahwal"
-order: 50
+order: 14
 count: 1
 mode: "both"
 quran: false

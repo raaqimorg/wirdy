@@ -1,6 +1,6 @@
 ---
 title: "الحمى من فيح جهنم"
-order: 30
+order: 8
 group: "الحمى وأجر المريض"
 rawi: "عائشة"
 takhrij:

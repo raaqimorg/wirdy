@@ -1,6 +1,6 @@
 ---
 title: "الذباب"
-order: 11
+order: 36
 group: "حفظ الصحة"
 rawi: "أبي هريرة"
 takhrij:

@@ -1,6 +1,6 @@
 ---
 title: "أذهب الباس رب الناس"
-order: 37
+order: 5
 group: "الرقية"
 rawi: "عائشة"
 takhrij:

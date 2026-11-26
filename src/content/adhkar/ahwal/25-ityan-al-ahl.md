@@ -1,7 +1,7 @@
 ---
 title: "ما يقول إذا أتى أهله"
 occasion: "ahwal"
-order: 29
+order: 25
 count: 1
 mode: "both"
 quran: false

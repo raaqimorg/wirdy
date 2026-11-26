@@ -1,6 +1,6 @@
 ---
 title: "النفث بالمعوذات"
-order: 36
+order: 4
 group: "الرقية"
 rawi: "عائشة"
 takhrij:

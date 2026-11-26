@@ -1,7 +1,7 @@
 ---
 title: "دعاء دخول السوق"
 occasion: "ahwal"
-order: 11
+order: 48
 count: 1
 mode: "both"
 quran: false

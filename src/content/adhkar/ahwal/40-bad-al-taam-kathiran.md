@@ -1,7 +1,7 @@
 ---
 title: "الحمد لله كثيرًا طيبًا مباركًا فيه"
 occasion: "ahwal"
-order: 16
+order: 40
 count: 1
 mode: "both"
 quran: false

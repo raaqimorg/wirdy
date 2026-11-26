@@ -1,7 +1,7 @@
 ---
 title: "تعويذ الأولاد"
 occasion: "ahwal"
-order: 30
+order: 26
 count: 1
 mode: "both"
 quran: false

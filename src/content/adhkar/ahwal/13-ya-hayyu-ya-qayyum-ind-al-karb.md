@@ -2,7 +2,7 @@
 title: "يا حي يا قيوم"
 context: "عند الكرب"
 occasion: "ahwal"
-order: 49
+order: 13
 count: 1
 mode: "both"
 quran: false

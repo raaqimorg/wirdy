@@ -1,7 +1,7 @@
 ---
 title: "دعاء رؤية الهلال"
 occasion: "ahwal"
-order: 39
+order: 3
 count: 1
 mode: "both"
 quran: false

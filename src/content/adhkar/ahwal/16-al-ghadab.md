@@ -1,7 +1,7 @@
 ---
 title: "الاستعاذة عند الغضب"
 occasion: "ahwal"
-order: 52
+order: 16
 count: 1
 mode: "both"
 quran: false

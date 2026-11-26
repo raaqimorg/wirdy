@@ -1,7 +1,7 @@
 ---
 title: "دعاء الاستخارة"
 occasion: "ahwal"
-order: 27
+order: 1
 count: 1
 mode: "both"
 quran: false

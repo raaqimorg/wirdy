@@ -1,7 +1,7 @@
 ---
 title: "اللهم صيبًا نافعًا"
 occasion: "ahwal"
-order: 42
+order: 6
 count: 1
 mode: "both"
 quran: false

@@ -1,7 +1,7 @@
 ---
 title: "اللهم بارك لهم فيما رزقتهم"
 occasion: "ahwal"
-order: 18
+order: 42
 count: 1
 mode: "both"
 quran: false

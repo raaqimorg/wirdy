@@ -1,6 +1,6 @@
 ---
 title: "سبع تمرات عجوة"
-order: 18
+order: 19
 group: "التمر وماء زمزم"
 rawi: "سعد بن أبي وقاص"
 takhrij:

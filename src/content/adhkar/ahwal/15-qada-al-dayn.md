@@ -1,7 +1,7 @@
 ---
 title: "دعاء قضاء الدَّين"
 occasion: "ahwal"
-order: 51
+order: 15
 count: 1
 mode: "both"
 quran: false

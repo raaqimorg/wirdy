@@ -1,7 +1,7 @@
 ---
 title: "دعاء الريح"
 occasion: "ahwal"
-order: 40
+order: 4
 count: 1
 mode: "both"
 quran: false

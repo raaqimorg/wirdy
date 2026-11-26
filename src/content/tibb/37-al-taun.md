@@ -1,6 +1,6 @@
 ---
 title: "الطاعون"
-order: 12
+order: 37
 group: "العدوى والأوبئة"
 rawi: "أسامة بن زيد"
 takhrij:

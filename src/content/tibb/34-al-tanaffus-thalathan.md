@@ -1,6 +1,6 @@
 ---
 title: "التنفس في الشراب ثلاثًا"
-order: 9
+order: 34
 group: "حفظ الصحة"
 rawi: "أنس بن مالك"
 takhrij:

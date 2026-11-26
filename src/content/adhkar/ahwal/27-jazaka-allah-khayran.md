@@ -1,7 +1,7 @@
 ---
 title: "جزاك الله خيرًا"
 occasion: "ahwal"
-order: 25
+order: 27
 count: 1
 mode: "both"
 quran: false

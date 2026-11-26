@@ -2,7 +2,7 @@
 title: "الحمد لله على كل حال"
 context: "للعاطس"
 occasion: "ahwal"
-order: 22
+order: 30
 count: 1
 mode: "both"
 quran: false

@@ -1,6 +1,6 @@
 ---
 title: "الإثمد"
-order: 24
+order: 25
 group: "أغذية وأدوية"
 rawi: "ابن عباس"
 takhrij:

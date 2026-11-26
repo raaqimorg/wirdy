@@ -1,7 +1,7 @@
 ---
 title: "أعوذ بك من الخبث والخبائث"
 occasion: "ahwal"
-order: 2
+order: 62
 count: 1
 mode: "both"
 quran: false

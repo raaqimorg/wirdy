@@ -1,6 +1,6 @@
 ---
 title: "لا تسبي الحمى"
-order: 31
+order: 9
 group: "الحمى وأجر المريض"
 rawi: "جابر بن عبد الله"
 takhrij:

@@ -1,6 +1,6 @@
 ---
 title: "الشفاء في ثلاثة"
-order: 15
+order: 16
 group: "العسل والحبة السوداء"
 rawi: "ابن عباس"
 takhrij:

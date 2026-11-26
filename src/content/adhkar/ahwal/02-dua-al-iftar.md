@@ -1,7 +1,7 @@
 ---
 title: "ذهب الظمأ"
 occasion: "ahwal"
-order: 20
+order: 2
 count: 1
 mode: "both"
 quran: false

@@ -1,7 +1,7 @@
 ---
 title: "كفارة المجلس"
 occasion: "ahwal"
-order: 26
+order: 28
 count: 1
 mode: "both"
 quran: false

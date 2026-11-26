@@ -1,6 +1,6 @@
 ---
 title: "التلبينة"
-order: 21
+order: 22
 group: "أغذية وأدوية"
 rawi: "عائشة"
 takhrij:

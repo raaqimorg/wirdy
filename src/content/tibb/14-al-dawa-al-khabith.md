@@ -1,6 +1,6 @@
 ---
 title: "النهي عن الدواء الخبيث"
-order: 4
+order: 14
 group: "مبادئ التداوي"
 rawi: "أبي هريرة"
 takhrij:

@@ -1,7 +1,7 @@
 ---
 title: "الدعاء للمتزوج"
 occasion: "ahwal"
-order: 28
+order: 24
 count: 1
 mode: "both"
 quran: false

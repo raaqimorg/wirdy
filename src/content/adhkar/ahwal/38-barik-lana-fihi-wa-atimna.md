@@ -1,7 +1,7 @@
 ---
 title: "اللهم بارك لنا فيه وأطعمنا خيرًا منه"
 occasion: "ahwal"
-order: 14
+order: 38
 count: 1
 mode: "both"
 quran: false

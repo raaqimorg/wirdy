@@ -1,6 +1,6 @@
 ---
 title: "تربة أرضنا"
-order: 39
+order: 7
 group: "الرقية"
 rawi: "عائشة"
 takhrij:

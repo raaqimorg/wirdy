@@ -1,7 +1,7 @@
 ---
 title: "مطرنا بفضل الله ورحمته"
 occasion: "ahwal"
-order: 43
+order: 7
 count: 1
 mode: "both"
 quran: false

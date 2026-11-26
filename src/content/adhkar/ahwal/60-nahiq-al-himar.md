@@ -1,7 +1,7 @@
 ---
 title: "التعوذ عند نهيق الحمار"
 occasion: "ahwal"
-order: 63
+order: 60
 count: 1
 mode: "both"
 quran: false

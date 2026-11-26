@@ -1,7 +1,7 @@
 ---
 title: "الله الله ربي"
 occasion: "ahwal"
-order: 47
+order: 11
 count: 1
 mode: "both"
 quran: false

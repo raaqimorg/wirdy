@@ -1,6 +1,6 @@
 ---
 title: "الخمر ليست بدواء"
-order: 5
+order: 15
 group: "مبادئ التداوي"
 rawi: "وائل الحضرمي"
 takhrij:

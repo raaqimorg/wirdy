@@ -1,7 +1,7 @@
 ---
 title: "دعاء الركوب"
 occasion: "ahwal"
-order: 9
+order: 46
 count: 1
 counts: [1, 1, 1, 3, 3, 1]
 mode: "both"

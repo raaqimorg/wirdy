@@ -1,6 +1,6 @@
 ---
 title: "الصحة والفراغ"
-order: 6
+order: 31
 group: "حفظ الصحة"
 rawi: "ابن عباس"
 takhrij:

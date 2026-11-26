@@ -1,6 +1,6 @@
 ---
 title: "غطوا الإناء"
-order: 10
+order: 35
 group: "حفظ الصحة"
 rawi: "جابر بن عبد الله"
 takhrij:

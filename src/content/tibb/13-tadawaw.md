@@ -1,6 +1,6 @@
 ---
 title: "تداووا"
-order: 3
+order: 13
 group: "مبادئ التداوي"
 rawi: "أسامة بن شريك"
 takhrij:
