@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { excerptAyat, excerptClauses, letters } from './excerpt';
+import { excerptAyat, excerptClauses, excerptWords, letters } from './excerpt';
+
+describe('excerptWords', () => {
+  it('keeps a short text whole', () => {
+    expect(excerptWords('سبحان الله', 20)).toEqual({ text: 'سبحان الله', cut: false });
+  });
+
+  it('cuts a long text between words, never inside one', () => {
+    expect(excerptWords('سبحان الله وبحمده سبحان الله العظيم', 12)).toEqual({
+      text: 'سبحان الله',
+      cut: true,
+    });
+  });
+});
 
 describe('letters', () => {
   it('counts no tashkil', () => {

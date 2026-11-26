@@ -6,6 +6,7 @@ import plex500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic
 import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url';
 import '../styles/index.css';
 import SearchSheet from '../components/SearchSheet.astro';
+import SkipLink from '../components/SkipLink.astro';
 import { PALETTE } from '../lib/palette';
 import { SITE } from '../lib/site';
 
@@ -294,6 +295,7 @@ const structuredData = {
     </noscript>
   </head>
   <body class={tone && 'tone'} style={tone && `--tone: ${tone}`}>
+    <SkipLink />
     <slot />
     {search && <SearchSheet stage={Boolean(tone)} />}
   </body>

@@ -1,138 +1,136 @@
 # Exceptions
 
-Wirdy is meant to look boring: Markdown in, static HTML pages out. Anything that does not look like that needs a reason here, so the next person (human or agent) does not try to "fix" it. See `AGENTS.md`, "Keep it boring".
-
-This list is short on purpose. If you find unusual code that is not here, say so. Either it belongs here, or the code should change.
+Wirdy is boring on purpose: Markdown in, static HTML out. Each choice below breaks that, with its reason, so nobody "fixes" it. If you find unusual code not listed here, say so: it belongs here, or it changes.
 
 ## One page serves the morning and the evening
 
-The morning and evening forms of a dhikr differ in a few words (أصبحنا or أمسينا). The page holds both and shows one. A switch under the top of the page («الصباح»، «المساء») changes the form at once, without loading the page again, and the script marks the one that shows with `aria-current`. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS hides the other form (`src/styles/components/variant-text.css`). The owner asked to show only the form that is picked.
+The two forms differ in a few words (أصبحنا, أمسينا). The page holds both and shows one. A switch at the top («الصباح»، «المساء») changes the form in place, and the script marks the shown one with `aria-current`. An inline script in `src/layouts/Paper.astro` sets `data-wird` on `<html>` before the first paint, and CSS hides the other form (`src/styles/components/variant-text.css`). The owner asked for it.
 
-- The script picks the morning before noon local time, and the evening otherwise, as AM and PM. `?w=s` or `?w=m` in the URL overrides it. The choice is kept in `sessionStorage`, with the form that was due when it was made, so it holds from page to page and ends when the next form is due. Returning to a page with the back button shows the last choice. The switch is at noon, not at Asr, because in winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, and 13:38 in London in December). Between Dhuhr and Asr, the next set, the evening, is the right guess.
+- The script picks the morning before local noon, the evening after. `?w=s` or `?w=m` overrides it. `sessionStorage` keeps the choice with the form due when it was made, so it holds across pages and ends when the next form is due. The back button shows the last choice. The switch is at noon, not Asr, because winter Asr comes before 15:00 (about 14:43 in Riyadh, 14:27 in Dammam, 13:38 in London in December). Between Dhuhr and Asr, the evening is the right guess.
 - It is inline, not a module, so the right form shows on the first paint, with no flash.
-- Without JavaScript, the page shows the morning form, and the switch is hidden (`<noscript>`), because it would change nothing.
-- A dhikr for one time only (`mode: "sabah"` or `"masaa"`) is hidden at the other time in its list, and the count at the top of the page follows. A link to its place (`#slug`) still shows it, through `:target`. Its own page always shows it.
-- The title of a dhikr that opens with the words of its text takes them from the evening form too (`eveningTitle` in `src/lib/title.ts`), so the title and the text agree. The `<title>`, the card, and the search keep the morning form.
+- Without JavaScript, the page shows the morning, and `<noscript>` hides the switch.
+- A one-time dhikr (`mode: "sabah"` or `"masaa"`) hides at the other time, and the page count follows. A `#slug` link still shows it, through `:target`. Its own page always shows it.
+- A title made of the text's first words follows the evening form too (`eveningTitle` in `src/lib/title.ts`). The `<title>`, the card, and search keep the morning form.
 
 ## An empty touch listener turns on the press state on iPhones
 
-A card shrinks to 97% while it is pressed (`src/styles/components/occasion-card.css`), and every other link and button dims to 60% (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds a `touchstart` listener that does nothing.
+A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and every other link and button dims to 60% (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds an empty `touchstart` listener.
 
-- Without it, an iPhone tap gives no feedback at all, because `a` turns off the grey tap highlight (`-webkit-tap-highlight-color: transparent`).
+- Without it, an iPhone tap shows nothing, because `-webkit-tap-highlight-color: transparent` turns off the grey highlight.
 - The listener is `passive`, so it never delays scrolling.
-- The ordinary way is to bring back the grey tap highlight. It is a flat flash on the link's box, not the press of an iOS control.
+- The ordinary way is the grey highlight: a flat flash on the link's box, not an iOS press.
 
 ## A button switches between light and dark
 
-The site follows the device's light or dark mode. The small «المظهر» button in the footer of every page (`components/ThemeToggle.astro`) flips it, and the browser remembers the choice in `localStorage` under `theme`. The owner asked for the button.
+The site follows the device's mode. The «المظهر» button in every footer (`components/ThemeToggle.astro`) flips it, and `localStorage` keeps the choice under `theme`. The owner asked for it.
 
 - The ordinary way is to follow the device only, with no button and no script.
-- The inline script in `src/layouts/Paper.astro` applies a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes the other mode. It also sets both `theme-color` metas to the chosen paper, so the browser bar matches.
-- The button has two states. It starts from the device's mode, and a click flips to the other one. When a click lands on the device's own mode, the script forgets the saved choice, so the site follows the device again. There is no third «automatic» state.
-- The button is named «المظهر», and its text never changes. Its `aria-pressed` says whether the dark mode is on. The script sets it when the page loads, on each click, and when the device's mode changes.
-- The dark colors appear twice in `src/styles/tokens.css`: once for a device in dark mode with no saved light choice, and once for a saved dark choice. A test fails when they differ. Each block also sets `--tone-shade`, which darkens the occasion colors by 10% (the night step of the tone rule in [`design-system.md`](design-system.md)) so they do not glare at night.
-- Without JavaScript, the button is hidden (`<noscript>`), and the page follows the device.
+- The inline script in `src/layouts/Paper.astro` sets a saved choice as `data-theme` on `<html>` before the first paint, so the page never flashes. It also sets both `theme-color` metas to the chosen paper.
+- Two states: the button starts from the device's mode, and a click flips it. A click back to the device's mode forgets the choice. There is no «automatic» state.
+- The label «المظهر» never changes. `aria-pressed` says whether dark is on. The script sets it on load, on click, and when the device's mode changes.
+- `src/styles/tokens.css` holds the dark colors twice: for a dark device with no saved light choice, and for a saved dark choice. A test fails when they differ. Each block sets `--tone-shade`, which darkens the occasion colors by 10% (the night step in [`design-system.md`](design-system.md)).
+- Without JavaScript, `<noscript>` hides the button, and the page follows the device.
 
 ## The code is written with Effect
 
-Every TypeScript module uses [Effect](https://effect.website): `Effect` for work that can fail, `Option` for a value that can be absent, `Schema` for outside data, and the `FileSystem`, `Path`, and `ChildProcess` services in the scripts. The owner asked for it, to make the code as strict as it can be.
+Every TypeScript module uses [Effect](https://effect.website): `Effect` for work that can fail, `Option` for an absent value, `Schema` for outside data, and the `FileSystem`, `Path`, and `ChildProcess` services in the scripts. The owner asked for it, for the strictest code.
 
-- The ordinary way for an Astro site is plain TypeScript, with zod at the schema and `throw` on bad content.
-- Astro reads a collection's schema only as zod. `src/content.config.ts` wraps each Effect `Schema` in `z.unknown().transform(...)`, so the Effect schema is the one source, and zod is only the bridge.
-- The decoders refuse unknown fields (`STRICT` in `src/lib/schema.ts`), as zod's `strictObject` did. A record decodes to the same JSON, key for key, so its fingerprints and the sharing cards do not change.
-- Search runs in the browser, so its module script carries the Effect runtime and `Schema`. It is about 30 KB gzipped, against about 2 KB before. `components/SearchSheet.astro` loads it on every page but `/bahth/`, and the browser keeps it for a year.
-- Two files stay plain JavaScript. The inline script in `src/layouts/Paper.astro` must run before the first paint, so it cannot import a module. `scripts/verification/capture.js` is pasted into the browser on dorar.net or sunnah.com, so it cannot import a module either.
+- The ordinary way for Astro is plain TypeScript, zod at the schema, and `throw` on bad content.
+- Astro reads a collection schema only as zod. `src/content.config.ts` wraps each Effect `Schema` in `z.unknown().transform(...)`: Effect is the one source, zod the bridge.
+- The decoders refuse unknown fields (`STRICT` in `src/lib/schema.ts`), as zod's `strictObject` did. A record decodes to the same JSON, key for key, so fingerprints and cards do not change.
+- The search module carries the Effect runtime and `Schema`: about 30 KB gzipped, against 2 KB before. `components/SearchSheet.astro` loads it on every page but `/bahth/`, and the browser keeps it for a year.
+- Two files stay plain JavaScript. The inline script in `src/layouts/Paper.astro` runs before the first paint, and `scripts/verification/capture.js` is pasted into the browser on dorar.net or sunnah.com. Neither can import a module.
 - A test runs the Effect at its edge (`Effect.runSync`, or `Effect.runPromise` with the Node services), so its assertions stay plain ([`testing.md`](testing.md#how-to-write-one)).
 
 ## The `{{morning|evening}}` markers
 
-A dhikr that changes between the morning and the evening is one file with markers, not two files. Two files would drift apart. `src/lib/variants.ts` parses the markers, and it fails with `MalformedMarker` on any malformed marker, so a typo fails the build instead of reaching the page.
+A dhikr that changes between morning and evening is one file with markers, because two files drift apart. `src/lib/variants.ts` parses the markers and fails with `MalformedMarker`, so a typo fails the build, not the page.
 
 ## The Quran ornaments live in CSS
 
-The brackets ﴿ ﴾ and the آية mark ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the text of the آيات. Copying the text, or reading it with a screen reader, gives the words without the ornaments.
+﴿ ﴾ and ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the آيات, so copy and screen readers give the words alone.
 
-- A folded سورة (`ayat: "fold"`) ends what shows with ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when the سورة is open.
-- Consecutive سور are parted by an empty gap (`src/styles/components/surah.css`), not by ۞. In the مصحف, ۞ marks the start of a ربع الحزب (its Unicode name is «ARABIC START OF RUB EL HIZB»), so between سور it suggests a division that is not there. Each سورة already opens with ﴿.
+- A folded سورة (`ayat: "fold"`) ends its shown part with ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when open.
+- A gap parts consecutive سور (`src/styles/components/surah.css`), not ۞. In the مصحف, ۞ marks a ربع الحزب («ARABIC START OF RUB EL HIZB»), so between سور it suggests a false division. Each سورة already opens with ﴿.
 
 ## A share link opens the device's share sheet
 
-The page of each dhikr, and of each hadith of «الطب النبوي», has a share button, next to «نسخ» and «الصورة». It is a link to the page itself. The inline script in `src/layouts/Paper.astro` opens the device's share sheet with that link. Where there is no share sheet, it copies the link, and its icon turns into a check for a moment. The owner asked for it. In a list, the foot of a card has a copy button, «نسخ», and a plain link to the dhikr's page, «صفحة الذكر» (or «صفحة الحديث»), on their own line under the takhrij.
+Each dhikr page and each hadith page has a share button beside «نسخ» and «الصورة». It links to the page itself. The inline script in `src/layouts/Paper.astro` opens the share sheet with that link, or, with no share sheet, copies it and turns its icon into a check for a moment. The owner asked for it. In a list, a card's foot has «نسخ» and a plain link, «صفحة الذكر» or «صفحة الحديث», on their own line under the takhrij.
 
-- The ordinary way is the link alone. It still is one: without JavaScript, or with a modifier key, it opens the dhikr's page.
-- It shares the link, not the image. Some apps drop the link when an image comes with it. The dhikr's page has a plain download link for the image.
-- A place in an occasion page is a plain `#slug`, marked with `:target` in CSS. The text after `#` never reaches the server, so only a page of its own can have its own sharing card.
-- Switching between the morning and the evening form keeps the `#slug`.
+- The ordinary way is the plain link. It still is one: without JavaScript, or with a modifier key, it opens the page.
+- It shares the link, not the image, because some apps drop a link sent with an image. The page has a plain download link for the image.
+- A place on an occasion page is a plain `#slug`, marked with `:target`. The fragment never reaches the server, so only a page of its own can have its own card.
+- Switching between morning and evening keeps the `#slug`.
 
 ## A button copies a dhikr with its takhrij
 
-Each dhikr has a copy button, in the foot of its card and on its own page. It copies the words, then the count and the moment when there are any, then the takhrij, so a dhikr does not travel without its source. A hadith of «الطب النبوي» copies its words, its narrator, and its takhrij. The owner asked for it.
+Each dhikr has a copy button, in its card's foot and on its page. It copies the words, then the count and moment when present, then the takhrij, so a dhikr never travels without its source. A hadith copies its words, its narrator, and its takhrij. The owner asked for it.
 
-- The ordinary way is to select the text. That still works, and it also gives the count once.
-- `src/lib/copy.ts` writes what to copy at build time, into `data-copy`. A dhikr with a morning and an evening form also has `data-copy-masaa`, and the script copies the form that shows. So the words are in the page twice.
-- قرآن is copied as Tanzil gives it: one آية on each line, a blank line between سور, and no ornaments. A dhikr with `counts` gives one phrase on each line, with its count.
-- When the copy works, the icon of the button turns into a check, grows from 60% to its size, and turns back after 1.2 seconds (`data-copied` on the button, `icon--idle` and `icon--done` in `src/styles/components/icon.css`). No text shows. A screen reader hears «نُسخ الذكر», or «تعذّر النسخ» when the browser refuses, from a hidden `role="status"`.
-- Without JavaScript, the button is hidden (`<noscript>`), because it would do nothing.
+- The ordinary way is to select the text. That still works, and gives the count once.
+- `src/lib/copy.ts` writes the copy at build time into `data-copy`, and `data-copy-masaa` for an evening form. The script copies the shown form. So the words are in the page twice.
+- قرآن copies as Tanzil gives it: one آية on each line, a blank line between سور, no ornaments. A dhikr with `counts` gives one phrase on each line, with its count.
+- When the copy works, the button's icon turns into a check, grows from 60%, and turns back after 1.2 seconds (`data-copied`, and `icon--idle` and `icon--done` in `icon.css`). No text shows. A screen reader hears «نُسخ الذكر», or «تعذّر النسخ», from a hidden `role="status"`.
+- Without JavaScript, `<noscript>` hides the button.
 
 ## A colored layer sits behind the top of a page with a color
 
-When an iPhone bounces at the top of a page, it uncovers what is above the page and paints it in the color of `body`. On an occasion page that put a band of paper between the status bar and the colored bar, both in the occasion's color. So `.page::before` (`src/styles/utilities.css`) is a fixed layer in the color of the bar, behind the page. A fixed layer stays in place while the page bounces, so the bounce uncovers it.
+An iPhone bounce at the top uncovers the area above the page, painted in the color of `body`. On an occasion page that showed a paper band between the status bar and the colored bar. So `.page::before` (`src/styles/utilities.css`) is a fixed layer in the bar's color, behind the page. It stays in place while the page bounces, so the bounce uncovers it.
 
-- The ordinary way is to let the page color show there, as on most sites.
-- `.page` has the paper color and is at least as tall as the layer, so the layer shows only in the bounce. The bounce at the end of a page stays paper.
-- A colored `body` would fix the top only. The bounce at the end of the page, and the area behind Safari's bottom bar, would turn that color too.
-- `html { background }` does not change the color of the bounce, and an element above the page with a negative offset is not painted there.
-- The home, search, and 404 pages have no color, so they have no layer.
-- Safari on iOS 26 paints the status bar in the color of the sticky bar only when the bar is a solid color with no `backdrop-filter`, so the bar is solid on every page.
+- The ordinary way is to let the page color show, as on most sites.
+- `.page` has the paper color and is at least as tall as the layer, so the layer shows only in the bounce. The bottom bounce stays paper.
+- A colored `body` fixes the top only: the bottom bounce and the area behind Safari's bottom bar take that color too.
+- `html { background }` does not change the bounce color, and an element above the page with a negative offset is not painted there.
+- The home, search, and 404 pages have no color and no layer.
+- Safari on iOS 26 paints the status bar in the sticky bar's color only when the bar is solid with no `backdrop-filter`, so the bar is solid on every page.
 
 ## Each dhikr has a card, named by its fingerprint
 
-`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/tibb/<slug>-<fingerprint>.png` for each hadith of «الطب النبوي» (`hadithCardOf`), 2400 by 1260: a page of 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
+`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/tibb/` for each hadith (`hadithCardOf`), 2400 by 1260: 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
 
-- The name changes when the card changes, so an app that cached the old image fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only the cards that changed.
+- A changed card gets a new name, so an app with the old image cached fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only changed cards.
 - Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.
-- The card looks like the dhikr's page: a band in the occasion's color with the name, its context (lighter, on the name's line when it fits and under it when it does not), and the count, the words in ink on the panel, and a muted foot. The size of the words is the largest that fits. A text that does not fit gets a red outline, and a build test refuses a card that has one.
-- A long text stops at the end of a clause, and قرآن at the end of an آية, never inside one (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks, and could end a card on «لا إله».
-- The card carries the moment, the count, and the takhrij, because an image travels without its page. A قرآن card says «النص: tanzil.net» in its foot.
+- The card mirrors the page: a band in the occasion's color with the name, its context (lighter, on the name's line when it fits, under it otherwise), and the count; the words in ink on the panel; a muted foot. The words take the largest size that fits. A text that does not fit gets a red outline, and a build test refuses it.
+- A long text stops at a clause end, and قرآن at an آية end (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks and could end a card on «لا إله».
+- The card carries the moment, count, and takhrij, because an image travels without its page. A قرآن card says «النص: tanzil.net» in its foot.
 
 ## The icons and the OpenGraph cards come from a headless browser
 
-`scripts/icons/build.ts` and `scripts/opengraph/build.ts` render HTML in a local Chromium-based browser (`scripts/chromium.ts`) and save screenshots. `scripts/icons/build.ts` also writes `favicon.ico` by hand, because the format is a short header and a list of PNGs, and it writes `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift apart.
+`scripts/icons/build.ts` and `scripts/opengraph/build.ts` render HTML in a local Chromium browser (`scripts/chromium.ts`) and save screenshots. `scripts/icons/build.ts` also writes `favicon.ico` by hand (a short header and a list of PNGs) and `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift.
 
-- The ordinary way is an image library such as `sharp`. That adds a native dependency for two scripts that run only when the mark or the card changes.
-- The OpenGraph cards draw the same mark, colors, and emblems as the site, from `src/lib/`, in the site's own fonts from `@fontsource`. The home card shows every occasion. Each occasion card shows its heading, its count, and its emblem on its color, as its page banner does. Run `bun run opengraph` after you change any of them, or after you add or remove a dhikr, because the cards print the count.
+- The ordinary way is an image library such as `sharp`: a native dependency for two scripts that run only when the mark or a card changes.
+- The cards draw the site's mark, colors, and emblems from `src/lib/`, in the site's fonts from `@fontsource`. The home card shows every occasion. Each occasion card shows its heading, count, and emblem on its color, like its page banner. Run `bun run opengraph` after changing any of them, or adding or removing a dhikr, because the cards print the count.
 
 ## Search opens over the page, from a module script
 
-The bar of every page ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the color of the page, because Safari keeps that color behind the clock. On a wide screen it is a panel in the middle, over a dimmed page. Before the reader types, it lists six suggestions, as `/bahth/` does above its section cards. The results change as the reader types, and they are grouped by section, each group under its emblem, its name, and its count. The arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, or ⌘K and Ctrl+K, opens it from the keyboard, and on a wide screen an empty field shows «Esc», the way to close it, which gives its place to the clear button once the reader types. The owner asked for it.
+Every bar ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the page color, because Safari keeps that color behind the clock. On a wide screen it is a centered panel over a dimmed page. Before typing, it lists six suggestions, as `/bahth/` does above its section cards. Results update as the reader types, grouped by section, each under its emblem, name, and count. Arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, ⌘K, or Ctrl+K opens it. On a wide screen an empty field shows «Esc», in the place the clear button takes once the reader types. The owner asked for it.
 
 - The ordinary way is a link to a search page. The icon still is one: without JavaScript, or with a modifier key, it opens `/bahth/`.
-- The rows come from one JSON file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). Its version is a hash of the rows, so it changes when any dhikr changes. `_headers` lets the browser keep it for a year, and a deploy that changes a dhikr changes its name, so no reader sees an old index. The sheet fetches it a second after the page loads, so the results are there as soon as the reader types. Each page asks for it, but the browser keeps it for a year, so it costs one download for each version. If the fetch fails, opening the sheet opens `/bahth/`.
-- The head of each group comes from one `<template>` for each section in the page, so the index carries the section's id, not its drawing.
-- An ordinary Astro `<script>` imports `src/scripts/search.ts`, which imports `src/lib/search.ts`, so the folding, the matching, and the marking have unit tests like the rest of `src/lib/`. Astro bundles it into `_astro/`, which the browser keeps for a year. Nothing in it has to run before the first paint.
-- `/bahth/` holds one row for each dhikr and each hadith in its HTML, so the page is its own index, and it uses the same script. The query never goes in the URL. When the reader opens a result and comes back, the browser's back-forward cache shows the page as it was. Safari empties the field when it shows the page from that cache, so on a `pageshow` from the cache the script writes the last query back. When the browser dropped the page, the script restores the last query from `sessionStorage`, and only on a back or forward navigation.
-- The sheet keeps its own last query in `sessionStorage` under `search-sheet`. When it opens with an empty field, it writes that query back and selects it, so the reader who opened one result can see the others, and typing replaces it.
-- Search reads more than the name, the words, and the section. A row carries `about`: the moment and the manner of a dhikr (`when` and `how`), so «إذا دخل المسجد» finds it. The words «دعاء», «ذكر», «أذكار», «عند», and «إذا» are left out of a query that has other words, Persian ک and ی are read as ك and ي, and a short list of other forms (`SYNONYMS` in `src/lib/search.ts`) lets «دخول» find «دخل» and «الأكل» find «الطعام». The list is short on purpose: a stemmer found more, but it turned «اية الكرسي» from 3 results into 40.
-- When every word together finds nothing, search shows the results of the longest word that finds something, under a line that says so, rather than an empty page.
-- قرآن is written in Tanzil's Uthmani spelling, which a reader does not type, so a سورة is found by its name. A قرآن row carries only the آيات that its card shows before it opens, and shows only its name, so no آية is cut.
-- Without JavaScript, `/bahth/` hides its field and its count (`<noscript>` in `src/layouts/Paper.astro`), and is a plain list of every row, which the browser's find can search. `/bahth/` is `noindex` and stays out of the sitemap.
+- The rows come from one file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). The version is a hash of the rows, so any dhikr change renames it. `_headers` caches it for a year, so no reader sees an old index. The sheet fetches it a second after the page loads, so results are ready as the reader types. Each version costs one download, then the cache serves it. If the fetch fails, opening the sheet opens `/bahth/`.
+- Each group head comes from one `<template>` per section in the page, so the index carries the section id, not its drawing.
+- An ordinary Astro `<script>` imports `src/scripts/search.ts`, which imports `src/lib/search.ts`, so folding, matching, and marking have unit tests. Astro bundles it into `_astro/`, cached for a year. Nothing in it runs before the first paint.
+- `/bahth/` holds one row for each dhikr and each hadith in its HTML, so the page is its own index, with the same script. The query never goes in the URL. Back from a result, the back-forward cache shows the page as it was, and a `pageshow` from that cache writes back the query that Safari empties. When the browser dropped the page, the script restores the last query from `sessionStorage`, on a back or forward navigation only.
+- The sheet keeps its last query in `sessionStorage` under `search-sheet`, and an empty field that opens takes it back, selected, so typing replaces it.
+- A row carries `about`, the `when` and `how` of a dhikr, so «إذا دخل المسجد» finds it. A query drops «دعاء», «ذكر», «أذكار», «عند», and «إذا» when it has other words, reads Persian ک and ی as ك and ي, and knows a short list of other forms (`SYNONYMS` in `src/lib/search.ts`): «دخول» finds «دخل», «الأكل» finds «الطعام». The list is short on purpose, because a stemmer turned «اية الكرسي» from 3 results into 40.
+- When the words together find nothing, search shows the results of the longest word that finds something, under a line that says so.
+- A reader does not type Tanzil's Uthmani spelling, so a سورة is found by its name. A قرآن row carries only the آيات its card shows folded, and shows only its name, so no آية is cut.
+- Without JavaScript, `/bahth/` hides its field and count (`<noscript>` in `src/layouts/Paper.astro`) and is a plain list of every row for the browser's find. `/bahth/` is `noindex` and out of the sitemap.
 
 ## Search remembers the results the reader opens
 
-Before the reader types, search lists «آخر ما فتحت»: the last results the reader opened from search, newest first, with a «مسح السجل» button that forgets them. The browser keeps them in `localStorage` under `search-history`. They never leave the device. The owner asked for it.
+Before typing, search lists «آخر ما فتحت»: the last results opened from search, newest first, with «مسح السجل» to forget them. `localStorage` keeps them under `search-history`. They never leave the device. The owner asked for it.
 
-- The ordinary way is no history, or the browser's own history of the field.
-- It keeps the link of a result that the reader opened, not the words the reader typed, because an opened result is a search that found its dhikr.
-- `src/lib/history.ts` holds the rules, with tests. The stored value is `{ "version": 1, "hrefs": [...] }`. Raise `HISTORY_VERSION` when the shape changes. A value of any other version is removed, and the list starts empty.
-- The stored text is not trusted. It is refused when it is longer than 4 KB, before it is parsed, when it is not JSON, when it has a field it does not know, more than 8 links, or a link that is not a path on the site. A refused value is removed.
-- It keeps 8 links, each once. A link that no row of the search index has (a dhikr that was removed or renamed) does not show, and the next read writes the list without it.
-- A row of the list is a copy of the row in the index, so a stored link never becomes markup. Every read and write is in a `try`, because Safari's private mode and a full storage throw.
-- Another tab that opens a result updates the list through the `storage` event.
+- The ordinary way is no history, or the browser's own field history.
+- It keeps the link of an opened result, not the typed words, because an opened result is a search that found its dhikr.
+- `src/lib/history.ts` holds the rules, with tests. The value is `{ "version": 1, "hrefs": [...] }`. Raise `HISTORY_VERSION` when the shape changes. A value of another version is removed, and the list starts empty.
+- The stored text is untrusted. It is refused when over 4 KB (before parsing), not JSON, or holding an unknown field, more than 8 links, or a link that is not a site path. A refused value is removed.
+- It keeps 8 links, each once. A link with no row in the index (a removed or renamed dhikr) does not show, and the next read drops it.
+- Each list row copies its index row, so a stored link never becomes markup. Every read and write is in a `try`, because Safari's private mode and a full storage throw.
+- Another tab's opened result updates the list through the `storage` event.
 
 ## The proofs are JSON files in git
 
-`verification/` holds a record for each proven dhikr, and the tests read them. The site does not. The owner asked for saved proofs, so that a check never starts from zero.
+`verification/` holds a record for each proven dhikr. The tests read them; the site does not. The owner asked for saved proofs, so a check never starts from zero.
 
-- The ordinary way is a database such as SQLite, or no record. In git, each change to a proof is readable and reviewed, and branches merge.
-- `scripts/verification/capture.js` runs in the browser, on the site itself, because dorar.net and sunnah.com refuse scripted requests. It reads one page every 3 seconds, and a button copies all of them, because a download opens a dialog for each file.
-- oxfmt ignores `src/lib/fixtures`, because a captured text must stay as its page gave it.
+- The ordinary way is a database such as SQLite, or no record. In git, each proof change is readable and reviewed, and branches merge.
+- `scripts/verification/capture.js` runs in the browser on the site itself, because dorar.net and sunnah.com refuse scripted requests. It reads one page every 3 seconds, and one button copies all of them, because a download opens a dialog for each file.
+- oxfmt ignores `src/lib/fixtures`, because a captured text stays as its page gave it.

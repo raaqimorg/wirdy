@@ -5,7 +5,7 @@
   --color-panel: hsl(60 10% 92%);
   --color-ink: hsl(200 50% 5%);
   --color-ink-muted: hsl(200 40% 22%);
-  --color-ink-faint: hsl(200 14% 34%);
+  --color-ink-faint: hsl(200 12% 35%);
   --color-line: hsl(200 30% 20% / 0.35);
   --color-line-soft: color-mix(in oklab, var(--color-line), transparent 55%);
   --color-eggshell: #f4f1d0;
@@ -122,6 +122,7 @@
   --layer-under: -1;
   --layer-raised: 1;
   --layer-bar: 5;
+  --layer-skip: 6;
 
   --opacity-pressed: 0.6;
   --opacity-quiet: 0.82;
@@ -171,7 +172,7 @@
     --color-thumb: hsl(200 20% 32%);
     --color-ink: hsl(55 62% 89%);
     --color-ink-muted: hsl(60 10% 72%);
-    --color-ink-faint: hsl(200 14% 62%);
+    --color-ink-faint: hsl(200 14% 57%);
     --color-line: hsl(60 10% 82% / 0.3);
     --tone-shade: 10%;
     --tone-ink: 45%;
@@ -186,7 +187,7 @@
   --color-thumb: hsl(200 20% 32%);
   --color-ink: hsl(55 62% 89%);
   --color-ink-muted: hsl(60 10% 72%);
-  --color-ink-faint: hsl(200 14% 62%);
+  --color-ink-faint: hsl(200 14% 57%);
   --color-line: hsl(60 10% 82% / 0.3);
   --tone-shade: 10%;
   --tone-ink: 45%;

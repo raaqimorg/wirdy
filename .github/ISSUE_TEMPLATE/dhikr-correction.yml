@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Wirdy shows only what is in al-Bukhari or Muslim, or what al-Albani grades صحيح or حسن (see [docs/content.md](https://github.com/raaqimorg/wirdy/blob/main/docs/content.md)). A report needs a dorar.net page. Another app or a printed book is useful context, but it is not enough on its own.
+        Wirdy shows only what is in al-Bukhari or Muslim, or what al-Albani grades صحيح or حسن (see [docs/content.md](https://github.com/raaqimorg/wirdy/blob/main/docs/content.md)). A report needs a dorar.net page: another app or a printed book is context, not proof.
   - type: dropdown
     id: kind
     attributes:

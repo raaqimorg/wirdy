@@ -1,0 +1,18 @@
+.skip-link {
+  position: fixed;
+  inset-block-start: calc(env(safe-area-inset-top) + var(--space-2));
+  inset-inline-start: var(--space-gutter);
+  z-index: var(--layer-skip);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-paper);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  background: var(--color-ink);
+  border-radius: var(--radius-tile);
+}
+
+.skip-link:not(:focus) {
+  clip-path: inset(50%);
+}

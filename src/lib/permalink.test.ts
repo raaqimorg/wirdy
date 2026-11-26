@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dhikrAnchor, dhikrPath, slugOf } from './permalink';
+import { dhikrAnchor, dhikrPath, hadithAnchor, hadithPath, slugOf } from './permalink';
 
 describe('slugOf', () => {
   it('drops the folder and the order, so a reorder keeps the link', () => {
@@ -19,5 +19,15 @@ describe('the links of a dhikr', () => {
 
   it('has its place in the occasion page', () => {
     expect(dhikrAnchor('nawm', 'ayat-al-kursi')).toBe('/nawm/#ayat-al-kursi');
+  });
+});
+
+describe('the links of a hadith of الطب النبوي', () => {
+  it('has its own page under the section', () => {
+    expect(hadithPath('tadawaw')).toBe('/al-tibb-al-nabawi/tadawaw/');
+  });
+
+  it('has its place in the section page', () => {
+    expect(hadithAnchor('tadawaw')).toBe('/al-tibb-al-nabawi/#tadawaw');
   });
 });

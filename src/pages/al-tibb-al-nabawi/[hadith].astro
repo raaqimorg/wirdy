@@ -8,6 +8,7 @@ import Section from '../../layouts/Section.astro';
 import { cardFile, hadithCardOf } from '../../lib/card';
 import { tibbEntries } from '../../lib/collection';
 import { hadithCopyOf } from '../../lib/copy';
+import { hadithDescriptionOf } from '../../lib/description';
 import { hadithAnchor, hadithPath, slugOf } from '../../lib/permalink';
 import { TIBB } from '../../lib/site';
 
@@ -25,7 +26,6 @@ const slug = slugOf(entry.id);
 const path = hadithPath(slug);
 const card = hadithCardOf(data, body);
 const image = `/${cardFile(card, 'tibb', slug)}`;
-const description = [data.title, card.lead, card.takhrij].join('. ');
 const links = [
   { label: 'السابق', entry: previous },
   { label: 'التالي', entry: next },
@@ -38,7 +38,7 @@ const links = [
 
 <Section
   title={`${data.title} | ${TIBB.title}`}
-  description={description}
+  description={hadithDescriptionOf(data, body)}
   image={image}
   faces={['naskh']}
   crumbs={[

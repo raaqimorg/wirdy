@@ -14,7 +14,7 @@ const { menu = true, ...paper } = Astro.props;
 <Paper {...paper}>
   <Bar menu={menu} />
   <slot name="top" />
-  <main class="container">
+  <main class="container" id="main">
     <slot />
   </main>
   <SiteFooter />

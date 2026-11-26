@@ -2,15 +2,13 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { Effect } from 'effect';
 import { OCCASIONS } from '../lib/occasions';
+import { tibbEntries } from '../lib/collection';
 import { dhikrPath, hadithPath, slugOf } from '../lib/permalink';
 import { TIBB } from '../lib/site';
 
 const sitemap = (site: URL | undefined) =>
   Effect.map(
-    Effect.all([
-      Effect.promise(() => getCollection('adhkar')),
-      Effect.promise(() => getCollection('tibb')),
-    ]),
+    Effect.all([Effect.promise(() => getCollection('adhkar')), tibbEntries]),
     ([adhkar, tibb]) => {
       const paths = [
         '/',
