@@ -5,6 +5,8 @@ export const GET: APIRoute = ({ site }) => {
 Allow: /
 
 Sitemap: ${new URL('/sitemap.xml', site).href}
+
+# LLMs: ${new URL('/llms.txt', site).href}
 `;
   return new Response(body, {
     headers: { 'content-type': 'text/plain; charset=utf-8' },

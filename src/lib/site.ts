@@ -11,6 +11,16 @@ export const SITE = {
   repo: 'https://github.com/raaqimorg/wirdy',
 } as const;
 
+export const RAAQIM = {
+  name: 'Raaqim',
+  arabic: 'راقم',
+  url: 'https://raaqim.org',
+  about: 'Raaqim builds Arabic and Islamic digital projects.',
+  github: 'https://github.com/raaqimorg',
+  x: 'https://x.com/raaqimorg',
+  email: 'contact@raaqim.org',
+} as const;
+
 export const TIBB = {
   path: '/al-tibb-al-nabawi/',
   heading: 'الطب النبوي',

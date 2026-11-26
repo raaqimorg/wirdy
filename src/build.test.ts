@@ -6,7 +6,7 @@ import { inflateSync } from 'node:zlib';
 import { OCCASIONS, OCCASION_IDS } from './lib/occasions';
 import { adhkarLabel } from './lib/arabic';
 import { PALETTE } from './lib/palette';
-import { SITE, TIBB } from './lib/site';
+import { RAAQIM, SITE, TIBB } from './lib/site';
 
 let html = '';
 let notFound = '';
@@ -641,6 +641,21 @@ describe('built site', () => {
     }
     expect(sitemap.match(/<loc>/gu)).toHaveLength(
       OCCASION_IDS.length + 2 + expected + hadiths.length
+    );
+  });
+
+  it('ships an llms.txt that links every section and Raaqim, and robots.txt points to it', () => {
+    const llms = readFileSync(join(DIST, 'llms.txt'), 'utf8');
+    expect(llms.startsWith(`# Wirdy (${SITE.name})\n\n> `)).toBe(true);
+    for (const { id, heading } of OCCASIONS) {
+      expect(llms).toContain(`- [${heading}](https://wirdy.site/${id}/): `);
+    }
+    expect(llms).toContain(`- [${TIBB.heading}](https://wirdy.site/al-tibb-al-nabawi/): `);
+    expect(llms).toContain(`(${RAAQIM.url})`);
+    expect(llms).toContain(`(${RAAQIM.url}/llms.txt)`);
+    expect(llms).toContain(`(${SITE.repo})`);
+    expect(readFileSync(join(DIST, 'robots.txt'), 'utf8')).toContain(
+      '# LLMs: https://wirdy.site/llms.txt'
     );
   });
 

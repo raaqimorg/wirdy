@@ -8,7 +8,7 @@
 - `src/content/tibb/`: the hadiths of الطب النبوي, one file each, on one page and a page per hadith ([`docs/content.md`](docs/content.md#الطب-النبوي)).
 - `src/lib/`: one topic per file, each with a test beside it (`content.test.ts` covers `schema.ts`, the build test covers `collection.ts`, `proofs.test.ts` covers `records.ts`). The proofs are `proof.ts`, `matching.ts`, `fingerprint.ts`, `verification.ts`, `baseline.ts`, and `records.ts`.
 - `src/components/`, `src/layouts/`, `src/styles/`: the design system ([`docs/design-system.md`](docs/design-system.md)).
-- `src/pages/`: the routes, the search index (`search/[version].json.ts`), and the `robots.txt`, `sitemap.xml`, and `site.webmanifest` endpoints.
+- `src/pages/`: the routes, the search index (`search/[version].json.ts`), and the `robots.txt`, `sitemap.xml`, `llms.txt`, and `site.webmanifest` endpoints.
 - `src/scripts/search.ts`: the search module, shared by the search page and the search sheet.
 - `public/`: the generated icons and cards, and `_headers`. Run `bun run icons`, `bun run opengraph`, or `bun run opengraph:adhkar`. Never edit them by hand.
 - `scripts/`: the icon and card generators (headless Chromium), the verification scripts, the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
