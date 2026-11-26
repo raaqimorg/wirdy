@@ -2,19 +2,24 @@
   display: grid;
   align-items: center;
   height: var(--size-banner);
-  font-size: var(--text-title-2);
+  font-size: var(--text-title-1);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
 }
 
 .hero__words {
   max-width: var(--size-hero);
-  text-wrap: balance;
+  text-wrap: pretty;
+}
+
+.hero__more {
+  color: var(--color-ink-faint);
 }
 
 @media (min-width: 64rem) {
   .hero {
     height: var(--size-banner-wide);
     font-size: var(--text-title-3);
+    line-height: var(--leading-tight);
   }
 }
