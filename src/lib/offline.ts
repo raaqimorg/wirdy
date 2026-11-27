@@ -1,10 +1,13 @@
 import { Array, Effect, FileSystem, Option, Order, Path } from 'effect';
 import { createHash } from 'node:crypto';
+import { SEARCH_INDEX } from './search';
 
 export const SERVICE_WORKER = 'service-worker.js';
 export const MANIFESTS = 'offline';
+export const OFFLINE_PAGE = '/bila-ittisal/';
 const TEMPLATE = 'src/scripts/service-worker.js';
-const FILES = ['_astro/', 'search/'];
+const FILES = ['_astro/'];
+const KEPT = new Set([SEARCH_INDEX.slice(1)]);
 
 export type Manifest = {
   readonly pages: Readonly<Record<string, string>>;
@@ -18,6 +21,7 @@ export type Built = {
 };
 
 export function pathOf(file: string): Option.Option<string> {
+  if (KEPT.has(file)) return Option.some(`/${file}`);
   if (file === 'index.html') return Option.some('/');
   if (!file.endsWith('/index.html')) return Option.none();
   return Option.some(`/${file.slice(0, -'index.html'.length)}`);
@@ -43,6 +47,9 @@ export function manifestOf({ pages, files }: Built): Manifest {
   );
   const home = pages.find(([file]) => file === 'index.html');
   const sections = home ? prefetchOf(new TextDecoder().decode(home[1])) : [];
+  const kept = [OFFLINE_PAGE, SEARCH_INDEX].filter((path) =>
+    hashed.some(([known]) => known === path)
+  );
   const assets = Array.sort(
     files.map((file) => `/${file}`),
     Order.String
@@ -55,14 +62,20 @@ export function manifestOf({ pages, files }: Built): Manifest {
       )
     ),
     files: assets,
-    prefetch: ['/', ...sections, ...assets],
+    prefetch: ['/', ...sections, ...kept, ...assets],
   };
 }
 
 export function serviceWorkerOf({ pages, files, prefetch }: Manifest, template: string) {
   const hashes = `${JSON.stringify(pages)}\n`;
   const file = `${MANIFESTS}/${hashOf(new TextEncoder().encode(hashes))}.json`;
-  const worker = `self.MANIFEST = ${JSON.stringify({ hashes: `/${file}`, files, prefetch })};\n${template}`;
+  const worker = `self.MANIFEST = ${JSON.stringify({
+    hashes: `/${file}`,
+    files,
+    index: SEARCH_INDEX,
+    offline: OFFLINE_PAGE,
+    prefetch,
+  })};\n${template}`;
   return { file, hashes, worker };
 }
 
@@ -71,8 +84,8 @@ export const readBuilt = (dist: string) =>
     const fs = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
     const all = Array.sort(yield* fs.readDirectory(dist, { recursive: true }), Order.String);
-    const html = Array.filter(all, (file) => file.endsWith('index.html'));
-    const pages = yield* Effect.forEach(html, (file) =>
+    const kept = Array.filter(all, (file) => file.endsWith('index.html') || KEPT.has(file));
+    const pages = yield* Effect.forEach(kept, (file) =>
       Effect.map(fs.readFile(path.join(dist, file)), (bytes): readonly [string, Uint8Array] => [
         file,
         bytes,

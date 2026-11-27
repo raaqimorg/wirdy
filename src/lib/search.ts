@@ -1,6 +1,8 @@
 import { Array, Option, Order, Schema } from 'effect';
 import { OCCASION_IDS } from './occasions';
 
+export const SEARCH_INDEX = '/search/index.json';
+
 export const searchRowSchema = Schema.Struct({
   title: Schema.String,
   words: Schema.String,

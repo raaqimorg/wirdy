@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Array, Effect, Option, Order } from 'effect';
 import { adhkarLabel, hadithLabel } from './arabic';
@@ -124,19 +123,5 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
       href: `${TIBB.path}#${slugOf(id)}`,
     }));
     return [...adhkar.flat(), ...tibb];
-  }
-);
-
-export type SearchIndex = {
-  readonly rows: ReadonlyArray<SearchRow>;
-  readonly version: string;
-  readonly path: string;
-};
-
-export const searchIndex: Effect.Effect<SearchIndex, MalformedMarker> = Effect.map(
-  searchRows,
-  (rows) => {
-    const version = createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
-    return { rows, version, path: `/search/${version}.json` };
   }
 );

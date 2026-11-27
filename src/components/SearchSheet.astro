@@ -1,21 +1,19 @@
 ---
 import Search from './Search.astro';
-import { Effect } from 'effect';
-import { searchIndex } from '../lib/collection';
+import { SEARCH_INDEX } from '../lib/search';
 
 interface Props {
   stage?: boolean | undefined;
 }
 
 const { stage = false } = Astro.props;
-const { path } = await Effect.runPromise(searchIndex);
 ---
 
 <dialog
   class:list={['search-sheet', stage && 'search-sheet--stage']}
   aria-label="البحث"
   data-search-sheet
-  data-search-index={path}
+  data-search-index={SEARCH_INDEX}
 >
   <Search />
 </dialog>

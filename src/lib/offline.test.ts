@@ -4,7 +4,7 @@ import { manifestOf, pathOf, prefetchOf, serviceWorkerOf, type Built } from './o
 
 const bytes = (text: string) => new TextEncoder().encode(text);
 const card = (href: string) => `<a class="occasion-card occasion-card--featured" href="${href}">`;
-const built = (nawm: string): Built => ({
+const built = (nawm: string, index = '[]'): Built => ({
   pages: [
     [
       'index.html',
@@ -13,8 +13,10 @@ const built = (nawm: string): Built => ({
     ['nawm/index.html', bytes(nawm)],
     ['nawm/ayat-al-kursi/index.html', bytes('ayat')],
     ['sabah-masaa/index.html', bytes('sabah')],
+    ['bila-ittisal/index.html', bytes('offline')],
+    ['search/index.json', bytes(index)],
   ],
-  files: ['_astro/site.abcdefgh.css', 'search/0123456789ab.json'],
+  files: ['_astro/site.abcdefgh.css'],
 });
 
 describe('pathOf', () => {
@@ -22,6 +24,7 @@ describe('pathOf', () => {
     ['index.html', '/'],
     ['nawm/index.html', '/nawm/'],
     ['nawm/ayat-al-kursi/index.html', '/nawm/ayat-al-kursi/'],
+    ['search/index.json', '/search/index.json'],
   ])('serves %s at %s', (file, path) => {
     expect(Option.getOrNull(pathOf(file))).toBe(path);
   });
@@ -44,21 +47,34 @@ describe('manifestOf', () => {
     const after = manifestOf(built('nawm, changed'));
     expect(Object.keys(before.pages)).toEqual([
       '/',
+      '/bila-ittisal/',
       '/nawm/',
       '/nawm/ayat-al-kursi/',
       '/sabah-masaa/',
+      '/search/index.json',
     ]);
     expect(after.pages['/nawm/']).not.toBe(before.pages['/nawm/']);
     expect({ ...after.pages, '/nawm/': '' }).toEqual({ ...before.pages, '/nawm/': '' });
   });
 
-  it('prefetches the home page, its cards, and every bundle file, and no other page', () => {
+  it('fingerprints the search index, so a changed index changes no page', () => {
+    const before = manifestOf(built('nawm'));
+    const after = manifestOf(built('nawm', '[{}]'));
+    expect(after.pages['/search/index.json']).not.toBe(before.pages['/search/index.json']);
+    expect({ ...after.pages, '/search/index.json': '' }).toEqual({
+      ...before.pages,
+      '/search/index.json': '',
+    });
+  });
+
+  it('prefetches the home page, its cards, the offline page, the index, and every bundle file', () => {
     expect(manifestOf(built('nawm')).prefetch).toEqual([
       '/',
       '/sabah-masaa/',
       '/nawm/',
+      '/bila-ittisal/',
+      '/search/index.json',
       '/_astro/site.abcdefgh.css',
-      '/search/0123456789ab.json',
     ]);
   });
 });
@@ -81,6 +97,8 @@ describe('serviceWorkerOf', () => {
     expect(JSON.parse(first!.replaceAll(/^self\.MANIFEST = |;$/gu, ''))).toEqual({
       hashes: `/${file}`,
       files: manifest.files,
+      index: '/search/index.json',
+      offline: '/bila-ittisal/',
       prefetch: manifest.prefetch,
     });
     expect(second).toBe('const MANIFEST = self.MANIFEST;');
