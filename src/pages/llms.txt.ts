@@ -22,7 +22,7 @@ ${sections}
 
 - [Source code](${SITE.repo}): MIT-licensed, on GitHub
 - [Report a mistake](${SITE.repo}/issues/new?template=dhikr-correction.yml): a correction needs a dorar.net page
-- [Sitemap](${new URL('/sitemap.xml', site).href}): every page of a dhikr and of a hadith
+- [Sitemap](${new URL('/sitemap.xml', site).href}): one page for each dhikr text and each hadith
 
 ## Raaqim
 

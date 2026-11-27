@@ -1,5 +1,6 @@
 ---
 title: "التلبية"
+headline: "التلبية: لبيك اللهم لبيك، لبيك لا شريك لك لبيك"
 occasion: "mawasim"
 order: 6
 count: 1

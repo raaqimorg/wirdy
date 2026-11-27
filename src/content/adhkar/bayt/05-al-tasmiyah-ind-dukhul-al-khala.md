@@ -1,5 +1,6 @@
 ---
 title: "التسمية عند دخول الخلاء"
+headline: "بسم الله"
 occasion: "bayt"
 order: 5
 count: 1

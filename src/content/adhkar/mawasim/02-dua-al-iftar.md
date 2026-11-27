@@ -1,5 +1,6 @@
 ---
 title: "ذهب الظمأ"
+headline: "دعاء الإفطار: ذهب الظمأ، وابتلت العروق، وثبت الأجر"
 occasion: "mawasim"
 order: 2
 count: 1

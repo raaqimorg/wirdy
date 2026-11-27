@@ -1,5 +1,6 @@
 ---
 title: "أعوذ بكلمات الله التامات"
+headline: "أعوذ بكلمات الله التامات من شر ما خلق"
 context: "في المساء"
 occasion: "sabah-masaa"
 order: 13

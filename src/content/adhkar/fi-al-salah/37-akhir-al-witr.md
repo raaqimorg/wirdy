@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أعوذ برضاك"
+headline: "اللهم إني أعوذ برضاك من سخطك… وأعوذ بك منك"
 context: "في آخر الوتر"
 occasion: "fi-al-salah"
 order: 37

@@ -1,5 +1,6 @@
 ---
 title: "أستغفر الله مئة مرة"
+headline: "أستغفر الله"
 occasion: "mutlaq"
 order: 14
 count: 100

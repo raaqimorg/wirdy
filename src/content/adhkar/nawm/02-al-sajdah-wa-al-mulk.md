@@ -1,5 +1,6 @@
 ---
 title: "سورتا السجدة والملك"
+headline: "سورتا السجدة والملك"
 occasion: "nawm"
 order: 2
 count: 1

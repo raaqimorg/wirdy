@@ -1,5 +1,6 @@
 ---
 title: "سبحان ربي العظيم"
+headline: "سبحان ربي العظيم"
 occasion: "fi-al-salah"
 order: 5
 count: 1

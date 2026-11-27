@@ -1,5 +1,6 @@
 ---
 title: "الحمد لله على كل حال"
+headline: "الحمد لله على كل حال"
 occasion: "hamm"
 order: 2
 count: 1

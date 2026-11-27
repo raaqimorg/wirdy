@@ -1,5 +1,6 @@
 ---
 title: "غفرانك"
+headline: "دعاء الخروج من الخلاء: غفرانك"
 occasion: "bayt"
 order: 7
 count: 1

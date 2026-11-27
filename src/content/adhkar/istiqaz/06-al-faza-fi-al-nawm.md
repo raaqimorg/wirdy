@@ -1,5 +1,6 @@
 ---
 title: "ما يقول إذا فزع في النوم"
+headline: "أعوذ بكلمات الله التامة من غضبه وعقابه"
 occasion: "istiqaz"
 order: 6
 count: 1

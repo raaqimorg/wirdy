@@ -1,5 +1,6 @@
 ---
 title: "اللهم اغفر لي وله"
+headline: "اللهم اغفر لي وله، وأعقبني منه عقبى حسنة"
 occasion: "janaiz"
 order: 5
 count: 1

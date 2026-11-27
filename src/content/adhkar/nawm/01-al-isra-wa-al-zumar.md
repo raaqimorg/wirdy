@@ -1,5 +1,6 @@
 ---
 title: "سورتا الإسراء والزمر"
+headline: "سورتا الإسراء والزمر"
 occasion: "nawm"
 order: 1
 count: 1

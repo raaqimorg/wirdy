@@ -1,5 +1,6 @@
 ---
 title: "الاستغفار بعد السلام"
+headline: "أستغفر الله"
 occasion: "salah"
 order: 1
 count: 3

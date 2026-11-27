@@ -1,5 +1,6 @@
 ---
 title: "دعاء الاستخارة"
+headline: "دعاء الاستخارة: اللهم إني أستخيرك بعلمك"
 occasion: "hamm"
 order: 17
 count: 1

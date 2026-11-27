@@ -1,5 +1,6 @@
 ---
 title: "سبحانك اللهم ربنا وبحمدك"
+headline: "سبحانك اللهم ربنا وبحمدك، اللهم اغفر لي"
 occasion: "fi-al-salah"
 order: 7
 count: 1

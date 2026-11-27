@@ -1,5 +1,6 @@
 ---
 title: "التعوذ عند نهيق الحمار"
+headline: "أعوذ بالله من الشيطان الرجيم"
 occasion: "matar"
 order: 10
 count: 1

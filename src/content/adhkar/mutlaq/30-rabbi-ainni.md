@@ -1,5 +1,6 @@
 ---
 title: "رب أعني ولا تعن علي"
+headline: "رب أعني ولا تعن علي، وانصرني ولا تنصر علي"
 occasion: "mutlaq"
 order: 30
 count: 1

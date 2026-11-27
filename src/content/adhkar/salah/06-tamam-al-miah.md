@@ -1,5 +1,6 @@
 ---
 title: "تمام المئة"
+headline: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد"
 occasion: "salah"
 order: 6
 count: 1

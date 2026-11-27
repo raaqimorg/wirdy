@@ -1,5 +1,6 @@
 ---
 title: "كفارة الحلف بغير الله"
+headline: "لا إله إلا الله"
 occasion: "nas"
 order: 8
 count: 1

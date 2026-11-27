@@ -1,5 +1,6 @@
 ---
 title: "وجهت وجهي"
+headline: "دعاء الاستفتاح: وجهت وجهي للذي فطر السماوات والأرض"
 occasion: "fi-al-salah"
 order: 4
 count: 1

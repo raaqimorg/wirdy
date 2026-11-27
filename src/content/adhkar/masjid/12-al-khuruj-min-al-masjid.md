@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أسألك من فضلك"
+headline: "اللهم إني أسألك من فضلك"
 occasion: "masjid"
 order: 12
 count: 1

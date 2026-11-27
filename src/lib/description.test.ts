@@ -101,6 +101,7 @@ describe('hadithDescriptionOf', () => {
   it('quotes the hadith, then its narrator and its takhrij', () => {
     const hadith: Hadith = {
       title: 'ما أنزل الله داء إلا أنزل له شفاء',
+      headline: 'ما أنزل الله داء إلا أنزل له شفاء',
       order: 1,
       group: 'مبادئ التداوي',
       rawi: 'أبي هريرة',

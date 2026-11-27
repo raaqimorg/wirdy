@@ -1,5 +1,6 @@
 ---
 title: "اللهم أعني على ذكرك"
+headline: "اللهم أعني على ذكرك، وشكرك، وحسن عبادتك"
 occasion: "salah"
 order: 13
 count: 1

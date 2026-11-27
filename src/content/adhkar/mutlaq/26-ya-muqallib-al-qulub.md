@@ -1,5 +1,6 @@
 ---
 title: "يا مقلب القلوب"
+headline: "يا مقلب القلوب ثبت قلبي على دينك"
 occasion: "mutlaq"
 order: 26
 count: 1

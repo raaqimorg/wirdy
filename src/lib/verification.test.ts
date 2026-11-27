@@ -15,6 +15,7 @@ const URL_OF_DORAR = 'https://dorar.net/h/abc';
 
 const dhikr: Dhikr = {
   title: 'سبحان الله وبحمده',
+  headline: 'سبحان الله وبحمده',
   occasion: 'sabah-masaa',
   order: 16,
   count: 100,

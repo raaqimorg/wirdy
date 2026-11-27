@@ -1,5 +1,6 @@
 ---
 title: "آية الكرسي"
+headline: "آية الكرسي: الله لا إله إلا هو الحي القيوم"
 context: "عند النوم"
 occasion: "nawm"
 order: 4

@@ -12,6 +12,7 @@ const BODY = 'سُبْحَانَ اللَّهِ';
 
 const data: Dhikr = {
   title: 'سبحان الله',
+  headline: 'سبحان الله',
   occasion: 'mutlaq',
   order: 1,
   count: 1,

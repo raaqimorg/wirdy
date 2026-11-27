@@ -1,5 +1,6 @@
 ---
 title: "اللهم اغفر لأبي سلمة"
+headline: "اللهم اغفر لأبي سلمة، وارفع درجته في المهديين"
 occasion: "janaiz"
 order: 4
 count: 1

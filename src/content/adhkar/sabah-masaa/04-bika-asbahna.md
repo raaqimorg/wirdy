@@ -1,5 +1,6 @@
 ---
 title: "اللهم بك أصبحنا"
+headline: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت"
 occasion: "sabah-masaa"
 order: 4
 count: 1

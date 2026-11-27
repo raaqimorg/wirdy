@@ -1,5 +1,6 @@
 ---
 title: "كفارة الطِّيَرة"
+headline: "اللهم لا طير إلا طيرك، ولا خير إلا خيرك"
 occasion: "hamm"
 order: 16
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "آيبون تائبون عابدون"
+headline: "آيبون تائبون عابدون، لربنا حامدون"
 occasion: "safar"
 order: 13
 count: 1

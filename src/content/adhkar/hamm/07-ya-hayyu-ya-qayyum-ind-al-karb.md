@@ -1,5 +1,6 @@
 ---
 title: "يا حي يا قيوم"
+headline: "يا حي يا قيوم، برحمتك أستغيث"
 context: "عند الكرب"
 occasion: "hamm"
 order: 7

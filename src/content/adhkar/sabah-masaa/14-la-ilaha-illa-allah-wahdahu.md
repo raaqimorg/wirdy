@@ -1,5 +1,6 @@
 ---
 title: "التهليل"
+headline: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد"
 context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 14

@@ -1,5 +1,6 @@
 ---
 title: "اللهم رب جبرائيل وميكائيل"
+headline: "اللهم رب جبرائيل وميكائيل وإسرافيل"
 occasion: "fi-al-salah"
 order: 35
 count: 1

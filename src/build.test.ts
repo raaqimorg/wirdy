@@ -23,6 +23,9 @@ const contentFiles = readdirSync(ADHKAR, { recursive: true, encoding: 'utf8' }).
   f.endsWith('.md')
 );
 const expected = contentFiles.length;
+const headlines = new Set(
+  contentFiles.map((f) => readFileSync(join(ADHKAR, f), 'utf8').match(/^headline: (.+)$/mu)![1])
+);
 const guidePages = GUIDE_IDS.map((guide) => GUIDES[guide].path.slice(1, -1));
 const hadithsOf = (guide: (typeof GUIDE_IDS)[number]) =>
   readdirSync(join(process.cwd(), 'src/content', guide))
@@ -522,6 +525,29 @@ describe('built site', () => {
     expect(pages['nawm']).toContain('<title>أذكار النوم | وِردي</title>');
   });
 
+  it('names a dhikr or hadith page by its headline alone, with no section', () => {
+    expect(own('nawm/bismika-amutu-wa-ahya')).toContain(
+      '<title>باسمك اللهم أموت وأحيا | وِردي</title>'
+    );
+    expect(own('al-jumuah/arban-badaha')).toContain(
+      '<title>إذا صلى أحدكم الجمعة فليصل بعدها أربعًا | وِردي</title>'
+    );
+  });
+
+  it('points a dhikr said in more than one place to its first page, and shares its own', () => {
+    const first = 'https://wirdy.site/sabah-masaa/ayat-al-kursi/';
+    for (const path of ['sabah-masaa', 'nawm', 'salah']) {
+      const page = own(`${path}/ayat-al-kursi`);
+      expect(page).toContain(`<link rel="canonical" href="${first}"`);
+      expect(page).toContain(
+        `<meta property="og:url" content="https://wirdy.site/${path}/ayat-al-kursi/"`
+      );
+    }
+    expect(own('nawm/bismika-amutu-wa-ahya')).toContain(
+      '<link rel="canonical" href="https://wirdy.site/nawm/bismika-amutu-wa-ahya/"'
+    );
+  });
+
   it('names the home page by its topic first and the brand last', () => {
     expect(html).toContain('<title>أذكار اليوم والليلة | وِردي</title>');
   });
@@ -634,11 +660,15 @@ describe('built site', () => {
     }
   });
 
-  it('lists in the sitemap every page that may be indexed, and no other', () => {
+  it('lists in the sitemap every page that is its own canonical page, and no other', () => {
     const indexed = readdirSync(DIST, { recursive: true, encoding: 'utf8' })
       .filter((file) => file.endsWith('index.html'))
-      .filter((file) => !readFileSync(join(DIST, file), 'utf8').includes('content="noindex"'))
       .map((file) => `${SITE.url}/${file.replace(/index\.html$/u, '')}`)
+      .filter((url) =>
+        readFileSync(join(DIST, url.slice(SITE.url.length), 'index.html'), 'utf8').includes(
+          `<link rel="canonical" href="${url}"`
+        )
+      )
       .toSorted();
     const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
     const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gu)].map(([, loc]) => loc!).toSorted();
@@ -779,7 +809,7 @@ describe('built site', () => {
       expect(sitemap).toContain(`<loc>https://wirdy.site/${path}/</loc>`);
     }
     expect(sitemap.match(/<loc>/gu)).toHaveLength(
-      OCCASION_IDS.length + 1 + guidePages.length + expected + hadiths.length
+      OCCASION_IDS.length + 1 + guidePages.length + headlines.size + hadiths.length
     );
   });
 
@@ -890,8 +920,12 @@ describe('built site', () => {
       expect(pngSize(new URL(image).pathname)).toEqual([2400, 1260]);
       expect(metaOf(page, 'property', 'og:image:width')).toBe('2400');
       expect(metaOf(page, 'property', 'og:image:height')).toBe('1260');
+      const canonical = page.match(/<link rel="canonical" href="([^"]+)"/u)![1]!;
+      const first = readFileSync(join(DIST, new URL(canonical).pathname, 'index.html'), 'utf8');
       expect(metaOf(page, 'property', 'og:url')).toBe(`https://wirdy.site/${slug}/`);
-      expect(page).toContain(`<link rel="canonical" href="https://wirdy.site/${slug}/">`);
+      expect(first.match(/<title>([^<]+)<\/title>/u)![1]).toBe(
+        page.match(/<title>([^<]+)<\/title>/u)![1]
+      );
       expect(page.match(/<h1[ >]/gu)).toHaveLength(1);
       expect(page).toContain(`href="/${occasion}/#${name}"`);
       const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
@@ -964,11 +998,9 @@ describe('built site', () => {
   it('shows the context of a dhikr under its name, and in parentheses in plain text', () => {
     const page = own('sabah-masaa/kalimat-allah-at-tammat');
     const full = 'أعوذ بكلمات الله التامات (في المساء)';
-    const { title } = OCCASIONS.find(({ id }) => id === 'sabah-masaa')!;
     expect(page).toMatch(
       /<h1 class="banner__title">\s*أعوذ بكلمات الله التامات\s*<\/h1>\s*<p class="banner__lede">في المساء/u
     );
-    expect(page).toContain(`<title>${full} | ${title} | ${SITE.name}</title>`);
     expect(page).toContain(`data-share-title="${full}"`);
     const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
     expect((crumbs['itemListElement'] as { name: string }[]).at(-1)!.name).toBe(full);

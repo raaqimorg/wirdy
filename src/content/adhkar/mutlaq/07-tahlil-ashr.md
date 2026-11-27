@@ -1,5 +1,6 @@
 ---
 title: "التهليل عشر مرات"
+headline: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد"
 occasion: "mutlaq"
 order: 7
 count: 10

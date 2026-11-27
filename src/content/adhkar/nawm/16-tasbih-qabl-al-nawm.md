@@ -1,5 +1,6 @@
 ---
 title: "التسبيح"
+headline: "سبحان الله، والحمد لله، والله أكبر"
 context: "عند النوم"
 occasion: "nawm"
 order: 16

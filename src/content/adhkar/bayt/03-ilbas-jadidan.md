@@ -1,5 +1,6 @@
 ---
 title: "البس جديدًا وعش حميدًا"
+headline: "البس جديدًا، وعش حميدًا، ومت شهيدًا"
 occasion: "bayt"
 order: 3
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "أهل الثناء والمجد"
+headline: "ربنا لك الحمد… أهل الثناء والمجد"
 occasion: "fi-al-salah"
 order: 13
 count: 1

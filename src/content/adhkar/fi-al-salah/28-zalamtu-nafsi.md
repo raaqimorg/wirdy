@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني ظلمت نفسي"
+headline: "اللهم إني ظلمت نفسي ظلمًا كثيرًا"
 occasion: "fi-al-salah"
 order: 28
 count: 1

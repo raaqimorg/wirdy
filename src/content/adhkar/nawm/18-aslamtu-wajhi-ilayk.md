@@ -1,5 +1,6 @@
 ---
 title: "اللهم أسلمت وجهي إليك"
+headline: "اللهم أسلمت وجهي إليك، وفوضت أمري إليك"
 occasion: "nawm"
 order: 18
 count: 1

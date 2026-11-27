@@ -1,5 +1,6 @@
 ---
 title: "خواتيم آل عمران"
+headline: "خواتيم آل عمران: إن في خلق السماوات والأرض"
 occasion: "istiqaz"
 order: 3
 count: 1

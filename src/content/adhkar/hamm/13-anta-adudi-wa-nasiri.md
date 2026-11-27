@@ -1,5 +1,6 @@
 ---
 title: "اللهم أنت عضدي ونصيري"
+headline: "اللهم أنت عضدي ونصيري، بك أحول وبك أصول"
 occasion: "hamm"
 order: 13
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "دعاء الكرب"
+headline: "دعاء الكرب: لا إله إلا الله العظيم الحليم"
 occasion: "hamm"
 order: 4
 count: 1

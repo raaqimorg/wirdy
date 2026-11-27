@@ -1,5 +1,6 @@
 ---
 title: "اللهم اجعل في قلبي نورًا"
+headline: "اللهم اجعل في قلبي نورًا، وفي لساني نورًا"
 occasion: "masjid"
 order: 9
 count: 1

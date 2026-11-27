@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { dhikrAnchor, dhikrPath, hadithAnchor, hadithPath, slugOf } from './permalink';
+import {
+  canonicalPathsOf,
+  dhikrAnchor,
+  dhikrPath,
+  hadithAnchor,
+  hadithPath,
+  slugOf,
+} from './permalink';
 
 describe('slugOf', () => {
   it('drops the folder and the order, so a reorder keeps the link', () => {
@@ -29,5 +36,24 @@ describe('the links of a hadith of الطب النبوي', () => {
 
   it('has its place in the section page', () => {
     expect(hadithAnchor('tibb', 'tadawaw')).toBe('/al-tibb-al-nabawi/#tadawaw');
+  });
+});
+
+describe('the canonical page of a dhikr', () => {
+  const canonical = canonicalPathsOf([
+    { path: '/sabah-masaa/ayat-al-kursi/', headline: 'آية الكرسي' },
+    { path: '/salah/ayat-al-kursi/', headline: 'آية الكرسي' },
+    { path: '/nawm/ayat-al-kursi/', headline: 'آية الكرسي' },
+    { path: '/nawm/bismika-amutu-wa-ahya/', headline: 'باسمك اللهم أموت وأحيا' },
+  ]);
+
+  it('is the first page in site order that shares its headline', () => {
+    expect(canonical.get('/sabah-masaa/ayat-al-kursi/')).toBe('/sabah-masaa/ayat-al-kursi/');
+    expect(canonical.get('/salah/ayat-al-kursi/')).toBe('/sabah-masaa/ayat-al-kursi/');
+    expect(canonical.get('/nawm/ayat-al-kursi/')).toBe('/sabah-masaa/ayat-al-kursi/');
+  });
+
+  it('is the page itself when no other page shares its headline', () => {
+    expect(canonical.get('/nawm/bismika-amutu-wa-ahya/')).toBe('/nawm/bismika-amutu-wa-ahya/');
   });
 });

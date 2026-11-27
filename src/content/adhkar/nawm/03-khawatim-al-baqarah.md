@@ -1,5 +1,6 @@
 ---
 title: "خواتيم البقرة"
+headline: "خواتيم البقرة: آمن الرسول بما أنزل إليه من ربه"
 occasion: "nawm"
 order: 3
 count: 1

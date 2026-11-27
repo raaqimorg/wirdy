@@ -1,5 +1,6 @@
 ---
 title: "الحمد لله الذي أحيانا"
+headline: "الحمد لله الذي أحيانا بعد ما أماتنا وإليه النشور"
 occasion: "istiqaz"
 order: 1
 count: 1

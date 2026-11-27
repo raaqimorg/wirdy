@@ -1,5 +1,6 @@
 ---
 title: "اللهم اغفر لي وارحمني"
+headline: "اللهم اغفر لي، وارحمني، وعافني، واهدني، وارزقني"
 occasion: "fi-al-salah"
 order: 20
 count: 1

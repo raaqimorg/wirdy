@@ -1,5 +1,6 @@
 ---
 title: "اللهم قني عذابك"
+headline: "اللهم قني عذابك يوم تبعث عبادك"
 occasion: "nawm"
 order: 8
 count: 1

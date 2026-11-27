@@ -1,5 +1,6 @@
 ---
 title: "لا حول ولا قوة إلا بالله"
+headline: "لا حول ولا قوة إلا بالله"
 occasion: "mutlaq"
 order: 13
 count: 1

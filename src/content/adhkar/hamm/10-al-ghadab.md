@@ -1,5 +1,6 @@
 ---
 title: "الاستعاذة عند الغضب"
+headline: "أعوذ بالله من الشيطان الرجيم"
 occasion: "hamm"
 order: 10
 count: 1

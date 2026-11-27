@@ -1,5 +1,6 @@
 ---
 title: "دعاء المصيبة"
+headline: "إنا لله وإنا إليه راجعون، اللهم أجرني في مصيبتي"
 occasion: "janaiz"
 order: 6
 count: 1

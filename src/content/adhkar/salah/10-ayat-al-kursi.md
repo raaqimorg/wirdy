@@ -1,5 +1,6 @@
 ---
 title: "آية الكرسي"
+headline: "آية الكرسي: الله لا إله إلا هو الحي القيوم"
 context: "بعد الصلاة"
 occasion: "salah"
 order: 10

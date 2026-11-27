@@ -1,5 +1,6 @@
 ---
 title: "اللهم رب السماوات السبع"
+headline: "اللهم رب السماوات السبع وما أظللن"
 occasion: "safar"
 order: 10
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "التسبيح ثلاثًا وثلاثين"
+headline: "سبحان الله، والحمد لله، والله أكبر"
 occasion: "salah"
 order: 5
 count: 1

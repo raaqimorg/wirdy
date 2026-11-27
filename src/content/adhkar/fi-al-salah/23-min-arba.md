@@ -1,5 +1,6 @@
 ---
 title: "التعوذ من أربع"
+headline: "اللهم إني أعوذ بك من عذاب جهنم، ومن عذاب القبر"
 occasion: "fi-al-salah"
 order: 23
 count: 1

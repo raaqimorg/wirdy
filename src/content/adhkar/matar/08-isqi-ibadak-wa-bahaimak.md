@@ -1,5 +1,6 @@
 ---
 title: "اللهم اسق عبادك وبهائمك"
+headline: "اللهم اسق عبادك وبهائمك، وانشر رحمتك"
 occasion: "matar"
 order: 8
 count: 1

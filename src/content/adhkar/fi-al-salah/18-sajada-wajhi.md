@@ -1,5 +1,6 @@
 ---
 title: "سجد وجهي للذي خلقه"
+headline: "سجد وجهي للذي خلقه، وشق سمعه وبصره"
 occasion: "fi-al-salah"
 order: 18
 count: 1

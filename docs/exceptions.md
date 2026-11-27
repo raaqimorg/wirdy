@@ -10,7 +10,7 @@ The two forms differ in a few words (أصبحنا, أمسينا). The page holds
 - It is inline, not a module, so the right form shows on the first paint, with no flash.
 - Without JavaScript, the page shows the morning, and `<noscript>` hides the switch.
 - A one-time dhikr (`mode: "sabah"` or `"masaa"`) hides at the other time, and the page count follows. A `#slug` link still shows it, through `:target`. Its own page always shows it.
-- A title made of the text's first words follows the evening form too (`eveningTitle` in `src/lib/title.ts`). The `<title>`, the card, and search keep the morning form.
+- A title made of the text's first words follows the evening form too (`eveningTitle` in `src/lib/title.ts`). The card and search keep the morning form.
 
 ## An empty touch listener turns on the press state on iPhones
 

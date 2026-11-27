@@ -1,5 +1,6 @@
 ---
 title: "يا حي يا قيوم"
+headline: "يا حي يا قيوم، برحمتك أستغيث، أصلح لي شأني كله"
 occasion: "sabah-masaa"
 order: 11
 count: 1

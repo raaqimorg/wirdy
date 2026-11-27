@@ -1,5 +1,6 @@
 ---
 title: "أفضل الدعاء"
+headline: "الحمد لله"
 occasion: "mutlaq"
 order: 10
 count: 1

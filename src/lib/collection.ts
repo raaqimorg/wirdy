@@ -4,7 +4,7 @@ import { adhkarLabel, hadithLabel } from './arabic';
 import type { EmblemName } from './emblems';
 import { foldOf, suwarOf } from './lead';
 import { listed, OCCASIONS, type Occasion } from './occasions';
-import { dhikrAnchor, hadithAnchor, slugOf } from './permalink';
+import { canonicalPathsOf, dhikrAnchor, dhikrPath, hadithAnchor, slugOf } from './permalink';
 import type { Dhikr } from './schema';
 import { GUIDE_IDS, GUIDES, type Guide } from './site';
 import type { SearchRow } from './search';
@@ -46,6 +46,17 @@ export const hadithsOf = (guide: Guide): Effect.Effect<ReadonlyArray<HadithEntry
     Effect.promise(() => getCollection(guide)),
     (entries) => Array.sort(entries, byOrder)
   );
+
+export const adhkarCanonicals: Effect.Effect<ReadonlyMap<string, string>> = Effect.map(
+  Effect.forEach(OCCASIONS, ({ id }) => adhkarOf(id)),
+  (lists) =>
+    canonicalPathsOf(
+      lists.flat().map(({ id, data }) => ({
+        path: dhikrPath(data.occasion, slugOf(id)),
+        headline: data.headline,
+      }))
+    )
+);
 
 export const guideTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
   GUIDE_IDS,

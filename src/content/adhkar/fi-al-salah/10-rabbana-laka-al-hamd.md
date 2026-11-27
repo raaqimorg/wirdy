@@ -1,5 +1,6 @@
 ---
 title: "اللهم ربنا لك الحمد"
+headline: "اللهم ربنا لك الحمد"
 occasion: "fi-al-salah"
 order: 10
 count: 1

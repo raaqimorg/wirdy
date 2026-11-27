@@ -1,5 +1,6 @@
 ---
 title: "سيد الاستغفار"
+headline: "سيد الاستغفار: اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك"
 occasion: "sabah-masaa"
 order: 7
 count: 1

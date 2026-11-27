@@ -1,5 +1,6 @@
 ---
 title: "دعاء التهجد"
+headline: "دعاء التهجد: اللهم لك الحمد أنت قيم السماوات والأرض"
 occasion: "fi-al-salah"
 order: 34
 count: 1

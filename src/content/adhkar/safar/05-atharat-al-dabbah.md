@@ -1,5 +1,6 @@
 ---
 title: "قل: بسم الله، ولا تقل: تعس الشيطان"
+headline: "بسم الله"
 occasion: "safar"
 order: 5
 count: 1

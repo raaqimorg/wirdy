@@ -1,5 +1,6 @@
 ---
 title: "اللهم أصلح لي ديني"
+headline: "اللهم أصلح لي ديني الذي هو عصمة أمري"
 occasion: "mutlaq"
 order: 25
 count: 1

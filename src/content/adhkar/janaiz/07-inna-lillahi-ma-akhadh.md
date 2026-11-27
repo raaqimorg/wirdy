@@ -1,5 +1,6 @@
 ---
 title: "إن لله ما أخذ وله ما أعطى"
+headline: "إن لله ما أخذ، وله ما أعطى، وكل عنده بأجل مسمى"
 occasion: "janaiz"
 order: 7
 count: 1
