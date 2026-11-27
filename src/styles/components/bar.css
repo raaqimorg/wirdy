@@ -43,3 +43,49 @@
 
   margin-inline-end: calc((var(--size-touch) - var(--size-icon-bar)) / -2);
 }
+
+@supports (timeline-scope: --reading) {
+  .bar::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    height: var(--space-track);
+    background: var(--tone-text);
+    transform: scaleX(0);
+    transform-origin: right;
+    animation: bar-progress linear both;
+    animation-duration: auto;
+    animation-timeline: --reading;
+    animation-range: contain 0% contain 100%;
+  }
+
+  .bar__name {
+    animation: bar-name linear both;
+    animation-duration: auto;
+    animation-timeline: --reading;
+    animation-range: contain 0% contain var(--size-bar);
+  }
+}
+
+@keyframes bar-name {
+  from {
+    clip-path: inset(-0.5em);
+  }
+
+  to {
+    visibility: hidden;
+    opacity: 0;
+    clip-path: inset(-0.5em -0.5em -0.5em 100%);
+  }
+}
+
+@keyframes bar-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}

@@ -50,7 +50,7 @@ Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with 
 - The morning and evening sun turns half a circle when the form changes: its lit half above in the morning, below in the evening.
 - The section menu grows from the bar, 94% to full size, as it fades in.
 - With reduced motion the emblem only fades, the sun and the menu change at once, and nothing scales or moves. Hover still brightens, so the pointer gets an answer.
-- On a long page a line under the bar grows from where the first group meets the bar to where the closing line meets the bottom of the screen (`components/ReadingProgress.astro`): a CSS view timeline on the groups and the closing line, so no script, and no line in a browser without them.
+- On a long page a line under the bar grows from where the first group meets the bar to where the closing line meets the bottom of the screen (`components/ReadingProgress.astro`): a CSS view timeline on the groups and the closing line, so no script, and no line in a browser without them. `timeline-scope` on `body` lends the timeline to the bar, which draws the line under itself, so the line moves with the bar when a page bounces past its end. As the line starts, «وِردي» in the bar fades and wipes into the sunflower over the bar's height of scroll, on the same timeline, so the bar keeps only the mark while the reader reads, and the name comes back at the top.
 - A page opens at once, with no cross-page view transition. During one, Safari drops every tap for about 150 ms after the page shows, so a reader had to tap «الرئيسية» or the search icon twice.
 
 ## Comments
