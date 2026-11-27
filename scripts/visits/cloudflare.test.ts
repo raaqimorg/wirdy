@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { Effect } from 'effect';
-import { decodeTotals, totalsQueryOf } from './cloudflare.ts';
+import { decodeDetails, decodeTotals, detailsQueryOf, totalsQueryOf } from './cloudflare.ts';
+import { windowsOf } from './report.ts';
 
 const failureOf = <A>(effect: Effect.Effect<A, Error>): Promise<string> =>
   Effect.runPromise(Effect.map(Effect.flip(effect), (error) => error.message));
@@ -8,26 +9,38 @@ const failureOf = <A>(effect: Effect.Effect<A, Error>): Promise<string> =>
 const fixture = (name: string): Promise<unknown> =>
   Bun.file(`${import.meta.dir}/fixtures/${name}.json`).json();
 
-const hour = {
-  from: new Date('2026-11-26T10:00:00Z'),
-  to: new Date('2026-11-26T11:00:00Z'),
-};
-const day = {
-  from: new Date('2026-11-25T21:00:00Z'),
-  to: new Date('2026-11-26T11:00:00Z'),
-};
+const windows = windowsOf(new Date('2026-11-26T11:00:00Z'));
+
+const zoneWith = (parts: Readonly<Record<string, unknown>>) => ({
+  data: { viewer: { zones: [parts] } },
+  errors: null,
+});
 
 describe('totalsQueryOf', () => {
-  const query = totalsQueryOf([hour, day]);
+  const query = totalsQueryOf(windows);
 
-  test('asks one alias per window, in order', () => {
+  test('asks each window by name', () => {
+    for (const alias of ['hour', 'day', 'hourBefore', 'dayBefore', 'hourFromX']) {
+      expect(query).toContain(` ${alias}: httpRequestsAdaptiveGroups(limit: 1, filter: {`);
+    }
+  });
+
+  test('asks the hour, and the same hour a day before', () => {
     expect(query).toContain(
-      'w0: httpRequestsAdaptiveGroups(limit: 1, filter: { datetime_geq: "2026-11-26T10:00:00.000Z", datetime_lt: "2026-11-26T11:00:00.000Z", requestSource: "eyeball" }) { sum { visits } }'
+      'hour: httpRequestsAdaptiveGroups(limit: 1, filter: { datetime_geq: "2026-11-26T10:00:00.000Z", datetime_lt: "2026-11-26T11:00:00.000Z"'
     );
     expect(query).toContain(
-      'w1: httpRequestsAdaptiveGroups(limit: 1, filter: { datetime_geq: "2026-11-25T21:00:00.000Z"'
+      'hourBefore: httpRequestsAdaptiveGroups(limit: 1, filter: { datetime_geq: "2026-11-25T10:00:00.000Z", datetime_lt: "2026-11-25T11:00:00.000Z"'
     );
-    expect(query).not.toContain('w2:');
+  });
+
+  test('counts only pages served to readers, not bots', () => {
+    expect(query).toContain(
+      'requestSource: "eyeball", verifiedBotCategory: "", edgeResponseStatus: 200'
+    );
+    expect(query).toContain('{ userAgent_like: "Mozilla/5.0 (%" }');
+    expect(query).toContain('{ userAgent_notlike: "%bot%" }');
+    expect(query).toContain('{ userAgent_notlike: "%compatible;%" }');
   });
 
   test('takes the zone as a variable', () => {
@@ -35,24 +48,92 @@ describe('totalsQueryOf', () => {
   });
 });
 
+describe('detailsQueryOf', () => {
+  const query = detailsQueryOf(windows.day);
+
+  test('asks the countries and the pages by visits', () => {
+    expect(query).toContain(
+      'countries: httpRequestsAdaptiveGroups(limit: 10, orderBy: [sum_visits_DESC]'
+    );
+    expect(query).toContain('dimensions { clientCountryName }');
+    expect(query).toContain(
+      'pages: httpRequestsAdaptiveGroups(limit: 200, orderBy: [sum_visits_DESC]'
+    );
+  });
+
+  test('asks the missing pages of readers, and leaves out scans for files the site never had', () => {
+    expect(query).toContain('edgeResponseStatus: 404');
+    expect(query).toContain('{ clientRequestPath_notlike: "%.php%" }');
+    expect(query).toContain('{ clientRequestPath_notlike: "%/.%" }');
+  });
+
+  test('asks every server error, from anyone', () => {
+    expect(query).toContain(
+      'failures: httpRequestsAdaptiveGroups(limit: 1, filter: { datetime_geq: "2026-11-25T21:00:00.000Z", datetime_lt: "2026-11-26T11:00:00.000Z", requestSource: "eyeball", edgeResponseStatus_geq: 500 }) { count }'
+    );
+  });
+});
+
 describe('decodeTotals', () => {
-  test('reads the visits of each window, and an empty one as 0', async () => {
-    expect(await Effect.runPromise(decodeTotals(await fixture('totals'), 3))).toEqual([18, 342, 0]);
+  test('reads each window, rounds a sampled count, and takes an empty one as 0', async () => {
+    expect(await Effect.runPromise(decodeTotals(await fixture('totals')))).toEqual({
+      hour: 18,
+      day: 342,
+      hourBefore: 8,
+      dayBefore: 290,
+      hourFromX: 0,
+    });
   });
 
   test('fails when a window is missing from the answer', async () => {
-    expect(await failureOf(decodeTotals(await fixture('totals'), 4))).toContain('w3');
+    const answer = zoneWith({ hour: [], day: [], hourBefore: [], dayBefore: [] });
+    expect(await failureOf(decodeTotals(answer))).toContain('no hourFromX');
+  });
+
+  test('fails when a window has another shape', async () => {
+    const answer = zoneWith({
+      hour: [{ sum: { visits: '5' } }],
+      day: [],
+      hourBefore: [],
+      dayBefore: [],
+      hourFromX: [],
+    });
+    expect(await failureOf(decodeTotals(answer))).toContain('hour of an unknown shape');
   });
 
   test('fails with the message Cloudflare gives', async () => {
-    expect(await failureOf(decodeTotals(await fixture('errors'), 1))).toContain(
+    expect(await failureOf(decodeTotals(await fixture('errors')))).toContain(
       'unknown arg visits_gt'
     );
   });
 
   test('fails on an answer of another shape', async () => {
-    expect(await failureOf(decodeTotals({ data: { viewer: { zones: [] } } }, 1))).toContain(
+    expect(await failureOf(decodeTotals({ data: { viewer: { zones: [] } } }))).toContain(
       'cloudflare'
     );
+    expect(await failureOf(decodeTotals('<html>'))).toContain('unknown shape');
+  });
+});
+
+describe('decodeDetails', () => {
+  test('reads the countries, pages, sources, posters, and errors of the day', async () => {
+    expect(await Effect.runPromise(decodeDetails(await fixture('details')))).toEqual({
+      countries: [
+        { key: 'SA', count: 133 },
+        { key: 'US', count: 33 },
+      ],
+      pages: [
+        { key: '/', count: 154 },
+        { key: '/al-jumuah/', count: 7 },
+      ],
+      fromX: 87,
+      posters: 22,
+      missing: [{ key: '/apple-touch-icon-precomposed.png', count: 24 }],
+      failures: 0,
+    });
+  });
+
+  test('fails when a part is missing from the answer', async () => {
+    expect(await failureOf(decodeDetails(zoneWith({})))).toContain('no countries');
   });
 });

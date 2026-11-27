@@ -3,9 +3,11 @@
     "viewer": {
       "zones": [
         {
-          "w0": [{ "sum": { "visits": 18 } }],
-          "w1": [{ "sum": { "visits": 342 } }],
-          "w2": []
+          "hour": [{ "sum": { "visits": 18 } }],
+          "day": [{ "sum": { "visits": 342 } }],
+          "hourBefore": [{ "sum": { "visits": 7.6 } }],
+          "dayBefore": [{ "sum": { "visits": 290 } }],
+          "hourFromX": []
         }
       ]
     }

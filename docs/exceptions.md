@@ -188,7 +188,7 @@ When a reader presses a link to a page of the site, or holds the mouse on it for
 
 ## A scheduled job sends the owner the visits
 
-A Cloudflare Worker, `scripts/visits/worker.ts`, runs on a Cron Trigger every hour. It reads the visits from Cloudflare's GraphQL Analytics API and sends them to the owner's Telegram group ([`development.md`](development.md#the-visit-reports)). The owner asked for it, to see that people read.
+A Cloudflare Worker, `scripts/visits/worker.ts`, runs on a Cron Trigger every hour. It reads the readers, their countries, the pages they opened first, and the missing pages from Cloudflare's GraphQL Analytics API, and sends them to the owner's Telegram group ([`development.md`](development.md#the-visit-reports)). The owner asked for it, to see that people read.
 
 - The ordinary way is a web analytics script in each page. It would make a third-party request and track readers, which `docs/branding/identity.md` refuses. Cloudflare counts the visits at its edge anyway, so the pages stay as they are.
 - A beacon to a Pages Function would add a script to every page and a server to a static site.

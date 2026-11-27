@@ -1,6 +1,6 @@
-import { Array, Config, Console, Effect, Option } from 'effect';
-import { visitsOf } from './cloudflare.ts';
-import { isSilent, nameOf, reportText, windowsOf } from './report.ts';
+import { Config, Console, Effect, Option } from 'effect';
+import { detailsOf, totalsOf } from './cloudflare.ts';
+import { alertText, isFinished, isSilent, nameOf, reportText, windowsOf } from './report.ts';
 import { sendMessage } from './telegram.ts';
 
 export const sendVisits = (now: Date, forced: boolean) =>
@@ -16,9 +16,22 @@ export const sendVisits = (now: Date, forced: boolean) =>
     const names = yield* Config.option(Config.String('RECIPIENT_NAME'));
     const name = Option.flatMap(names, (given) => nameOf(given, Math.random()));
     const windows = windowsOf(now);
-    const totals = yield* visitsOf(analytics, [windows.hour, windows.day]);
-    const hour = Option.getOrElse(Array.get(totals, 0), () => 0);
-    const day = Option.getOrElse(Array.get(totals, 1), () => 0);
-    yield* sendMessage(chat, reportText(windows, hour, day, name), isSilent(hour, forced));
+    const totals = yield* totalsOf(analytics, windows);
+    const details = isFinished(windows)
+      ? yield* Effect.option(
+          detailsOf(analytics, windows.day).pipe(
+            Effect.tapError((error) => Console.error(error.message))
+          )
+        )
+      : Option.none();
+    yield* sendMessage(
+      chat,
+      reportText(windows, totals, details, name),
+      isSilent(totals.hour, forced)
+    );
+    yield* Option.match(Option.flatMap(details, alertText), {
+      onNone: () => Effect.void,
+      onSome: (text) => sendMessage(chat, text, true),
+    });
     yield* Console.log('sent');
   });
