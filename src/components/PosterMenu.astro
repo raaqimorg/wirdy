@@ -56,12 +56,13 @@ const themes: ReadonlyArray<ThemeName> = ['light', 'dark'];
         data-hover="fill"
       >
         <span class="poster-menu__text">
-          حفظ الصورة
+          <span data-label>حفظ الصورة</span>
           <span class="poster-menu__choice" data-poster-choice>
             {`${story.title}، ${THEME_TITLES.light}`}
           </span>
         </span>
-        <Icon name="save" class="poster-menu__icon" />
+        <Icon name="save" class="poster-menu__icon icon--idle" />
+        <Icon name="check" class="poster-menu__icon icon--done" />
       </a>
       <p class="poster-menu__heading" id="poster-format">
         الشكل
