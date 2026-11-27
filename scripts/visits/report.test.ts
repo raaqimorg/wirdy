@@ -1,56 +1,33 @@
 import { describe, expect, test } from 'bun:test';
 import { Option } from 'effect';
-import {
-  hourlyText,
-  hourlyWindowsOf,
-  isSilent,
-  morningText,
-  nameOf,
-  yesterdayOf,
-} from './report.ts';
+import { isSilent, nameOf, reportText, windowsOf } from './report.ts';
 
 const at = (iso: string) => new Date(iso);
 const span = (from: string, to: string) => ({ from: at(from), to: at(to) });
 const first = Option.some('الأولى');
 
-describe('hourlyWindowsOf', () => {
-  test('reports the last whole hour and the Riyadh day up to it', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T11:41:00Z'))).toEqual({
-      hour: span('2026-11-26T10:00:00Z', '2026-11-26T11:00:00Z'),
-      day: span('2026-11-25T21:00:00Z', '2026-11-26T11:00:00Z'),
+describe('windowsOf', () => {
+  test('reports the half hour up to the run and the Riyadh day up to it', () => {
+    expect(windowsOf(at('2026-11-26T11:30:00Z'))).toEqual({
+      halfHour: span('2026-11-26T11:00:00Z', '2026-11-26T11:30:00Z'),
+      day: span('2026-11-25T21:00:00Z', '2026-11-26T11:30:00Z'),
     });
   });
 
-  test('reports the same hour from a late run', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T11:59:00Z'))).toEqual(
-      hourlyWindowsOf(at('2026-11-26T11:41:00Z'))
-    );
+  test('reports the same half hour from a late run', () => {
+    expect(windowsOf(at('2026-11-26T11:59:00Z'))).toEqual(windowsOf(at('2026-11-26T11:30:00Z')));
   });
 
-  test('reports the same hour from a run late past the next hour', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T12:20:00Z'))).toEqual(
-      hourlyWindowsOf(at('2026-11-26T11:41:00Z'))
-    );
-  });
-
-  test('reports the whole day before from the run after Riyadh midnight', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T21:41:00Z'))).toEqual({
-      hour: span('2026-11-26T20:00:00Z', '2026-11-26T21:00:00Z'),
+  test('reports the whole day before from the run at Riyadh midnight', () => {
+    expect(windowsOf(at('2026-11-26T21:00:00Z'))).toEqual({
+      halfHour: span('2026-11-26T20:30:00Z', '2026-11-26T21:00:00Z'),
       day: span('2026-11-25T21:00:00Z', '2026-11-26T21:00:00Z'),
     });
   });
-});
 
-describe('yesterdayOf', () => {
-  test('is the whole Riyadh day before the run', () => {
-    expect(yesterdayOf(at('2026-11-26T04:07:00Z'))).toEqual(
-      span('2026-11-24T21:00:00Z', '2026-11-25T21:00:00Z')
-    );
-  });
-
-  test('is the same day for a late run', () => {
-    expect(yesterdayOf(at('2026-11-26T08:59:00Z'))).toEqual(
-      yesterdayOf(at('2026-11-26T04:07:00Z'))
+  test('starts a new day from the first run after Riyadh midnight', () => {
+    expect(windowsOf(at('2026-11-26T21:30:00Z')).day).toEqual(
+      span('2026-11-26T21:00:00Z', '2026-11-26T21:30:00Z')
     );
   });
 });
@@ -75,92 +52,61 @@ describe('nameOf', () => {
   });
 });
 
-describe('hourlyText', () => {
-  test('gives the last hour and today so far', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 18, 342, first)).toBe(
-      '<b>الأولى</b> 🌻\n\n<b>١٨ ذاكرا</b> في آخر ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
+describe('reportText', () => {
+  const noon = windowsOf(at('2026-11-26T11:30:00Z'));
+
+  test('gives the last half hour and today so far', () => {
+    expect(reportText(noon, 18, 342, first)).toBe(
+      '<b>الأولى</b> 🌻\n\n<b>١٨ ذاكرا</b> في آخر نصف ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
     );
   });
 
   test('names one and two in words', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 9, first)).toContain(
-      '<b>ذاكر واحد</b> في آخر ساعة، و<b>٩</b> اليوم'
+    expect(reportText(noon, 1, 9, first)).toContain(
+      '<b>ذاكر واحد</b> في آخر نصف ساعة، و<b>٩</b> اليوم'
     );
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 2, 9, first)).toContain(
-      '<b>ذاكران</b> في آخر ساعة، و<b>٩</b> اليوم'
+    expect(reportText(noon, 2, 9, first)).toContain(
+      '<b>ذاكران</b> في آخر نصف ساعة، و<b>٩</b> اليوم'
     );
   });
 
-  test('counts today in full after a quiet hour', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:41:00Z')), 0, 6, first)).toContain(
-      '<b>لا أحد</b> في آخر ساعة، و<b>٦ ذاكرين</b> اليوم'
+  test('counts today in full after a quiet half hour', () => {
+    expect(reportText(windowsOf(at('2026-11-26T00:30:00Z')), 0, 6, first)).toContain(
+      '<b>لا أحد</b> في آخر نصف ساعة، و<b>٦ ذاكرين</b> اليوم'
     );
   });
 
   test('says no one for a quiet day', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T22:41:00Z')), 0, 0, first)).toContain(
-      '<b>لا أحد</b> في آخر ساعة، و<b>لا أحد</b> اليوم'
+    expect(reportText(windowsOf(at('2026-11-26T21:30:00Z')), 0, 0, first)).toContain(
+      '<b>لا أحد</b> في آخر نصف ساعة، و<b>لا أحد</b> اليوم'
     );
   });
 
   test('calls the total of a finished day yesterday', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:41:00Z')), 3, 412, first)).toContain(
-      '<b>٣ ذاكرين</b> في آخر ساعة، و<b>٤١٢</b> أمس'
+    expect(reportText(windowsOf(at('2026-11-26T21:00:00Z')), 3, 412, first)).toContain(
+      '<b>٣ ذاكرين</b> في آخر نصف ساعة، و<b>٤١٢</b> أمس'
     );
   });
 
   test('uses the site name when no name is set', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 2, Option.none())).toMatch(
-      /^<b>وردي<\/b> 🌻/u
-    );
+    expect(reportText(noon, 1, 2, Option.none())).toMatch(/^<b>وردي<\/b> 🌻/u);
   });
 
   test('escapes a name that looks like markup', () => {
-    expect(
-      hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 2, Option.some('<i>&'))
-    ).toContain('<b>&lt;i&gt;&amp;</b>');
+    expect(reportText(noon, 1, 2, Option.some('<i>&'))).toContain('<b>&lt;i&gt;&amp;</b>');
   });
 
   test('carries no diacritics', () => {
-    expect(
-      hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 18, 342, Option.none())
-    ).not.toMatch(/[\u064B-\u0652]/u);
-  });
-});
-
-describe('morningText', () => {
-  test('greets with the rememberers of yesterday', () => {
-    expect(morningText(412, first)).toBe(
-      '<b>صباح الخير يا أولى</b> 🌻\n\n<b>٤١٢ ذاكرا</b> أمس\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
-    );
-  });
-
-  test('drops the article after يا', () => {
-    expect(morningText(1, Option.some('المعلمة'))).toContain('<b>صباح الخير يا معلمة</b>');
-    expect(morningText(1, Option.some('أم أحمد'))).toContain('<b>صباح الخير يا أم أحمد</b>');
-  });
-
-  test('counts a few rememberers in the plural', () => {
-    expect(morningText(5, first)).toContain('<b>٥ ذاكرين</b> أمس');
-  });
-
-  test('greets without a name when none is set', () => {
-    expect(morningText(0, Option.none())).toBe(
-      '<b>صباح الخير</b> 🌻\n\n<b>لا أحد</b> أمس\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
-    );
-  });
-
-  test('carries no diacritics', () => {
-    expect(morningText(412, Option.none())).not.toMatch(/[\u064B-\u0652]/u);
+    expect(reportText(noon, 18, 342, Option.none())).not.toMatch(/[\u064B-\u0652]/u);
   });
 });
 
 describe('isSilent', () => {
-  test('silences an hour with no visits', () => {
+  test('silences a half hour with no visits', () => {
     expect(isSilent(0, false)).toBe(true);
   });
 
-  test('rings for an hour with visits', () => {
+  test('rings for a half hour with visits', () => {
     expect(isSilent(5, false)).toBe(false);
   });
 

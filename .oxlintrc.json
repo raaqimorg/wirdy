@@ -101,7 +101,12 @@
       }
     },
     {
-      "files": ["astro.config.ts", "vitest.config.ts", "vitest.build.config.ts"],
+      "files": [
+        "astro.config.ts",
+        "vitest.config.ts",
+        "vitest.build.config.ts",
+        "scripts/visits/worker.ts"
+      ],
       "rules": {
         "import/no-default-export": "off"
       }

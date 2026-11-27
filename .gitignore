@@ -5,6 +5,7 @@ dist/
 *.tsbuildinfo
 .env
 .env.*
+.dev.vars
 .DS_Store
 .idea/
 .claude/*
