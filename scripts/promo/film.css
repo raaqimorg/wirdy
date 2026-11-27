@@ -27,20 +27,25 @@ body {
 .film__scene {
   --start: 0;
   --end: 0;
+  --dissolve: 0.4;
 
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 40px;
-  padding: 320px 120px 704px;
+  padding: 120px;
   background: var(--color-paper);
   opacity: 0;
   animation:
-    film-show 0s linear calc(var(--start) * 1s) forwards,
-    film-hide 0s linear calc(var(--end) * 1s) forwards;
+    film-show calc(var(--dissolve) * 1s) var(--ease-out) calc(var(--start) * 1s) both,
+    film-hide 0s linear calc((var(--end) + var(--dissolve)) * 1s) forwards;
+}
+
+.film__scene:first-child {
+  --dissolve: 0;
 }
 
 .film__scene--center {
@@ -104,9 +109,19 @@ body {
   object-position: top;
 }
 
+.film__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 880px;
+  margin: -231px 0 0 -440px;
+  border-radius: 24px;
+  box-shadow: 0 48px 96px -24px rgb(0 0 0 / 0.35);
+}
+
 .film__screen--blank {
-  padding: 32px;
-  border: 4px dashed var(--color-line);
+  border-style: dashed;
+  border-color: var(--color-line);
   color: var(--color-ink-muted);
   font-size: 32px;
   text-align: center;
@@ -130,6 +145,7 @@ body {
   display: flex;
   align-items: center;
   gap: 48px;
+  translate: 4px 0;
 }
 
 .film__mark {
@@ -191,7 +207,10 @@ body {
 }
 
 @keyframes film-show {
-  from,
+  from {
+    opacity: 0;
+  }
+
   to {
     opacity: 1;
   }

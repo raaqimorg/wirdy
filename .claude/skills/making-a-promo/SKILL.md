@@ -31,8 +31,9 @@ Load `argent-device-interact` and `argent-screen-recording`.
 2. Set light or dark as the story needs.
 3. Open `https://wirdy.site` in Safari, add it to the home screen, and open it from its icon, so no Safari bar shows. A feature not yet live is recorded from `bun run preview`.
 4. Ask the owner to run `argent disable video-watermark` in their own terminal, outside Claude Code, and wait for it. The flag is global, and a worktree session refuses the command, so never run it yourself.
-5. Record each clip with `screen-recording-start` (`showTouches: false`), one scripted `run-sequence` for the take, then `screen-recording-stop`. A retake runs the same sequence. Take a still with `screenshot` at scale 1.
-6. When the last clip is done, ask the owner to run `argent enable video-watermark` in their own terminal.
+5. In the installed app, «الصورة» opens iOS's file screen, which has no way back. Make it the last tap of its take, and quit the web app after it (`xcrun simctl terminate <udid> com.apple.webapp`).
+6. Record each clip with `screen-recording-start` (`showTouches: false`), one scripted `run-sequence` for the take, then `screen-recording-stop`. A retake runs the same sequence. Take a still with `screenshot` at scale 1.
+7. When the last clip is done, ask the owner to run `argent enable video-watermark` in their own terminal.
 
 Argent saves a recording in `.argent/recordings/` of its project, which git ignores. Turn each into a clip with `bun run promo:clip promo/<slug> <recording> <name>`: 30 fps, every frame a key frame, so a seek lands on the exact frame. Clips go to `promo/<slug>/clips/`, which git ignores.
 
@@ -41,13 +42,16 @@ Argent saves a recording in `.argent/recordings/` of its project, which git igno
 Write `promo/<slug>/film.html`. It holds only the scenes; the scripts add the site's tokens, fonts, emblems, mark, and colors.
 
 - One `<main class="film" data-film data-duration="24">`. Add `data-theme="dark"` for a night film.
-- One `<section class="film__scene" style="--start: 4; --end: 8.5">` per scene, in seconds from the start of the film. A scene shows from `--start` to `--end`. `film__scene--center` centers its content; `film__scene--tone` with `data-occasion="<id>"` puts it on that section's color.
+- One `<section class="film__scene" style="--start: 4; --end: 8.5">` per scene, in seconds from the start of the film. A scene dissolves in over `--dissolve` (0.4 s; the first scene shows at once) and stays until the next has covered it. Its content is centered on the frame, both ways. `film__scene--tone` with `data-occasion="<id>"` puts it on that section's color. Give the title `--at: 0.2`, so it enters as the dissolve ends.
 - A title is `<div class="film__title">` of `<p class="film__line">` lines, `film__line--small` for the second. Wrap ﷺ in `<span class="film__salawat">`.
 - An element moves with `data-motion` and `style="--at: 0.4"`, seconds after its scene starts: `enter` (from the right, the way Arabic reads), `grow` (from 60%), `fade`, or `push` (to `--push`, 1.6 to 2, around `--focus`, such as `50% 30%`).
 - `<video class="film__screen" data-clip src="clips/search.mp4" data-start="6.5" muted>` plays a clip from second 6.5 of the film. To push into part of a clip without the phone growing over the title, put `<video class="film__media" data-clip ... data-motion="push">` inside a `<div class="film__screen">`: the frame holds still and the picture grows inside it. `<img class="film__screen" data-still src="clips/home.png">` shows a still. `--screen` sets the width of the phone screen, and the frame draws a black phone body around it.
 - `<svg class="film__emblem" data-emblem="<id>">` draws a section's emblem, and its lit shapes enter as on the site. `<svg class="film__mark" data-mark>` draws the mark (`data-mark="stage"` in cream, on a color).
 - `data-quote` marks a dhikr copied from its file in `src/content/`, letter for letter. Only a quote may pass five words.
-- The end card is `film__end`: `film__brand` holding the mark and `<span class="film__name">وِردي</span>`, then `<span class="film__domain">wirdy.site</span>`.
+- The end card is `film__end`: `film__brand` holding the mark and `<span class="film__name">وِردي</span>`, then `<span class="film__domain">wirdy.site</span>`. The mark and name row is moved 4 px right by `film__brand`, because the tail of «وِردي» reaches left of its box.
+- `<img class="film__card" src="clips/<file>.png" alt="" data-motion="grow">` lays an image the site makes (the file «الصورة» downloads, fetched from the live site) over the phone, centered on the frame.
+- Keep the phone in one place: every scene with a phone has the same title size and line box, so the stack centers the same way. A title set smaller keeps the 88 px line box (`line-height: calc(88px * var(--leading-tight))`). One 88 px title and a 520 px screen fill the safe zone from top to bottom.
+- Prefer one continuous take played across several scenes (each scene's `<video>` with the same `src` and `data-start`): the phone never jumps, and only the titles change.
 
 ## 6. The check
 
@@ -55,7 +59,7 @@ Run `bun run promo:check promo/<slug>`. It reads the film every quarter second a
 
 ## 7. The review
 
-Run `bun run promo:sheet promo/<slug>`. It saves `out/sheet.png`: a frame each half second, with its time. Read it, and the frames at each cut, against the checklist below. Show the owner the sheet.
+Run `bun run promo:sheet promo/<slug>`. It saves `out/sheet.png`: a frame each half second, with its time. Read it, and the frames at each cut, against the checklist below. Then measure, never assume: pull frames from the render with ffmpeg as grayscale and find the ink against the paper, the title by its band and the phone by its black body. The title, the phone, and each end card row share the frame's center within 1 px, and the phone sits at the same pixels in every scene. Correct an offset by whole pixels and measure again. Show the owner the sheet.
 
 ## 8. The render
 
