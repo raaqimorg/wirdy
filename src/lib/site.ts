@@ -32,7 +32,7 @@ export const RAAQIM = {
 export const GUIDES = {
   jumuah: {
     path: '/al-jumuah/',
-    heading: 'الجمعة',
+    heading: 'سنن الجمعة',
     title: 'سنن الجمعة',
     topics: 'في فضل يوم الجمعة والغسل والتبكير والخطبة والصلاة وسورة الكهف وساعة الإجابة',
     color: hexFromOklch(DEEP_LIGHTNESS, chromaOf(DEEP_LIGHTNESS), 115),

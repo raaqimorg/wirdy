@@ -155,7 +155,7 @@ describe('pageLabel', () => {
   });
 
   test('names a guide and a hadith in it by the guide', () => {
-    expect(Option.getOrNull(pageLabel('/al-jumuah/'))).toBe('الجمعة');
+    expect(Option.getOrNull(pageLabel('/al-jumuah/'))).toBe('سنن الجمعة');
     expect(Option.getOrNull(pageLabel('/al-tibb-al-nabawi/al-asal/'))).toBe('الطب النبوي');
   });
 
@@ -280,7 +280,7 @@ describe('reportText', () => {
         '↓ أول أمس: ٣٠١ ذاكر',
         '',
         '🌍 السعودية ١٣٣، أمريكا ٣٣، سنغافورة ١٢',
-        '🚪 الرئيسية ١٥٤، الجمعة ٧، الطعام والشراب ٥',
+        '🚪 الرئيسية ١٥٤، سنن الجمعة ٧، الطعام والشراب ٥',
         '🔗 من إكس: ٨٧ ذاكرا',
         '🖼 فتح الملصق ٢٢ مرة',
         'كتب الله أجرك',

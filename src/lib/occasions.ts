@@ -28,7 +28,7 @@ const SECTIONS = {
   nas: { heading: 'الناس والمجالس', title: 'أذكار الناس والمجالس' },
   hamm: { heading: 'الهم والغضب', title: 'أذكار الهم والغضب' },
   marad: { heading: 'المرض والرقية', title: 'أذكار المرض والرقية' },
-  janaiz: { heading: 'الجنائز', title: 'أذكار الجنائز' },
+  janaiz: { heading: 'الموت والجنائز', title: 'أذكار الجنائز' },
   matar: { heading: 'المطر والريح', title: 'أذكار المطر والريح' },
 } as const;
 

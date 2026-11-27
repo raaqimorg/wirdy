@@ -47,10 +47,10 @@ A section answers one question a reader has in the moment: where am I, what am I
 | `nas`         | الناس والمجالس |
 | `hamm`        | الهم والغضب    |
 | `marad`       | المرض والرقية  |
-| `janaiz`      | الجنائز        |
+| `janaiz`      | الموت والجنائز |
 | `matar`       | المطر والريح   |
 
-The guides, «الجمعة» and «الطب النبوي», close the list ([The guides](#the-guides)).
+The guides, «سنن الجمعة» and «الطب النبوي», close the list ([The guides](#the-guides)).
 
 A dhikr of two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
 
@@ -61,7 +61,7 @@ A dhikr of two occasions, such as آية الكرسي, has one file in each, wit
 1. The order a hadith states. Examples: «تمام المائة» after the tasbih, and «اجعلهن آخر ما تتكلم به» last before sleep.
 2. The sequence of the moment: the adhan, then wudu, then going out, entering, and leaving the mosque.
 3. Adhkar of one kind stay together under a `group`. Every dhikr on a page has a `group`, so the page shows its index.
-4. Where no moment gives a sequence (the sections from المواسم والحج on, and الطب النبوي), the groups go from the most sacred down, or in the order of the need. المواسم والحج: the crescent and fasting, then الأضحية, then the rites of الحج. الطعام والشراب: before the meal, the blessing in it, after it, then the guest and the host. البيت والأهل: اللباس, the house at night, الخلاء, then marriage and children. الخروج والسفر: leaving the house and the market, riding, seeing a traveler off, then the journey and the return. الناس والمجالس: السلام, kindness and love, the gathering and the tongue, then sneezing. الهم والغضب: what pleases and what displeases, then worry, الكرب and debt, anger, fear and the enemy, the whispers of الشيطان and الطيرة, then الاستخارة. المرض والرقية: the sick person, then الرقية, then visiting the sick and seeing the afflicted. الجنائز: from the deathbed to the grave. المطر والريح: the wind and the clouds, the rain, the prayer for rain, then the sounds of animals. الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
+4. Where no moment gives a sequence (the sections from المواسم والحج on, and الطب النبوي), the groups go from the most sacred down, or in the order of the need. المواسم والحج: the crescent and fasting, then الأضحية, then the rites of الحج. الطعام والشراب: before the meal, the blessing in it, after it, then the guest and the host. البيت والأهل: اللباس, the house at night, الخلاء, then marriage and children. الخروج والسفر: leaving the house and the market, riding, seeing a traveler off, then the journey and the return. الناس والمجالس: السلام, kindness and love, the gathering and the tongue, then sneezing. الهم والغضب: what pleases and what displeases, then worry, الكرب and debt, anger, fear and the enemy, the whispers of الشيطان and الطيرة, then الاستخارة. المرض والرقية: the sick person, then الرقية, then visiting the sick and seeing the afflicted. الموت والجنائز: from the deathbed to the grave. المطر والريح: the wind and the clouds, the rain, the prayer for rain, then the sounds of animals. الطب النبوي: الرقية, the reward of the sick, the principles of treatment, the remedies by their blessing (honey, then Zamzam, then the others, then cupping), then keeping healthy and contagion.
 
 Each group has a Latin slug, such as `/sabah-masaa/#al-hifz`, in `GROUP_SLUGS` (`src/lib/groups.ts`), or the build fails. A slug is lowercase words joined by hyphens, and never equals a dhikr's slug on the same page.
 
@@ -142,7 +142,7 @@ A proof ends when what it proves changes. A change of order, title, group, form,
 
 ## The guides
 
-A guide holds sound hadiths to read, not adhkar to say: no count, moment, or card of their own. `GUIDES` in `src/lib/site.ts` lists them, each with its folder in `src/content/`, its page, its color, and its emblem. They show after the occasions, «الجمعة» then «الطب النبوي».
+A guide holds sound hadiths to read, not adhkar to say: no count, moment, or card of their own. `GUIDES` in `src/lib/site.ts` lists them, each with its folder in `src/content/`, its page, its color, and its emblem. They show after the occasions, «سنن الجمعة» then «الطب النبوي».
 
 | Folder   | Heading     | Page                  |
 | -------- | ----------- | --------------------- |

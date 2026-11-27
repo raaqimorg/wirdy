@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { OCCASIONS } from './occasions';
 import { PALETTE } from './palette';
+import { GUIDES } from './site';
 import { contrast, hueOf } from './tone';
 
 const COLORS = OCCASIONS.map(({ id, color }) => [id, color]);
@@ -20,5 +21,13 @@ describe('the occasion colors', () => {
 
   it('gives every occasion its own color', () => {
     expect(new Set(OCCASIONS.map(({ color }) => color)).size).toBe(OCCASIONS.length);
+  });
+});
+
+const HEADINGS = [...OCCASIONS, ...Object.values(GUIDES)].map(({ heading }) => [heading]);
+
+describe('the section headings', () => {
+  it.each(HEADINGS)('names %s in exactly two words', (heading) => {
+    expect(heading.split(/\s+/u)).toHaveLength(2);
   });
 });
