@@ -30,9 +30,9 @@ Load `argent-device-interact` and `argent-screen-recording`.
 1. Boot an iPhone simulator, and set the status bar: `xcrun simctl status_bar <udid> override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3`. Argent has no tool for it.
 2. Set light or dark as the story needs.
 3. Open `https://wirdy.site` in Safari, add it to the home screen, and open it from its icon, so no Safari bar shows. A feature not yet live is recorded from `bun run preview`.
-4. Run `argent disable video-watermark`.
+4. Ask the owner to run `argent disable video-watermark` in their own terminal, outside Claude Code, and wait for it. The flag is global, and a worktree session refuses the command, so never run it yourself.
 5. Record each clip with `screen-recording-start` (`showTouches: false`), one scripted `run-sequence` for the take, then `screen-recording-stop`. A retake runs the same sequence. Take a still with `screenshot` at scale 1.
-6. Run `argent enable video-watermark` when the last clip is done.
+6. When the last clip is done, ask the owner to run `argent enable video-watermark` in their own terminal.
 
 Argent saves a recording in `.argent/recordings/` of its project, which git ignores. Turn each into a clip with `bun run promo:clip promo/<slug> <recording> <name>`: 30 fps, every frame a key frame, so a seek lands on the exact frame. Clips go to `promo/<slug>/clips/`, which git ignores.
 
