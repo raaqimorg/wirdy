@@ -25,7 +25,7 @@ describe('adhkarLabel', () => {
   });
 
   it('uses the accusative singular above ten', () => {
-    expect(adhkarLabel(14)).toBe('١٤ ذكرًا');
+    expect(adhkarLabel(14)).toBe('١٤ ذكرا');
   });
 });
 

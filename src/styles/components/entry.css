@@ -93,6 +93,10 @@
   display: none;
 }
 
+.entry__more:not([open]) {
+  padding-block-end: var(--space-3);
+}
+
 .entry__more[open] .entry__toggle-open {
   display: inline;
 }

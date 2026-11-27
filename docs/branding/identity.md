@@ -19,7 +19,7 @@ The name, its meaning, the words that present the site, and its voice. Read it b
 | `url`         | https://wirdy.site                                                                                   | `astro.config.ts`, every absolute URL                                    |
 | `domain`      | wirdy.site                                                                                           | The sharing cards                                                        |
 | `tagline`     | أذكار اليوم والليلة                                                                                  | The title of the home page, and the home sharing card                    |
-| `promise`     | لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ، ومع كلٍّ درجتُه (كصحيح البخاري) ورابطُ مصدره، وفضلُه إن ورد                | The large line of the home page; `more`, from «ومع», is in the faint ink |
+| `promise`     | لا ذكر هنا إلا ما صح عن النبي ﷺ، ومع كل درجته (كصحيح البخاري) ورابط مصدره، وفضله إن ورد                | The large line of the home page; `more`, from «ومع», is in the faint ink |
 | `title`       | وِردي: أذكار الصباح والمساء والنوم وأدبار الصلوات                                                     | The installed app (`name` in the manifest), and the site in JSON-LD      |
 | `description` | أذكار الصباح والمساء والنوم والصلاة، والطعام والسفر والهم والمرض، مما ثبت عن النبي ﷺ، مع تخريج كل ذكر | The home page, the manifest, and the site in JSON-LD                     |
 
@@ -46,5 +46,6 @@ Each section has three names in `src/lib/occasions.ts` ([`design-system.md`](../
 
 - Write Arabic first, with the words of the content: ذكر، أذكار، تخريج، حكم.
 - Write short and plain ([`writing.md`](../writing.md)). Say what a thing is, not how good it is.
+- Write the words of the interface with no tashkil: labels, buttons, headings, counts, and the line of the home page. Only «وِردي» keeps its kasra. The adhkar, the hadiths, and what their proofs cover (the moment, the virtue) keep the marks of their source, and so does the takhrij line («صحّحه الألباني»), which the sharing cards print. A build test checks the home, 404, and section pages.
 - Never state a virtue, a count, or a ruling the takhrij does not prove ([`content.md`](../content.md)).
 - The line under a title never states a virtue or a ruling ([`design-system.md`](../design-system.md#components)).

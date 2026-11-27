@@ -105,11 +105,7 @@ const fold = single ? {} : { class: 'entry__more' };
           </div>
         )}
       </dl>
+      {!single && <slot name="actions" />}
     </div>
   </Fold>
-  {!single && (
-    <div class="entry__side">
-      <slot name="actions" />
-    </div>
-  )}
 </li>

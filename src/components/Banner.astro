@@ -21,7 +21,7 @@ const long = title.length > 24;
 <header
   class:list={[
     'banner',
-    emblem ? 'banner--stage' : 'banner--plain',
+    emblem && 'banner--stage',
     long && 'banner--long',
     turns && 'banner--turns',
   ]}

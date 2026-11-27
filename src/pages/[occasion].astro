@@ -54,7 +54,7 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
     {runs.map(({ group, items }) => (
       <Group title={Option.getOrUndefined(group)} entries={items} />
     ))}
-    <Closing text={hasVariants ? 'تمّت أذكار {{الصباح|المساء}}' : `تمّت ${title}`} />
+    <Closing text={hasVariants ? 'تمت أذكار {{الصباح|المساء}}' : `تمت ${title}`} />
   </ReadingProgress>
   <Related slot="after" tiles={others} />
 </Section>

@@ -89,7 +89,7 @@ export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   'بعد الطعام': 'bada-al-akl',
   'الضيف والمضيف': 'al-dayf-wa-al-mudif',
   اللباس: 'al-libas',
-  'البيت ليلًا': 'al-bayt-laylan',
+  'البيت ليلا': 'al-bayt-laylan',
   الخلاء: 'al-khala',
   'الزواج والأولاد': 'al-zawaj-wa-al-awlad',
   'الخروج والسوق': 'al-khuruj-wa-al-suq',

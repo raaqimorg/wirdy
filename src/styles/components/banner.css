@@ -63,19 +63,6 @@
   text-wrap: pretty;
 }
 
-.banner--plain .banner__words {
-  justify-content: center;
-}
-
-.banner--plain .banner__kicker {
-  margin-block-end: var(--space-2);
-}
-
-.banner--plain .banner__kicker,
-.banner--plain .banner__lede {
-  color: var(--color-ink-muted);
-}
-
 .banner__graphic {
   flex: none;
   align-self: center;

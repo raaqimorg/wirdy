@@ -238,11 +238,12 @@ describe('Dhikr', () => {
     expect(html).not.toContain('data-copy');
   });
 
-  it('folds its takhrij under one line in a list, keeps its buttons in view, and keeps all open on its own page', async () => {
+  it('folds its takhrij and its buttons under one line in a list, and keeps all open on its own page', async () => {
     const listed = await render(base, 'سبحان الله', { heading: 'h3' });
     expect(listed).toMatch(
-      /<details class="entry__more">\s*<summary class="entry__toggle" data-hover="line">[\s\S]*?التخريج[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?<\/details>\s*<div class="entry__side">\s*<div class="entry__acts">[\s\S]*?data-copy=/u
+      /<details class="entry__more">\s*<summary class="entry__toggle" data-hover="line">[\s\S]*?التخريج[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?<div class="entry__acts">[\s\S]*?data-copy=[\s\S]*?<\/details>/u
     );
+    expect(listed.slice(listed.indexOf('</details>'))).not.toContain('entry__acts');
     expect(listed).not.toContain('التخريج والمزيد');
     expect(listed).not.toMatch(/<details class="entry__more" open/u);
     const alone = await render(base, 'سبحان الله', { single: true });
@@ -257,12 +258,12 @@ describe('Dhikr', () => {
 
   it('says to read each سورة to its end when only its first آية shows', async () => {
     const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\n\nج\nد');
-    expect(html).toContain('<p class="entry__lead">تُقرأ كل سورة إلى آخرها</p>');
+    expect(html).toContain('<p class="entry__lead">تقرأ كل سورة إلى آخرها</p>');
   });
 
   it('says to read to the end of the سورة when there is one', async () => {
     const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\nج');
-    expect(html).toContain('<p class="entry__lead">تُقرأ إلى آخر السورة</p>');
+    expect(html).toContain('<p class="entry__lead">تقرأ إلى آخر السورة</p>');
   });
 
   it('joins the read-to-the-end line to a cue as its own sentence', async () => {
@@ -270,7 +271,7 @@ describe('Dhikr', () => {
       { ...base, quran: true, ayat: 'first', when: 'إذا أوى إلى فراشه' },
       'أ\nب'
     );
-    expect(html).toContain('<p class="entry__lead">إذا أوى إلى فراشه. تُقرأ إلى آخر السورة</p>');
+    expect(html).toContain('<p class="entry__lead">إذا أوى إلى فراشه. تقرأ إلى آخر السورة</p>');
   });
 
   it('adds no read-to-the-end line when every آية shows', async () => {

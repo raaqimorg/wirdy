@@ -163,7 +163,7 @@ describe('built site', () => {
       const page = pages[id]!;
       expect(page.match(/<h1[ >]/gu)).toHaveLength(1);
       expect(page).toMatch(
-        /<nav class="bar bar--stage" aria-label="التنقّل">\s*<div class="bar__inner container">\s*<a class="bar__brand" href="\/" aria-label="وِردي، الرئيسية">/u
+        /<nav class="bar bar--stage" aria-label="التنقل">\s*<div class="bar__inner container">\s*<a class="bar__brand" href="\/" aria-label="وِردي، الرئيسية">/u
       );
     }
   });
@@ -187,7 +187,7 @@ describe('built site', () => {
     );
   });
 
-  it('opens a menu of every section from an icon in the bar of each page but home, with no script', () => {
+  it('opens a menu of every section from an icon in the bar of each page but home and the 404 page, with no script', () => {
     const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'];
     for (const path of [...sections, 'nawm/ayat-al-kursi']) {
       const bar = barOf(own(path));
@@ -205,6 +205,7 @@ describe('built site', () => {
       expect(current.map(([, href]) => href)).toEqual(sections.includes(path) ? [`/${path}/`] : []);
     }
     expect(barOf(html)).not.toContain('section-menu');
+    expect(barOf(notFound)).not.toContain('section-menu');
     expect(css).toMatch(/@supports selector\(:popover-open\)/u);
     expect(css).toMatch(/\.section-menu__panel::backdrop\{display:none/u);
   });
@@ -734,6 +735,25 @@ describe('built site', () => {
     expect(llms.filter((line) => stopped(line))).toEqual([]);
   });
 
+  it('writes the words of the interface with no tashkil, but the name وِردي', () => {
+    const marked = /[\u064B-\u0652\u0670]/u;
+    const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'].map((id) => own(id));
+    const found = [html, notFound, ...sections].flatMap((page) =>
+      page
+        .replace(/<head>[\s\S]*?<\/head>/u, '')
+        .replaceAll(/<script[\s\S]*?<\/script>/gu, '')
+        .replaceAll(/<div class="entry__main">[\s\S]*?(?=<details class="entry__more">)/gu, '')
+        .replaceAll(/<dd class="entry__words">[\s\S]*?<\/dd>/gu, '')
+        .replaceAll(/<span class="takhrij__text">[\s\S]*?<\/span>/gu, '')
+        .replaceAll(/<[^>]*>/gu, '\n')
+        .replaceAll(SITE.name, '')
+        .split('\n')
+        .map((text) => text.trim())
+        .filter((text) => marked.test(text))
+    );
+    expect(found).toEqual([]);
+  });
+
   it('puts no middle dot next to a number on any page, where it reads as a zero', () => {
     const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
       file.endsWith('.html')
@@ -925,6 +945,10 @@ describe('built site', () => {
     expect(notFound).not.toContain('rel="canonical"');
     expect(notFound).not.toContain('application/ld+json');
     expect(notFound.match(/<h1[ >]/gu)).toHaveLength(1);
+    expect(notFound).toMatch(
+      /<h1 class="hero">\s*<span class="hero__words">\s*لم نجد هذه الصفحة، <span class="hero__more">اختر قسما، أو ابحث عن الذكر<\/span>/u
+    );
+    expect(notFound).not.toContain('class="banner');
     for (const id of OCCASION_IDS) {
       expect(notFound).toMatch(cardTo(`/${id}/`));
     }

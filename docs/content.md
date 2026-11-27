@@ -96,7 +96,7 @@ takhrij:
 - `mode`: `sabah` or `masaa` for a dhikr of one time only, `both` otherwise.
 - `ayat`: how much of each سورة shows. The file keeps the whole text. Only قرآن files use `first` or `fold`.
   - `all`, the default, shows every آية.
-  - `first` shows the first آية of each سورة, for سور the reader knows by heart, such as المعوذات. The card adds «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one).
+  - `first` shows the first آية of each سورة, for سور the reader knows by heart, such as المعوذات. The card adds «تقرأ إلى آخر السورة» («تقرأ كل سورة إلى آخرها» for more than one).
   - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one). A button, «أكمل القراءة، ٨ آيات», opens the rest in place: a `<details>`, no script, reading «طيّ» while open. Copy gives the آيات that show, with «وتتمة الآيات في الصفحة». The card shares its 250 letters among the سور, with the same line.
 - `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only, not the manner, source, or virtue. The card shows it first, with the count.
 - `how`: the manner the narration gives, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.

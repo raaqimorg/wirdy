@@ -14,7 +14,7 @@ const { menu = true, stage = false } = Astro.props;
 const label = 'ابحث في الأذكار';
 ---
 
-<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقّل">
+<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقل">
   <div class="bar__inner container">
     <a class="bar__brand" href="/" aria-label={`${SITE.name}، الرئيسية`}>
       <Mark inks={stage ? 'stage' : 'own'} />
