@@ -380,9 +380,14 @@ const structuredData = {
           const file = ready.get(link.getAttribute('href'));
           if (!file) return;
           event.preventDefault();
-          navigator.share({ files: [file] }).catch(function (error) {
-            if (error.name !== 'AbortError') location.assign(link.href);
-          });
+          navigator.share({ files: [file] }).then(
+            function () {
+              return copied(link, 'تم');
+            },
+            function (error) {
+              if (error.name !== 'AbortError') location.assign(link.href);
+            }
+          );
         });
       })();
     </script>
