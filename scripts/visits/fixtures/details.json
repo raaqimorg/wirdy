@@ -12,6 +12,15 @@
             { "sum": { "visits": 7 }, "dimensions": { "clientRequestPath": "/al-jumuah/" } }
           ],
           "fromX": [{ "sum": { "visits": 87 } }],
+          "fromInstagram": [{ "sum": { "visits": 9.4 } }],
+          "fromSnapchat": [],
+          "fromTikTok": [],
+          "fromFacebook": [],
+          "fromThreads": [],
+          "fromGoogle": [],
+          "fromLinkedIn": [],
+          "fromTelegram": [],
+          "fromPinterest": [],
           "posters": [{ "count": 22 }],
           "missing": [
             {

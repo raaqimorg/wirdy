@@ -1,6 +1,6 @@
 import { Array, Data, Effect, Option, Redacted, Schedule, Schema } from 'effect';
-import { toCount } from './report.ts';
-import type { Details, Tally, Totals, Window, Windows } from './report.ts';
+import { SOURCE_IDS, toCount } from './report.ts';
+import type { Details, SourceId, SourceTally, Tally, Totals, Window, Windows } from './report.ts';
 
 export class AnalyticsFailed extends Data.TaggedError('AnalyticsFailed')<{
   readonly message: string;
@@ -30,7 +30,21 @@ const READER_AGENT = [
   ...NOT_READER_AGENTS.map((pattern) => `{ userAgent_notlike: "${pattern}" }`),
 ];
 
-const FROM_X = '{ userAgent_like: "%Twitter%" }';
+const SOURCE_AGENTS: Readonly<Record<SourceId, ReadonlyArray<string>>> = {
+  X: ['%Twitter%'],
+  Instagram: ['%Instagram%'],
+  Snapchat: ['%Snapchat%'],
+  TikTok: ['%musical_ly%', '%BytedanceWebview%', '%TikTok%'],
+  Facebook: ['%FBAN/%', '%FBAV/%', '%FB_IAB/%'],
+  Threads: ['%Barcelona%'],
+  Google: ['%GSA/%'],
+  LinkedIn: ['%LinkedInApp%'],
+  Telegram: ['%Telegram%'],
+  Pinterest: ['%Pinterest%'],
+};
+
+const fromSource = (id: SourceId) =>
+  `{ OR: [${SOURCE_AGENTS[id].map((pattern) => `{ userAgent_like: "${pattern}" }`).join(', ')}] }`;
 
 const windowFilterOf = (window: Window) =>
   `datetime_geq: "${window.from.toISOString()}", datetime_lt: "${window.to.toISOString()}", requestSource: "eyeball"`;
@@ -55,7 +69,7 @@ export function totalsQueryOf(windows: Windows): string {
     groups('day', `limit: 1, filter: ${readsOf(windows.day)}`, VISITS),
     groups('hourBefore', `limit: 1, filter: ${readsOf(windows.hourBefore)}`, VISITS),
     groups('dayBefore', `limit: 1, filter: ${readsOf(windows.dayBefore)}`, VISITS),
-    groups('hourFromX', `limit: 1, filter: ${readsOf(windows.hour, [FROM_X])}`, VISITS),
+    groups('hourFromX', `limit: 1, filter: ${readsOf(windows.hour, [fromSource('X')])}`, VISITS),
   ]);
 }
 
@@ -72,7 +86,9 @@ export function detailsQueryOf(day: Window): string {
       `limit: 200, orderBy: [sum_visits_DESC], filter: ${readsOf(day)}`,
       `${VISITS} dimensions { clientRequestPath }`
     ),
-    groups('fromX', `limit: 1, filter: ${readsOf(day, [FROM_X])}`, VISITS),
+    ...SOURCE_IDS.map((id) =>
+      groups(`from${id}`, `limit: 1, filter: ${readsOf(day, [fromSource(id)])}`, VISITS)
+    ),
     groups(
       'posters',
       `limit: 1, filter: ${readsOf(day, ['{ clientRequestPath_like: "/posters/%" }'])}`,
@@ -159,6 +175,11 @@ const countIn = (zone: Zone, key: string) =>
     Option.match(Array.head(rows), { onNone: () => 0, onSome: (row) => toCount(row.count) })
   );
 
+const sourcesIn = (zone: Zone) =>
+  Effect.forEach(SOURCE_IDS, (id) =>
+    Effect.map(visitsIn(zone, `from${id}`), (count): SourceTally => ({ id, count }))
+  );
+
 export const decodeTotals = (json: unknown) =>
   Effect.gen(function* () {
     const zone = yield* zoneOf(json);
@@ -187,7 +208,7 @@ export const decodeDetails = (json: unknown) =>
         key: row.dimensions.clientRequestPath,
         count: toCount(row.sum.visits),
       })),
-      fromX: yield* visitsIn(zone, 'fromX'),
+      sources: yield* sourcesIn(zone),
       posters: yield* countIn(zone, 'posters'),
       missing: missing.map((row): Tally => ({
         key: row.dimensions.clientRequestPath,
