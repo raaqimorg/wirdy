@@ -44,14 +44,14 @@ Write `promo/<slug>/film.html`. It holds only the scenes; the scripts add the si
 - One `<section class="film__scene" style="--start: 4; --end: 8.5">` per scene, in seconds from the start of the film. A scene shows from `--start` to `--end`. `film__scene--center` centers its content; `film__scene--tone` with `data-occasion="<id>"` puts it on that section's color.
 - A title is `<div class="film__title">` of `<p class="film__line">` lines, `film__line--small` for the second. Wrap ﷺ in `<span class="film__salawat">`.
 - An element moves with `data-motion` and `style="--at: 0.4"`, seconds after its scene starts: `enter` (from the right, the way Arabic reads), `grow` (from 60%), `fade`, or `push` (to `--push`, 1.6 to 2, around `--focus`, such as `50% 30%`).
-- `<video class="film__screen" data-clip src="clips/search.mp4" data-start="6.5" muted>` plays a clip from second 6.5 of the film. `<img class="film__screen" data-still src="clips/home.png">` shows a still. `--screen` sets the width of the phone screen.
+- `<video class="film__screen" data-clip src="clips/search.mp4" data-start="6.5" muted>` plays a clip from second 6.5 of the film. To push into part of a clip without the phone growing over the title, put `<video class="film__media" data-clip ... data-motion="push">` inside a `<div class="film__screen">`: the frame holds still and the picture grows inside it. `<img class="film__screen" data-still src="clips/home.png">` shows a still. `--screen` sets the width of the phone screen.
 - `<svg class="film__emblem" data-emblem="<id>">` draws a section's emblem, and its lit shapes enter as on the site. `<svg class="film__mark" data-mark>` draws the mark (`data-mark="stage"` in cream, on a color).
 - `data-quote` marks a dhikr copied from its file in `src/content/`, letter for letter. Only a quote may pass five words.
 - The end card is `film__end`: `film__brand` holding the mark and `<span class="film__name">وِردي</span>`, then `<span class="film__domain">wirdy.site</span>`.
 
 ## 6. The check
 
-Run `bun run promo:check promo/<slug>`. It reads the film every quarter second and names text outside the safe zone, text under 28 px, a line over five words, an em-dash, «وردي» without its kasra, a missing clip, a clip that ends before its scene, an empty frame 0, and a film outside 15 to 30 seconds. Fix every line until it prints «ok».
+Run `bun run promo:check promo/<slug>`. It reads the film every quarter second and names text outside the safe zone, text under 28 px, a line over five words, an em-dash, tashkil in a title, «وردي» without its kasra, a missing clip, a clip that ends before its scene, an empty frame 0, and a film outside 15 to 30 seconds. Fix every line until it prints «ok».
 
 ## 7. The review
 
@@ -78,6 +78,7 @@ Write `promo/<slug>/post.md`: one caption for X, one for TikTok, one for Snapcha
 - The end card: the mark and «وِردي» land in the last 10%, then `wirdy.site`, held 2 to 3 seconds.
 - No first line of «نقدّم لكم» or «تعرّف على». None of «الأفضل», «الأول», «ثوري», «بسهولة», «بضغطة زر» unless the film shows it.
 - No screen, button, or dhikr that is not on the site. No virtue, count, or ruling its takhrij does not prove.
+- Titles carry no tashkil (`docs/branding/identity.md`, the voice). Only «وِردي» keeps its kasra, and a `data-quote` keeps its source's marks.
 - Write «وِردي» with its kasra, and never drop ﷺ.
 - No em-dashes.
 

@@ -62,6 +62,13 @@ describe('textProblems', () => {
       '2s: «وردي» needs the kasra: وِردي',
     ]);
   });
+  test('names tashkil in a title, but not the name or a quote', () => {
+    expect(textProblems(1, { ...line, text: 'ومع كل ذكر تخريجُه' })).toEqual([
+      '1s: «ومع كل ذكر تخريجُه» has tashkil: titles carry none',
+    ]);
+    expect(textProblems(1, { ...line, text: 'افتح وِردي' })).toEqual([]);
+    expect(textProblems(1, { ...line, text: 'سُبْحَانَ اللَّهِ', quote: true })).toEqual([]);
+  });
   test('names an em-dash', () => {
     const dash = String.fromCodePoint(0x2014);
     expect(textProblems(0, { ...line, text: `صباح ${dash} مساء` })).toEqual([

@@ -16,6 +16,9 @@ export const LENGTH = { min: 15, max: 30 } as const;
 const NAME = 'وِردي';
 const BARE_NAME = /(?<![\p{L}\p{M}])وردي(?![\p{L}\p{M}])/u;
 const EM_DASH = String.fromCodePoint(0x2014);
+const TASHKIL = /[ً-ْٰ]/u;
+
+const hasTashkil = (text: string): boolean => TASHKIL.test(text.replaceAll(NAME, ''));
 
 export type Box = {
   readonly x: number;
@@ -67,6 +70,7 @@ export const textProblems = (time: number, box: TextBox): ReadonlyArray<string> 
       ? [`${at} has ${String(words)} words, over ${String(MAX_WORDS)}`]
       : []),
     ...(BARE_NAME.test(box.text) ? [`${at} needs the kasra: ${NAME}`] : []),
+    ...(!box.quote && hasTashkil(box.text) ? [`${at} has tashkil: titles carry none`] : []),
     ...(box.text.includes(EM_DASH) ? [`${at} has an em-dash`] : []),
     ...(isSafe(box) ? [] : [`${at} is outside the safe zone`]),
   ];
