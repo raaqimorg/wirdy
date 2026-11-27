@@ -43,8 +43,8 @@
     "promo:render": "bun scripts/promo/render.ts",
     "promo:sheet": "bun scripts/promo/sheet.ts",
     "visits": "bun scripts/visits/send.ts",
-    "visits:deploy": "wrangler deploy --config scripts/visits/wrangler.toml",
-    "deploy": "bun run ci && wrangler pages deploy",
+    "visits:deploy": "env -u CLOUDFLARE_API_TOKEN -u CLOUDFLARE_ZONE_ID wrangler deploy --config scripts/visits/wrangler.toml --env-file=/dev/null",
+    "deploy": "bun run ci && env -u CLOUDFLARE_API_TOKEN -u CLOUDFLARE_ZONE_ID wrangler pages deploy --env-file=/dev/null",
     "gallery": "bun scripts/gallery/serve.ts"
   },
   "dependencies": {
