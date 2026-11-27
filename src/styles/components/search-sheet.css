@@ -40,4 +40,8 @@
     border-radius: var(--radius-xlarge);
     box-shadow: var(--shadow-menu);
   }
+
+  .search-sheet--stage {
+    --search-field-ink: var(--color-ink);
+  }
 }

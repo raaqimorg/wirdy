@@ -26,6 +26,7 @@ const groups = [tiles.filter(({ id }) => id !== 'tibb'), tiles.filter(({ id }) =
                   href={href}
                   style={`--tone: ${color}`}
                   aria-current={href === here ? 'page' : undefined}
+                  data-hover="fill"
                 >
                   <span class="section-menu__tile">
                     <Emblem name={id} motion="still" />

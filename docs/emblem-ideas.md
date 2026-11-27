@@ -51,7 +51,7 @@ Reused: the site's mark (src/lib/mark.ts), at emblem size.
 
 «كُنّ له مسلحة من أول النهار إلى آخره». The ten morning tahlil stand around the one who said them, like a guard, until evening.
 
-Reused: the bead ring that shows a count of ten or fewer on every card (src/lib/beads.ts).
+Reused: the bead ring the cards once drew for a count of ten or fewer.
 
 ### The climbing light
 
@@ -227,7 +227,7 @@ From the occasion's name: أدبار الصلوات, after every prayer.
 
 One ring of thirty three beads, the tasbih count, drawn as the site draws a count. The lit centre is where a card puts the number.
 
-Reused: the bead ring of each count (src/lib/beads.ts), with thirty three beads.
+Reused: the bead ring the cards once drew for a count, with thirty three beads.
 
 ### The hundredth closes the circle
 

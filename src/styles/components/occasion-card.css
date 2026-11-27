@@ -68,10 +68,6 @@
     transition: transform var(--duration-release) var(--spring);
   }
 
-  .occasion-card:active {
-    opacity: 1;
-  }
-
   .occasion-card:active .occasion-card__face {
     transform: scale(0.97);
     transition: transform var(--duration-press) var(--ease-out);

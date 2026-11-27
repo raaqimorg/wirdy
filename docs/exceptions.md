@@ -14,7 +14,7 @@ The two forms differ in a few words (أصبحنا, أمسينا). The page holds
 
 ## An empty touch listener turns on the press state on iPhones
 
-A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and every other link and button dims to 60% (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds an empty `touchstart` listener.
+A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and every other control answers by its shape (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds an empty `touchstart` listener.
 
 - Without it, an iPhone tap shows nothing, because `-webkit-tap-highlight-color: transparent` turns off the grey highlight.
 - The listener is `passive`, so it never delays scrolling.
@@ -165,3 +165,11 @@ The home page, the sections its cards open, and search open at once, and with no
 - A beacon to a Pages Function would add a script to every page and a server to a static site.
 - The job keeps no state. Each run asks Cloudflare again, so a run that GitHub drops or delays changes nothing after it. The hour reported is fixed by the clock, and a retry of a Telegram send never happens, so nothing is sent twice.
 - Every window is at most one day back. The free plan keeps 31.
+
+## The palette reads the tokens
+
+`src/lib/palette.ts` reads the colors it needs (the paper by day and night, the panel, eggshell, and the inks) from `src/styles/tokens.css` when the build loads it, so each color is written once. The theme-color metas, the mark, the manifest, and the generated cards use it.
+
+- The ordinary way is to write the colors twice, in the CSS and in TypeScript, and keep them equal with a test.
+- It runs only at build time, in Node. No page ships it.
+- Three values stay in it: the black of a shade, and the petal and the disc of the mark, which no stylesheet uses.

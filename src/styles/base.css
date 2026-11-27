@@ -61,32 +61,48 @@ a {
 
 @media (hover: hover) {
   :where(a, button, summary):hover {
+    opacity: var(--opacity-hover);
+  }
+
+  :where([data-hover="fill"]):hover {
+    opacity: 1;
     box-shadow: var(--shadow-hover);
+  }
+
+  [data-hover="line"]:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: var(--underline-gap-wide);
+  }
+
+  :where([data-hover="self"]):hover {
+    opacity: 1;
   }
 }
 
 :where(a, button, summary):active {
+  opacity: var(--opacity-pressed);
+}
+
+:where([data-hover="fill"]):active {
+  opacity: 1;
   box-shadow: var(--shadow-pressed);
+}
+
+[data-hover="line"]:active {
+  opacity: 1;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-gap-wide);
+}
+
+:where([data-hover="self"]):active {
+  opacity: 1;
 }
 
 @keyframes fade {
   from {
     opacity: 0;
   }
-}
-
-@media (hover: hover) {
-  [data-link="text"]:hover {
-    box-shadow: none;
-    text-decoration: underline;
-    text-decoration-color: var(--color-line);
-    text-underline-offset: var(--underline-gap-wide);
-  }
-}
-
-[data-link="text"]:active {
-  box-shadow: none;
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-underline-offset: var(--underline-gap-wide);
 }

@@ -1,9 +1,14 @@
-.reading-progress {
+.reading-progress__bar {
   display: none;
 }
 
-@supports (animation-timeline: scroll()) {
+@supports (animation-timeline: view()) {
   .reading-progress {
+    view-timeline: --reading block;
+    view-timeline-inset: calc(env(safe-area-inset-top) + var(--size-bar)) 0;
+  }
+
+  .reading-progress__bar {
     position: fixed;
     inset-block-start: calc(env(safe-area-inset-top) + var(--size-bar));
     inset-inline: 0;
@@ -14,14 +19,8 @@
     transform-origin: right;
     animation: reading-progress linear both;
     animation-duration: auto;
-    animation-timeline: scroll(root);
-    animation-range: var(--size-banner) normal;
-  }
-
-  @media (min-width: 64rem) {
-    .reading-progress {
-      animation-range: var(--size-banner-wide) normal;
-    }
+    animation-timeline: --reading;
+    animation-range: contain 0% contain 100%;
   }
 }
 

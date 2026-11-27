@@ -57,6 +57,14 @@ const unescaped = (text: string) =>
     .replaceAll('&#39;', "'")
     .replaceAll('&amp;', '&');
 const plain = (text: string) => text.replaceAll(/\s+/gu, ' ').trim();
+const stopped = (text: string) => /[.]\s*$/u.test(text) && !/^https?:\/\//u.test(text);
+const stringsOf = (value: unknown): string[] => {
+  if (typeof value === 'string') return [value];
+  if (Array.isArray(value)) return value.flatMap((item: unknown) => stringsOf(item));
+  if (value !== null && typeof value === 'object')
+    return Object.values(value).flatMap((item: unknown) => stringsOf(item));
+  return [];
+};
 
 const own = (path: string) => readFileSync(join(DIST, path, 'index.html'), 'utf8');
 const facesOf = (page: string) =>
@@ -268,7 +276,7 @@ describe('built site', () => {
       const footer = page.match(/<footer class="site-footer">[\s\S]*?<\/footer>/u)![0];
       const tools = footer.match(/<p class="site-footer__tools">([\s\S]*?)<\/p>/u)![1]!;
       expect(tools.replaceAll(/\s+/gu, ' ').trim()).toBe(
-        '<button type="button" aria-pressed="false" data-theme-toggle="true" class="button button--text theme-toggle"> المظهر </button><span aria-hidden="true">·</span><a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener" data-link="text">قتهب</a>'
+        '<button type="button" data-hover="line" aria-pressed="false" data-theme-toggle="true" class="button button--text theme-toggle"> المظهر </button><span aria-hidden="true">·</span><a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener" data-hover="line">قتهب</a>'
       );
       expect(page.split('data-theme-toggle=').length - 1).toBe(1);
       expect(page.split('href="https://github.com/raaqimorg/wirdy"').length - 1).toBe(1);
@@ -281,7 +289,7 @@ describe('built site', () => {
 
   it('names the section over the title of a dhikr, as the way back to its place', () => {
     expect(own('nawm/ayat-al-kursi')).toMatch(
-      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi">\s*<svg[\s\S]*?<span>عند النوم<\/span>/u
+      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi" data-hover="line">\s*<svg[\s\S]*?<span>عند النوم<\/span>/u
     );
   });
 
@@ -325,10 +333,10 @@ describe('built site', () => {
     const page = pages['sabah-masaa']!;
     const group = page.match(/<div class="wird-switch" role="group"[\s\S]*?<\/div>/u)![0];
     expect(group).toContain(
-      '<a class="wird-switch__option" href="?w=s" data-wird-form="s">الصباح</a>'
+      '<a class="wird-switch__option" href="?w=s" data-wird-form="s" data-hover="fill">الصباح</a>'
     );
     expect(group).toContain(
-      '<a class="wird-switch__option" href="?w=m" data-wird-form="m">المساء</a>'
+      '<a class="wird-switch__option" href="?w=m" data-wird-form="m" data-hover="fill">المساء</a>'
     );
     expect(page).toMatch(/<script>[\s\S]*?setAttribute\('aria-current'[\s\S]*?<\/script>/u);
   });
@@ -699,6 +707,33 @@ describe('built site', () => {
     );
   });
 
+  it('ends no metadata with a full stop: titles, descriptions, sharing text, JSON-LD, the manifest, and llms.txt', () => {
+    const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    const found = files.flatMap((file) => {
+      const page = readFileSync(join(DIST, file), 'utf8');
+      const title = page.match(/<title>([^<]*)<\/title>/u)?.[1] ?? '';
+      const metas = [
+        ...page.matchAll(
+          /<meta (?:name|property)="(?:description|og:[^"]+|twitter:[^"]+)" content="([^"]*)"/gu
+        ),
+      ].map(([, content]) => content!);
+      const graph = [
+        ...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu),
+      ].flatMap(([, json]) => stringsOf(JSON.parse(json!)));
+      return [title, ...metas, ...graph]
+        .map((text) => unescaped(text))
+        .filter((text) => stopped(text))
+        .map((text) => `${file}: ${text}`);
+    });
+    expect(found).toEqual([]);
+    const manifest: unknown = JSON.parse(readFileSync(join(DIST, 'site.webmanifest'), 'utf8'));
+    expect(stringsOf(manifest).filter((text) => stopped(text))).toEqual([]);
+    const llms = readFileSync(join(DIST, 'llms.txt'), 'utf8').split('\n');
+    expect(llms.filter((line) => stopped(line))).toEqual([]);
+  });
+
   it('leads from each dhikr to the previous and the next in its occasion', () => {
     const list = contentFiles
       .filter((f) => f.startsWith('nawm/'))
@@ -738,9 +773,11 @@ describe('built site', () => {
       expect(page.match(/data-share-title=/gu)).toHaveLength(1);
       expect(page.match(/ data-copy=/gu)).toHaveLength(1);
       expect(page.match(/ data-status/gu)).toHaveLength(1);
-      expect(page).toMatch(/<a href="\/og\/[^"]+" download="wirdy-[^"]+" class="button">/u);
+      expect(page).toMatch(
+        /<a href="\/og\/[^"]+" data-hover="fill" download="wirdy-[^"]+" class="button">/u
+      );
       expect(pages[occasion!]).toMatch(
-        new RegExp(`<a href="/${slug}/" aria-label="صفحة الذكر: `, 'u')
+        new RegExp(`<a href="/${slug}/" data-hover="line" aria-label="صفحة الذكر: `, 'u')
       );
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
@@ -770,7 +807,7 @@ describe('built site', () => {
           .filter(Boolean)
           .map((other) => `/al-tibb-al-nabawi/${other!}/`)
       );
-      expect(list).toContain(`<a href="${path}" aria-label="صفحة الحديث: `);
+      expect(list).toContain(`<a href="${path}" data-hover="line" aria-label="صفحة الحديث: `);
     }
   });
 
@@ -993,7 +1030,9 @@ describe('built site', () => {
       )![0];
       for (const page of [card, own(`${occasion}/${name}`)]) {
         expect(page.match(/<details class="surah__rest">/gu)).toHaveLength(suwar.length);
-        expect(page.match(/<summary class="surah__more">/gu)).toHaveLength(suwar.length);
+        expect(page.match(/<summary class="surah__more" data-hover="fill">/gu)).toHaveLength(
+          suwar.length
+        );
         let at = 0;
         for (const ayah of suwar.flat()) {
           const next = page.indexOf(ayah, at);

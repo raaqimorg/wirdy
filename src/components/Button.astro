@@ -8,12 +8,14 @@ interface Props {
 
 const { variant = 'plain', href, class: extra, ...rest } = Astro.props;
 const Tag = href ? 'a' : 'button';
+const hover = { plain: 'fill', primary: 'fill', text: 'line', icon: undefined }[variant];
 ---
 
 <Tag
   class:list={['button', variant !== 'plain' && `button--${variant}`, extra]}
   href={href}
   type={href ? undefined : 'button'}
+  data-hover={hover}
   {...rest}
 >
   <slot />

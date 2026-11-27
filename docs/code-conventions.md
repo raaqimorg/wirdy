@@ -39,17 +39,18 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with springs").
 
 - Animate only `transform` and `opacity`, in CSS. No motion library.
-- Move with `--spring`, Apple's bounceless spring as CSS `linear()`. Its duration sets the speed: 607 ms (a 0.45 s spring) for the emblems, 405 ms (0.3 s) for hover, and 270 ms (0.2 s) for the press release. Fade with `--ease-out`. The page fade is linear, to keep pace with Safari's status bar fade.
+- Four durations: 100 ms for a press, 200 ms for a fade, 300 ms for a release or a hover, and 500 ms for an entrance. Move with `--spring`, Apple's bounceless spring as CSS `linear()`. Fade with `--ease-out`. The page fade is linear, to keep pace with Safari's status bar fade.
+- Motion is opt-in: it is written under `prefers-reduced-motion: no-preference`, so a rule that forgets reduced motion shows none.
 - Respond on the first frame. Never ease in or ease in-out: both start slowly.
 - Grow a shape from 60%, not from nothing (Apple's Replace for SF Symbols).
-- Move only what is lit. An emblem fades in whole, its dark shapes still. After 180 ms its lit shapes enter, each its own way (`enter` in `src/lib/emblems.ts`).
+- An emblem fades in whole, once, in 200 ms. Its shapes do not enter one by one on every page.
 - Animate nothing out of sight. On the home page only the first 3 cards animate, or 6 on a wide screen. The «بقية الأقسام» cards do not.
 - On hover a card brightens and grows 2%. A press shrinks it to 97% at once, on iPhones too ([`exceptions.md`](exceptions.md)). The card scales its face, `.occasion-card__face`, never the link, so the link stays under the pointer: a click near the edge of a shrinking link used to land outside it and open nothing.
-- A press on any other link or button dims it to 60% at once, with no transition.
+- Any other control answers by its shape ([`design-system.md`](design-system.md#states)): a fill tints, text underlines, an icon dims. A press answers at once, with no transition.
 - The morning and evening sun turns half a circle when the form changes: its lit half above in the morning, below in the evening.
 - The section menu grows from the bar, 94% to full size, as it fades in.
 - With reduced motion the emblem only fades, the sun and the menu change at once, and nothing scales or moves. Hover still brightens, so the pointer gets an answer.
-- On a long page, once the top has scrolled away, a line under the bar grows as the reader scrolls (`components/ReadingProgress.astro`): a CSS scroll-driven animation, so no script, and no line in a browser without them.
+- On a long page a line under the bar grows from where the first group meets the bar to where the closing line meets the bottom of the screen (`components/ReadingProgress.astro`): a CSS view timeline on the groups and the closing line, so no script, and no line in a browser without them.
 - A page opens at once, with no cross-page view transition. During one, Safari drops every tap for about 150 ms after the page shows, so a reader had to tap «الرئيسية» or the search icon twice.
 
 ## Comments

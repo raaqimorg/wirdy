@@ -13,7 +13,7 @@ const { groups } = Astro.props;
   <ul class="group-index__list">
     {groups.map((group) => (
       <li>
-        <a class="group-index__link" href={`#${Effect.runSync(groupId(group))}`}>
+        <a class="group-index__link" href={`#${Effect.runSync(groupId(group))}`} data-hover="fill">
           {group}
         </a>
       </li>

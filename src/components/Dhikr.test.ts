@@ -113,7 +113,7 @@ describe('Dhikr', () => {
     expect(html).toContain('<div class="surah surah--fold">');
     expect(html.match(/<details class="surah__rest">/gu)).toHaveLength(1);
     expect(html).toContain(
-      `<summary class="surah__more"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
+      `<summary class="surah__more" data-hover="fill"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
     );
     expect(html.split('<details')[0]!.match(new RegExp(ayah, 'gu'))).toHaveLength(2);
     expect(
@@ -241,7 +241,7 @@ describe('Dhikr', () => {
   it('folds its takhrij under one line in a list, keeps its buttons in view, and keeps all open on its own page', async () => {
     const listed = await render(base, 'سبحان الله', { heading: 'h3' });
     expect(listed).toMatch(
-      /<details class="entry__more">\s*<summary class="entry__toggle">[\s\S]*?التخريج[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?<\/details>\s*<div class="entry__side">\s*<div class="entry__acts">[\s\S]*?data-copy=/u
+      /<details class="entry__more">\s*<summary class="entry__toggle" data-hover="line">[\s\S]*?التخريج[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?<\/details>\s*<div class="entry__side">\s*<div class="entry__acts">[\s\S]*?data-copy=/u
     );
     expect(listed).not.toContain('التخريج والمزيد');
     expect(listed).not.toMatch(/<details class="entry__more" open/u);
@@ -282,10 +282,10 @@ describe('Dhikr', () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('<li class="entry" id="sayyid-al-istighfar">');
     expect(html).toMatch(
-      /<button type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)" class="button button--text entry__act">[\s\S]*?<span data-label>نسخ<\/span>/u
+      /<button type="button" data-hover="line" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)" class="button button--text entry__act">[\s\S]*?<span data-label>نسخ<\/span>/u
     );
     expect(html).toMatch(
-      /<a href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار" class="button button--text entry__act">\s*<span>صفحة الذكر<\/span>/u
+      /<a href="\/sabah-masaa\/sayyid-al-istighfar\/" data-hover="line" aria-label="صفحة الذكر: سيد الاستغفار" class="button button--text entry__act">\s*<span>صفحة الذكر<\/span>/u
     );
     expect(html).not.toContain('data-share-title');
   });
@@ -300,7 +300,7 @@ describe('Dhikr', () => {
   it('says whether it was copied, on its button and to a screen reader, with an icon for each outcome', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="visually-hidden" role="status" data-status><\/span>\s*<button type="button" aria-label="نسخ: سيد الاستغفار"/u
+      /<span class="visually-hidden" role="status" data-status><\/span>\s*<button type="button" data-hover="line" aria-label="نسخ: سيد الاستغفار"/u
     );
     expect(html).toMatch(
       /class="icon icon--line icon--idle"[\s\S]*?class="icon icon--line icon--done"[\s\S]*?class="icon icon--line icon--fail"[\s\S]*?<span data-label>نسخ<\/span>/u

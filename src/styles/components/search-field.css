@@ -38,6 +38,11 @@
   font-size: var(--text-body);
 }
 
+.search-field__box:has(.search-field__input:focus-visible) {
+  outline: var(--border-ring) solid var(--color-ink);
+  outline-offset: var(--ring-inset);
+}
+
 .search-field__input::placeholder {
   color: var(--color-ink-faint);
   opacity: 1;
@@ -115,6 +120,10 @@
   }
 
   .search-field__box:has(.search-field__input:not(:placeholder-shown)) .search-field__key {
+    display: none;
+  }
+
+  .search-field__close {
     display: none;
   }
 }

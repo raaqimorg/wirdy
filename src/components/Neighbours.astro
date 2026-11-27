@@ -8,7 +8,7 @@ const { links } = Astro.props;
 
 <nav class="neighbours" aria-label="السابق والتالي">
   {links.map(({ label, title, context, href }) => (
-    <a class="neighbours__link" href={href}>
+    <a class="neighbours__link" href={href} data-hover="line">
       <span class="neighbours__label">{label}</span>
       <span>
         {title}

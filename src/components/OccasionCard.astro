@@ -12,7 +12,12 @@ const { tile, variant, motion } = Astro.props;
 const { id, heading, color, note, href } = tile;
 ---
 
-<a class={`occasion-card occasion-card--${variant} tone`} href={href} style={`--tone: ${color}`}>
+<a
+  class={`occasion-card occasion-card--${variant} tone`}
+  href={href}
+  style={`--tone: ${color}`}
+  data-hover="self"
+>
   <span class="occasion-card__face">
     <span class="occasion-card__stage">
       <Emblem name={id} motion={motion} class="occasion-card__emblem" />
