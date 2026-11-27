@@ -103,8 +103,9 @@ describe('textProblems', () => {
     ]);
   });
   test('names an em-dash', () => {
-    expect(textProblems(0, { ...line, text: 'صباح — مساء' })).toEqual([
-      '0s: «صباح — مساء» has an em-dash',
+    const dash = String.fromCharCode(0x2014);
+    expect(textProblems(0, { ...line, text: `صباح ${dash} مساء` })).toEqual([
+      `0s: «صباح ${dash} مساء» has an em-dash`,
     ]);
   });
   test('names text outside the zone', () => {
