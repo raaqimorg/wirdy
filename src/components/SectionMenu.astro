@@ -21,7 +21,14 @@ const groups = [tiles.filter(({ id }) => !isGuide(id)), tiles.filter(({ id }) =>
   >
     <Icon name="sections" />
   </Button>
-  <dialog class="section-menu__panel" id="sections" aria-label="الأقسام" data-sheet data-expandable>
+  <dialog
+    class="section-menu__panel"
+    id="sections"
+    aria-label="الأقسام"
+    data-sheet
+    data-expandable
+    autofocus
+  >
     <div class="section-menu__head" data-sheet-handle>
       <span class="section-menu__grabber" aria-hidden="true" />
       <p class="section-menu__title">الأقسام</p>

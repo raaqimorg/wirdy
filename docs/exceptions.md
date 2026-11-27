@@ -148,6 +148,14 @@ On a phone the section menu and the poster menu rise from the bottom edge as she
 - The inline script in `src/layouts/Paper.astro` listens to pointer events on the head. It ignores a mouse, a press on the close button, and any screen from `40rem`, where the menu opens under the bar and has no grabber. It sets the height and the `translate` while the finger moves, and `data-size="expanded"` once the sheet grows. A sheet that closes forgets its size.
 - The head has `touch-action: none`, so the page does not scroll under the drag. The body scrolls inside the panel and hides its scrollbar at every width, as the owner asked. It still scrolls with a finger, a wheel, a trackpad, or the keys.
 
+### The dim under a sheet ends in the sheet's color
+
+On a phone the backdrop of each sheet is `--color-scrim`, except its lowest `--size-sheet-floor`, which is `--color-panel`. Safari on iOS 26 draws the page under its floating toolbar, below the edge a fixed sheet sits on, and there it shows only the backdrop: the sheet looked cut off above a grey band. The owner reported it from an iPhone.
+
+- The ordinary way is a sheet that ends at the bottom edge over a uniform dim. Safari leaves no way to put the sheet itself under its toolbar: a fixed element, its shadow, and anything it overflows stop at that edge, and only the backdrop goes on.
+- The sheet covers the colored band everywhere but under Safari's toolbar, so on other browsers it shows only while a drag moves the sheet down.
+- Each dialog has `autofocus`, so `showModal()` focuses the sheet, not its close icon, and a tap opens it with no focus ring. The dialog draws no outline of its own. A first Tab still reaches the close icon.
+
 ## Search opens over the page, from a module script
 
 Every bar ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the page color, because Safari keeps that color behind the clock. On a wide screen it is a centered panel over a dimmed page. Before typing, it lists six suggestions. Results update as the reader types, grouped by section, each under its emblem, name, and count. Arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, ⌘K, or Ctrl+K opens it. On a wide screen an empty field shows «Esc», in the place the clear button takes once the reader types. The clear button is an eraser, not a cross, so it does not read as «إلغاء», which closes search beside it. The owner asked for it.

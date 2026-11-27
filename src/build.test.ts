@@ -214,7 +214,7 @@ describe('built site', () => {
         /<button type="button" aria-label="الأقسام" data-sheet-open="sections" class="button button--icon section-menu__button">\s*<svg class="icon/u
       );
       const panel = bar.match(
-        /<dialog class="section-menu__panel" id="sections" aria-label="الأقسام" data-sheet data-expandable>[\s\S]*?<\/dialog>/u
+        /<dialog class="section-menu__panel" id="sections" aria-label="الأقسام" data-sheet data-expandable autofocus>[\s\S]*?<\/dialog>/u
       )![0];
       const links = [
         ...panel.matchAll(/<a class="section-menu__link[^"]*" href="([^"]+)"[^>]*>/gu),
@@ -616,7 +616,7 @@ describe('built site', () => {
       ]) {
         expect(page).toMatch(
           new RegExp(
-            `<dialog class="[\\w-]+__panel" id="${id}" aria-label="${title}" data-sheet${grows}><div class="[\\w-]+__head" data-sheet-handle>[\\s\\S]*?__title">${title}</p><button type="button" aria-label="إغلاق" data-sheet-close`,
+            `<dialog class="[\\w-]+__panel" id="${id}" aria-label="${title}" data-sheet${grows} autofocus><div class="[\\w-]+__head" data-sheet-handle>[\\s\\S]*?__title">${title}</p><button type="button" aria-label="إغلاق" data-sheet-close`,
             'u'
           )
         );
