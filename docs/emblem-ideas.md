@@ -627,7 +627,7 @@ A lit pulse across faint lines. It was the emblem of «المرض والرقية
 
 «لا بأس، طهور إن شاء الله». A lit square, and small squares falling away from it.
 
-## الجنائز (`janaiz`)
+## الموت والجنائز (`janaiz`)
 
 ### Layers of earth
 
@@ -679,7 +679,7 @@ Rain in slanted strokes, with one lit drop. It was the emblem of «المطر و
 
 Three gusts that curl at their ends, the middle one lit. «اللهم إني أسألك خيرها».
 
-## الجمعة (`jumuah`)
+## سنن الجمعة (`jumuah`)
 
 ### The five hours
 

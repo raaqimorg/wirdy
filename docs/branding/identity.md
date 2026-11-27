@@ -37,10 +37,10 @@ Say these plainly where they help the reader. Never claim more.
 
 Each section has three names in `src/lib/occasions.ts` ([`design-system.md`](../design-system.md) has the rules):
 
-- `heading`: two words at most, for the top of its page and its card («عند النوم»).
+- `heading`: exactly two words, for the top of its page and its card («عند النوم»). A test holds every section and guide to it.
 - `title`: with «أذكار», for the browser tab, search engines, the sharing cards, and the breadcrumbs («أذكار النوم»).
 
-Two guides hold sound hadiths to read, not adhkar to say. «الجمعة» holds the sunan of Friday, from its virtue to what is forbidden on it: `heading` «الجمعة», `title` «سنن الجمعة». «الطب النبوي» holds the sound hadiths on treatment and keeping well: `heading` and `title` «الطب النبوي». `GUIDES` in `src/lib/site.ts` holds their pages.
+Two guides hold sound hadiths to read, not adhkar to say. «سنن الجمعة» holds the sunan of Friday, from its virtue to what is forbidden on it: `heading` and `title` «سنن الجمعة». «الطب النبوي» holds the sound hadiths on treatment and keeping well: `heading` and `title` «الطب النبوي». `GUIDES` in `src/lib/site.ts` holds their pages.
 
 ## The voice
 
