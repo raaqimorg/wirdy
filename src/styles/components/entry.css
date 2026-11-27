@@ -133,6 +133,7 @@
 
 .entry__row .entry__words {
   padding-block: calc((var(--size-touch) - 1lh) / 2);
+  font-family: var(--font-naskh);
   font-size: var(--text-note);
   font-weight: var(--weight-regular);
 }
