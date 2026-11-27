@@ -21,6 +21,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@supports (timeline-scope: --reading) {
+  body {
+    timeline-scope: --reading;
+  }
+}
+
 h1,
 h2,
 h3,
