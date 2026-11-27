@@ -29,12 +29,8 @@
 }
 
 .surah__ayah-end {
-  margin-inline: 0.15em 0.3em;
+  margin-inline-start: 0.15em;
   font-family: var(--font-ayah-end);
-}
-
-.surah__ayah-end:last-child {
-  margin-inline-end: 0;
 }
 
 .surah__ayah-end::before {

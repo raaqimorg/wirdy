@@ -17,6 +17,7 @@ const folded = rest.length > 0;
     <Fragment>
       {ayah}
       <span class="surah__ayah-end" data-ayah={`۝${toArabicDigits(from + i)}`} />
+      {i < ayat.length - 1 && ' '}
     </Fragment>
   ))}
   {folded && (
@@ -34,6 +35,7 @@ const folded = rest.length > 0;
               class="surah__ayah-end"
               data-ayah={`۝${toArabicDigits(from + ayat.length + i)}`}
             />
+            {i < rest.length - 1 && ' '}
           </Fragment>
         ))}
       </span>
