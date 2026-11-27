@@ -49,7 +49,7 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
   eveningKicker={hasVariants ? labelAt('masaa') : undefined}
   turns={hasVariants}
 >
-  <PosterMenu slot="bar" posters={posters} title={title} path={`/${id}/`} />
+  <PosterMenu slot="bar" posters={posters} />
   <PageTools>
     {hasVariants && <WirdSwitch />}
     {hasIndex && <GroupIndex groups={groups} />}

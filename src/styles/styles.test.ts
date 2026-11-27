@@ -29,6 +29,11 @@ const everything = [...sheets, ...blocks.map((block) => `components/${block}.css
 const all = everything.join('\n');
 const tokens = read('tokens.css');
 
+const panelOf = (block: string) =>
+  read(`components/${block}.css`)
+    .match(/\.[\w-]+__panel \{[\s\S]*?@media \(min-width: 40rem\) \{[\s\S]*?\n\}\n/u)![0]
+    .replaceAll(block, 'menu');
+
 const declarations = (block: string) =>
   [...block.matchAll(/(--[\w-]+): ([^;]+);/gu)].map(([, name, value]) => `${name}: ${value}`);
 const dark = {
@@ -149,6 +154,10 @@ describe('the component styles', () => {
 
   it.each(blocks)('%s belongs to a component of the same name', (block) => {
     expect(existsSync(join(COMPONENTS, `${pascal(block)}.astro`))).toBe(true);
+  });
+
+  it("gives the bar's two menus one panel, a sheet on a phone and a menu under the bar from 40rem", () => {
+    expect(panelOf('poster-menu')).toBe(panelOf('section-menu'));
   });
 
   it.each(blocks)('%s styles only its own block', (block) => {
