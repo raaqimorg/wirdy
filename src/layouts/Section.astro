@@ -34,7 +34,9 @@ const {
 
 <Paper {...paper} tone={color}>
   <div class="page">
-    <Bar stage />
+    <Bar stage>
+      <slot name="bar" />
+    </Bar>
     <Banner
       title={heading}
       evening={evening}

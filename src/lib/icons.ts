@@ -5,6 +5,7 @@ export type IconName =
   | 'chevron'
   | 'copy'
   | 'erase'
+  | 'link'
   | 'open'
   | 'out'
   | 'save'
@@ -41,5 +42,11 @@ export const ICONS: Readonly<Record<IconName, Icon>> = {
   copy: { paths: ['M9 9h12v12h-12z', 'M15 4V3h-12v12H4'] },
   open: { paths: ['M15 5L8 12l7 7'] },
   share: { paths: ['M12 15v-12M7 7L12 2l5 5M4 13V22h16V13'] },
+  link: {
+    paths: [
+      'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1',
+      'M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
+    ],
+  },
   save: { paths: ['M12 2v12M7 10L12 15 17 10M4 16v6h16V16'] },
 };

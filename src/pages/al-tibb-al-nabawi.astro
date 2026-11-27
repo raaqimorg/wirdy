@@ -5,6 +5,7 @@ import Group from '../components/Group.astro';
 import GroupIndex from '../components/GroupIndex.astro';
 import Hadith from '../components/Hadith.astro';
 import PageTools from '../components/PageTools.astro';
+import PosterMenu from '../components/PosterMenu.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import Related from '../components/Related.astro';
 import Section from '../layouts/Section.astro';
@@ -13,11 +14,13 @@ import { sectionCardFile } from '../lib/card';
 import { sectionTiles, tibbEntries } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
 import { slugOf } from '../lib/permalink';
+import { tibbPosterOf } from '../lib/poster';
 import { TIBB } from '../lib/site';
 
 const { heading, title, color, path } = TIBB;
 const entries = await Effect.runPromise(tibbEntries);
 const runs = runsByGroup(entries);
+const poster = tibbPosterOf(entries);
 const groups = runs.flatMap(({ group }) => Option.toArray(group));
 const others = (await Effect.runPromise(sectionTiles)).filter((tile) => tile.id !== 'tibb');
 
@@ -35,6 +38,7 @@ const description = `${title}: ${label} صحيحة عن النبي ﷺ في ال
   heading={heading}
   kicker={label}
 >
+  <PosterMenu slot="bar" posters={[poster]} title={title} path={path} />
   <PageTools>
     <GroupIndex groups={groups} />
   </PageTools>

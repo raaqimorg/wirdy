@@ -309,6 +309,85 @@ const structuredData = {
             );
           }
         });
+
+        const sharesFiles =
+          matchMedia('(pointer: coarse)').matches &&
+          Boolean(navigator.canShare) &&
+          navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] });
+        const fetched = new Map();
+        let poster = null;
+        function pick(option) {
+          const group = option.parentElement.children;
+          for (let i = 0; i < group.length; i += 1)
+            group[i].setAttribute('aria-checked', String(group[i] === option));
+        }
+        function posterOf(menu) {
+          const format = menu.querySelector('[data-poster-format][aria-checked="true"]');
+          const dark = menu.querySelector('[data-poster-theme="dark"]');
+          dark.disabled = format.dataset.posterFormat === 'print';
+          if (dark.disabled) pick(menu.querySelector('[data-poster-theme="light"]'));
+          const theme = menu.querySelector('[data-poster-theme][aria-checked="true"]');
+          const files = JSON.parse(menu.dataset.posters);
+          const [href, name] = (files[root.dataset.wird] || files.s)[
+            `${format.dataset.posterFormat}-${theme.dataset.posterTheme}`
+          ];
+          const link = menu.querySelector('[data-poster-save]');
+          link.href = href;
+          link.download = name;
+          const choice = menu.querySelector('[data-poster-choice]');
+          choice.textContent = `${format.dataset.title}، ${theme.dataset.title}`;
+          if (!sharesFiles) return;
+          if (!fetched.has(href))
+            fetched.set(
+              href,
+              fetch(href)
+                .then(function (response) {
+                  return response.blob();
+                })
+                .then(function (blob) {
+                  return new File([blob], name, { type: 'image/png' });
+                })
+            );
+          poster = fetched.get(href);
+        }
+        document.addEventListener(
+          'toggle',
+          function (event) {
+            const menu = event.target.closest && event.target.closest('[data-poster-menu]');
+            if (!menu || event.newState !== 'open') return;
+            if (menu.dataset.chosen === undefined)
+              pick(menu.querySelector(`[data-poster-theme="${current()}"]`));
+            posterOf(menu);
+          },
+          true
+        );
+        document.addEventListener('click', function (event) {
+          const menu = event.target.closest('[data-poster-menu]');
+          if (!menu) return;
+          const option = event.target.closest('[data-poster-format], [data-poster-theme]');
+          if (option && !option.disabled) {
+            pick(option);
+            if (option.dataset.posterTheme) menu.dataset.chosen = '';
+            posterOf(menu);
+          }
+          const link = event.target.closest('[data-poster-save]');
+          if (!link) return;
+          posterOf(menu);
+          if (!poster || link.dataset.saving !== undefined) {
+            delete link.dataset.saving;
+            return;
+          }
+          event.preventDefault();
+          poster
+            .then(function (file) {
+              return navigator.share({ files: [file] });
+            })
+            .catch(function (error) {
+              if (error.name === 'AbortError') return;
+              link.dataset.saving = '';
+              link.click();
+            });
+        });
       })();
     </script>
     {import.meta.env.PROD ? (

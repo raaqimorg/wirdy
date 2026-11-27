@@ -10,6 +10,7 @@ import { dhikrPath, hadithPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
 import { dhikrSchema, STRICT, tibbSchema, type Dhikr } from './schema';
 import { phrasesOf as phrasesEffect } from './phrases';
+import { FORMATS, posterFile, postersOf, themesOf } from './poster';
 import { fullTitle } from './title';
 import { parseVariants as variantsEffect } from './variants';
 
@@ -296,6 +297,26 @@ describe('the permalinks', () => {
   it('gives each hadith of الطب النبوي its own title', () => {
     const titles = tibb.map(({ data }) => data.title);
     expect(new Set(titles).size).toBe(titles.length);
+  });
+});
+
+describe('the posters', () => {
+  const dir = join(process.cwd(), 'public/posters');
+  const drawn = existsSync(dir)
+    ? readdirSync(dir, { recursive: true, encoding: 'utf8' })
+        .filter((path) => path.endsWith('.png'))
+        .map((path) => `posters/${path}`)
+    : [];
+  const wanted = Effect.runSync(postersOf(entries, tibb)).flatMap((poster) =>
+    FORMATS.flatMap((format) => themesOf(format).map((theme) => posterFile(poster, format, theme)))
+  );
+
+  it('is drawn for each section, format, and theme as it is now (run bun run posters)', () => {
+    expect(wanted.filter((file) => !drawn.includes(file))).toEqual([]);
+  });
+
+  it('keeps no poster of an older text', () => {
+    expect(drawn.filter((file) => !wanted.includes(file))).toEqual([]);
   });
 });
 

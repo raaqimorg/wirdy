@@ -8,7 +8,7 @@ The setup, the commands, the git hooks, and the generated files.
 2. Run `bun install`. It also turns on the git hooks in `.githooks/`.
 3. Run `bun run dev`, and open `http://localhost:4321`.
 
-The icon, card, and promo scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`. The promo scripts also need [ffmpeg](https://ffmpeg.org) on `PATH`, and a browser that plays H.264 (Brave or Chrome, not plain Chromium).
+The icon, card, poster, and promo scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`. The promo scripts also need [ffmpeg](https://ffmpeg.org) on `PATH`, and a browser that plays H.264 (Brave or Chrome, not plain Chromium).
 
 ## Commands
 
@@ -26,6 +26,7 @@ The icon, card, and promo scripts need a Chromium browser (Brave, Chrome, Chromi
 | `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                     |
 | `bun run opengraph`        | Draws the cards of the home page and each section.             |
 | `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.         |
+| `bun run posters`          | Draws each missing section poster, and deletes stale ones.     |
 | `bun run promo:check <f>`  | Names what in a promo film breaks its rules.                   |
 | `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.       |
 | `bun run promo:render <f>` | Renders a promo film to `out/<slug>.mp4` (`--draft`: half).    |
@@ -74,4 +75,5 @@ Never edit these by hand. Run their script.
 - `public/favicon.svg`, `favicon.ico`, the PNG icons, and `apple-touch-icon.png`: `bun run icons`.
 - `public/opengraph/home-<fingerprint>.png` and `public/opengraph/<section>-<fingerprint>.png`: `bun run opengraph`.
 - `public/og/<occasion>/<slug>-<fingerprint>.png`: `bun run opengraph:adhkar`.
+- `public/posters/<slug>/<format>-<fingerprint>.png`: `bun run posters`.
 - `.astro/` and `dist/`: Astro writes them, and git ignores them.
