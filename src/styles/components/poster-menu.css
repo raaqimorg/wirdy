@@ -1,0 +1,189 @@
+.poster-menu {
+  display: none;
+}
+
+.poster-menu__button {
+  --ring-color: currentColor;
+  --ring-offset: var(--ring-inset);
+  --icon-size: var(--size-icon-bar);
+}
+
+.poster-menu__panel {
+  inset: auto;
+  inset-block-start: calc(env(safe-area-inset-top) + var(--size-bar) + var(--space-1));
+  inset-inline-end: max(
+    var(--space-gutter),
+    calc((100% - var(--size-page)) / 2 + var(--space-gutter))
+  );
+  width: min(var(--size-menu), calc(100% - var(--space-gutter) * 2));
+  max-height: calc(100dvh - env(safe-area-inset-top) - var(--size-bar) - var(--space-8));
+  margin: 0;
+  padding: var(--space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-ink);
+  background: var(--color-panel);
+  border: 0;
+  border-radius: var(--radius-xlarge);
+  box-shadow: var(--shadow-menu);
+  transform-origin: top left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .poster-menu__panel {
+    transition:
+      opacity var(--duration-fade) var(--ease-out),
+      scale var(--duration-fade) var(--ease-out);
+  }
+}
+
+@starting-style {
+  .poster-menu__panel:popover-open {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+.poster-menu__panel::backdrop {
+  display: none;
+}
+
+.poster-menu__save,
+.poster-menu__option,
+.poster-menu__link {
+  --ring-offset: var(--ring-inset);
+
+  display: grid;
+  grid-template-columns: var(--size-icon-large) minmax(0, 1fr) var(--space-6);
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--size-touch);
+  padding-inline: var(--space-3);
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-large);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.poster-menu__icon,
+.poster-menu__check {
+  --icon-size: var(--size-icon-large);
+  --icon-stroke: var(--stroke-icon-bold);
+}
+
+.poster-menu__icon {
+  grid-column: 3;
+  justify-self: center;
+}
+
+.poster-menu__text,
+.poster-menu__name {
+  display: grid;
+  grid-column: 2;
+}
+
+.poster-menu__save {
+  min-height: var(--size-control);
+  padding-block: var(--space-2);
+  color: var(--tone-text);
+  font-weight: var(--weight-bold);
+}
+
+.poster-menu__choice {
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+}
+
+.poster-menu__heading {
+  margin-block: var(--space-3) var(--space-1);
+  padding-inline-start: calc(var(--space-3) * 2 + var(--size-icon-large));
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+}
+
+.poster-menu__group {
+  display: grid;
+}
+
+.poster-menu__option[aria-checked="true"] {
+  font-weight: var(--weight-bold);
+}
+
+.poster-menu__option:disabled {
+  cursor: default;
+  opacity: var(--opacity-quiet);
+}
+
+.poster-menu__check {
+  grid-column: 1;
+  color: var(--tone-text);
+}
+
+.poster-menu__option[aria-checked="false"] .poster-menu__check {
+  visibility: hidden;
+}
+
+.poster-menu__note {
+  display: none;
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  font-weight: var(--weight-regular);
+}
+
+.poster-menu__option:disabled .poster-menu__note {
+  display: block;
+}
+
+.poster-menu__shape {
+  grid-column: 3;
+  justify-self: center;
+  height: var(--size-icon-large);
+  border: var(--border-ring) solid var(--color-ink-muted);
+  border-radius: var(--radius-small);
+}
+
+.poster-menu__shape--story {
+  aspect-ratio: 9 / 16;
+}
+
+.poster-menu__shape--portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.poster-menu__shape--square {
+  aspect-ratio: 1;
+}
+
+.poster-menu__shape--landscape {
+  width: var(--space-6);
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.poster-menu__shape--print {
+  aspect-ratio: 1 / 1.414;
+}
+
+.poster-menu__foot {
+  margin-block-start: var(--space-2);
+  padding-block-start: var(--space-2);
+  border-block-start: var(--border-hairline) solid var(--color-line-soft);
+}
+
+@supports selector(:popover-open) {
+  .poster-menu {
+    display: block;
+  }
+}

@@ -47,6 +47,25 @@ Every page has a card for link previews: 1200 by 630, drawn at twice the scale (
 - Every card is named by its fingerprint, a hash of what it prints (`src/lib/card.ts`), so a changed card gets a new URL that no chat app or cache has kept. A page links the name it computes, and the build test fails when that file is missing: run `bun run opengraph` when a section's title, color, count, or emblem changes, and `bun run opengraph:adhkar` for a dhikr. Raise `SITE_TEMPLATE` or `TEMPLATE` when only the drawing changes.
 - Every element sits 64 px from the sides and 56 px from the top and bottom (at 1x), so X's 2:1 crop and rounded corners cut nothing but color. A section card draws the mark as its navbar does, in cream, and counts the adhkar as the home page does, leaving out the evening-only forms.
 
+## The posters
+
+Each section has a poster: every dhikr of the page, or every hadith, in full, with its count and its takhrij, on one image to save, send, print, or show on a screen. A reader picks a format and a paper from the share icon in the section page's bar, then saves it: an iPhone opens the share sheet, and a computer downloads the file. `bun run posters` draws them all ahead of time, and the site only links the files.
+
+| Format  | Ratio | File at 3x | For                                    |
+| ------- | ----- | ---------- | -------------------------------------- |
+| حالة    | 9:16  | 3240×5760  | Stories, status, a phone's wallpaper   |
+| منشور   | 4:5   | 3240×4050  | Feed posts                             |
+| مربع    | 1:1   | 3240×3240  | Chats, and anywhere                    |
+| شاشة    | 16:9  | 5760×3240  | Screens in a masjid, slides, a desktop |
+| للطباعة | A4    | 3720×5262  | Print, at 450 dpi                      |
+
+- A poster is the dhikr card at the size of a page: the band in the section's color with its emblem, title, and count, the mark, «وِردي», and `wirdy.site`; the words in columns under the group titles; and a foot that names the section's page. The words take the largest size that fills the frame, in as many columns as that needs, and the space between adhkar grows until the columns reach the foot.
+- A poster is drawn at three times its size and saved as a 256-color PNG, so a reader can zoom into the smallest takhrij and the file stays near a megabyte.
+- «الصباح والمساء» has two posters, `sabah` and `masaa`, with each time's words, as the switch on the page gives them. The menu follows the switch.
+- Every format comes on two papers, «فاتح» (the day paper) and «داكن» (the night paper), except print, which is always on the day paper, because a dark page wastes ink. So a section has nine files, and «الصباح والمساء» eighteen. The menu starts on the paper the site is showing.
+- The Quran is in full, except a folded سورة longer than 3,000 letters (in «النوم», الإسراء والزمر and السجدة والملك), which shows the opening the page shows, then «وتتمتها في» and the page's address.
+- `src/lib/poster.ts` decides what a poster says and names its file by its fingerprint, `public/posters/<slug>/<format>-<paper>-<print>.png`. A test fails when a poster is missing or left over: run `bun run posters`. It draws only what changed, and refuses a poster that does not fit its frame. Raise `POSTER_TEMPLATE` when only the drawing changes ([`exceptions.md`](../exceptions.md#each-section-has-posters-named-by-their-fingerprint)).
+
 ## The promo films
 
 A promo film is a short vertical video of the site, or one of its features, for X, TikTok, and Snapchat: 1080 by 1920, 30 fps, 15 to 30 seconds, with no music and no voice.

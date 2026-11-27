@@ -93,6 +93,20 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 - A long text stops at a clause end, and قرآن at an آية end (`src/lib/excerpt.ts`). CSS line clamping cut the Quran marks and could end a card on «لا إله».
 - The card carries the moment, count, and takhrij, because an image travels without its page. A قرآن card says «النص: tanzil.net» in its foot.
 
+## Each section has posters, named by their fingerprint
+
+`scripts/posters/build.ts` draws a poster of each section in five formats and two papers into `public/posters/<slug>/<format>-<paper>-<print>.png`: the whole section, with each count and takhrij ([`branding/imagery.md`](branding/imagery.md#the-posters)). A share icon in the section page's bar opens a menu (`PosterMenu`, a popover): «حفظ الصورة» on top, then the format and the paper as checked rows, then «مشاركة رابط الصفحة». The owner chose it from five designs.
+
+- The ordinary way is to let the reader take a screenshot, or to draw the image in the browser with a canvas. A screenshot holds one screen, not the section, and a canvas needs a script and the fonts on every phone. Drawing ahead also lets each poster take the largest type that fits.
+- `src/lib/poster.ts` decides what a poster says and computes its fingerprint, as `src/lib/card.ts` does for the cards. The page, the script, and `content.test.ts` all call it, so a changed dhikr changes the names, and the test fails until `bun run posters` draws them. Raise `POSTER_TEMPLATE` when only the drawing changes.
+- The page fits itself in the browser: it tries one to eight columns, takes the largest type that fits with lines at least 13 times the type size, then widens the space between adhkar to fill the frame. The script reads the result with `--dump-dom` before it takes the screenshot, and stops on a poster that does not fit.
+- The browser takes the screenshot at three times the scale, so the words stay sharp when a reader zooms in, and `sharp` (which Astro already installs) saves it as a 256-color PNG: the same text at about a third of the size of a full-color PNG. It only compresses: the drawing is still the browser's ([the icons and the cards](#the-icons-and-the-opengraph-cards-come-from-a-headless-browser)).
+- The inline script in `src/layouts/Paper.astro` moves the checks, points «حفظ الصورة» at the chosen file, and says the choice under it. On a touch screen that can share files (Safari on iOS), it fetches the chosen file once, keeps it for the page's life, and opens the share sheet with the image when the reader taps: on an iPhone that is how a reader saves it to Photos. A computer, and any other browser, gets a plain download link, and fetches nothing until the reader saves. If sharing fails for any reason but the reader's cancel, the row downloads the file.
+- The ordinary way is plain download links. On an iPhone a download goes to Files, not Photos, and the reader then has to attach it by hand.
+- Without JavaScript the row downloads the morning poster in the story format, on the day paper. The menu needs the popover API, as the section menu does, and hides without it.
+- «مشاركة رابط الصفحة» is the page's share link ([a share link opens the device's share sheet](#a-share-link-opens-the-devices-share-sheet)).
+- The service worker never keeps a poster, and `_headers` keeps `/posters/` for a year.
+
 ## The icons and the OpenGraph cards come from a headless browser
 
 `scripts/icons/build.ts` and `scripts/opengraph/build.ts` render HTML in a local Chromium browser (`scripts/chromium.ts`) and save screenshots. `scripts/icons/build.ts` also writes `favicon.ico` by hand (a short header and a list of PNGs) and `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift.

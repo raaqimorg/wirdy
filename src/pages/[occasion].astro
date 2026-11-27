@@ -4,6 +4,7 @@ import Closing from '../components/Closing.astro';
 import Group from '../components/Group.astro';
 import GroupIndex from '../components/GroupIndex.astro';
 import PageTools from '../components/PageTools.astro';
+import PosterMenu from '../components/PosterMenu.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import Related from '../components/Related.astro';
 import WirdSwitch from '../components/WirdSwitch.astro';
@@ -13,6 +14,7 @@ import { sectionCardFile } from '../lib/card';
 import { adhkarOf, sectionTiles } from '../lib/collection';
 import { runsByGroup } from '../lib/groups';
 import { listed, OCCASIONS } from '../lib/occasions';
+import { occasionPostersOf } from '../lib/poster';
 
 export function getStaticPaths() {
   return OCCASIONS.map((occasion) => ({ params: { occasion: occasion.id }, props: { occasion } }));
@@ -26,6 +28,7 @@ const hasIndex = runs.length > 1 && groups.length === runs.length;
 const others = (await Effect.runPromise(sectionTiles)).filter((tile) => tile.id !== id);
 const hasQuran = entries.some(({ data }) => data.quran);
 const hasVariants = entries.some((entry) => entry.body?.includes('{{') === true);
+const posters = await Effect.runPromise(occasionPostersOf(id, entries));
 
 const label = adhkarLabel(entries.length);
 const labelAt = (time: 'sabah' | 'masaa') =>
@@ -46,6 +49,7 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
   eveningKicker={hasVariants ? labelAt('masaa') : undefined}
   turns={hasVariants}
 >
+  <PosterMenu slot="bar" posters={posters} title={title} path={`/${id}/`} />
   <PageTools>
     {hasVariants && <WirdSwitch />}
     {hasIndex && <GroupIndex groups={groups} />}

@@ -529,6 +529,26 @@ describe('built site', () => {
     expect(existsSync(join(DIST, homeCardFile()))).toBe(true);
   });
 
+  it('offers each section page its posters in every format and theme, each one shipped', () => {
+    const tibb = readFileSync(join(DIST, 'al-tibb-al-nabawi', 'index.html'), 'utf8');
+    for (const [id, page] of [
+      ...OCCASION_IDS.map((occasion) => [occasion, pages[occasion]!]),
+      ['tibb', tibb],
+    ]) {
+      const data = /data-posters="([^"]+)"/u.exec(page!)?.[1] ?? '{}';
+      const times: Record<string, Record<string, [string, string]>> = JSON.parse(
+        data.replaceAll('&quot;', '"').replaceAll('&amp;', '&')
+      );
+      const files = Object.values(times).flatMap((set) => Object.values(set));
+      const missing = files.filter(([href]) => !existsSync(join(DIST, href)));
+      expect({ id, files: files.length, missing }).toEqual({
+        id,
+        files: id === 'sabah-masaa' ? 18 : 9,
+        missing: [],
+      });
+    }
+  });
+
   it('gives each section page its own card, named by what it prints, the size of the home card', () => {
     const tibb = readFileSync(join(DIST, 'al-tibb-al-nabawi', 'index.html'), 'utf8');
     for (const [id, page] of [
@@ -1031,7 +1051,7 @@ describe('built site', () => {
 
   it('keeps what is named by its content for a year, and asks for a page again on each visit', () => {
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
-    for (const path of ['/_astro/*', '/og/*']) {
+    for (const path of ['/_astro/*', '/og/*', '/posters/*']) {
       expect(headers).toContain(`${path}\n  Cache-Control: public, max-age=31536000, immutable\n`);
     }
     expect(headers.match(/^\/\*\n((?:  .*\n)+)/u)![1]).not.toContain('Cache-Control');

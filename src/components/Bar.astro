@@ -21,6 +21,7 @@ const label = 'ابحث في الأذكار';
       <span class="bar__name">{SITE.name}</span>
     </a>
     {menu && <SectionMenu />}
+    <slot />
     <Button variant="icon" class="bar__search" aria-label={label} data-search-open>
       <Icon name="search" />
     </Button>
