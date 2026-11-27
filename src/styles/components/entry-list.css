@@ -15,7 +15,7 @@
   }
 
   .entry-list:not(.entry-list--single) {
-    max-width: calc(var(--size-reading) + var(--space-16));
+    max-width: var(--size-column);
   }
 }
 

@@ -53,6 +53,7 @@
 
   --size-page: 76rem;
   --size-reading: 46rem;
+  --size-column: calc(var(--size-reading) + var(--space-16));
   --size-touch: 2.75rem;
   --size-mark: 1.75rem;
   --size-icon: 1em;

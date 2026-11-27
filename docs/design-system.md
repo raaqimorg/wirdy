@@ -16,17 +16,17 @@ The shape of the styles and the components: tokens, then base styles, then one s
 
 The names follow Tailwind's namespaces.
 
-| Prefix                                   | What it holds                                                             |
-| ---------------------------------------- | ------------------------------------------------------------------------- |
-| `--color-*`                              | Colors by role: `paper`, `panel`, `ink`, `ink-muted`, `ink-faint`, `line` |
-| `--tone-*`                               | Colors from the occasion's color                                          |
-| `--font-*`, `--weight-*`                 | Families and weights                                                      |
-| `--text-*`, `--leading-*`                | Type sizes and line heights                                               |
-| `--space-*`                              | Spacing on a 4 px step: 4, 8, 12, 16, 24, 32, 40, 64 px                   |
-| `--size-*`                               | Shared widths and heights: the page, the reading measure, targets, icons  |
-| `--radius-*`, `--border-*`, `--ring-*`   | Corners by size (`small` to `full`), lines, and focus rings               |
-| `--opacity-*`, `--shadow-*`              | The hover and press states, and the raised panels                         |
-| `--ease-out`, `--spring`, `--duration-*` | Motion. See [`code-conventions.md`](code-conventions.md#motion)           |
+| Prefix                                   | What it holds                                                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------------- |
+| `--color-*`                              | Colors by role: `paper`, `panel`, `ink`, `ink-muted`, `ink-faint`, `line`           |
+| `--tone-*`                               | Colors from the occasion's color                                                    |
+| `--font-*`, `--weight-*`                 | Families and weights                                                                |
+| `--text-*`, `--leading-*`                | Type sizes and line heights                                                         |
+| `--space-*`                              | Spacing on a 4 px step: 4, 8, 12, 16, 24, 32, 40, 64 px                             |
+| `--size-*`                               | Shared widths and heights: the page, the reading measure and column, targets, icons |
+| `--radius-*`, `--border-*`, `--ring-*`   | Corners by size (`small` to `full`), lines, and focus rings                         |
+| `--opacity-*`, `--shadow-*`              | The hover and press states, and the raised panels                                   |
+| `--ease-out`, `--spring`, `--duration-*` | Motion. See [`code-conventions.md`](code-conventions.md#motion)                     |
 
 One type scale, shared by the interface and the adhkar: 13, 15, 17, 20, 24, 28, 34, and 48 px (`small`, `note`, `body`, `title-1`, `reading-2`, `title-2`, `title-3`, `title-4`), after iOS's text styles. Two fluid titles move with the width between two steps of the scale: `title-fluid` from 20 to 28 px, and `title-long` from 17 to 20 px.
 
@@ -95,11 +95,30 @@ The foot of an `Entry` is a list of labelled rows, in one order on every card: �
 
 One bar, with the same places on every page and width: the sunflower and «وِردي» lead home at the start, and the section and search icons sit at the end. The home page drops the sections, because it shows them. The bar is solid: the paper, or the section's color, with the mark and icons in eggshell. The section menu does not dim the page.
 
-The top of a page is at least `--size-banner` tall, or `--size-banner-wide` on a wide screen, and grows with its text, so large text never runs under the first card. On a screen under `30rem` tall, a phone on its side, it shrinks to its text and hides the emblem. It holds a short line (the count, or a dhikr's section as the way back), the title, and on a dhikr or hadith page, one line under it. A title over 24 letters takes a smaller size. A section has two names in `src/lib/occasions.ts`: `heading` (two words at most) for the pages, and `title`, which says «أذكار», for the tab, search engines, the cards, and notes that name a section. «الطب النبوي» keeps its heading as its title, because it holds hadiths, not adhkar. A section has no line under its title. A dhikr's line is its `context` or its `group`, and its count when over one. It never repeats the `heading` above the title, falls back to the section's `title`, and never states a virtue or a ruling. The home page has one sentence in their place, at the same height.
+The top of a page is at least `--size-banner` tall, or `--size-banner-wide` on a wide screen, and grows with its text, so large text never runs under the first card. On a screen under `30rem` tall, a phone on its side, it shrinks to its text and hides the emblem. It holds a short line (the count, or a dhikr's section as the way back), the title, and on a dhikr or hadith page, one line under it. A title over 24 letters takes a smaller size. A section has two names in `src/lib/occasions.ts`: `heading` (two words at most) for the pages, and `title`, which says «أذكار», for the tab, search engines, the cards, and notes that name a section. «الطب النبوي» keeps its heading as its title, because it holds hadiths, not adhkar. A section has no line under its title. A dhikr's line is its `context` or its `group`, and its count when over one. It never repeats the `heading` above the title: a `context` that holds it («في الصباح والمساء») gives way to the `group`. A group named after its section («أدعية بعد الصلاة») may still hold it. It falls back to the section's `title`, and never states a virtue or a ruling. The home page has one sentence in their place, at the same height.
 
 On a phone, a page's group index is one row that scrolls sideways to the screen edge. While there is more to scroll, its end fades (a CSS scroll-driven animation on the row), so a row whose last chip ends at the edge still says there is more. The fade goes at the end of the row, and a row that fits has none. From `40rem` the chips wrap. The row keeps room above, below, and at its ends for a focus ring, so a focused chip is never cut. A group's title above its cards is secondary to the words: body size, bold, in `ink-muted`. An occasion page ends with one line, «تمت» and the section's title, before «بقية الأقسام».
 
+The top of a page sits `--space-6` under its banner at every width. On a wide screen a list page is one column, `--size-column` wide at the start: the switch, the group index, the cards, and «تمت», which is centred over the cards it ends. «بقية الأقسام» is four columns of compact cards in a fixed grid, so a last row that is not full keeps each card one column wide, and its cards sit as far apart as the home grid's.
+
 A count is words in the section's color («٣٣ مرة»), never a shape that looks like a button. The counts of a dhikr's phrases sit in one column beside the longest phrase.
+
+### The labels of a card
+
+Each label of a card has one meaning and one look, on every card and page, so a reader learns it once. `src/build.test.ts` refuses any other label, another order, a number outside the count, a moment that says how to read, and «١ مرة».
+
+| Label        | Class                         | Says                                                      | Shows when                                            | Type            | Ink                                                               | Space below |
+| ------------ | ----------------------------- | --------------------------------------------------------- | ----------------------------------------------------- | --------------- | ----------------------------------------------------------------- | ----------- |
+| الاسم         | `entry__name`                 | What the dhikr or hadith is called                        | Its words do not open with its name (`isOpening`)     | `small`, bold   | `ink-muted`                                                       | `space-1`   |
+| العدد والوقت | `entry__lead`, `entry__count` | How many times, then when: the time of day and the moment | A count over one, a time, or a moment (`momentOf`)    | `note`, bold    | The count in `tone-text`, the comma and the moment in `ink-muted` | `space-2`   |
+| الكيفية      | `entry__how`                  | What to do while saying it, and to read a سورة to its end | A `how`, or a سورة whose first آية shows (`mannerOf`) | `note`, regular | `ink-muted`                                                       | `space-2`   |
+| الراوي       | `entry__rawi`                 | Who narrates a hadith, «عن …»                             | Every hadith                                          | `note`, regular | `ink-muted`                                                       | `space-2`   |
+
+The first label sits `space-6` under the top of the card (`space-1` in a card inside a choice), and the words follow the last. A count reads the same everywhere it shows (`timesLabel`): «مرة واحدة»، «مرتان»، «٣ مرات»، «٣٣ مرة». The count of a phrase (`badge--count`) is the same words in the same type and ink.
+
+Under the words, the foot has a control and fields, not labels: «التخريج» (`small`, bold, `ink-muted`, with its chevron) opens it, each row names its field (`small`, medium, `ink-faint`) beside its value (`small`, medium, `ink-muted`; «الفضل» in `note`, regular), and «نسخ» and «صفحة الذكر» are actions, bold in `tone-text`, each with its icon. In a card the section's color means a count, or an action with an icon, and nothing else.
+
+Above a set of cards, a title is `body`, bold, `ink-muted`: a group's title, and in a choice the title of each wording («الصيغة الأولى»). The note of a choice («تكفي واحدة منها») is `note`, medium, `ink-muted`.
 
 The section cards are rows on a phone, under a large first card. Each counts what its page holds, and «الصباح والمساء» counts its morning list. On a wide screen they sit in four columns, and in each row one card spans two: the first, then the last, then the middle.
 

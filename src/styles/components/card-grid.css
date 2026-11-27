@@ -8,10 +8,6 @@
   grid-column: span 2;
 }
 
-.card-grid--compact {
-  gap: var(--space-4);
-}
-
 @media (max-width: 40rem) {
   .card-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -20,10 +16,6 @@
   .card-grid__wide {
     grid-column: auto;
   }
-
-  .card-grid--compact {
-    gap: var(--space-2);
-  }
 }
 
 @media (min-width: 64rem) {
@@ -31,17 +23,12 @@
     gap: var(--space-6);
   }
 
-  .card-grid--featured {
+  .card-grid--featured,
+  .card-grid--compact {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .card-grid--compact {
-    display: flex;
-    flex-wrap: wrap;
     container-type: inline-size;
-  }
-
-  .card-grid--compact > li {
-    flex: 1 1 30%;
   }
 }

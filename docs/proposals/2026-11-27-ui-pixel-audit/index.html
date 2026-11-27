@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>فحص الواجهة بالبكسل</title>
+    <style>
+      :root {
+        --bg: #d6d6cd;
+        --surface: hsl(60 10% 92%);
+        --fg: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --line: hsl(200 30% 20% / 0.22);
+        --accent: #8f593b;
+        --ok: #2f6b57;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #060f13;
+          --surface: hsl(200 32% 15%);
+          --fg: hsl(55 62% 89%);
+          --muted: hsl(60 10% 72%);
+          --line: hsl(60 10% 82% / 0.18);
+          --accent: #d9a27f;
+          --ok: #7fc7ab;
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          17px/1.7 'IBM Plex Sans Arabic',
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+        margin: 0 0 0.5rem;
+      }
+      p {
+        max-width: 46rem;
+        margin: 0.25rem 0 0.75rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.75rem 0;
+        font-size: 0.9375rem;
+      }
+      th,
+      td {
+        text-align: start;
+        padding: 0.4rem 0.5rem;
+        border-top: 1px solid var(--line);
+        vertical-align: top;
+      }
+      section {
+        background: var(--surface);
+        border-radius: 1.25rem;
+        padding: 1.25rem;
+        margin-block: 1.5rem;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.8125rem;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 0 0.6rem;
+        margin-inline-end: 0.25rem;
+      }
+      .num {
+        color: var(--accent);
+      }
+      figure {
+        margin: 1rem 0;
+      }
+      figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+      }
+      figcaption {
+        font-size: 0.875rem;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+      .pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+        gap: 1rem;
+      }
+      .pair img {
+        max-width: 24rem;
+        width: 100%;
+      }
+      ol.options {
+        list-style: none;
+        padding: 0;
+        margin: 0.75rem 0 0;
+      }
+      ol.options li {
+        border-top: 1px solid var(--line);
+        padding: 0.5rem 0;
+      }
+      .rec {
+        color: var(--ok);
+        font-weight: 700;
+      }
+      .reply {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: var(--surface);
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        display: inline-block;
+      }
+      ul.fine {
+        margin: 0;
+        padding-inline-start: 1.25rem;
+      }
+      code {
+        font-size: 0.875em;
+        direction: ltr;
+        unicode-bidi: embed;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>فحص الواجهة بالبكسل</h1>
+      <p class="lead">
+        صوّرت كل أنواع الصفحات (الرئيسية، قسم، ذكر، الطب النبوي، حديث، ٤٠٤، البحث، قائمة الأقسام) على
+        أربعة عروض: هاتف ٣٩٠، آيباد ٨٢٠، آيباد برو ١٠٢٤، حاسوب ١٤٤٠، فاتحًا وداكنًا، في كروميوم وفي
+        ويب‌كِت (محرك سفاري). ثم قست كل حافة ومسافة بالبكسل من الصفحة نفسها، لا من الصورة. وجدت ستة
+        أمور، كل واحد منها مثبت بقياس وصورة.
+      </p>
+
+      <section>
+        <h2>ما بُني: الستة كلها بالخيار أ</h2>
+        <p>
+          أعدت القياس بعد البناء على الصفحة نفسها. كل رقم أدناه مقيس، والفحص الكامل (التنسيق والفحص
+          والأنواع و٣٩٩٥ اختبارًا و٩١ اختبار بناء) ناجح.
+        </p>
+        <ol class="options">
+          <li>
+            <strong>١.</strong> وسط «تمت» عند ٩١٢px ووسط البطاقات عند ٩١٢px على ١٤٤٠، و٦٠٨ = ٦٠٨ على
+            ١٠٢٤.
+          </li>
+          <li>
+            <strong>٢.</strong> التبويبات داخل عمود الأذكار (٨٠٠px). أثر جانبي رأيته: المفتاح
+            والتبويبات لا يتسعان لصف واحد في ٨٠٠px، فنزلت التبويبات إلى صف تحت المفتاح على الحاسوب.
+          </li>
+          <li>
+            <strong>٣.</strong> «بقية الأقسام» أربعة صفوف كاملة من أربعة أعمدة، ومسرح كل بطاقة بنسبة
+            ٢:١.
+          </li>
+          <li><strong>٤.</strong> ٢٤px تحت الرأس في كل الصفحات على الهاتف والآيباد والحاسوب.</li>
+          <li>
+            <strong>٥.</strong> السطر تحت «آية الكرسي» صار «القرآن»، والصفحات الست كلها نظيفة.
+            اختبار بناء يمنع عودة التكرار.
+          </li>
+          <li>
+            <strong>٦.</strong> ١٢px بين البطاقات في الرئيسية و«بقية الأقسام» على الهاتف والآيباد.
+          </li>
+        </ol>
+        <p class="lead">
+          الرئيسية لم تتغير: صورتها قبل وبعد متطابقة، إلا مواضع الرسوم المتحركة التي تختلف بين
+          تصويرين من الكود نفسه.
+        </p>
+        <div class="pair">
+          <figure>
+            <img src="1-closing-after.png" alt="تمت في وسط البطاقة" />
+            <figcaption>١ بعد.</figcaption>
+          </figure>
+          <figure>
+            <img src="2-tools-after.png" alt="التبويبات داخل عمود الأذكار" />
+            <figcaption>٢ بعد، الصباح والمساء.</figcaption>
+          </figure>
+          <figure>
+            <img src="2-tools-tibb-after.png" alt="تبويبات الطب النبوي داخل العمود" />
+            <figcaption>٢ بعد، الطب النبوي.</figcaption>
+          </figure>
+          <figure>
+            <img src="3-related-after.png" alt="آخر صف من أربع بطاقات" />
+            <figcaption>٣ بعد.</figcaption>
+          </figure>
+          <figure>
+            <img src="4-gap-section-after.png" alt="٢٤ بكسل تحت الرأس" />
+            <figcaption>٤ بعد.</figcaption>
+          </figure>
+          <figure>
+            <img src="5-lede-after.png" alt="آية الكرسي وتحتها القرآن" />
+            <figcaption>٥ بعد.</figcaption>
+          </figure>
+          <figure>
+            <img src="6-gap-related-after.png" alt="بطاقات بقية الأقسام بمسافة ١٢ بكسل" />
+            <figcaption>٦ بعد.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>تسميات البطاقة: لكل تسمية معنى واحد وشكل واحد</h2>
+        <p>
+          جمعت كل بطاقات الموقع (٢٨٥ بطاقة في ١٧ صفحة) فوجدت ٢٥ تركيبًا مختلفًا من التسميات. المسافات
+          كانت سليمة ومنتظمة في كل التراكيب. المشكلة في المعنى: السطر الملون كان يحمل أربعة معانٍ
+          (العدد، ووقت اليوم، والموقف، وطريقة القراءة)، ولون القسم نفسه كان لعنوان الصيغة، وكانت
+          العبارات تظهر «١ مرة».
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>التسمية</th>
+              <th>تقول</th>
+              <th>الشكل</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>الاسم</td>
+              <td>اسم الذكر، إن لم يبدأ نصه به</td>
+              <td>١٣px عريض رمادي</td>
+            </tr>
+            <tr>
+              <td>العدد</td>
+              <td>كم مرة: «مرة واحدة»، «مرتان»، «٣ مرات»، «٣٣ مرة»</td>
+              <td>١٥px عريض بلون القسم</td>
+            </tr>
+            <tr>
+              <td>الوقت</td>
+              <td>متى يقال: «في المساء»، «إذا أوى إلى فراشه». في سطر العدد بعد فاصلة</td>
+              <td>١٥px عريض رمادي</td>
+            </tr>
+            <tr>
+              <td>الكيفية</td>
+              <td>ماذا يفعل، و«تقرأ إلى آخر السورة»</td>
+              <td>١٥px عادي رمادي</td>
+            </tr>
+            <tr>
+              <td>الراوي</td>
+              <td>«عن ابن عباس» في الطب النبوي</td>
+              <td>١٥px عادي رمادي</td>
+            </tr>
+            <tr>
+              <td>عنوان الصيغة</td>
+              <td>«الصيغة الأولى»: عنوان فوق بطاقات، مثل عنوان المجموعة</td>
+              <td>١٧px عريض رمادي</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          لون القسم في البطاقة صار يعني شيئين فقط: العدد، أو زرًا معه أيقونة («نسخ»، «صفحة الذكر»).
+          المسافات لم تتغير بكسلًا: ٢٤px فوق أول تسمية، و٤px تحت الاسم، و٨px تحت الوقت والكيفية
+          والراوي. كتبت الجدول في <code>docs/design-system.md</code>، واختبار بناء يرفض أي تسمية
+          أخرى أو ترتيبًا آخر أو رقمًا خارج العدد أو «١ مرة».
+        </p>
+        <div class="pair">
+          <figure>
+            <img src="card-moment-before.png" alt="قبل: العدد والوقت بلون القسم" />
+            <figcaption>قبل: «١٠ مرات، بعد صلاة الفجر» كله بلون القسم.</figcaption>
+          </figure>
+          <figure>
+            <img src="card-moment-after.png" alt="بعد: العدد بلون القسم والوقت رمادي" />
+            <figcaption>بعد: العدد بلون القسم، والوقت رمادي.</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="card-quran-before.png" alt="قبل: طريقة القراءة في السطر الملون" />
+            <figcaption>قبل: «تقرأ كل سورة إلى آخرها» في السطر الملون.</figcaption>
+          </figure>
+          <figure>
+            <img src="card-quran-after.png" alt="بعد: طريقة القراءة في سطر الكيفية" />
+            <figcaption>بعد: في سطر الكيفية.</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="card-phrases-before.png" alt="قبل: ١ مرة" />
+            <figcaption>قبل: «١ مرة».</figcaption>
+          </figure>
+          <figure>
+            <img src="card-phrases-after.png" alt="بعد: مرة واحدة" />
+            <figcaption>بعد: «مرة واحدة»، كما يقال «آية واحدة».</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="card-choice-before.png" alt="قبل: الصيغة الأولى بلون العدد" />
+            <figcaption>قبل: «الصيغة الأولى» بلون العدد.</figcaption>
+          </figure>
+          <figure>
+            <img src="card-choice-after.png" alt="بعد: الصيغة الأولى عنوان رمادي" />
+            <figcaption>بعد: عنوان فوق بطاقات.</figcaption>
+          </figure>
+        </div>
+        <p class="lead">
+          ملاحظة مقيسة: في قسم «بعد الصلاة» (الأخضر المزرق) لون العدد قريب من الرمادي في الوضع الفاتح
+          (مسافة ٠٫٠٣٣ في OKLab، وفي البقية ٠٫٠٥ إلى ٠٫١٢). الكلمات نفسها («١٠ مرات») تقول إنها عدد،
+          فتركته. إن أردت فرقًا أوضح، فالحل أن يكون الوقت بوزن متوسط لا عريض.
+        </p>
+      </section>
+
+      <h2>الفحص الأول</h2>
+
+      <section>
+        <h2><span class="num">١.</span> سطر «تمت» ليس في وسط الأذكار التي يختمها</h2>
+        <span class="tag">آيباد برو وحاسوب</span><span class="tag">صفحات الأقسام</span>
+        <p>
+          من عرض ٦٤rem تضيق الأذكار إلى عمود القراءة (٨٠٠px) عند اليمين، لكن «تمت أذكار الصباح» يتوسط
+          عرض الصفحة كله. على ١٤٤٠ وسطه عند ٧٢٠px ووسط البطاقات عند ٩١٢px، فهو منحرف ١٩٢px. على ١٠٢٤
+          ينحرف ٩٦px.
+        </p>
+        <figure>
+          <img src="1-closing.png" alt="سطر تمت أذكار الصباح منحرف عن وسط البطاقة فوقه" />
+          <figcaption>١٤٤٠: البطاقة الأخيرة ثم «تمت» تحتها، وليس في وسطها.</figcaption>
+        </figure>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> يتوسط عمود الأذكار نفسه (العرض الأقصى نفسه).
+            <span class="rec">موصى به</span>
+          </li>
+          <li><strong>ب.</strong> يبدأ من اليمين مثل عناوين المجموعات.</li>
+          <li><strong>ج.</strong> يبقى كما هو.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">٢.</span> صف التبويبات أعرض من عمود الأذكار</h2>
+        <span class="tag">آيباد برو وحاسوب</span><span class="tag">صفحات الأقسام والطب النبوي</span>
+        <p>
+          البطاقات تقف عند ٥١٢px من اليسار، والتبويبات تتجاوزها إلى ٤٢٩px (٨٣px خارج العمود). في
+          الطب النبوي التبويبات تملأ عرض الصفحة كله (١١٨٤px) والبطاقات تحتها ٨٠٠px، فيبدو أعلى الصفحة
+          وأسفلها على شبكتين.
+        </p>
+        <figure>
+          <img src="2-tools.png" alt="صف الصباح والمساء والتبويبات يتجاوز حافة البطاقة اليسرى" />
+          <figcaption>الصباح والمساء، ١٤٤٠.</figcaption>
+        </figure>
+        <figure>
+          <img src="2-tools-tibb.png" alt="تبويبات الطب النبوي بعرض الصفحة والبطاقة أضيق" />
+          <figcaption>الطب النبوي، ١٤٤٠.</figcaption>
+        </figure>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> التبويبات وعناوين المجموعات و«تمت» كلها في عمود الأذكار نفسه (٨٠٠px)،
+            فتكون الصفحة عمودًا واحدًا من التبويبات إلى «تمت». <span class="rec">موصى به</span>
+          </li>
+          <li>
+            <strong>ب.</strong> تمتد الأذكار إلى عرض الصفحة كله كما في صفحة الذكر. السطر يطول على عرض
+            القراءة.
+          </li>
+          <li><strong>ج.</strong> يبقى كما هو.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">٣.</span> البطاقة الأخيرة في «بقية الأقسام» تمتد بعرض الصفحة</h2>
+        <span class="tag">آيباد برو وحاسوب</span><span class="tag">كل صفحات الأقسام</span>
+        <p>
+          «بقية الأقسام» ست عشرة بطاقة في ثلاثة أعمدة: خمسة صفوف كاملة، ثم بطاقة وحيدة تتمدد إلى
+          ١١٨٤px بمسرح ارتفاعه ٢٤٠px. السبب أن الشبكة مرنة (<code>flex: 1 1 30%</code>) فتكبر الأخيرة
+          لتملأ الصف، وليست تصميمًا مقصودًا.
+        </p>
+        <figure>
+          <img src="3-related.png" alt="آخر صف في بقية الأقسام فيه بطاقة الطب النبوي بعرض الصفحة" />
+          <figcaption>آخر صفين على ١٤٤٠.</figcaption>
+        </figure>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> أربعة أعمدة كالرئيسية في شبكة ثابتة: ست عشرة بطاقة تملأ أربعة صفوف،
+            وإن تغير العدد بقيت كل بطاقة بعرض عمود. <span class="rec">موصى به</span>
+          </li>
+          <li>
+            <strong>ب.</strong> تبقى ثلاثة أعمدة في شبكة ثابتة، وتقف البطاقة الأخيرة بعرض عمود واحد.
+          </li>
+          <li><strong>ج.</strong> نمط الرئيسية نفسه (بطاقات عريضة وضيقة).</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">٤.</span> المسافة تحت رأس الصفحة على الهاتف ليست واحدة</h2>
+        <span class="tag">هاتف</span>
+        <p>
+          تحت الرأس الملون: ١٦px في صفحات الأقسام والطب النبوي، و٢٤px في صفحات الذكر والحديث. على
+          الآيباد والحاسوب ٢٤px في كل الصفحات.
+        </p>
+        <div class="pair">
+          <figure>
+            <img src="4-gap-section.png" alt="صفحة قسم: ١٦ بكسل بين الرأس والمفتاح" />
+            <figcaption>صفحة قسم: ١٦px.</figcaption>
+          </figure>
+          <figure>
+            <img src="4-gap-dhikr.png" alt="صفحة ذكر: ٢٤ بكسل بين الرأس والبطاقة" />
+            <figcaption>صفحة ذكر: ٢٤px.</figcaption>
+          </figure>
+        </div>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> ٢٤px في كل الصفحات وكل العروض. <span class="rec">موصى به</span>
+          </li>
+          <li><strong>ب.</strong> ١٦px على الهاتف في كل الصفحات، و٢٤px لما فوقه.</li>
+          <li><strong>ج.</strong> يبقى كما هو.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">٥.</span> صفحة الذكر تكرر اسم القسم فوق العنوان وتحته</h2>
+        <span class="tag">كل العروض</span><span class="tag">٦ صفحات</span>
+        <p>
+          «الصباح والمساء» فوق «آية الكرسي»، ثم «في الصباح والمساء» تحتها. القاعدة في
+          <code>docs/design-system.md</code> أن السطر تحت العنوان لا يكرر اسم القسم فوقه. الكود يقارن
+          النص حرفًا بحرف، و«في الصباح والمساء» لا يطابق «الصباح والمساء» فيمر. الصفحات الست: آية
+          الكرسي، المعوذات، عالم الغيب، لا إله إلا الله وحده، التهليل عشرًا، سبحان الله وبحمده.
+        </p>
+        <div class="pair">
+          <figure>
+            <img src="5-lede.png" alt="رأس صفحة آية الكرسي فيه الصباح والمساء مرتين" />
+            <figcaption>آية الكرسي، هاتف.</figcaption>
+          </figure>
+        </div>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> يُتخطى السياق إذا احتوى اسم القسم، فتأخذ المجموعة مكانه: «القرآن»،
+            «القرآن، ٣ مرات»، «الاستغفار والدعاء»، «التهليل والتسبيح»، «التهليل والتسبيح، ١٠ مرات»،
+            «التهليل والتسبيح، ١٠٠ مرة». <span class="rec">موصى به</span>
+          </li>
+          <li>
+            <strong>ب.</strong> مثل أ، ويُتخطى كذلك «أدعية بعد الصلاة» في خمس صفحات تحت «بعد الصلاة».
+            لكن البديل حينها «أذكار بعد الصلاة»، فيبقى التكرار.
+          </li>
+          <li><strong>ج.</strong> يبقى كما هو.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">٦.</span> المسافة بين بطاقات الأقسام نفسها ثلاث قيم</h2>
+        <span class="tag">هاتف وآيباد</span><span class="tag">أولوية صغيرة</span>
+        <p>
+          في الرئيسية ١٢px على الهاتف والآيباد. في «بقية الأقسام» ٨px على الهاتف و١٦px على الآيباد. على
+          الحاسوب ٢٤px في الاثنتين. بطاقات «بقية الأقسام» أصغر قصدًا، لكن المسافة لا يلزمها أن تختلف.
+        </p>
+        <div class="pair">
+          <figure>
+            <img src="6-gap-home.png" alt="بطاقات الرئيسية على الهاتف بمسافة ١٢ بكسل" />
+            <figcaption>الرئيسية، هاتف: ١٢px.</figcaption>
+          </figure>
+          <figure>
+            <img src="6-gap-related.png" alt="بطاقات بقية الأقسام على الهاتف بمسافة ٨ بكسل" />
+            <figcaption>بقية الأقسام، هاتف: ٨px.</figcaption>
+          </figure>
+        </div>
+        <ol class="options">
+          <li>
+            <strong>أ.</strong> مسافة واحدة: ١٢px على الهاتف والآيباد، و٢٤px على الحاسوب.
+            <span class="rec">موصى به</span>
+          </li>
+          <li><strong>ب.</strong> تبقى كما هي.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>ما قسته فكان سليمًا</h2>
+        <ul class="fine">
+          <li>لا تمرير أفقي على أي عرض.</li>
+          <li>
+            الزهرة والأيقونات في الشريط على حافة المحتوى تمامًا: ١٦px على الهاتف والآيباد، و١٢٨px على
+            الحاسوب.
+          </li>
+          <li>
+            كل زر ورابط ٤٤px أو أكثر. رابط الرجوع في الرأس ومفتاح الصباح والمساء يوسعان منطقة اللمس
+            بما يكفي.
+          </li>
+          <li>كل حجم خط من السلم، أو من الحجمين المرنين الموثقين.</li>
+          <li>الوضع الداكن بالهندسة نفسها، وويب‌كِت مطابق لكروميوم.</li>
+          <li>البحث وقائمة الأقسام على الهاتف والآيباد والحاسوب.</li>
+        </ul>
+        <p class="lead">لم أفحص: جهازًا حقيقيًا أو المحاكي، وحالات المرور والتركيز، والهاتف أفقيًا.</p>
+      </section>
+
+      <h2>للمعاينة</h2>
+      <p>خادم التطوير على <code>http://localhost:4324</code>. لم أنشئ أي commit.</p>
+    </main>
+  </body>
+</html>

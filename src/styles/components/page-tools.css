@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
-  margin-block-start: var(--space-4);
+  margin-block-start: var(--space-6);
 }
 
 @media (min-width: 40rem) {
@@ -11,6 +11,11 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-4) var(--space-6);
-    margin-block-start: var(--space-6);
+  }
+}
+
+@media (min-width: 64rem) {
+  .page-tools {
+    max-width: var(--size-column);
   }
 }

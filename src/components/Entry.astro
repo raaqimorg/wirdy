@@ -10,8 +10,10 @@ interface Props {
   title?: string | undefined;
   name?: string | undefined;
   heading?: 'h2' | 'h3' | 'h4' | undefined;
-  lead?: string | undefined;
+  count?: string | undefined;
+  moment?: string | undefined;
   how?: string | undefined;
+  rawi?: string | undefined;
   fadl?: string | undefined;
   single?: boolean | undefined;
   nested?: boolean | undefined;
@@ -26,8 +28,10 @@ const {
   title,
   name,
   heading: Heading,
-  lead,
+  count,
+  moment,
   how,
+  rawi,
   fadl,
   single,
   nested,
@@ -60,16 +64,15 @@ const fold = single ? {} : { class: 'entry__more' };
         )}
       </Heading>
     )}
-    {lead && (
-      <div class="entry__head">
-        <slot name="count" />
-        <p class="entry__lead">
-          <slot name="number" />
-          {lead}
-        </p>
-      </div>
+    {(count || moment) && (
+      <p class="entry__lead">
+        {count && <span class="entry__count">{count}</span>}
+        {count && moment && '، '}
+        {moment}
+      </p>
     )}
     {how && <p class="entry__how">{how}</p>}
+    {rawi && <p class="entry__rawi">{rawi}</p>}
     <div class="entry__text">
       <slot />
     </div>

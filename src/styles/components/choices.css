@@ -20,14 +20,14 @@
 
 .choices__title {
   padding-inline: var(--space-4);
-  color: var(--tone-text);
-  font-size: var(--text-note);
+  color: var(--color-ink-muted);
+  font-size: var(--text-body);
   font-weight: var(--weight-bold);
 }
 
 @media (min-width: 64rem) {
   .choices {
-    max-width: calc(var(--size-reading) + var(--space-16));
+    max-width: var(--size-column);
   }
 
   .choices__item {
