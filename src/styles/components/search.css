@@ -32,6 +32,16 @@
   position: relative;
 }
 
+.search__tries > :first-child {
+  border-start-start-radius: var(--radius-large);
+  border-start-end-radius: var(--radius-large);
+}
+
+.search__tries > :last-child {
+  border-end-start-radius: var(--radius-large);
+  border-end-end-radius: var(--radius-large);
+}
+
 .search__tries > * + *::before {
   content: "";
   position: absolute;
@@ -56,6 +66,7 @@
   font-family: var(--font-ui);
   font-size: var(--text-body);
   text-align: start;
+  border-radius: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }

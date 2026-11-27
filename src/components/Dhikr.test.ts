@@ -113,7 +113,7 @@ describe('Dhikr', () => {
     expect(html).toContain('<div class="surah surah--fold">');
     expect(html.match(/<details class="surah__rest">/gu)).toHaveLength(1);
     expect(html).toContain(
-      `<summary class="surah__more" data-hover="fill"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
+      `<summary class="surah__more" data-hover="fill"><span class="surah__closed">أكمل القراءة، ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
     );
     expect(html.split('<details')[0]!.match(new RegExp(ayah, 'gu'))).toHaveLength(2);
     expect(

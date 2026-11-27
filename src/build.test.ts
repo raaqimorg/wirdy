@@ -734,6 +734,20 @@ describe('built site', () => {
     expect(llms.filter((line) => stopped(line))).toEqual([]);
   });
 
+  it('puts no middle dot next to a number on any page, where it reads as a zero', () => {
+    const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    const found = files.flatMap((file) =>
+      [
+        ...readFileSync(join(DIST, file), 'utf8').matchAll(
+          /[^<>]{0,20}(?:·\s*[0-9٠-٩]|[0-9٠-٩]\s*·)[^<>]{0,20}/gu
+        ),
+      ].map(([text]) => `${file}: ${text}`)
+    );
+    expect(found).toEqual([]);
+  });
+
   it('leads from each dhikr to the previous and the next in its occasion', () => {
     const list = contentFiles
       .filter((f) => f.startsWith('nawm/'))

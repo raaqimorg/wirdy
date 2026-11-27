@@ -27,30 +27,30 @@ When al-Albani changed his ruling (dorar.net shows «تراجع الشيخ»), t
 
 ## Occasions
 
-Each dhikr belongs to one occasion: its folder and its `occasion` field. `src/lib/occasions.ts` holds the order, the headings, and the three bands of the home page.
+Each dhikr belongs to one occasion: its folder and its `occasion` field. `src/lib/occasions.ts` holds the order and the headings. The home page shows the sections in that order, as one list with no headings: worship first, then daily life, then what befalls a reader.
 
 A section answers one question a reader has in the moment: where am I, what am I doing, or what do I feel. Its name says what the reader looks for, and no section is «متفرقة». A section has three to five groups where it can, and a group two to six adhkar. The sections of worship keep the order of the day and the prayer.
 
-| Band           | Folder        | Heading        |
-| -------------- | ------------- | -------------- |
-| العبادة        | `sabah-masaa` | الصباح والمساء |
-|                | `masjid`      | الأذان والمسجد  |
-|                | `fi-al-salah` | أثناء الصلاة    |
-|                | `salah`       | بعد الصلاة      |
-|                | `nawm`        | عند النوم      |
-|                | `istiqaz`     | عند الاستيقاظ   |
-|                | `mutlaq`      | كل وقت         |
-|                | `mawasim`     | المواسم والحج  |
-| الحياة اليومية | `taam`        | الطعام والشراب |
-|                | `bayt`        | البيت والأهل    |
-|                | `safar`       | الخروج والسفر  |
-|                | `nas`         | الناس والمجالس |
-| ما يمر بك      | `hamm`        | الهم والغضب    |
-|                | `marad`       | المرض والرقية  |
-|                | `janaiz`      | الجنائز        |
-|                | `matar`       | المطر والريح   |
+| Folder        | Heading        |
+| ------------- | -------------- |
+| `sabah-masaa` | الصباح والمساء |
+| `masjid`      | الأذان والمسجد  |
+| `fi-al-salah` | أثناء الصلاة    |
+| `salah`       | بعد الصلاة      |
+| `nawm`        | عند النوم      |
+| `istiqaz`     | عند الاستيقاظ   |
+| `mutlaq`      | كل وقت         |
+| `mawasim`     | المواسم والحج  |
+| `taam`        | الطعام والشراب |
+| `bayt`        | البيت والأهل    |
+| `safar`       | الخروج والسفر  |
+| `nas`         | الناس والمجالس |
+| `hamm`        | الهم والغضب    |
+| `marad`       | المرض والرقية  |
+| `janaiz`      | الجنائز        |
+| `matar`       | المطر والريح   |
 
-«الطب النبوي» closes the last band.
+«الطب النبوي» closes the list.
 
 A dhikr of two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
 
@@ -73,18 +73,19 @@ The name is `<order>-<slug>.md`, such as `01-sayyid-al-istighfar.md`. The slug i
 
 ```markdown
 ---
-title: "سيد الاستغفار"
-occasion: "sabah-masaa"
+title: 'سيد الاستغفار'
+occasion: 'sabah-masaa'
 order: 1
 count: 1
-mode: "both"
+mode: 'both'
 quran: false
 takhrij:
-  grader: "البخاري"
-  source: "صحيح البخاري ٦٣٠٦"
-  ruling: "صحيح"
-  url: "https://dorar.net/h/1Xe5exzh"
+  grader: 'البخاري'
+  source: 'صحيح البخاري ٦٣٠٦'
+  ruling: 'صحيح'
+  url: 'https://dorar.net/h/1Xe5exzh'
 ---
+
 اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، ...
 ```
 
@@ -96,7 +97,7 @@ takhrij:
 - `ayat`: how much of each سورة shows. The file keeps the whole text. Only قرآن files use `first` or `fold`.
   - `all`, the default, shows every آية.
   - `first` shows the first آية of each سورة, for سور the reader knows by heart, such as المعوذات. The card adds «تُقرأ إلى آخر السورة» («تُقرأ كل سورة إلى آخرها» for more than one).
-  - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one). A button, «أكمل القراءة · ٨ آيات», opens the rest in place: a `<details>`, no script, reading «طيّ» while open. Copy gives the آيات that show, with «وتتمة الآيات في الصفحة». The card shares its 250 letters among the سور, with the same line.
+  - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one). A button, «أكمل القراءة، ٨ آيات», opens the rest in place: a `<details>`, no script, reading «طيّ» while open. Copy gives the آيات that show, with «وتتمة الآيات في الصفحة». The card shares its 250 letters among the سور, with the same line.
 - `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only, not the manner, source, or virtue. The card shows it first, with the count.
 - `how`: the manner the narration gives, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.
 - `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with one `group` show under it. Use it for one situation in an occasion, or for alternatives. A page where every dhikr has a group opens with links to its groups.

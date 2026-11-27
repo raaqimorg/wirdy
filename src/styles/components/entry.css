@@ -103,7 +103,6 @@
 
 .entry__info {
   display: grid;
-  row-gap: var(--space-1);
   margin: var(--space-4) calc(var(--entry-pad) * -1) 0;
   padding: var(--space-3) var(--entry-pad) var(--space-4);
   border-block-start: var(--border-hairline) solid var(--color-line-soft);
@@ -130,6 +129,7 @@
 }
 
 .entry__row .entry__words {
+  padding-block: calc((var(--size-touch) - 1lh) / 2);
   font-size: var(--text-note);
   font-weight: var(--weight-regular);
 }
