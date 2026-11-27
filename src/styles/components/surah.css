@@ -3,7 +3,7 @@
 }
 
 .surah + .surah {
-  margin-top: var(--space-3);
+  margin-block-start: var(--space-3);
 }
 
 .surah::before,
@@ -38,16 +38,18 @@
 }
 
 .surah__more {
+  --ring-color: currentColor;
+  --ring-offset: var(--ring-inset);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1-5);
+  gap: var(--space-2);
   min-height: var(--size-touch);
   margin-block: var(--space-2);
-  padding-bottom: var(--space-lift);
   color: var(--tone-text);
   background: var(--tone-wash);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-large);
   font-family: var(--font-ui);
   font-size: var(--text-note);
   font-weight: var(--weight-bold);
@@ -58,9 +60,13 @@
 }
 
 .surah__chevron {
-  --icon-drop: var(--drop);
+  --icon-stroke: var(--stroke-icon-bold);
+}
 
-  transition: rotate var(--duration-release) var(--spring);
+@media (prefers-reduced-motion: no-preference) {
+  .surah__chevron {
+    transition: rotate var(--duration-release) var(--spring);
+  }
 }
 
 .surah__rest[open] .surah__chevron {
@@ -71,22 +77,7 @@
   display: none;
 }
 
-.surah__more:focus-visible {
-  outline: var(--border-ring) solid var(--tone-text);
-  outline-offset: var(--ring-inset);
-}
-
-.surah__more:active {
-  opacity: var(--opacity-pressed);
-}
-
 .surah__rest[open] .surah__closed,
 .surah__rest:not([open]) .surah__opened {
   display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .surah__chevron {
-    transition: none;
-  }
 }

@@ -1,20 +1,24 @@
 .entry-list {
   display: grid;
   gap: var(--space-4);
-  margin-top: var(--space-6);
+  margin-block-start: var(--space-6);
 }
 
 @media (min-width: 64rem) {
   .entry-list {
-    gap: var(--space-5);
-    margin-top: var(--space-10);
+    gap: var(--space-6);
+    margin-block-start: var(--space-10);
   }
 
   .entry-list--single {
-    margin-top: var(--space-5);
+    margin-block-start: var(--space-6);
+  }
+
+  .entry-list:not(.entry-list--single) {
+    max-width: calc(var(--size-reading) + var(--space-16));
   }
 }
 
 .entry-list--titled {
-  margin-top: var(--space-4);
+  margin-block-start: var(--space-4);
 }

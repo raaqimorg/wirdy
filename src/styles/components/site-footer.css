@@ -1,13 +1,13 @@
 .site-footer {
   padding: var(--space-8) var(--space-gutter) calc(env(safe-area-inset-bottom) + var(--space-10));
   color: var(--color-ink-muted);
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-snug);
   text-align: center;
   text-wrap: balance;
 }
 
 .site-footer__line {
-  max-width: var(--size-footer);
+  max-width: 44rem;
   margin-inline: auto;
   font-size: var(--text-note);
 }
@@ -26,10 +26,4 @@
   min-height: var(--size-touch);
   padding-inline: var(--space-2);
   text-decoration: none;
-}
-
-@media (hover: hover) {
-  .site-footer__link:hover {
-    color: var(--color-ink);
-  }
 }

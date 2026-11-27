@@ -32,12 +32,16 @@
 @media (min-width: 64rem) {
   .search-sheet {
     position: fixed;
-    inset: var(--size-spotlight-top) 0 auto;
-    width: var(--size-spotlight);
+    inset: 12vh 0 auto;
+    width: 40rem;
     height: fit-content;
     max-height: 70dvh;
     margin-inline: auto;
-    border-radius: var(--radius-menu);
+    border-radius: var(--radius-xlarge);
     box-shadow: var(--shadow-menu);
+  }
+
+  .search-sheet--stage {
+    --search-field-ink: var(--color-ink);
   }
 }

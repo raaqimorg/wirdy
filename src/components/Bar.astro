@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
 import SectionMenu from './SectionMenu.astro';
@@ -13,15 +14,15 @@ const { menu = true, stage = false } = Astro.props;
 const label = 'ابحث في الأذكار';
 ---
 
-<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقّل">
+<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقل">
   <div class="bar__inner container">
     <a class="bar__brand" href="/" aria-label={`${SITE.name}، الرئيسية`}>
       <Mark inks={stage ? 'stage' : 'own'} />
       <span class="bar__name">{SITE.name}</span>
     </a>
     {menu && <SectionMenu />}
-    <button class="bar__search" type="button" aria-label={label} data-search-open>
+    <Button variant="icon" class="bar__search" aria-label={label} data-search-open>
       <Icon name="search" />
-    </button>
+    </Button>
   </div>
 </nav>

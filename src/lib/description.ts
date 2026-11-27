@@ -34,9 +34,13 @@ const wordsOf = (card: Card): Option.Option<string> => {
   );
 };
 
+const unstopped = (text: string) => text.trim().replace(/[.،:؛]+$/u, '');
+
 const sentences = (parts: ReadonlyArray<string | null | undefined>) =>
   parts
     .filter((part): part is string => part !== undefined && part !== null && part !== '')
+    .map((part) => unstopped(part))
+    .filter((part) => part !== '')
     .join('. ');
 
 export function descriptionOf(card: Card, fadl?: string): string {

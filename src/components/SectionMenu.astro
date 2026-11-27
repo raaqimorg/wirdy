@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 import Emblem from './Emblem.astro';
 import Icon from './Icon.astro';
 import { Effect } from 'effect';
@@ -10,9 +11,9 @@ const groups = [tiles.filter(({ id }) => id !== 'tibb'), tiles.filter(({ id }) =
 ---
 
 <div class="section-menu">
-  <button class="section-menu__button" type="button" popovertarget="sections" aria-label="الأقسام">
+  <Button variant="icon" class="section-menu__button" popovertarget="sections" aria-label="الأقسام">
     <Icon name="sections" />
-  </button>
+  </Button>
   <div class="section-menu__panel" id="sections" popover>
     <ul>
       {groups.map((group) => (
@@ -25,6 +26,7 @@ const groups = [tiles.filter(({ id }) => id !== 'tibb'), tiles.filter(({ id }) =
                   href={href}
                   style={`--tone: ${color}`}
                   aria-current={href === here ? 'page' : undefined}
+                  data-hover="fill"
                 >
                   <span class="section-menu__tile">
                     <Emblem name={id} motion="still" />

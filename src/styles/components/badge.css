@@ -1,18 +1,18 @@
 .badge {
   flex: none;
-  padding: var(--space-badge-block) var(--space-badge-inline);
+  padding: var(--space-1) var(--space-3);
   color: var(--color-eggshell);
   background: var(--tone-fill);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   font-size: var(--text-small);
   font-weight: var(--weight-bold);
 }
 
 .badge--count {
-  min-width: var(--size-touch);
-  padding-inline: var(--space-badge-inline-count);
+  padding: 0;
+  color: var(--tone-text);
+  background: none;
   font-family: var(--font-ui);
   font-size: var(--text-note);
   line-height: var(--leading-snug);
-  text-align: center;
 }

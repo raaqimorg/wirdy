@@ -10,7 +10,7 @@
   font-weight: var(--weight-medium);
   text-decoration: none;
   background: var(--color-ink);
-  border-radius: var(--radius-tile);
+  border-radius: var(--radius-medium);
 }
 
 .skip-link:not(:focus) {

@@ -1,12 +1,12 @@
 ---
 import { Effect } from 'effect';
-import SectionBands from '../components/SectionBands.astro';
+import CardGrid from '../components/CardGrid.astro';
 import Hero from '../components/Hero.astro';
 import Home from '../layouts/Home.astro';
-import { bandTiles } from '../lib/collection';
+import { sectionTiles } from '../lib/collection';
 import { SITE } from '../lib/site';
 
-const bands = await Effect.runPromise(bandTiles);
+const tiles = await Effect.runPromise(sectionTiles);
 ---
 
 <Home title={SITE.tagline} description={SITE.description} menu={false}>
@@ -14,5 +14,5 @@ const bands = await Effect.runPromise(bandTiles);
     {SITE.promise.before}&nbsp;<span class="salawat">ﷺ</span>
     {SITE.promise.after}
   </Hero>
-  <SectionBands bands={bands} />
+  <CardGrid tiles={tiles} variant="featured" />
 </Home>

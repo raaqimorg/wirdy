@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 import Entry from './Entry.astro';
 import Icon from './Icon.astro';
 import { hadithCopyOf } from '../lib/copy';
@@ -31,20 +32,26 @@ const path = hadithPath(slug);
   {!single && (
     <div slot="actions" class="entry__acts">
       <span class="visually-hidden" role="status" data-status />
-      <button
+      <Button
+        variant="text"
         class="entry__act"
-        type="button"
         aria-label={`نسخ: ${data.title}`}
         data-copy={copy.sabah}
       >
         <Icon name="copy" class="icon--idle" />
         <Icon name="check" class="icon--done" />
-        <span class="entry__act-label">نسخ</span>
-      </button>
-      <a class="entry__act" href={path} aria-label={`صفحة الحديث: ${data.title}`}>
-        <span class="entry__act-label">صفحة الحديث</span>
+        <Icon name="alert" class="icon--fail" />
+        <span data-label>نسخ</span>
+      </Button>
+      <Button
+        variant="text"
+        class="entry__act"
+        href={path}
+        aria-label={`صفحة الحديث: ${data.title}`}
+      >
+        <span>صفحة الحديث</span>
         <Icon name="open" />
-      </a>
+      </Button>
     </div>
   )}
 </Entry>

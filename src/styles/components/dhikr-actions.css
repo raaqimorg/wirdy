@@ -1,14 +1,14 @@
 .dhikr-actions {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-action), 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(5.5rem, 100%), 1fr));
   gap: var(--space-2);
-  margin-top: var(--space-4);
+  margin-block-start: var(--space-4);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 40rem) {
   .dhikr-actions {
-    grid-template-columns: repeat(auto-fit, var(--size-action-wide));
+    grid-template-columns: repeat(auto-fit, 9rem);
     max-width: var(--size-reading);
   }
 }

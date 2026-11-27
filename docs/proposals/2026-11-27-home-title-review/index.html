@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wirdy Home Title Review</title>
+    <style>
+      :root {
+        --bg: #d6d6cd;
+        --surface: hsl(60 10% 92%);
+        --fg: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --line: hsl(200 30% 20% / 0.22);
+        --ok: #2f6b57;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #060f13;
+          --surface: hsl(200 32% 15%);
+          --fg: hsl(55 62% 89%);
+          --muted: hsl(60 10% 72%);
+          --line: hsl(60 10% 82% / 0.18);
+          --ok: #7fc7ab;
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 1.125rem;
+        margin: 0 0 0.25rem;
+      }
+      p,
+      ul {
+        max-width: 46rem;
+        margin: 0.25rem 0 0.75rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      section {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1rem;
+        margin: 1.25rem 0;
+      }
+      .pair {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 0.75rem;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        font-size: 0.8125rem;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+      pre {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.75rem;
+        overflow-x: auto;
+        font-size: 0.8125rem;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      td,
+      th {
+        border-bottom: 1px solid var(--line);
+        padding: 0.3rem 0.6rem;
+        text-align: start;
+      }
+      .ok {
+        color: var(--ok);
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Review of 43ebaa0: the home page title line</h1>
+      <p class="lead">
+        The commit replaces the home line with «لا ذكرَ هنا إلا ما صحّ عن النبي ﷺ،» and a second clause
+        in the faint ink, «ومع كلٍّ درجتُه (كصحيح البخاري) ورابطُ مصدره، وفضلُه إن ورد». Each finding
+        below was measured in Brave on the build of main as committed, at 320, 390, 834, and 1440
+        px, light and dark. The "after" images are main with only the proposed CSS added. Nothing
+        here is applied until the owner approves.
+      </p>
+
+      <section>
+        <h2>What holds up</h2>
+        <ul>
+          <li>
+            The words: a claim in ink, then what comes with each dhikr in the faint ink. The two
+            inks read as one sentence with a clear first part.
+          </li>
+          <li>
+            Contrast: the faint clause is 4.77:1 on the paper by day and 6.29:1 at night, above the
+            4.5:1 that text of 20 to 21 px needs. The ink part is 13.34:1 and 16.90:1.
+          </li>
+          <li>
+            Punctuation: no space before «،», and the salawat stays on the line of «النبي» (a
+            non-breaking space).
+          </li>
+          <li>
+            Over the recolored cards it stays quiet in both modes: the cards carry the color, the
+            line carries the words.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>1. The faint clause starts at the end of the first line</h2>
+        <p>
+          On a phone the first line ends with «ومع كلٍّ», so the faint clause begins mid-line and its
+          first two words hang at the end of the claim. On a wide screen the clause runs on after
+          «ﷺ،» to «(كصحيح البخاري)». The two inks only read as two parts when each starts a line.
+        </p>
+        <p><b>Proposal:</b> the faint clause starts its own line.</p>
+        <pre>
+.hero__more {
+  display: block;
+}</pre>
+        <div class="pair">
+          <figure>
+            <img src="main-390-light.png" alt="" />
+            <figcaption>Now, 390 px</figcaption>
+          </figure>
+          <figure>
+            <img src="h1-390-light.png" alt="" />
+            <figcaption>With the clause on its own line</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Twice as much space below the line as above it</h2>
+        <p>
+          The line is centred in a box of fixed height (192 px on a phone, 256 px wide), and the
+          first band adds 40 px more. Measured from the bar to the line and from the line to
+          «العبادة»: 47 and 87 px at 390, 77 and 117 px at 1440. The box also cannot grow: at 200%
+          text on a 390 px phone the line already runs 4 px past the bottom of its box. The band's
+          margin hides it today (76 px still separate it from «العبادة»), but a longer line, or
+          larger text, would run into the band. The branch gives the box a minimum height instead.
+        </p>
+        <p>
+          <b>Proposal:</b> the box takes the height of its text, with the band spacing above it, so
+          the line has 40 px above and 40 px below at every width.
+        </p>
+        <p>
+          <b>Outcome:</b> with the band titles gone, the band margin went with them. Measured from
+          the bar to the line and from the line to the first card: 64 and 66 px at 390 and 820, 76
+          and 80 px at 1440. The space is even, so the box keeps its height.
+        </p>
+        <pre>
+.hero {
+  height: auto;
+  padding-block: var(--space-10) 0;
+}</pre>
+      </section>
+
+      <section>
+        <h2>3. The band title is as large as the line above it</h2>
+        <p>
+          On a phone «العبادة» is 21.33 px bold under a line of 21.33 px: the heading of a band
+          competes with the page's one sentence. Inside a section the branch already makes group
+          titles secondary (17 px, bold, in the muted ink); the bands of the home page are the same
+          kind of title.
+        </p>
+        <p><b>Proposal:</b> the band titles take the same style as the group titles.</p>
+        <p>
+          <b>Outcome:</b> the owner chose to drop the band titles. The home page is now one list in
+          the same order, so this item no longer applies.
+        </p>
+        <pre>
+.section-bands__title {
+  color: var(--color-ink-muted);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}</pre>
+      </section>
+
+      <section>
+        <h2>All three together</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>Above the line</th>
+            <th>Below the line</th>
+            <th>Band title</th>
+          </tr>
+          <tr>
+            <td>Now, 390 px</td>
+            <td>47 px</td>
+            <td>87 px</td>
+            <td>21.33 px</td>
+          </tr>
+          <tr>
+            <td>Now, 1440 px</td>
+            <td>77 px</td>
+            <td>117 px</td>
+            <td>21.33 px</td>
+          </tr>
+          <tr>
+            <td>Proposed, every width</td>
+            <td class="ok">40 px</td>
+            <td class="ok">40 px</td>
+            <td class="ok">17 px</td>
+          </tr>
+        </table>
+        <div class="pair">
+          <figure>
+            <img src="main-390-light.png" alt="" />
+            <figcaption>Now, 390 px, light</figcaption>
+          </figure>
+          <figure>
+            <img src="h123-390-light.png" alt="" />
+            <figcaption>Proposed, 390 px, light</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="main-390-dark.png" alt="" />
+            <figcaption>Now, 390 px, dark</figcaption>
+          </figure>
+          <figure>
+            <img src="h123-390-dark.png" alt="" />
+            <figcaption>Proposed, 390 px, dark</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="main-1440-light.png" alt="" />
+            <figcaption>Now, 1440 px, light</figcaption>
+          </figure>
+          <figure>
+            <img src="h123-1440-light.png" alt="" />
+            <figcaption>Proposed, 1440 px, light</figcaption>
+          </figure>
+        </div>
+        <div class="pair">
+          <figure>
+            <img src="main-1440-dark.png" alt="" />
+            <figcaption>Now, 1440 px, dark</figcaption>
+          </figure>
+          <figure>
+            <img src="h123-1440-dark.png" alt="" />
+            <figcaption>Proposed, 1440 px, dark</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>Already in the branch</h2>
+        <ul>
+          <li>
+            No full stop at the end of the line, with every other text that is also metadata (note
+            F8). If the owner wants the full stop back on the visible line only, it can live in
+            <code>Hero.astro</code> rather than in <code>SITE.promise.more</code>.
+          </li>
+          <li>
+            The box grows with its text: at 200% text the line ends 32 px inside it, 112 px above
+            «العبادة».
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

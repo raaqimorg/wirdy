@@ -30,7 +30,7 @@ const hasVariants = entries.some((entry) => entry.body?.includes('{{') === true)
 const label = adhkarLabel(entries.length);
 const labelAt = (time: 'sabah' | 'masaa') =>
   adhkarLabel(entries.filter(({ data }) => data.mode === 'both' || data.mode === time).length);
-const description = `${title}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية.`;
+const description = `${title}: ${label} مما ثبت عن النبي ﷺ، بالتشكيل وعدد المرات، وتحت كل ذكر تخريجه من الدرر السنية`;
 ---
 
 <Section
@@ -46,14 +46,15 @@ const description = `${title}: ${label} مما ثبت عن النبي ﷺ، با
   eveningKicker={hasVariants ? labelAt('masaa') : undefined}
   turns={hasVariants}
 >
-  <ReadingProgress />
   <PageTools>
     {hasVariants && <WirdSwitch />}
     {hasIndex && <GroupIndex groups={groups} />}
   </PageTools>
-  {runs.map(({ group, items }) => (
-    <Group title={Option.getOrUndefined(group)} entries={items} />
-  ))}
-  <Closing text={hasVariants ? 'تمّت أذكار {{الصباح|المساء}}' : `تمّت ${title}`} />
+  <ReadingProgress>
+    {runs.map(({ group, items }) => (
+      <Group title={Option.getOrUndefined(group)} entries={items} />
+    ))}
+    <Closing text={hasVariants ? 'تمت أذكار {{الصباح|المساء}}' : `تمت ${title}`} />
+  </ReadingProgress>
   <Related slot="after" tiles={others} />
 </Section>

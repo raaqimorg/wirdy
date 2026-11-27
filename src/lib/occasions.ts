@@ -57,15 +57,4 @@ export function sectionOf(id: Occasion): Section {
   };
 }
 
-export type Band = { readonly heading: string; readonly ids: ReadonlyArray<Occasion | 'tibb'> };
-
-export const BANDS: ReadonlyArray<Band> = [
-  {
-    heading: 'العبادة',
-    ids: ['sabah-masaa', 'masjid', 'fi-al-salah', 'salah', 'nawm', 'istiqaz', 'mutlaq', 'mawasim'],
-  },
-  { heading: 'الحياة اليومية', ids: ['taam', 'bayt', 'safar', 'nas'] },
-  { heading: 'ما يمر بك', ids: ['hamm', 'marad', 'janaiz', 'matar', 'tibb'] },
-];
-
 export const listed = (mode: 'both' | 'sabah' | 'masaa'): boolean => mode !== 'masaa';

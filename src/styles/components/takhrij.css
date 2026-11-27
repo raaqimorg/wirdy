@@ -1,8 +1,7 @@
 .takhrij {
   --icon-size: var(--size-icon);
-  --icon-drop: 0;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   min-height: var(--size-touch);
   color: inherit;
@@ -16,22 +15,6 @@
 
 .takhrij svg {
   display: inline-block;
-  margin-inline-start: var(--space-1-5);
+  margin-inline-start: var(--space-2);
   opacity: var(--opacity-quiet);
-}
-
-.takhrij:focus-visible {
-  outline-offset: var(--ring-gap-small);
-}
-
-@media (hover: hover) {
-  .takhrij:hover {
-    color: var(--color-ink);
-  }
-
-  .takhrij:hover .takhrij__text {
-    text-decoration: underline;
-    text-decoration-color: var(--color-line);
-    text-underline-offset: var(--underline-gap-wide);
-  }
 }

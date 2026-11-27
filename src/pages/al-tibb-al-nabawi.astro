@@ -22,7 +22,7 @@ const groups = runs.flatMap(({ group }) => Option.toArray(group));
 const others = (await Effect.runPromise(sectionTiles)).filter((tile) => tile.id !== 'tibb');
 
 const label = hadithLabel(entries.length);
-const description = `${title}: ${label} صحيحة عن النبي ﷺ في التداوي والعسل والحبة السوداء وماء زمزم والحجامة والرقية وحفظ الصحة، ومع كل حديث تخريجه.`;
+const description = `${title}: ${label} صحيحة عن النبي ﷺ في التداوي والعسل والحبة السوداء وماء زمزم والحجامة والرقية وحفظ الصحة، ومع كل حديث تخريجه`;
 ---
 
 <Section
@@ -35,18 +35,19 @@ const description = `${title}: ${label} صحيحة عن النبي ﷺ في ال
   heading={heading}
   kicker={label}
 >
-  <ReadingProgress />
   <PageTools>
     <GroupIndex groups={groups} />
   </PageTools>
-  {runs.map(({ group, items }) => (
-    <Group title={Option.getOrUndefined(group)}>
-      <EntryList variant="titled">
-        {items.map(({ id, data, body = '' }) => (
-          <Hadith data={data} body={body} slug={slugOf(id)} />
-        ))}
-      </EntryList>
-    </Group>
-  ))}
+  <ReadingProgress>
+    {runs.map(({ group, items }) => (
+      <Group title={Option.getOrUndefined(group)}>
+        <EntryList variant="titled">
+          {items.map(({ id, data, body = '' }) => (
+            <Hadith data={data} body={body} slug={slugOf(id)} />
+          ))}
+        </EntryList>
+      </Group>
+    ))}
+  </ReadingProgress>
   <Related slot="after" tiles={others} />
 </Section>

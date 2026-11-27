@@ -1,7 +1,7 @@
 .occasion-card {
   display: block;
   height: 100%;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-large);
   text-decoration: none;
 }
 
@@ -11,14 +11,13 @@
   height: 100%;
   overflow: hidden;
   background: var(--color-panel);
-  border-radius: var(--radius-card);
-  transition: transform var(--duration-release) var(--spring);
+  border-radius: var(--radius-large);
 }
 
 .occasion-card__stage {
   position: relative;
   display: block;
-  height: var(--size-stage);
+  height: 8.5rem;
   overflow: hidden;
   background: var(--tone-fill);
 }
@@ -29,7 +28,7 @@
   inset: 0;
   background: var(--color-brighten);
   opacity: 0;
-  transition: opacity var(--duration-brighten) var(--ease-out);
+  transition: opacity var(--duration-fade) var(--ease-out);
 }
 
 .occasion-card__emblem {
@@ -42,7 +41,7 @@
 .occasion-card__body {
   display: grid;
   min-width: 0;
-  gap: var(--space-0-5);
+  gap: var(--space-1);
   padding: var(--space-4);
 }
 
@@ -62,20 +61,24 @@
   .occasion-card:hover .occasion-card__stage::before {
     opacity: 0.14;
   }
+}
 
-  .occasion-card:hover .occasion-card__face {
-    transform: scale(1.02);
-    transition-duration: var(--duration-hover);
+@media (prefers-reduced-motion: no-preference) {
+  .occasion-card__face {
+    transition: transform var(--duration-release) var(--spring);
+  }
+
+  .occasion-card:active .occasion-card__face {
+    transform: scale(0.97);
+    transition: transform var(--duration-press) var(--ease-out);
   }
 }
 
-.occasion-card:active {
-  opacity: 1;
-}
-
-.occasion-card:active .occasion-card__face {
-  transform: scale(0.97);
-  transition: transform var(--duration-press) var(--ease-out);
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .occasion-card:hover .occasion-card__face {
+    transform: scale(1.02);
+    transition-duration: var(--duration-release);
+  }
 }
 
 @media (max-width: 40rem) {
@@ -113,29 +116,14 @@
 
 @media (min-width: 64rem) {
   .occasion-card__stage {
-    height: var(--size-stage-wide);
+    height: 12rem;
   }
 
   .occasion-card--compact .occasion-card__stage {
-    height: calc((100cqi - 3 * var(--space-5)) / 6);
+    height: calc((100cqi - 3 * var(--space-6)) / 6);
   }
 
   .occasion-card--compact .occasion-card__title {
     font-size: var(--text-body);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .occasion-card__face {
-    transition: none;
-  }
-
-  .occasion-card:hover .occasion-card__face,
-  .occasion-card:active .occasion-card__face {
-    transform: none;
-  }
-
-  .occasion-card:active {
-    opacity: 0.85;
   }
 }

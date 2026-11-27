@@ -46,7 +46,7 @@ function leadWith(
 ): string {
   const cue = Array.getSomes([TIME[data.mode], ...Array.map(cues, present)]).join('، ');
   const many = Option.exists(suwar, (all) => all.length > 1);
-  const untilEnd = many ? 'تُقرأ كل سورة إلى آخرها' : 'تُقرأ إلى آخر السورة';
+  const untilEnd = many ? 'تقرأ كل سورة إلى آخرها' : 'تقرأ إلى آخر السورة';
   const whole = data.quran && data.ayat === 'first' ? Option.some(untilEnd) : Option.none();
   return Array.getSomes([present(cue), whole]).join('. ');
 }

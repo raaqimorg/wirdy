@@ -16,6 +16,7 @@ interface Props {
   single?: boolean | undefined;
   nested?: boolean | undefined;
   kind?: 'quran' | undefined;
+  phrases?: boolean | undefined;
   time?: 'sabah' | 'masaa' | undefined;
 }
 
@@ -31,6 +32,7 @@ const {
   single,
   nested,
   kind,
+  phrases,
   time,
 } = Astro.props;
 const Fold = single ? Fragment : 'details';
@@ -43,6 +45,7 @@ const fold = single ? {} : { class: 'entry__more' };
     single && 'entry--single',
     nested && 'entry--nested',
     kind && `entry--${kind}`,
+    phrases && 'entry--phrases',
     time && `entry--${time}`,
   ]}
   id={id}
@@ -73,8 +76,8 @@ const fold = single ? {} : { class: 'entry__more' };
   </div>
   <Fold {...fold}>
     {!single && (
-      <summary class="entry__toggle">
-        <span class="entry__toggle-closed">التخريج والمزيد</span>
+      <summary class="entry__toggle" data-hover="line">
+        <span class="entry__toggle-closed">التخريج</span>
         <span class="entry__toggle-open">إخفاء</span>
         <Icon name="chevron" />
       </summary>
@@ -102,7 +105,7 @@ const fold = single ? {} : { class: 'entry__more' };
           </div>
         )}
       </dl>
-      <slot name="actions" />
+      {!single && <slot name="actions" />}
     </div>
   </Fold>
 </li>

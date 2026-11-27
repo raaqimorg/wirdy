@@ -1,14 +1,15 @@
 .hero {
   display: grid;
   align-items: center;
-  height: var(--size-banner);
+  min-height: var(--size-banner);
+  padding-block: var(--space-4);
   font-size: var(--text-title-1);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
 }
 
 .hero__words {
-  max-width: var(--size-hero);
+  max-width: 24em;
   text-wrap: pretty;
 }
 
@@ -18,8 +19,15 @@
 
 @media (min-width: 64rem) {
   .hero {
-    height: var(--size-banner-wide);
+    min-height: var(--size-banner-wide);
     font-size: var(--text-title-3);
     line-height: var(--leading-tight);
+  }
+}
+
+@media (max-height: 30rem) {
+  .hero {
+    min-height: 0;
+    padding-block: var(--space-6);
   }
 }

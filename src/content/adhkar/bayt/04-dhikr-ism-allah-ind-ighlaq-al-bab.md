@@ -7,7 +7,7 @@ count: 1
 mode: "both"
 quran: false
 when: "إذا جنح الليل، عند إغلاق الباب وإطفاء المصباح وتغطية الإناء"
-group: "البيت ليلًا"
+group: "البيت ليلا"
 takhrij:
   grader: "البخاري"
   source: "صحيح البخاري ٣٢٨٠"

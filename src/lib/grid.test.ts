@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { widthsOf } from './grid';
+import { OCCASION_IDS } from './occasions';
 
 const COUNTS = Array.from({ length: 19 }, (_, index) => index + 2);
 const unitsOf = (count: number) => widthsOf(count).map((width) => (width === 'wide' ? 2 : 1));
@@ -7,6 +8,16 @@ const sum = (units: ReadonlyArray<number>) => units.reduce((total, unit) => tota
 const widesStartingMidRow = (count: number) => {
   const units = unitsOf(count);
   return units.filter((unit, index) => unit === 2 && sum(units.slice(0, index)) % 2 === 1);
+};
+const SECTIONS = OCCASION_IDS.length + 1;
+const rowsOfFour = (count: number) => {
+  const rows: string[] = [];
+  const row: number[] = [];
+  for (const unit of unitsOf(count)) {
+    row.push(unit);
+    if (sum(row) === 4) rows.push(row.splice(0).join(''));
+  }
+  return rows;
 };
 const narrowRuns = (count: number) =>
   widthsOf(count)
@@ -29,6 +40,17 @@ describe('the widths of a card grid', () => {
 
   it.each(COUNTS)('keeps narrow cards in pairs, with %i cards', (count) => {
     expect(narrowRuns(count).filter((run) => run % 2 === 1)).toEqual([]);
+  });
+
+  it('never gives two rows of four the same shape one after the other, on the home page', () => {
+    const rows = rowsOfFour(SECTIONS);
+    expect(rows.filter((row, index) => row === rows[index - 1])).toEqual([]);
+  });
+
+  it('never stacks three wide cards in the grid of two, on the home page', () => {
+    expect(widthsOf(SECTIONS).join(' ').replaceAll('narrow narrow', '|')).not.toContain(
+      'wide wide wide'
+    );
   });
 
   it('starts with a wide card', () => {

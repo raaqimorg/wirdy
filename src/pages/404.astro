@@ -1,15 +1,15 @@
 ---
 import { Effect } from 'effect';
-import Banner from '../components/Banner.astro';
-import SectionBands from '../components/SectionBands.astro';
+import CardGrid from '../components/CardGrid.astro';
+import Hero from '../components/Hero.astro';
 import Home from '../layouts/Home.astro';
-import { bandTiles } from '../lib/collection';
+import { sectionTiles } from '../lib/collection';
 import { SITE } from '../lib/site';
 
-const description = `لم نجد هذه الصفحة في ${SITE.name}. اختر قسمًا من أقسام الأذكار.`;
+const description = `لم نجد هذه الصفحة في ${SITE.name}. اختر قسما من أقسام الأذكار`;
 ---
 
-<Home title="الصفحة غير موجودة" description={description} noindex faces={[]}>
-  <Banner slot="top" title="لم نجد هذه الصفحة" kicker="٤٠٤" lede="اختر قسمًا، أو ابحث عن الذكر" />
-  <SectionBands bands={await Effect.runPromise(bandTiles)} />
+<Home title="الصفحة غير موجودة" description={description} noindex faces={[]} menu={false}>
+  <Hero more="اختر قسما، أو ابحث عن الذكر">لم نجد هذه الصفحة،</Hero>
+  <CardGrid tiles={await Effect.runPromise(sectionTiles)} variant="featured" />
 </Home>

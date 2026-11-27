@@ -40,7 +40,7 @@ const named = [data.context, data.group].find(
   (part) => part !== undefined && part !== occasion.heading
 );
 const parts = [named, times].filter((part) => part !== undefined);
-const lede = parts.length === 0 ? occasion.title : parts.join(' · ');
+const lede = parts.length === 0 ? occasion.title : parts.join('، ');
 const evening = Effect.runSync(eveningTitle(data.title, body));
 
 const description = descriptionOf(card, data.fadl);

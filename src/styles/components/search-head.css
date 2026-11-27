@@ -17,7 +17,7 @@
   height: var(--space-6);
   overflow: hidden;
   background: var(--tone-fill);
-  border-radius: var(--radius-tile);
+  border-radius: var(--radius-medium);
 }
 
 .search-head__tile svg {
@@ -27,11 +27,9 @@
 
 .search-head__name {
   flex: 0 1 auto;
-  padding-bottom: var(--space-lift);
 }
 
 .search-head__count {
-  padding-bottom: var(--space-lift);
   font-weight: var(--weight-medium);
 }
 
@@ -45,5 +43,5 @@
 
 .search-head:first-child,
 :where([hidden]) + .search-head {
-  padding-top: var(--space-1);
+  padding-block-start: var(--space-1);
 }

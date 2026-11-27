@@ -1,5 +1,4 @@
 .mark {
   width: var(--size-mark);
   height: var(--size-mark);
-  translate: 0 var(--icon-drop, 0);
 }

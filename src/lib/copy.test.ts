@@ -50,7 +50,7 @@ describe('copyOf', () => {
   it('gives only the first آية of each سورة, and says to read on, when only it shows', () => {
     const data: Dhikr = { ...base, quran: true, ayat: 'first' };
     expect(copy(data, 'أ\nب\n\nج\nد').sabah).toBe(
-      'أ\n\nج\n\nتُقرأ كل سورة إلى آخرها\nصحيح البخاري (١)'
+      'أ\n\nج\n\nتقرأ كل سورة إلى آخرها\nصحيح البخاري (١)'
     );
   });
 

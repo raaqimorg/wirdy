@@ -12,14 +12,14 @@ export function adhkarLabel(n: number): string {
   if (n === 1) return 'ذكر واحد';
   if (n === 2) return 'ذكران';
   if (isFew(n)) return `${toArabicDigits(n)} أذكار`;
-  return `${toArabicDigits(n)} ذكرًا`;
+  return `${toArabicDigits(n)} ذكرا`;
 }
 
 export function hadithLabel(n: number): string {
   if (n === 1) return 'حديث واحد';
   if (n === 2) return 'حديثان';
   if (isFew(n)) return `${toArabicDigits(n)} أحاديث`;
-  return `${toArabicDigits(n)} حديثًا`;
+  return `${toArabicDigits(n)} حديثا`;
 }
 
 const ORDINALS: Readonly<Record<(typeof FORMS)[number], string>> = {

@@ -14,7 +14,7 @@ The two forms differ in a few words (أصبحنا, أمسينا). The page holds
 
 ## An empty touch listener turns on the press state on iPhones
 
-A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and every other link and button dims to 60% (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds an empty `touchstart` listener.
+A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and every other control answers by its shape (`src/styles/base.css`), so a tap answers on the first frame. iOS Safari applies `:active` only when the page listens for touches, so the inline script in `src/layouts/Paper.astro` adds an empty `touchstart` listener.
 
 - Without it, an iPhone tap shows nothing, because `-webkit-tap-highlight-color: transparent` turns off the grey highlight.
 - The listener is `passive`, so it never delays scrolling.
@@ -69,7 +69,7 @@ Each dhikr has a copy button, in its card's foot and on its page. It copies the 
 - The ordinary way is to select the text. That still works, and gives the count once.
 - `src/lib/copy.ts` writes the copy at build time into `data-copy`, and `data-copy-masaa` for an evening form. The script copies the shown form. So the words are in the page twice.
 - قرآن copies as Tanzil gives it: one آية on each line, a blank line between سور, no ornaments. A dhikr with `counts` gives one phrase on each line, with its count.
-- When the copy works, the button's icon turns into a check, grows from 60%, and turns back after 1.2 seconds (`data-copied`, and `icon--idle` and `icon--done` in `icon.css`). No text shows. A screen reader hears «نُسخ الذكر», or «تعذّر النسخ», from a hidden `role="status"`.
+- When the copy works, the button's icon turns into a check, grows from 60%, and turns back after 1.2 seconds (`data-copied`, and `icon--idle` and `icon--done` in `icon.css`). No text shows. A screen reader hears «نسخ الذكر», or «تعذر النسخ», from a hidden `role="status"`.
 - Without JavaScript, `<noscript>` hides the button.
 
 ## A colored layer sits behind the top of a page with a color
@@ -114,7 +114,7 @@ A promo film for X, TikTok, or Snapchat is one HTML page, `promo/<slug>/film.htm
 Every bar ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the page color, because Safari keeps that color behind the clock. On a wide screen it is a centered panel over a dimmed page. Before typing, it lists six suggestions. Results update as the reader types, grouped by section, each under its emblem, name, and count. Arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, ⌘K, or Ctrl+K opens it. On a wide screen an empty field shows «Esc», in the place the clear button takes once the reader types. The clear button is an eraser, not a cross, so it does not read as «إلغاء», which closes search beside it. The owner asked for it.
 
 - The ordinary way is a link to a search page. There is none: the icon is a button, and without JavaScript `<noscript>` in `src/layouts/Paper.astro` hides it. A tap before the module has loaded is not lost: the inline script in `Paper.astro` marks it with `data-search-pending` on `<html>`, and the module opens the sheet when it mounts.
-- The rows come from one file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). The version is a hash of the rows, so any dhikr change renames it. `_headers` caches it for a year, so no reader sees an old index. The sheet fetches it a second after the page loads, so results are ready as the reader types. Each version costs one download, then the cache serves it. If the fetch fails, the sheet says «تعذّر تحميل البحث، فأعد تحميل الصفحة».
+- The rows come from one file, `/search/<version>.json` (`src/pages/search/[version].json.ts`). The version is a hash of the rows, so any dhikr change renames it. `_headers` caches it for a year, so no reader sees an old index. The sheet fetches it a second after the page loads, so results are ready as the reader types. Each version costs one download, then the cache serves it. If the fetch fails, the sheet says «تعذر تحميل البحث، فأعد تحميل الصفحة».
 - Each group head comes from one `<template>` per section in the page, so the index carries the section id, not its drawing.
 - An ordinary Astro `<script>` imports `src/scripts/search.ts`, which imports `src/lib/search.ts`, so folding, matching, and marking have unit tests. Astro bundles it into `_astro/`, cached for a year. Nothing in it runs before the first paint.
 - The sheet keeps its last query in `sessionStorage` under `search-sheet`, and an empty field that opens takes it back, selected, so typing replaces it.
@@ -165,3 +165,11 @@ The home page, the sections its cards open, and search open at once, and with no
 - A beacon to a Pages Function would add a script to every page and a server to a static site.
 - The job keeps no state. Each run asks Cloudflare again, so a run that GitHub drops or delays changes nothing after it. The hour reported is fixed by the clock, and a retry of a Telegram send never happens, so nothing is sent twice.
 - Every window is at most one day back. The free plan keeps 31.
+
+## The palette reads the tokens
+
+`src/lib/palette.ts` reads the colors it needs (the paper by day and night, the panel, eggshell, and the inks) from `src/styles/tokens.css` when the build loads it, so each color is written once. The theme-color metas, the mark, the manifest, and the generated cards use it.
+
+- The ordinary way is to write the colors twice, in the CSS and in TypeScript, and keep them equal with a test.
+- It runs only at build time, in Node. No page ships it.
+- Three values stay in it: the black of a shade, and the petal and the disc of the mark, which no stylesheet uses.

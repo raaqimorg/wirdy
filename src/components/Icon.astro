@@ -1,5 +1,5 @@
 ---
-import { ICONS, type IconName } from '../lib/icons';
+import { ICON_GRID, ICONS, type IconName } from '../lib/icons';
 
 interface Props {
   name: IconName;
@@ -7,13 +7,12 @@ interface Props {
 }
 
 const { name, class: className } = Astro.props;
-const { size, stroke, paths } = ICONS[name];
+const { paths } = ICONS[name];
 ---
 
 <svg
-  class:list={['icon', stroke && 'icon--line', className]}
-  viewBox={`0 0 ${size} ${size}`}
-  stroke-width={stroke}
+  class:list={['icon', 'icon--line', className]}
+  viewBox={`0 0 ${ICON_GRID} ${ICON_GRID}`}
   aria-hidden="true"
 >
   {paths.map((d) => (

@@ -1,35 +1,46 @@
 .button {
-  --icon-drop: var(--drop);
+  --icon-stroke: var(--stroke-icon-bold);
 
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: var(--size-button);
-  padding-bottom: var(--space-lift);
+  min-height: var(--size-control);
   padding-inline: var(--space-3);
   color: inherit;
   background: var(--color-panel);
   border: 0;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-large);
   font-family: var(--font-ui);
   font-size: var(--text-note);
   font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
   text-decoration: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.button:focus-visible {
-  outline: var(--border-ring) solid var(--color-ink);
-  outline-offset: var(--ring-gap);
-}
-
-.button:active {
-  opacity: var(--opacity-pressed);
-}
-
 .button--primary {
   color: var(--color-eggshell);
   background: var(--tone-fill);
+}
+
+.button--text,
+.button--icon {
+  --ring-offset: var(--ring-inset);
+
+  min-height: var(--size-touch);
+  padding-inline: var(--space-2);
+  color: inherit;
+  background: none;
+  font-weight: var(--weight-medium);
+}
+
+.button--icon {
+  width: var(--size-touch);
+  padding: 0;
+}
+
+.button[hidden] {
+  display: none;
 }

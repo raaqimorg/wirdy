@@ -224,17 +224,24 @@ const structuredData = {
         });
 
         const resetting = new WeakMap();
-        function copied(button, words) {
+        function answer(button, words, state) {
           say(button, words);
           const { dataset } = button;
-          dataset.copied = 'yes';
+          const label = button.querySelector('[data-label]');
+          if (label && dataset.rest === undefined) dataset.rest = label.textContent;
+          if (label) label.textContent = words;
+          dataset.copied = state;
           clearTimeout(resetting.get(button));
           resetting.set(
             button,
             setTimeout(function () {
               dataset.copied = 'no';
-            }, 1200)
+              if (label) label.textContent = dataset.rest;
+            }, 2500)
           );
+        }
+        function copied(button, words) {
+          answer(button, words, 'yes');
         }
         function say(from, words) {
           const said = from.parentElement.querySelector('[data-status]');
@@ -259,10 +266,10 @@ const structuredData = {
               : Promise.reject(new Error('no clipboard'));
             done.then(
               function () {
-                return copied(copy, 'نُسخ الذكر');
+                return copied(copy, 'نسخ الذكر');
               },
               function () {
-                say(copy, 'تعذّر النسخ');
+                answer(copy, 'تعذر النسخ', 'failed');
               }
             );
           }
@@ -276,7 +283,7 @@ const structuredData = {
             event.preventDefault();
             navigator.clipboard.writeText(url).then(
               function () {
-                return copied(share, 'نُسخ الرابط');
+                return copied(share, 'نسخ الرابط');
               },
               function () {
                 location.href = url;

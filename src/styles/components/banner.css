@@ -1,17 +1,18 @@
 .banner__inner {
   display: flex;
   gap: var(--space-3);
-  height: var(--size-banner);
+  min-height: var(--size-banner);
 }
 
 .banner--stage {
   background: var(--tone-fill);
   color: var(--color-eggshell);
-  border-radius: 0 0 var(--radius-card) var(--radius-card);
+  border-end-start-radius: var(--radius-large);
+  border-end-end-radius: var(--radius-large);
 }
 
 .banner--stage .banner__inner {
-  padding-block: var(--space-3) var(--space-5);
+  padding-block: var(--space-3) var(--space-6);
 }
 
 .banner__words {
@@ -22,19 +23,19 @@
 }
 
 .banner__kicker {
-  margin-bottom: auto;
+  margin-block-end: auto;
   font-size: var(--text-note);
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
 }
 
 .banner__up {
-  --icon-drop: 0;
+  --ring-color: currentColor;
 
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1-5);
+  gap: var(--space-2);
   text-decoration: none;
 }
 
@@ -42,14 +43,6 @@
   content: "";
   position: absolute;
   inset: calc(var(--space-3) * -1);
-}
-
-.banner__up-label {
-  padding-bottom: var(--space-lift);
-}
-
-.banner__up:focus-visible {
-  outline-color: currentColor;
 }
 
 .banner__title {
@@ -64,34 +57,23 @@
 }
 
 .banner__lede {
-  margin-top: var(--space-1-5);
+  margin-block-start: var(--space-2);
   font-size: var(--text-note);
   line-height: var(--leading-snug);
   text-wrap: pretty;
 }
 
-.banner--plain .banner__words {
-  justify-content: center;
-}
-
-.banner--plain .banner__kicker {
-  margin-bottom: var(--space-1-5);
-}
-
-.banner--plain .banner__kicker,
-.banner--plain .banner__lede {
-  color: var(--color-ink-muted);
-}
-
 .banner__graphic {
   flex: none;
   align-self: center;
-  width: var(--size-graphic);
+  width: clamp(3.5rem, 52vw - 6.5rem, 6.5rem);
   aspect-ratio: 1;
 }
 
-.banner--turns .banner__graphic {
-  transition: transform var(--duration-enter) var(--spring);
+@media (prefers-reduced-motion: no-preference) {
+  .banner--turns .banner__graphic {
+    transition: transform var(--duration-enter) var(--spring);
+  }
 }
 
 :root[data-wird="m"] .banner--turns .banner__graphic {
@@ -101,15 +83,15 @@
 @media (min-width: 64rem) {
   .banner__inner {
     gap: var(--space-10);
-    height: var(--size-banner-wide);
+    min-height: var(--size-banner-wide);
   }
 
   .banner__graphic {
-    width: var(--size-graphic-wide);
+    width: 12.5rem;
   }
 
   .banner--stage .banner__inner {
-    padding-block: var(--space-6) var(--space-9);
+    padding-block: var(--space-6) var(--space-10);
   }
 
   .banner__title {
@@ -121,13 +103,21 @@
   }
 
   .banner__lede {
-    margin-top: var(--space-2);
+    margin-block-start: var(--space-2);
     font-size: var(--text-title-1);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .banner--turns .banner__graphic {
-    transition: none;
+@media (max-height: 30rem) {
+  .banner__inner {
+    min-height: 0;
+  }
+
+  .banner__kicker {
+    margin-block-end: var(--space-2);
+  }
+
+  .banner__graphic {
+    display: none;
   }
 }

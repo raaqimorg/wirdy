@@ -10,11 +10,11 @@
   --color-line-soft: color-mix(in oklab, var(--color-line), transparent 55%);
   --color-eggshell: #f4f1d0;
   --color-brighten: white;
-  --color-thumb: var(--color-panel);
   --color-track: color-mix(in oklab, var(--color-ink), transparent 92%);
   --color-scrim: rgb(0 0 0 / 0.3);
   --color-mark: color-mix(in oklab, #d2a249, var(--color-panel) 62%);
   --tone-shade: 0%;
+  --tone-lift: 0%;
   --tone-ink: 30%;
 
   --font-ui: "IBM Plex Sans Arabic", system-ui, sans-serif;
@@ -24,107 +24,79 @@
   --weight-medium: 500;
   --weight-bold: 700;
 
-  --text-bead: 11px;
   --text-small: 0.8125rem;
   --text-note: 0.9375rem;
   --text-body: 1.0625rem;
-  --text-title-1: 1.333rem;
-  --text-title-2: 1.777rem;
-  --text-title-3: 2.369rem;
-  --text-title-4: 3.157rem;
+  --text-title-1: 1.25rem;
+  --text-title-2: 1.75rem;
+  --text-title-3: 2.125rem;
+  --text-title-4: 3rem;
   --text-title-fluid: clamp(1.25rem, 7vw, var(--text-title-2));
   --text-title-long: clamp(1.0625rem, 5vw, var(--text-title-1));
   --text-reading-2: 1.5rem;
-  --text-reading-3: 1.75rem;
-  --text-reading-4: 2rem;
 
   --leading-tight: 1.3;
   --leading-snug: 1.5;
-  --leading-body: 1.6;
-  --leading-relaxed: 1.7;
-  --leading-reading-small: 1.9;
   --leading-reading: 2.05;
   --leading-quran: 2.5;
 
-  --space-0-5: 0.125rem;
   --space-1: 0.25rem;
-  --space-1-5: 0.375rem;
   --space-2: 0.5rem;
-  --space-2-5: 0.625rem;
   --space-3: 0.75rem;
-  --space-3-5: 0.875rem;
   --space-4: 1rem;
-  --space-4-5: 1.125rem;
-  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
-  --space-9: 2.25rem;
   --space-10: 2.5rem;
   --space-16: 4rem;
   --space-gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
-  --space-track: 3px;
-  --space-lift: 0.14em;
-  --space-lift-brand: 0.2em;
-  --space-badge-block: 0.2rem;
-  --space-badge-inline: 0.7rem;
-  --space-badge-inline-count: 0.6rem;
+  --space-track: 0.25rem;
 
   --size-page: 76rem;
   --size-reading: 46rem;
-  --size-hero: 24em;
-  --size-footer: 44rem;
   --size-touch: 2.75rem;
-  --size-button: 3rem;
   --size-mark: 1.75rem;
-  --size-icon: 0.75em;
+  --size-icon: 1em;
   --size-icon-medium: 1rem;
   --size-icon-large: 1.125rem;
   --size-thumb: 6rem;
   --size-thumb-small: 5rem;
   --size-thumb-fluid: 25vw;
-  --size-action: 5.5rem;
-  --size-action-wide: 9rem;
-  --size-side: 18rem;
   --size-menu: 20rem;
   --size-under: 50vh;
-  --size-spotlight: 40rem;
-  --size-spotlight-top: 12vh;
   --size-bar: 3.25rem;
   --size-tile: 1.875rem;
-  --size-row: 3rem;
+  --size-control: 3rem;
   --size-label: 3.5rem;
   --size-banner: 12rem;
   --size-banner-wide: 16rem;
-  --size-stage: 8.5rem;
-  --size-stage-wide: 12rem;
   --size-icon-bar: 1.375rem;
-  --size-graphic: clamp(3.5rem, 52vw - 6.5rem, 6.5rem);
-  --size-graphic-wide: 12.5rem;
 
-  --shadow-thumb: 0 1px 3px rgb(0 0 0 / 0.14);
   --shadow-menu: 0 12px 40px -8px rgb(0 0 0 / 0.45), 0 0 0 1px var(--color-line-soft);
 
-  --radius-focus: 4px;
-  --radius-card: 0.8rem;
-  --radius-tile: 0.5rem;
-  --radius-menu: 1.25rem;
-  --radius-pill: 99px;
+  --radius-small: 4px;
+  --radius-large: 0.75rem;
+  --radius-medium: 0.5rem;
+  --radius-xlarge: 1.25rem;
+  --radius-full: 99px;
 
   --border-hairline: 1px;
   --border-ring: 2px;
-  --ring-gap: 0.25em;
-  --ring-gap-small: 2px;
+  --stroke-icon: 1.5px;
+  --stroke-icon-bold: 2px;
+  --ring-gap: 0.25rem;
   --ring-inset: -2px;
   --underline-gap-wide: 0.35em;
-  --drop: 0.07em;
 
   --layer-under: -1;
   --layer-raised: 1;
   --layer-bar: 5;
   --layer-skip: 6;
 
-  --opacity-pressed: 0.6;
+  --shadow-hover: inset 0 0 0 100vmax color-mix(in oklab, currentColor, transparent 92%);
+  --shadow-pressed: inset 0 0 0 100vmax color-mix(in oklab, currentColor, transparent 82%);
   --opacity-quiet: 0.82;
+  --opacity-hover: 0.72;
+  --opacity-pressed: 0.56;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --spring: linear(
     0,
@@ -153,27 +125,22 @@
     0.997,
     1
   );
-  --duration-press: 60ms;
-  --duration-enter-fade: 160ms;
-  --duration-enter-delay: 180ms;
+  --duration-press: 100ms;
   --duration-fade: 200ms;
-  --duration-brighten: 250ms;
-  --duration-release: 270ms;
-  --duration-hover: 405ms;
-  --duration-enter: 607ms;
-  --duration-found: 1.6s;
+  --duration-release: 300ms;
+  --duration-enter: 500ms;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --color-paper: #060f13;
     --color-panel: hsl(200 32% 15%);
-    --color-thumb: hsl(200 20% 32%);
     --color-ink: hsl(55 62% 89%);
     --color-ink-muted: hsl(60 10% 72%);
     --color-ink-faint: hsl(200 14% 57%);
     --color-line: hsl(60 10% 82% / 0.3);
     --tone-shade: 10%;
+    --tone-lift: 3%;
     --tone-ink: 45%;
   }
 }
@@ -183,12 +150,12 @@
 
   --color-paper: #060f13;
   --color-panel: hsl(200 32% 15%);
-  --color-thumb: hsl(200 20% 32%);
   --color-ink: hsl(55 62% 89%);
   --color-ink-muted: hsl(60 10% 72%);
   --color-ink-faint: hsl(200 14% 57%);
   --color-line: hsl(60 10% 82% / 0.3);
   --tone-shade: 10%;
+  --tone-lift: 3%;
   --tone-ink: 45%;
 }
 
@@ -198,6 +165,7 @@
 
 .tone {
   --tone-fill: color-mix(in oklab, var(--tone), black var(--tone-shade));
+  --tone-select: color-mix(in oklab, var(--tone), white var(--tone-lift));
   --tone-text: color-mix(in oklab, var(--tone), var(--color-ink) var(--tone-ink));
   --tone-wash: color-mix(in oklab, var(--tone), var(--color-panel) 82%);
   --tone-flash: color-mix(in oklab, var(--tone), var(--color-panel) 40%);

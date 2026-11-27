@@ -5,69 +5,12 @@
   animation: fade var(--duration-fade) var(--ease-out) both;
 }
 
-.emblem [data-enter] {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation:
-    emblem-grow var(--duration-enter) var(--spring) var(--duration-enter-delay) both,
-    fade var(--duration-enter-fade) var(--ease-out) var(--duration-enter-delay) both;
-}
-
-.emblem [data-enter="up"] {
-  animation-name: emblem-up, fade;
-  transform-origin: bottom;
-}
-
-.emblem [data-enter="across"] {
-  animation-name: emblem-across, fade;
-}
-
-.emblem [data-enter="turn"] {
-  animation-name: emblem-turn, fade;
-}
-
-.emblem [data-enter="fade"] {
-  animation-name: fade, fade;
-}
-
-.emblem--still,
-.emblem--still [data-enter] {
+.emblem--still {
   animation: none;
 }
 
 @media (max-width: 63.99rem) {
-  .emblem--wide-only,
-  .emblem--wide-only [data-enter] {
+  .emblem--wide-only {
     animation: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .emblem [data-enter] {
-    animation: none;
-  }
-}
-
-@keyframes emblem-grow {
-  from {
-    transform: scale(0.6);
-  }
-}
-
-@keyframes emblem-up {
-  from {
-    transform: scaleY(0.1);
-  }
-}
-
-@keyframes emblem-across {
-  from {
-    transform: scaleX(0);
-  }
-}
-
-@keyframes emblem-turn {
-  from {
-    transform: rotate(26deg);
   }
 }

@@ -3,11 +3,19 @@
   width: var(--icon-size, var(--size-icon));
   height: var(--icon-size, var(--size-icon));
   fill: currentColor;
-  translate: 0 var(--icon-drop, 0);
 }
 
-.icon--done {
+.icon--done,
+.icon--fail {
   display: none;
+}
+
+[data-copied="failed"] .icon--idle {
+  display: none;
+}
+
+[data-copied="failed"] .icon--fail {
+  display: block;
 }
 
 [data-copied="yes"] .icon--idle {
@@ -35,6 +43,11 @@
 .icon--line {
   fill: none;
   stroke: currentColor;
+  stroke-width: var(--icon-stroke, var(--stroke-icon));
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.icon--line path {
+  vector-effect: non-scaling-stroke;
 }

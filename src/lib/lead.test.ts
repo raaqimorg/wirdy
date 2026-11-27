@@ -62,7 +62,7 @@ describe('leadOf', () => {
   it('joins the time, the moment, and the read-to-the-end line', () => {
     const data: Dhikr = { ...base, mode: 'masaa', when: 'إذا أوى إلى فراشه', ayat: 'first' };
     expect(leadOf(data, Option.some([['أ']]))).toBe(
-      'في المساء، إذا أوى إلى فراشه. تُقرأ إلى آخر السورة'
+      'في المساء، إذا أوى إلى فراشه. تقرأ إلى آخر السورة'
     );
   });
 
@@ -87,7 +87,7 @@ describe('fullLeadOf', () => {
   it('adds the manner after the moment, for a card that stands alone', () => {
     const data: Dhikr = { ...base, when: 'إذا أخذ مضجعه', how: 'متوضئًا', ayat: 'first' };
     expect(fullLeadOf(data, Option.some([['أ']]))).toBe(
-      'إذا أخذ مضجعه، متوضئًا. تُقرأ إلى آخر السورة'
+      'إذا أخذ مضجعه، متوضئًا. تقرأ إلى آخر السورة'
     );
   });
 });
