@@ -139,7 +139,7 @@ describe('Dhikr', () => {
     const html = await render({ ...base, quran: true, from: [7] }, 'أ\nب\nج\nد');
     expect(html.match(/class="surah"/gu)).toHaveLength(1);
     expect(html).toContain(
-      `<div class="surah">أ<span class="surah__ayah-end" data-ayah="۝٧"></span>ب<span class="surah__ayah-end" data-ayah="۝٨"></span>ج<span class="surah__ayah-end" data-ayah="۝٩"></span>د<span class="surah__ayah-end" data-ayah="۝١٠"></span></div>`
+      `<div class="surah">أ<span class="surah__ayah-end" data-ayah="۝٧"></span> ب<span class="surah__ayah-end" data-ayah="۝٨"></span> ج<span class="surah__ayah-end" data-ayah="۝٩"></span> د<span class="surah__ayah-end" data-ayah="۝١٠"></span></div>`
     );
   });
 
@@ -149,8 +149,16 @@ describe('Dhikr', () => {
       `<div class="surah">أ<span class="surah__ayah-end" data-ayah="۝٢٥٥"></span></div>`
     );
     expect(html).toContain(
-      `<div class="surah">ب<span class="surah__ayah-end" data-ayah="۝١"></span>ج<span class="surah__ayah-end" data-ayah="۝٢"></span></div>`
+      `<div class="surah">ب<span class="surah__ayah-end" data-ayah="۝١"></span> ج<span class="surah__ayah-end" data-ayah="۝٢"></span></div>`
     );
+  });
+
+  it('keeps each آية a word apart from the next in the text a reader hears', async () => {
+    const html = await render({ ...base, quran: true, ayat: 'fold' }, ['أ', 'ب', 'ج'].join('\n'));
+    const text = html
+      .match(/<div class="surah[^"]*">[\s\S]*?<\/div>/u)![0]
+      .replaceAll(/<[^>]*>/gu, '');
+    expect(text).toBe('أ ب ج');
   });
 
   it('keeps the ﴿﴾ ۝ ۞ out of the text a reader copies or hears', async () => {
