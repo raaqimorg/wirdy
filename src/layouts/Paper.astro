@@ -316,8 +316,8 @@ const structuredData = {
           matchMedia('(pointer: coarse)').matches &&
           Boolean(navigator.canShare) &&
           navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] });
-        const fetched = new Map();
-        let poster = null;
+        const fetched = new Set();
+        const ready = new Map();
         function pick(option) {
           const group = option.parentElement.children;
           for (let i = 0; i < group.length; i += 1)
@@ -338,19 +338,21 @@ const structuredData = {
           link.download = name;
           const choice = menu.querySelector('[data-poster-choice]');
           choice.textContent = `${format.dataset.title}، ${theme.dataset.title}`;
-          if (!sharesFiles) return;
-          if (!fetched.has(href))
-            fetched.set(
-              href,
-              fetch(href)
-                .then(function (response) {
-                  return response.blob();
-                })
-                .then(function (blob) {
-                  return new File([blob], name, { type: 'image/png' });
-                })
+          if (!sharesFiles || fetched.has(href)) return;
+          fetched.add(href);
+          fetch(href)
+            .then(function (response) {
+              if (!response.ok) throw new Error(String(response.status));
+              return response.blob();
+            })
+            .then(
+              function (blob) {
+                return ready.set(href, new File([blob], name, { type: 'image/png' }));
+              },
+              function () {
+                return fetched.delete(href);
+              }
             );
-          poster = fetched.get(href);
         }
         document.addEventListener(
           'toggle',
@@ -375,20 +377,12 @@ const structuredData = {
           const link = event.target.closest('[data-poster-save]');
           if (!link) return;
           posterOf(menu);
-          if (!poster || link.dataset.saving !== undefined) {
-            delete link.dataset.saving;
-            return;
-          }
+          const file = ready.get(link.getAttribute('href'));
+          if (!file) return;
           event.preventDefault();
-          poster
-            .then(function (file) {
-              return navigator.share({ files: [file] });
-            })
-            .catch(function (error) {
-              if (error.name === 'AbortError') return;
-              link.dataset.saving = '';
-              link.click();
-            });
+          navigator.share({ files: [file] }).catch(function (error) {
+            if (error.name !== 'AbortError') location.assign(link.href);
+          });
         });
       })();
     </script>
