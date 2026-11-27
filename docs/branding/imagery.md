@@ -34,13 +34,13 @@ Each section has one emblem in `src/lib/emblems.ts`. Every emblem is:
 
 Every page has a card for link previews: 1200 by 630, drawn at twice the scale (2400 by 1260), so it stays sharp after a chat app compresses it.
 
-| Card           | File                                | What it shows                                                                                                 | Made by                    |
-| -------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| Home           | `public/opengraph/home-<print>.png` | The mark, the name, and the domain on paper, beside every section's emblem in a 3 by 3 mosaic of their colors | `bun run opengraph`        |
-| A section      | `public/opengraph/<id>-<print>.png` | The navbar's mark and name, the section `title`, its count, and its emblem, on its color                      | `bun run opengraph`        |
-| A dhikr        | `public/og/<id>/<slug>-<print>.png` | The section, the title, the count, the words, the moment, and the takhrij                                     | `bun run opengraph:adhkar` |
-| A hadith       | `public/og/tibb/<slug>-<print>.png` | The section, the title, the words, the narrator, and the takhrij                                              | `bun run opengraph:adhkar` |
-| Search and 404 | `public/opengraph/home-<print>.png` | The home card                                                                                                 |                            |
+| Card           | File                                | What it shows                                                                                                                                                 | Made by                    |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Home           | `public/opengraph/home-<print>.png` | The mark, the name, and the home sentence in two inks on paper, in the centre square, between the 16 home sections, eight a side, in their colors and emblems | `bun run opengraph`        |
+| A section      | `public/opengraph/<id>-<print>.png` | The navbar's mark and name, the section `title`, its count, and its emblem, on its color                                                                      | `bun run opengraph`        |
+| A dhikr        | `public/og/<id>/<slug>-<print>.png` | The section, the title, the count, the words, the moment, and the takhrij                                                                                     | `bun run opengraph:adhkar` |
+| A hadith       | `public/og/tibb/<slug>-<print>.png` | The section, the title, the words, the narrator, and the takhrij                                                                                              | `bun run opengraph:adhkar` |
+| Search and 404 | `public/opengraph/home-<print>.png` | The home card                                                                                                                                                 |                            |
 
 - Every card shows the mark, «وِردي», and `wirdy.site`.
 - A dhikr card carries its takhrij, because an image travels without its page ([`exceptions.md`](../exceptions.md#each-dhikr-has-a-card-named-by-its-fingerprint)).

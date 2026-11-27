@@ -14,6 +14,7 @@ Every brand color, and the rule that makes each section's color. Read it before 
 | `eggshell`  | `#f4f1d0`          | Text and drawings on a section color, the lit shape of an emblem |
 | `ink`       | `hsl(200 50% 5%)`  | Text                                                             |
 | `inkMuted`  | `hsl(200 40% 22%)` | Secondary text                                                   |
+| `inkFaint`  | `hsl(200 12% 35%)` | The second ink of the home sentence, on the page and its card    |
 | `shade`     | `#000`             | The dark shapes of an emblem, always at a low opacity            |
 | `petal`     | `#d2a249`          | The petals of the mark. The one color outside the rule below     |
 | `disc`      | `#91593c`          | The disc of the mark. It equals the color of «الصباح والمساء»    |
