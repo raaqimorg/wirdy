@@ -12,27 +12,28 @@ The icon, card, poster, and promo scripts need a Chromium browser (Brave, Chrome
 
 ## Commands
 
-| Command                    | What it does                                                   |
-| -------------------------- | -------------------------------------------------------------- |
-| `bun run dev`              | Serves the site locally.                                       |
-| `bun run build`            | Builds the site into `dist/`.                                  |
-| `bun run preview`          | Serves the built site.                                         |
-| `bun run ci`               | The full gate: format, lint, types, and the three test suites. |
-| `bun run format`           | Formats the code (oxfmt, and Prettier for `.astro`).           |
-| `bun run lint`             | Generates the Astro types, then runs oxlint and stylelint.     |
-| `bun run check`            | Runs `astro check`, the type check.                            |
-| `bun run test`             | Runs the unit tests ([`testing.md`](testing.md)).              |
-| `bun run verification`     | Lists the proven adhkar, and what the others lack.             |
-| `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                     |
-| `bun run opengraph`        | Draws the cards of the home page and each section.             |
-| `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.         |
-| `bun run posters`          | Draws each missing section poster, and deletes stale ones.     |
-| `bun run promo:check <f>`  | Names what in a promo film breaks its rules.                   |
-| `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.       |
-| `bun run promo:render <f>` | Renders a promo film to `out/<slug>.mp4` (`--draft`: half).    |
-| `bun run promo:clip`       | Turns a simulator recording into a clip a film can seek.       |
-| `bun run visits`           | Sends the owner the visits of the last hour on Telegram.       |
-| `bun run visits:deploy`    | Deploys the Worker that sends the visits every hour.           |
+| Command                    | What it does                                                      |
+| -------------------------- | ----------------------------------------------------------------- |
+| `bun run dev`              | Serves the site locally.                                          |
+| `bun run build`            | Builds the site into `dist/`.                                     |
+| `bun run preview`          | Serves the built site.                                            |
+| `bun run ci`               | The full gate: format, lint, types, and the three test suites.    |
+| `bun run format`           | Formats the code (oxfmt, and Prettier for `.astro`).              |
+| `bun run lint`             | Generates the Astro types, then runs oxlint and stylelint.        |
+| `bun run check`            | Runs `astro check`, the type check.                               |
+| `bun run test`             | Runs the unit tests ([`testing.md`](testing.md)).                 |
+| `bun run verification`     | Lists the proven adhkar, and what the others lack.                |
+| `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                        |
+| `bun run opengraph`        | Draws the cards of the home page and each section.                |
+| `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.            |
+| `bun run posters`          | Draws each missing section poster, and deletes stale ones.        |
+| `bun run gallery`          | Serves every image in `public/` on one page, at `localhost:4400`. |
+| `bun run promo:check <f>`  | Names what in a promo film breaks its rules.                      |
+| `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.          |
+| `bun run promo:render <f>` | Renders a promo film to `out/<slug>.mp4` (`--draft`: half).       |
+| `bun run promo:clip`       | Turns a simulator recording into a clip a film can seek.          |
+| `bun run visits`           | Sends the owner the visits of the last hour on Telegram.          |
+| `bun run visits:deploy`    | Deploys the Worker that sends the visits every hour.              |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
 

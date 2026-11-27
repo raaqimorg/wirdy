@@ -20,4 +20,4 @@ The code holds the values, and this folder says what they are and why. `src/lib/
 - No color is typed by hand outside `tokens.css` and `palette.ts`. A section's color comes from its place on the list ([Color](color.md)).
 - The adhkar and the Quran are in KFGQPC Naskh, the ۝ in KFGQPC Hafs, and the rest in IBM Plex Sans Arabic.
 - Every page title ends with « | وِردي». Every link preview carries a 2400 by 1260 card.
-- Never edit generated files by hand: run `bun run icons`, `bun run opengraph`, `bun run opengraph:adhkar`, and `bun run posters`.
+- Never edit generated files by hand: run `bun run icons`, `bun run opengraph`, `bun run opengraph:adhkar`, and `bun run posters`. Run `bun run gallery` to see them all on one page.
