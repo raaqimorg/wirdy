@@ -258,3 +258,10 @@
     transition: rotate var(--duration-release) var(--spring);
   }
 }
+
+@media (forced-colors: active) {
+  .entry {
+    outline: var(--border-hairline) solid canvastext;
+    outline-offset: calc(var(--border-hairline) * -1);
+  }
+}

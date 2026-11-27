@@ -6,20 +6,28 @@ Every brand color, and the rule that makes each section's color. Read it before 
 
 `src/lib/palette.ts` holds these, and `src/styles/tokens.css` the same values for CSS. A test keeps the two equal, and `src/lib/branding.test.ts` keeps this table equal to them.
 
-| Key         | Value              | What it is                                                       |
-| ----------- | ------------------ | ---------------------------------------------------------------- |
-| `paper`     | `#d6d6cd`          | The page in light mode, and the browser bar                      |
-| `paperDark` | `#060f13`          | The page in dark mode, and the browser bar                       |
-| `panel`     | `hsl(60 10% 92%)`  | A card on the paper                                              |
-| `eggshell`  | `#f4f1d0`          | Text and drawings on a section color, the lit shape of an emblem |
-| `ink`       | `hsl(200 50% 5%)`  | Text                                                             |
-| `inkMuted`  | `hsl(200 40% 22%)` | Secondary text                                                   |
-| `inkFaint`  | `hsl(200 12% 35%)` | The second ink of the home sentence, on the page and its card    |
-| `shade`     | `#000`             | The dark shapes of an emblem, always at a low opacity            |
-| `petal`     | `#d2a249`          | The petals of the mark. The one color outside the rule below     |
-| `disc`      | `#91593c`          | The disc of the mark. It equals the color of «الصباح والمساء»    |
+| Key             | Value                     | What it is                                                       |
+| --------------- | ------------------------- | ---------------------------------------------------------------- |
+| `paper`         | `#d6d6cd`                 | The page in light mode, and the browser bar                      |
+| `paperDark`     | `#060f13`                 | The page in dark mode, and the browser bar                       |
+| `panel`         | `hsl(60 10% 92%)`         | A card on the paper                                              |
+| `panelDark`     | `hsl(200 32% 15%)`        | A card on the paper in dark mode, and a dark poster              |
+| `eggshell`      | `#f4f1d0`                 | Text and drawings on a section color, the lit shape of an emblem |
+| `ink`           | `hsl(200 50% 5%)`         | Text                                                             |
+| `inkDark`       | `hsl(55 62% 89%)`         | Text in dark mode                                                |
+| `inkMuted`      | `hsl(200 40% 22%)`        | Secondary text                                                   |
+| `inkMutedDark`  | `hsl(60 10% 72%)`         | Secondary text in dark mode                                      |
+| `inkFaint`      | `hsl(200 12% 35%)`        | The second ink of the home sentence, on the page and its card    |
+| `line`          | `hsl(200 30% 20% / 0.35)` | A rule between parts, and the columns of a poster                |
+| `lineDark`      | `hsl(60 10% 82% / 0.3)`   | The same rule in dark mode                                       |
+| `toneInk`       | `30%`                     | The ink a section color takes to become text on a panel          |
+| `toneInkDark`   | `45%`                     | The same share at night                                          |
+| `toneShadeDark` | `10%`                     | The black a section color takes at night                         |
+| `shade`         | `#000`                    | The dark shapes of an emblem, always at a low opacity            |
+| `petal`         | `#d2a249`                 | The petals of the mark. The one color outside the rule below     |
+| `disc`          | `#91593c`                 | The disc of the mark. It equals the color of «الصباح والمساء»    |
 
-Dark mode changes the paper, the panel, and the ink in `tokens.css`, not the mark, the eggshell, or a section's hue. At night a section color takes 10% black, so it does not glare.
+Dark mode changes the paper, the panel, the inks, and the line in `tokens.css`, not the mark, the eggshell, or a section's hue. At night a section color takes 10% black, so it does not glare. The dark keys exist for the posters, which draw a dark paper outside the page, so they read the same tokens the page does.
 
 ## The color of a section
 

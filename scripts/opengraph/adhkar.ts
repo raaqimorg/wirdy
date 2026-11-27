@@ -57,7 +57,7 @@ ${hafs()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
 body.unfit{outline:12px solid red;outline-offset:-12px}
-body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.ink} 30%);font-family:"Plex",sans-serif;font-weight:500;background:${PALETTE.panel};color:${PALETTE.ink};display:flex;flex-direction:column}
+body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.ink} ${PALETTE.toneInk});font-family:"Plex",sans-serif;font-weight:500;background:${PALETTE.panel};color:${PALETTE.ink};display:flex;flex-direction:column}
 .top{flex:none;display:flex;align-items:center;gap:26px;height:152px;padding:0 56px;background:var(--tone);color:${PALETTE.eggshell}}
 .top svg{flex:none;width:104px;height:104px}
 .names{flex:1;min-width:0;padding-bottom:8px}
@@ -65,7 +65,7 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 .title{font-weight:700;line-height:1.4;white-space:nowrap}
 .context{font-size:.6em;font-weight:500;opacity:.82}
 .stacked .context{display:block;font-size:26px;line-height:1.3}
-.count{flex:none;padding:8px 30px 13px;font-size:36px;font-weight:700;line-height:1.35;color:color-mix(in oklab,var(--tone),black 35%);background:${PALETTE.eggshell};border-radius:99px}
+.count{flex:none;padding:8px 30px 13px;font-size:36px;font-weight:700;line-height:1.35;color:color-mix(in oklab,var(--tone),${PALETTE.shade} 35%);background:${PALETTE.eggshell};border-radius:99px}
 .main{flex:1;min-height:0;display:flex;flex-direction:column;padding:22px 56px 0}
 .lead{font-size:28px;font-weight:700;line-height:1.5;color:var(--tone-text)}
 .box{flex:1;min-height:0;display:flex;align-items:center}

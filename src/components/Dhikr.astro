@@ -6,7 +6,7 @@ import Phrase from './Phrase.astro';
 import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
 import { Effect, Option } from 'effect';
-import { timesLabel } from '../lib/arabic';
+import { surahLabel, timesLabel } from '../lib/arabic';
 import { copyOf } from '../lib/copy';
 import { foldOf, mannerOf, momentOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
@@ -63,7 +63,12 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
 >
   <Fragment>
     {folds.map(({ shown, rest }, i) => (
-      <Surah ayat={shown} rest={rest} from={data.from?.[i] ?? 1} />
+      <Surah
+        ayat={shown}
+        rest={rest}
+        from={data.from?.[i] ?? 1}
+        place={folds.length > 1 ? surahLabel(i + 1) : undefined}
+      />
     ))}
     {phrases.map((phrase) => (
       <Phrase {...phrase} />

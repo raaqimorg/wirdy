@@ -45,7 +45,7 @@ Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with 
 - Grow a shape from 60%, not from nothing (Apple's Replace for SF Symbols).
 - An emblem fades in whole, once, in 200 ms. Its shapes do not enter one by one on every page.
 - Animate nothing out of sight. On the home page only the first 3 cards animate, or 6 on a wide screen. The «بقية الأقسام» cards do not.
-- On hover a card brightens and grows 2%. A press shrinks it to 97% at once, on iPhones too ([`exceptions.md`](exceptions.md)). The card scales its face, `.occasion-card__face`, never the link, so the link stays under the pointer: a click near the edge of a shrinking link used to land outside it and open nothing.
+- On hover a card brightens and grows 2%. A press shrinks it to 97% at once, with a mouse over it and on iPhones too ([`exceptions.md`](exceptions.md)). The card scales its face, `.occasion-card__face`, never the link, so the link stays under the pointer: a click near the edge of a shrinking link used to land outside it and open nothing.
 - Any other control answers by its shape ([`design-system.md`](design-system.md#states)): a fill tints, text underlines, an icon dims. A press answers at once, with no transition.
 - The morning and evening sun turns half a circle when the form changes: its lit half above in the morning, below in the evening.
 - The section menu grows from the bar, 94% to full size, as it fades in.

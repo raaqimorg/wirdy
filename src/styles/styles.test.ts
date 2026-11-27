@@ -76,6 +76,17 @@ describe('the tokens', () => {
     expect(dark.chosen).toContain(`--color-paper: ${PALETTE.paperDark};`);
   });
 
+  it('give the posters the colors of the night and the tone shares the site uses', () => {
+    expect(light).toContain(`--color-line: ${PALETTE.line};`);
+    expect(light).toContain(`--tone-ink: ${PALETTE.toneInk};`);
+    expect(dark.chosen).toContain(`--color-panel: ${PALETTE.panelDark};`);
+    expect(dark.chosen).toContain(`--color-ink: ${PALETTE.inkDark};`);
+    expect(dark.chosen).toContain(`--color-ink-muted: ${PALETTE.inkMutedDark};`);
+    expect(dark.chosen).toContain(`--color-line: ${PALETTE.lineDark};`);
+    expect(dark.chosen).toContain(`--tone-ink: ${PALETTE.toneInkDark};`);
+    expect(dark.chosen).toContain(`--tone-shade: ${PALETTE.toneShadeDark};`);
+  });
+
   it('darken the tones at night by the same share as the tone rule', () => {
     expect(light).toContain('--tone-shade: 0%;');
     expect(dark.chosen).toContain(`--tone-shade: ${Math.round((1 - NIGHT) * 100)}%;`);

@@ -51,6 +51,12 @@ ul {
   list-style: none;
 }
 
+button,
+input {
+  padding: 0;
+  line-height: inherit;
+}
+
 a {
   color: inherit;
   -webkit-tap-highlight-color: transparent;

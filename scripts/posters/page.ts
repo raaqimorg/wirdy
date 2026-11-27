@@ -13,21 +13,25 @@ const DAY = {
   panel: PALETTE.panel,
   ink: PALETTE.ink,
   muted: PALETTE.inkMuted,
-  line: 'hsl(200 30% 20% / .22)',
+  line: PALETTE.line,
+  toneInk: PALETTE.toneInk,
 };
 
 const NIGHT = {
-  panel: 'hsl(200 32% 15%)',
-  ink: 'hsl(55 62% 89%)',
-  muted: 'hsl(60 10% 72%)',
-  line: 'hsl(60 10% 82% / .18)',
+  panel: PALETTE.panelDark,
+  ink: PALETTE.inkDark,
+  muted: PALETTE.inkMutedDark,
+  line: PALETTE.lineDark,
+  toneInk: PALETTE.toneInkDark,
 };
 
 const theme = ({ color }: Poster, name: ThemeName) => {
   const dark = name === 'dark';
-  const { panel, ink, muted, line } = dark ? NIGHT : DAY;
-  const tone = dark ? `color-mix(in oklab,${color},black 10%)` : color;
-  const toneText = `color-mix(in oklab,${color},${ink} ${dark ? 55 : 30}%)`;
+  const { panel, ink, muted, line, toneInk } = dark ? NIGHT : DAY;
+  const tone = dark
+    ? `color-mix(in oklab,${color},${PALETTE.shade} ${PALETTE.toneShadeDark})`
+    : color;
+  const toneText = `color-mix(in oklab,${color},${ink} ${toneInk})`;
   return `--panel:${panel};--ink:${ink};--muted:${muted};--line:${line};--tone:${tone};--tone-text:${toneText};`;
 };
 

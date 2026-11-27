@@ -390,6 +390,19 @@ const structuredData = {
             }
           );
         });
+        const steps = { ArrowDown: 1, ArrowLeft: 1, ArrowUp: -1, ArrowRight: -1 };
+        document.addEventListener('keydown', function (event) {
+          const option = event.target.closest('[data-poster-format], [data-poster-theme]');
+          const step = steps[event.key];
+          if (!option || !step) return;
+          event.preventDefault();
+          const group = Array.prototype.filter.call(option.parentElement.children, function (item) {
+            return !item.disabled;
+          });
+          const next = group[(group.indexOf(option) + step + group.length) % group.length];
+          next.focus();
+          check(next);
+        });
 
         const wide = matchMedia('(min-width: 40rem)');
         const tallest = 'calc(100dvh - env(safe-area-inset-top) - var(--space-3))';

@@ -192,3 +192,10 @@
 
   color: var(--tone-text);
 }
+
+@media (forced-colors: active) {
+  .section-menu__panel {
+    outline: var(--border-hairline) solid canvastext;
+    outline-offset: calc(var(--border-hairline) * -1);
+  }
+}

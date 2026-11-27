@@ -79,6 +79,11 @@
     transform: scale(1.02);
     transition-duration: var(--duration-release);
   }
+
+  .occasion-card:hover:active .occasion-card__face {
+    transform: scale(0.97);
+    transition-duration: var(--duration-press);
+  }
 }
 
 @media (max-width: 40rem) {
@@ -125,5 +130,12 @@
 
   .occasion-card--compact .occasion-card__title {
     font-size: var(--text-body);
+  }
+}
+
+@media (forced-colors: active) {
+  .occasion-card__face {
+    outline: var(--border-hairline) solid canvastext;
+    outline-offset: calc(var(--border-hairline) * -1);
   }
 }

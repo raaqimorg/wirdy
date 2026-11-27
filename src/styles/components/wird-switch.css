@@ -12,7 +12,7 @@
   display: grid;
   position: relative;
   place-items: center;
-  min-height: calc(var(--size-control) - var(--space-track) * 2);
+  min-height: var(--size-touch);
   border-radius: calc(var(--radius-large) - var(--space-track));
   font-size: var(--text-note);
   font-weight: var(--weight-medium);
@@ -35,5 +35,13 @@
 @media (min-width: 40rem) {
   .wird-switch {
     width: var(--size-menu);
+  }
+}
+
+@media (forced-colors: active) {
+  :root:not([data-wird="m"]) .wird-switch__option[data-wird-form="s"],
+  :root[data-wird="m"] .wird-switch__option[data-wird-form="m"] {
+    color: selecteditemtext;
+    background: selecteditem;
   }
 }

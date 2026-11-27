@@ -13,7 +13,7 @@ import { takhrijLine } from './takhrij';
 import { eveningTitle } from './title';
 import { formOf, type Form, type MalformedMarker } from './variants';
 
-export const POSTER_TEMPLATE = 3;
+export const POSTER_TEMPLATE = 4;
 
 export type FormatName = 'story' | 'portrait' | 'square' | 'landscape' | 'print';
 
@@ -171,7 +171,7 @@ export const adhkarPosterOf = (
       form: timed ? form : undefined,
       heading: timed ? HEADINGS[form] : title,
       summary: `${adhkarLabel(items.length)} مما صح عن النبي ﷺ، ومع كل مصدره`,
-      promise: `${SITE.promise.before} ﷺ، ومع كل درجته ومصدره`,
+      promise: `${SITE.promise.before} ﷺ${SITE.promise.after} ${SITE.promise.more}`,
       color,
       path,
       items,
@@ -210,7 +210,7 @@ export const hadithPosterOf = (guide: Guide, entries: ReadonlyArray<Entry<Hadith
     form: undefined,
     heading: GUIDES[guide].title,
     summary: `${hadithLabel(items.length)} مما صح عن النبي ﷺ، ومع كل مصدره`,
-    promise: 'لا حديث هنا إلا ما صح عن النبي ﷺ، ومع كل درجته ومصدره',
+    promise: `لا حديث هنا إلا ما صح عن النبي ﷺ${SITE.promise.after} ${SITE.promise.more}`,
     color: GUIDES[guide].color,
     path: GUIDES[guide].path,
     items,
