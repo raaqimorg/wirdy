@@ -27,6 +27,10 @@
   flex-direction: column;
 }
 
+.poster-menu__panel:focus {
+  outline: none;
+}
+
 .poster-menu__panel[data-size="expanded"] {
   height: calc(100dvh - env(safe-area-inset-top) - var(--space-3));
   max-height: none;
@@ -54,7 +58,11 @@
 }
 
 .poster-menu__panel::backdrop {
-  background: var(--color-scrim);
+  background: linear-gradient(
+    to top,
+    var(--color-panel) var(--size-sheet-floor),
+    var(--color-scrim) var(--size-sheet-floor)
+  );
 }
 
 .poster-menu__head {
