@@ -29,15 +29,25 @@
 }
 
 @font-face {
-  font-family: Amiri;
+  font-family: "KFGQPC Naskh";
   font-weight: 400;
+  size-adjust: 112%;
   font-display: swap;
-  src: url("@fontsource/amiri/files/amiri-arabic-400-normal.woff2") format("woff2");
+  src: url("../fonts/kfgqpc-naskh-regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Amiri Quran";
-  font-weight: 400;
+  font-family: "KFGQPC Naskh";
+  font-weight: 700;
+  size-adjust: 112%;
   font-display: swap;
-  src: url("@fontsource/amiri-quran/files/amiri-quran-arabic-400-normal.woff2") format("woff2");
+  src: url("../fonts/kfgqpc-naskh-bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "KFGQPC Hafs";
+  font-weight: 400;
+  size-adjust: 112%;
+  font-display: swap;
+  src: url("../fonts/kfgqpc-hafs.ttf") format("truetype");
 }

@@ -8,6 +8,7 @@ count: 1
 mode: "both"
 quran: true
 ayat: "first"
+from: [1, 1, 1]
 group: "القرآن"
 takhrij:
   grader: "الألباني"

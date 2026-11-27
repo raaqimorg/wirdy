@@ -48,10 +48,20 @@ A dhikr that changes between morning and evening is one file with markers, becau
 
 ## The Quran ornaments live in CSS
 
-﴿ ﴾ and ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the آيات, so copy and screen readers give the words alone.
+﴿ ﴾ and the numbered ۝ are CSS `content` with empty alternative text (`content: "﴿" / ""`). The HTML holds only the آيات, so copy and screen readers give the words alone.
 
-- A folded سورة (`ayat: "fold"`) ends its shown part with ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when open.
+- Each آية ends with its number in ۝, in the section's color. The number sits whole in `data-ayah` («۝٢٥٥») and CSS draws it with `content: attr(data-ayah)`: generated content split into two parts shapes them apart, and the digits fall outside the ornament. `from` in the frontmatter gives each سورة's first number ([`content.md`](content.md#the-file)).
+- The ۝ is set in KFGQPC Hafs (`--font-ayah-end`), the one face that draws the number inside it. The آيات are in KFGQPC Naskh: Hafs is built for the Complex's own Quran text, and on Tanzil's text it breaks the dagger alef after a tatweel and the rounded zero after an alef.
+- A folded سورة (`ayat: "fold"`) ends its shown part with its last ۝, not ﴾, because it goes on. Its ﴾ follows the last آية inside the `<details>` (`.surah__ayat::after`), so it shows only when open.
 - A gap parts consecutive سور (`src/styles/components/surah.css`), not ۞. In the مصحف, ۞ marks a ربع الحزب («ARABIC START OF RUB EL HIZB»), so between سور it suggests a false division. Each سورة already opens with ﴿.
+
+## The KFGQPC faces ship as TTF, unchanged
+
+The adhkar and the Quran are set in the faces of the King Fahd Glorious Quran Printing Complex (qurancomplex.gov.sa/fonts): KFGQPC Uthman Taha Naskh 2.0, regular and bold, and KFGQPC Hafs 3.0 for the numbered ۝. They sit in `src/fonts/` byte for byte as the Complex gives them. The owner asked for them.
+
+- The ordinary way is a subset WOFF2, as `@fontsource` gives Plex. The Complex's license forbids modifying the font, so there is no subset and no WOFF2. Cloudflare compresses the TTF on the way (Naskh about 67 KB, Hafs about 125 KB with brotli).
+- Their letters are smaller than their size says, so each face takes `size-adjust: 112%` (`src/styles/fonts.css`), which brings its alef to Amiri's height.
+- KFGQPC Naskh has no glyphs for 14 Uthmani marks in Tanzil's text (ٱ, ۟, the waqf signs, the small و and ي). Each device draws them in its own Arabic face. Hafs has them, but breaks on Tanzil's text (above), and adding them to Naskh is a modification.
 
 ## A share link opens the device's share sheet
 

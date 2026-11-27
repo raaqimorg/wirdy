@@ -48,6 +48,6 @@ Run `bun run ci` before you open a pull request. [`CONTRIBUTING.md`](.github/CON
 
 ## License
 
-The code is [MIT](LICENSE). The Quran text is under [Tanzil's terms](NOTICE). The fonts are under the SIL Open Font License 1.1.
+The code is [MIT](LICENSE). The Quran text is under [Tanzil's terms](NOTICE). IBM Plex Sans Arabic is under the SIL Open Font License 1.1. The KFGQPC faces are the King Fahd Glorious Quran Printing Complex's, used under its license (see `NOTICE`).
 
 Maintained by [Raaqim](https://raaqim.org).

@@ -223,6 +223,10 @@ describe.each(prose)('$path, as a hadith text', ({ body, data }) => {
   it('shows its whole text', () => {
     expect(data.ayat).toBe('all');
   });
+
+  it('numbers no آية', () => {
+    expect(data.from).toBeUndefined();
+  });
 });
 
 it('reads every file under the adhkar folder', () => {

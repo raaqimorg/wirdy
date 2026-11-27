@@ -62,8 +62,8 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
   time={single || data.mode === 'both' ? undefined : data.mode}
 >
   <Fragment>
-    {folds.map(({ shown, rest }) => (
-      <Surah ayat={shown} rest={rest} />
+    {folds.map(({ shown, rest }, i) => (
+      <Surah ayat={shown} rest={rest} from={data.from?.[i] ?? 1} />
     ))}
     {phrases.map((phrase) => (
       <Phrase {...phrase} />

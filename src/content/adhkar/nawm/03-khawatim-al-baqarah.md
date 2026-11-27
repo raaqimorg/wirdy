@@ -6,6 +6,7 @@ order: 3
 count: 1
 mode: "both"
 quran: true
+from: [285]
 when: "في الليل"
 group: "القرآن"
 fadl: "من قرأ بالآيتين من آخر سورة البقرة في ليلة كفتاه"

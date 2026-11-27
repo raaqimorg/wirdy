@@ -31,3 +31,30 @@ notice follows, as Tanzil asks.
     derived from or containing substantial portion of this text.
 
   Please check updates at: http://tanzil.net/updates/
+
+The fonts in src/fonts/ (kfgqpc-naskh-regular.ttf, kfgqpc-naskh-bold.ttf,
+and kfgqpc-hafs.ttf) are KFGQPC Uthman Taha Naskh 2.0 and KFGQPC Hafs 3.0,
+from the King Fahd Glorious Quran Printing Complex
+(https://qurancomplex.gov.sa/fonts). They are not under the MIT license.
+They ship as the Complex gives them, unmodified, under the license each file
+carries, which reads:
+
+  Copyright (c) 2008 (Naskh), 2010 (Hafs) by King Fahd Glorious Quran
+  Printing Complex (KFGQPC), AlMadinah AlMunawarrah, Kingdom of Saudi
+  Arabia. All Rights Reserved.
+
+  Permission is hereby granted, Free of Cost, to any person obtaining a
+  copy of this Font accompanying this license, the rights to Use, Copy,
+  Distribute, subject to the following conditions:
+
+  1. The Font Software cannot be Sold, Modified, Altered, Translated,
+     Reverse Engineered, Decompiled, Disassembled, Reproduced or Attempted
+     to discover the Source Code of this Font in no means.
+
+  2. The Font Software is provided "AS IS", and KFGQPC makes no warranties
+     as to its use or performance, fitness for a particular purpose. KFGQPC
+     does not and cannot warrant the performance or results you may obtain
+     by using the Font. In no event shall KFGQPC be liable for any Claims,
+     Damages or other Liability, including any Damages, arising from, out
+     of the use or inability to use the Font or from other dealings in the
+     Font.

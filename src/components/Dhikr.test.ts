@@ -86,23 +86,32 @@ describe('Dhikr', () => {
       { ...base, quran: true, ayat: 'first' },
       'قُلْ هُوَ\nٱللَّهُ ٱلصَّمَدُ\n\nقُلْ أَعُوذُ\nمِن شَرِّ'
     );
-    expect(html).toContain('<div class="surah">قُلْ هُوَ</div>');
-    expect(html).toContain('<div class="surah">قُلْ أَعُوذُ</div>');
+    expect(html).toContain(
+      '<div class="surah">قُلْ هُوَ<span class="surah__ayah-end" data-ayah="۝١"></span></div>'
+    );
+    expect(html).toContain(
+      '<div class="surah">قُلْ أَعُوذُ<span class="surah__ayah-end" data-ayah="۝١"></span></div>'
+    );
     expect(html).not.toContain('ٱلصَّمَدُ');
     expect(html).not.toContain('مِن شَرِّ');
-    expect(html).not.toContain('surah__ayah-end');
   });
 
   it('wraps each سورة of a قرآن card in its own element', async () => {
     const html = await render({ ...base, quran: true }, 'قُلْ هُوَ\n\nقُلْ أَعُوذُ');
-    expect(html).toContain('<div class="surah">قُلْ هُوَ</div>');
-    expect(html).toContain('<div class="surah">قُلْ أَعُوذُ</div>');
+    expect(html).toContain(
+      '<div class="surah">قُلْ هُوَ<span class="surah__ayah-end" data-ayah="۝١"></span></div>'
+    );
+    expect(html).toContain(
+      '<div class="surah">قُلْ أَعُوذُ<span class="surah__ayah-end" data-ayah="۝١"></span></div>'
+    );
   });
 
   it('gives each سورة its own element, one after the other', async () => {
     const html = await render({ ...base, quran: true }, 'أ\n\nب\n\nج');
     expect(html.match(/class="surah"/gu)).toHaveLength(3);
-    expect(html).toMatch(/<\/div>\s*<div class="surah">ب<\/div>\s*<div class="surah">/u);
+    expect(html).toMatch(
+      /<\/div>\s*<div class="surah">ب<span [^>]*><\/span><\/div>\s*<div class="surah">/u
+    );
   });
 
   it('folds the rest of a long سورة behind a button that says how many آيات remain', async () => {
@@ -117,27 +126,38 @@ describe('Dhikr', () => {
       `<summary class="surah__more" data-hover="fill"><span class="surah__closed">أكمل القراءة، ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
     );
     expect(html.split('<details')[0]!.match(new RegExp(ayah, 'gu'))).toHaveLength(2);
+    expect(html.split('<details')[0]).toMatch(/data-ayah="۝٢"><\/span>$/u);
+    expect(html.split('<details')[1]).toContain(
+      `${ayah}<span class="surah__ayah-end" data-ayah="۝٣">`
+    );
     expect(
       html.split('<details')[1]!.split('</details>')[0]!.match(new RegExp(ayah, 'gu'))
     ).toHaveLength(3);
   });
 
-  it('closes each آية inside a سورة with ۝ but not the last', async () => {
-    const html = await render({ ...base, quran: true }, 'أ\nب\nج\nد');
+  it('closes each آية with ۝ and its number, counting from its first', async () => {
+    const html = await render({ ...base, quran: true, from: [7] }, 'أ\nب\nج\nد');
     expect(html.match(/class="surah"/gu)).toHaveLength(1);
-    expect(html.match(/class="surah__ayah-end"/gu)).toHaveLength(3);
-    expect(html).toMatch(/<div class="surah">أ<span class="surah__ayah-end"><\/span>ب/u);
+    expect(html).toContain(
+      `<div class="surah">أ<span class="surah__ayah-end" data-ayah="۝٧"></span>ب<span class="surah__ayah-end" data-ayah="۝٨"></span>ج<span class="surah__ayah-end" data-ayah="۝٩"></span>د<span class="surah__ayah-end" data-ayah="۝١٠"></span></div>`
+    );
   });
 
-  it('leaves a single آية unmarked', async () => {
-    const html = await render({ ...base, quran: true }, 'قُلْ هُوَ ٱللَّهُ أَحَدٌ');
-    expect(html).not.toContain('surah__ayah-end');
+  it('numbers each سورة from its own first آية', async () => {
+    const html = await render({ ...base, quran: true, from: [255, 1] }, 'أ\n\nب\nج');
+    expect(html).toContain(
+      `<div class="surah">أ<span class="surah__ayah-end" data-ayah="۝٢٥٥"></span></div>`
+    );
+    expect(html).toContain(
+      `<div class="surah">ب<span class="surah__ayah-end" data-ayah="۝١"></span>ج<span class="surah__ayah-end" data-ayah="۝٢"></span></div>`
+    );
   });
 
-  it('keeps the ﴿﴾ ۝ ۞ out of the markup', async () => {
+  it('keeps the ﴿﴾ ۝ ۞ out of the text a reader copies or hears', async () => {
     const html = await render({ ...base, quran: true }, 'أ\nب\n\nج');
+    const text = html.replaceAll(/<[^>]*>/gu, '');
     for (const ornament of ['﴿', '﴾', '۝', '۞']) {
-      expect(html).not.toContain(ornament);
+      expect(text).not.toContain(ornament);
     }
   });
 

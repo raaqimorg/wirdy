@@ -18,8 +18,9 @@
   --tone-ink: 30%;
 
   --font-ui: "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --font-naskh: "Amiri", "Geeza Pro", serif;
-  --font-quran: "Amiri Quran", "Amiri", serif;
+  --font-naskh: "KFGQPC Naskh", "Geeza Pro", serif;
+  --font-quran: "KFGQPC Naskh", serif;
+  --font-ayah-end: "KFGQPC Hafs", serif;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-bold: 700;

@@ -18,6 +18,6 @@ The code holds the values, and this folder says what they are and why. `src/lib/
 - The name is «وِردي», always with its kasra. In Latin letters it is Wirdy, and the site is `wirdy.site`.
 - The mark is the sunflower. It leads the name at the start of the bar, and it is the favicon.
 - No color is typed by hand outside `tokens.css` and `palette.ts`. A section's color comes from its place on the list ([Color](color.md)).
-- The adhkar are in Amiri, the Quran in Amiri Quran, and the rest in IBM Plex Sans Arabic.
+- The adhkar and the Quran are in KFGQPC Naskh, the ۝ in KFGQPC Hafs, and the rest in IBM Plex Sans Arabic.
 - Every page title ends with « | وِردي». Every link preview carries a 2400 by 1260 card.
 - Never edit generated files by hand: run `bun run icons`, `bun run opengraph`, `bun run opengraph:adhkar`, and `bun run posters`.

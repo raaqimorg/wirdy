@@ -10,7 +10,7 @@
 .surah::after,
 .surah__ayat::after,
 .surah__ayah-end {
-  color: var(--color-ink-muted);
+  color: var(--tone-text);
 }
 
 .surah::before {
@@ -29,12 +29,13 @@
 }
 
 .surah__ayah-end {
-  margin: 0 0.2em;
+  margin-inline-start: 0.15em;
+  font-family: var(--font-ayah-end);
 }
 
 .surah__ayah-end::before {
-  content: "۝";
-  content: "۝" / "";
+  content: attr(data-ayah);
+  content: attr(data-ayah) / "";
 }
 
 .surah__more {

@@ -6,6 +6,7 @@ order: 17
 count: 1
 mode: "both"
 quran: true
+from: [1]
 how: "ثم ينام على خاتمتها"
 group: "آخر ما يقال"
 fadl: "فإنها براءة من الشرك"

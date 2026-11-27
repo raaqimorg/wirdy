@@ -7,6 +7,7 @@ count: 1
 mode: "both"
 quran: true
 ayat: "fold"
+from: [190]
 when: "إذا استيقظ من الليل"
 group: "عند الاستيقاظ"
 takhrij:
