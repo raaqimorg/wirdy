@@ -44,7 +44,8 @@
     "promo:sheet": "bun scripts/promo/sheet.ts",
     "visits": "bun scripts/visits/send.ts",
     "visits:deploy": "wrangler deploy --config scripts/visits/wrangler.toml",
-    "deploy": "bun run ci && wrangler pages deploy"
+    "deploy": "bun run ci && wrangler pages deploy",
+    "gallery": "bun scripts/gallery/serve.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
