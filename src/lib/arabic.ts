@@ -39,6 +39,7 @@ export function timesUnit(n: number): string {
 }
 
 export function timesLabel(n: number): string {
+  if (n === 1) return 'مرة واحدة';
   if (n === 2) return timesUnit(n);
   return `${toArabicDigits(n)} ${timesUnit(n)}`;
 }

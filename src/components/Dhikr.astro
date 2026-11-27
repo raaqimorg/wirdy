@@ -6,9 +6,9 @@ import Phrase from './Phrase.astro';
 import Surah from './Surah.astro';
 import VariantText from './VariantText.astro';
 import { Effect, Option } from 'effect';
-import { timesUnit, toArabicDigits } from '../lib/arabic';
+import { timesLabel } from '../lib/arabic';
 import { copyOf } from '../lib/copy';
-import { foldOf, leadOf, suwarOf } from '../lib/lead';
+import { foldOf, mannerOf, momentOf, suwarOf } from '../lib/lead';
 import { dhikrPath } from '../lib/permalink';
 import { phrasesOf } from '../lib/phrases';
 import type { Dhikr } from '../lib/schema';
@@ -34,8 +34,9 @@ const folds = Option.getOrElse(
   ),
   () => []
 );
-const unit = data.count > 1 ? [timesUnit(data.count)] : [];
-const lead = [...unit, leadOf(data, suwar)].filter((part) => part !== '').join('، ');
+const count = data.count > 1 ? timesLabel(data.count) : undefined;
+const moment = momentOf(data) || undefined;
+const how = mannerOf(data, suwar) || undefined;
 const copy = Effect.runSync(copyOf(data, body));
 const path = dhikrPath(data.occasion, slug);
 const phrases = data.counts === undefined ? [] : Effect.runSync(phrasesOf(text, data.counts));
@@ -50,8 +51,9 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
   title={title}
   name={opening ? undefined : data.title}
   heading={heading}
-  lead={lead}
-  how={data.how}
+  count={count}
+  moment={moment}
+  how={how}
   fadl={data.fadl}
   single={single}
   nested={nested}
@@ -59,7 +61,6 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
   phrases={phrases.length > 0}
   time={single || data.mode === 'both' ? undefined : data.mode}
 >
-  {data.count > 2 && <span slot="number">{`${toArabicDigits(data.count)}\u00a0`}</span>}
   <Fragment>
     {folds.map(({ shown, rest }) => (
       <Surah ayat={shown} rest={rest} />

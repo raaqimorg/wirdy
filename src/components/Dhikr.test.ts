@@ -47,7 +47,7 @@ describe('Dhikr', () => {
   it('suppresses the badge when the count is one', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).not.toContain('class="bead-ring"');
-    expect(html).not.toContain('entry__head');
+    expect(html).not.toContain('entry__count');
   });
 
   it('reads the count in full to a screen reader and in a selection', async () => {
@@ -154,7 +154,9 @@ describe('Dhikr', () => {
 
   it('leads with the count in words, with nothing drawn that looks like a button', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
-    expect(html).toMatch(/<p class="entry__lead">\s*<span>\s*٣\s*<\/span>\s*مرات\s*<\/p>/u);
+    expect(html).toMatch(
+      /<p class="entry__lead">\s*<span class="entry__count">٣ مرات<\/span>\s*<\/p>/u
+    );
     expect(html).not.toContain('bead-ring');
     expect(html).not.toContain('<svg class="bead');
   });
@@ -203,6 +205,7 @@ describe('Dhikr', () => {
       'href="/sabah-masaa/sayyid-al-istighfar/"',
     ].map((part) => html.indexOf(part));
     expect(leadOf(html)).toBe('٣ مرات، إذا أخذ مضجعه');
+    expect(html).toMatch(/<span class="entry__count">٣ مرات<\/span>،\s*إذا أخذ مضجعه/u);
     expect(order).not.toContain(-1);
     expect(order).toEqual(order.toSorted((a, b) => a - b));
   });
@@ -251,27 +254,29 @@ describe('Dhikr', () => {
     expect(alone).toContain('class="takhrij"');
   });
 
-  it('omits the lead when there is no cue', async () => {
+  it('omits the lead when there is no count and no moment', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).not.toContain('entry__lead');
   });
 
-  it('says to read each سورة to its end when only its first آية shows', async () => {
+  it('says to read each سورة to its end, on the line of how, when only its first آية shows', async () => {
     const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\n\nج\nد');
-    expect(html).toContain('<p class="entry__lead">تقرأ كل سورة إلى آخرها</p>');
+    expect(html).toContain('<p class="entry__how">تقرأ كل سورة إلى آخرها</p>');
+    expect(html).not.toContain('entry__lead');
   });
 
   it('says to read to the end of the سورة when there is one', async () => {
     const html = await render({ ...base, quran: true, ayat: 'first' }, 'أ\nب\nج');
-    expect(html).toContain('<p class="entry__lead">تقرأ إلى آخر السورة</p>');
+    expect(html).toContain('<p class="entry__how">تقرأ إلى آخر السورة</p>');
   });
 
-  it('joins the read-to-the-end line to a cue as its own sentence', async () => {
+  it('keeps the moment on its line and the read-to-the-end line with how', async () => {
     const html = await render(
-      { ...base, quran: true, ayat: 'first', when: 'إذا أوى إلى فراشه' },
+      { ...base, quran: true, ayat: 'first', when: 'إذا أوى إلى فراشه', how: 'ينفث' },
       'أ\nب'
     );
-    expect(html).toContain('<p class="entry__lead">إذا أوى إلى فراشه. تقرأ إلى آخر السورة</p>');
+    expect(html).toContain('<p class="entry__lead">إذا أوى إلى فراشه</p>');
+    expect(html).toContain('<p class="entry__how">ينفث. تقرأ إلى آخر السورة</p>');
   });
 
   it('adds no read-to-the-end line when every آية shows', async () => {

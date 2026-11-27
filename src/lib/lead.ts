@@ -39,22 +39,30 @@ export function foldOf(ayat: Ayat): { readonly shown: Ayat; readonly rest: Reado
 const present = (value: string | undefined): Option.Option<string> =>
   Option.filter(Option.fromUndefinedOr(value), (text) => text !== '');
 
-function leadWith(
-  cues: ReadonlyArray<string | undefined>,
-  data: Dhikr,
-  suwar: Option.Option<Suwar>
-): string {
-  const cue = Array.getSomes([TIME[data.mode], ...Array.map(cues, present)]).join('، ');
+const untilEndOf = (data: Dhikr, suwar: Option.Option<Suwar>): Option.Option<string> => {
+  if (!data.quran || data.ayat !== 'first') return Option.none();
   const many = Option.exists(suwar, (all) => all.length > 1);
-  const untilEnd = many ? 'تقرأ كل سورة إلى آخرها' : 'تقرأ إلى آخر السورة';
-  const whole = data.quran && data.ayat === 'first' ? Option.some(untilEnd) : Option.none();
-  return Array.getSomes([present(cue), whole]).join('. ');
+  return Option.some(many ? 'تقرأ كل سورة إلى آخرها' : 'تقرأ إلى آخر السورة');
+};
+
+const cueOf = (cues: ReadonlyArray<string | undefined>, data: Dhikr): string =>
+  Array.getSomes([TIME[data.mode], ...Array.map(cues, present)]).join('، ');
+
+export function momentOf(data: Dhikr): string {
+  return cueOf([data.when], data);
+}
+
+export function mannerOf(data: Dhikr, suwar: Option.Option<Suwar>): string {
+  return Array.getSomes([present(data.how), untilEndOf(data, suwar)]).join('. ');
 }
 
 export function leadOf(data: Dhikr, suwar: Option.Option<Suwar>): string {
-  return leadWith([data.when], data, suwar);
+  return Array.getSomes([present(momentOf(data)), untilEndOf(data, suwar)]).join('. ');
 }
 
 export function fullLeadOf(data: Dhikr, suwar: Option.Option<Suwar>): string {
-  return leadWith([data.when, data.how], data, suwar);
+  return Array.getSomes([
+    present(cueOf([data.when, data.how], data)),
+    untilEndOf(data, suwar),
+  ]).join('. ');
 }

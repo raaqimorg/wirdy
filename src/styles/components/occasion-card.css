@@ -120,7 +120,7 @@
   }
 
   .occasion-card--compact .occasion-card__stage {
-    height: calc((100cqi - 3 * var(--space-6)) / 6);
+    height: calc((100cqi - 3 * var(--space-6)) / 8);
   }
 
   .occasion-card--compact .occasion-card__title {

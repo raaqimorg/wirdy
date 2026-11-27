@@ -180,10 +180,12 @@ describe('built site', () => {
       );
       expect(page.slice(page.indexOf('</main>'))).toContain('<nav class="related container"');
     }
-    expect(css).toMatch(/\.card-grid--compact\{[^}]*display:flex/u);
-    expect(css).toMatch(/\.card-grid--compact>li\{flex:/u);
     expect(css).toMatch(
-      /\.occasion-card--compact \.occasion-card__stage\{[^}]*height:calc\(\(100cqi - 3 \* var\(--space-6\)\) \/ 6\)/u
+      /\.card-grid--featured,\.card-grid--compact\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)\}/u
+    );
+    expect(css).not.toMatch(/\.card-grid--compact>li\{flex:/u);
+    expect(css).toMatch(
+      /\.occasion-card--compact \.occasion-card__stage\{[^}]*height:calc\(\(100cqi - 3 \* var\(--space-6\)\) \/ 8\)/u
     );
   });
 
@@ -294,14 +296,56 @@ describe('built site', () => {
     );
   });
 
-  it('says the section once at the top of a dhikr', () => {
-    for (const file of contentFiles) {
+  it('says the section once at the top of a dhikr, unless a group is named after it', () => {
+    const repeats = contentFiles.flatMap((file) => {
       const path = file.replace(/\.md$/u, '').replace(/\/\d+-/u, '/');
       const top = own(path).match(/<header class="banner[\s\S]*?<\/header>/u)![0];
-      const up = top.match(/<a class="banner__up"[^>]*>\s*<svg[\s\S]*?<span>([^<]+)</u)![1];
-      const lede = top.match(/<p class="banner__lede">([^<]+)</u)![1];
-      expect(`${path}: ${lede}`).not.toBe(`${path}: ${up}`);
+      const up = top.match(/<a class="banner__up"[^>]*>\s*<svg[\s\S]*?<span>([^<]+)</u)![1]!;
+      const lede = top.match(/<p class="banner__lede">([^<]+)</u)![1]!;
+      const first = lede.split('، ')[0]!;
+      const groups = [
+        ...own(path.split('/')[0]!).matchAll(/<h2 class="group__title"[^>]*>\s*([^<]+?)\s*</gu),
+      ].map((match) => match[1]);
+      return first.includes(up) && !groups.includes(first) ? [`${path}: ${lede}`] : [];
+    });
+    expect(repeats).toEqual([]);
+  });
+
+  it('gives a card only its named labels, in one order, each with one meaning', () => {
+    const order = ['entry__name', 'entry__lead', 'entry__how', 'entry__rawi'];
+    const cards = [...Object.values(pages), own('al-tibb-al-nabawi')].flatMap((page) =>
+      [...page.matchAll(/<div class="entry__main">([\s\S]*?)<div class="entry__text">/gu)].map(
+        (match) => match[1]!
+      )
+    );
+    expect(cards.length).toBeGreaterThan(expected);
+    const labels = cards.map((card) =>
+      [...card.matchAll(/<(?:h[2-4]|p) class="(entry__[a-z]+)"/gu)].map((match) => match[1]!)
+    );
+    for (const found of labels) {
+      expect(found).toEqual(order.filter((label) => found.includes(label)));
     }
+    const counts = cards.flatMap((card) =>
+      [...card.matchAll(/<span class="entry__count">([^<]+)<\/span>/gu)].map((match) => match[1]!)
+    );
+    expect(counts.length).toBeGreaterThan(0);
+    for (const count of counts) {
+      expect(count).toMatch(/^(?:[٠-٩]+ (?:مرة|مرات)|مرتان)$/u);
+    }
+    const leads = cards.flatMap((card) =>
+      [...card.matchAll(/<p class="entry__lead">([\s\S]*?)<\/p>/gu)].map((match) => match[1]!)
+    );
+    for (const lead of leads) {
+      expect(plain(lead.replace(/<span class="entry__count">[^<]+<\/span>/u, ''))).not.toMatch(
+        /[٠-٩]|(?:^|\s)(?:مرة|مرات|مرتان)(?:\s|$)|تقرأ/u
+      );
+    }
+    const rawis = cards.flatMap((card) =>
+      [...card.matchAll(/<p class="entry__rawi">([^<]+)<\/p>/gu)].map((match) => match[1]!)
+    );
+    expect(rawis.length).toBe(hadiths.length);
+    for (const rawi of rawis) expect(rawi).toMatch(/^عن /u);
+    expect(all).not.toMatch(/badge--count">١ مرة/u);
   });
 
   it('counts the adhkar of the time that shows', () => {
@@ -906,7 +950,7 @@ describe('built site', () => {
           .split('\n\n')
           .slice(0, -1)
           .join(' ')
-          .replaceAll(/ \([٠-٩]+ مر(ة|ات)\)$/gmu, '');
+          .replaceAll(/ \((?:[٠-٩]+ مر(?:ة|ات)|مرتان|مرة واحدة)\)$/gmu, '');
         expect(plain(words)).toBe(plain(unescaped(shown.replaceAll(/<[^>]+>/gu, ''))));
       }
     }

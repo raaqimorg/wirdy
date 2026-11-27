@@ -68,6 +68,10 @@ describe('timesUnit', () => {
 });
 
 describe('timesLabel', () => {
+  it('says once in words, as آية واحدة does', () => {
+    expect(timesLabel(1)).toBe('مرة واحدة');
+  });
+
   it('uses the dual for two', () => {
     expect(timesLabel(2)).toBe('مرتان');
   });
@@ -81,10 +85,6 @@ describe('timesLabel', () => {
   it('reverts to the singular above ten', () => {
     expect(timesLabel(11)).toBe('١١ مرة');
     expect(timesLabel(100)).toBe('١٠٠ مرة');
-  });
-
-  it('labels one, though the card suppresses the badge', () => {
-    expect(timesLabel(1)).toBe('١ مرة');
   });
 });
 

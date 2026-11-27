@@ -1,6 +1,6 @@
 import { Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { foldOf, fullLeadOf, leadOf, suwarOf as suwarOption } from './lead';
+import { foldOf, fullLeadOf, mannerOf, momentOf, suwarOf as suwarOption } from './lead';
 import type { Dhikr } from './schema';
 
 const suwarOf = (data: Dhikr, text: string) => Option.getOrNull(suwarOption(data, text));
@@ -58,28 +58,39 @@ describe('foldOf', () => {
   });
 });
 
-describe('leadOf', () => {
-  it('joins the time, the moment, and the read-to-the-end line', () => {
+describe('momentOf', () => {
+  it('joins the time and the moment, and nothing of how to read', () => {
     const data: Dhikr = { ...base, mode: 'masaa', when: 'إذا أوى إلى فراشه', ayat: 'first' };
-    expect(leadOf(data, Option.some([['أ']]))).toBe(
-      'في المساء، إذا أوى إلى فراشه. تقرأ إلى آخر السورة'
+    expect(momentOf(data)).toBe('في المساء، إذا أوى إلى فراشه');
+  });
+
+  it('leaves the manner to its own line', () => {
+    expect(momentOf({ ...base, when: 'إذا أخذ مضجعه', how: 'متوضئًا' })).toBe('إذا أخذ مضجعه');
+  });
+
+  it('is empty when there is no time or moment', () => {
+    expect(momentOf(base)).toBe('');
+  });
+});
+
+describe('mannerOf', () => {
+  it('joins the manner and the read-to-the-end line', () => {
+    const data: Dhikr = { ...base, how: 'متوضئًا', ayat: 'first' };
+    expect(mannerOf(data, Option.some([['أ']]))).toBe('متوضئًا. تقرأ إلى آخر السورة');
+  });
+
+  it('reads each سورة to its end when there are several', () => {
+    expect(mannerOf({ ...base, ayat: 'first' }, Option.some([['أ'], ['ب']]))).toBe(
+      'تقرأ كل سورة إلى آخرها'
     );
   });
 
   it('says nothing of reading to the end for a سورة that folds, because the page holds it', () => {
-    expect(
-      leadOf({ ...base, ayat: 'fold', when: 'إذا أوى إلى فراشه' }, Option.some([['أ'], ['ب']]))
-    ).toBe('إذا أوى إلى فراشه');
-  });
-
-  it('leaves the manner to its own line', () => {
-    expect(leadOf({ ...base, when: 'إذا أخذ مضجعه', how: 'متوضئًا' }, Option.none())).toBe(
-      'إذا أخذ مضجعه'
-    );
+    expect(mannerOf({ ...base, ayat: 'fold' }, Option.some([['أ'], ['ب']]))).toBe('');
   });
 
   it('is empty when there is nothing to say', () => {
-    expect(leadOf({ ...base, quran: false }, Option.none())).toBe('');
+    expect(mannerOf({ ...base, quran: false }, Option.none())).toBe('');
   });
 });
 
