@@ -14,6 +14,7 @@ import { formOf, hasVariants, type MalformedMarker } from './variants';
 
 const TEMPLATE = 4;
 const SITE_TEMPLATE = 1;
+const HOME_TEMPLATE = 2;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
 
@@ -130,10 +131,8 @@ export type SectionCard = {
 const fingerprint = (value: unknown): string =>
   createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 8);
 
-export const SWATCHES: ReadonlyArray<{ readonly id: EmblemName; readonly color: string }> = [
-  ...OCCASIONS.map(({ id, color }) => ({ id, color })),
-  { id: 'tibb', color: TIBB.color },
-];
+export const HOME_SWATCHES: ReadonlyArray<{ readonly id: EmblemName; readonly color: string }> =
+  OCCASIONS.map(({ id, color }) => ({ id, color }));
 
 export function sectionCardFile(card: SectionCard): string {
   const print = fingerprint([SITE_TEMPLATE, card, EMBLEMS[card.id], markSvg('stage')]);
@@ -142,10 +141,11 @@ export function sectionCardFile(card: SectionCard): string {
 
 export function homeCardFile(): string {
   const print = fingerprint([
-    SITE_TEMPLATE,
+    HOME_TEMPLATE,
     SITE.name,
     SITE.domain,
-    SWATCHES.map(({ id, color }) => [id, color, EMBLEMS[id]]),
+    SITE.promise,
+    HOME_SWATCHES.map(({ id, color }) => [id, color, EMBLEMS[id]]),
     markSvg(),
   ]);
   return `opengraph/home-${print}.png`;

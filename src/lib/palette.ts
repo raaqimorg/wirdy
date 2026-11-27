@@ -18,6 +18,7 @@ export const PALETTE = {
   eggshell: token(light, 'color-eggshell'),
   ink: token(light, 'color-ink'),
   inkMuted: token(light, 'color-ink-muted'),
+  inkFaint: token(light, 'color-ink-faint'),
   shade: '#000',
   petal: '#d2a249',
   disc: '#91593c',
