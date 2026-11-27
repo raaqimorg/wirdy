@@ -88,7 +88,7 @@ Write `promo/<slug>/post.md`: one caption for X, one for TikTok, one for Snapcha
 - Text and the phone screen stay in the safe zone: 120 to 888 px across, 288 to 1248 px down; 120 to 780 px across below 840 px, where TikTok's buttons widen.
 - Titles enter from the right.
 - Motion is the site's: `--spring` to move, `--ease-out` to fade, grow from 60%. Only the camera eases in. Every change moves: no title, image, or screen appears or goes in a cut, but a still swapped for the identical frame of its clip.
-- Few titles, and general: three or four for a 30 second film, each held 4 seconds or more. The screens show the steps; a title never names a tap.
+- Few titles, and general: two or three for a 30 second film, each held 4 seconds or more. Let the screens tell: a title never names a tap, a section, or a mode the screen already shows, and never sets one part of the site apart as something different.
 - No call to action. The end is the site's own line, or the mark and `wirdy.site`.
 - The screen sits in its phone frame, centered, flat, never tilted in 3D, pushed to 1.6 to 2 times when one part is the point.
 - The end card: the mark and «وِردي» land in the last 10%, then `wirdy.site`, held 2 to 3 seconds.

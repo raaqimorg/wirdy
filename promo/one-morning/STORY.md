@@ -4,7 +4,7 @@
 
 «أذكار يومك في مكان، ومع كل ذكر مصدره. افتح wirdy.site.»
 
-The viewer already reads adhkar from a booklet or another app. The film shows what is different: one page for each occasion, the morning and evening forms, and the source under every dhikr. The owner cut the search scene from the first cut, then asked for a longer walk: the sections menu, a group, a dhikr page, copy, the image, the theme, and the footer's «صدقة جارية عن شروق». The third cut dropped the call to action and most titles, made every change move, and ends by zooming into the footer's line and lifting it out as the last frame. The fourth cut is one take and shorter: every section down to الطب النبوي, back through the sections menu to الصباح والمساء, from the evening the page opens on to the morning, a dhikr's page, copy, the theme, and the same ending. It dissolves across each of the site's instant changes, so nothing flickers.
+The viewer already reads adhkar from a booklet or another app. The film shows what is different: one page for each occasion, the morning and evening forms, and the source under every dhikr. The owner cut the search scene from the first cut, then asked for a longer walk: the sections menu, a group, a dhikr page, copy, the image, the theme, and the footer's «صدقة جارية عن شروق». The third cut dropped the call to action and most titles, made every change move, and ends by zooming into the footer's line and lifting it out as the last frame. The fourth cut is one take and shorter: every section down to الطب النبوي, back through the sections menu to الصباح والمساء, from the evening the page opens on to the morning, a dhikr's page, copy, the theme, and the same ending. It dissolves across each of the site's instant changes, so nothing flickers. The owner then cut two of its four titles, «والطب النبوي», which set the tibb apart as something different, and «نهارا أو ليلا», which the theme already shows: the screens tell the rest.
 
 ## The storylines
 
@@ -23,9 +23,9 @@ Silent, 1080 by 1920, 26 seconds, light until the theme turns, centered. One tak
 | Seconds      | Title              | Screen                                                                                                                                        |
 | ------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | 0 to 3.5     | أذكار يومك في مكان | the home page, two flicks down through every section to الطب النبوي                                                                           |
-| 4.1 to 7.3   | والطب النبوي       | الطب النبوي opens at 4.07, its first hadith's «التخريج»: «صحيح مسلم (٢٢٠٠)»                                                                   |
+| 3.5 to 7.8   | none               | الطب النبوي opens at 4.07, its first hadith's «التخريج»: «صحيح مسلم (٢٢٠٠)»                                                                   |
 | 7.8 to 16.4  | مع كل ذكر تخريجه   | «الأقسام» at 7.2, «الصباح والمساء» at 8.63 (open on المساء, the clock's choice), «الصباح» at 10.03, «التخريج» of آية الكرسي, its page at 14.67 |
-| 17 to 19.45  | نهارا أو ليلا       | a scroll to the foot of the page, «نسخ» at 17.43, «المظهر» turns it dark at 18.97                                                             |
+| 16.4 to 19.8 | none               | a scroll to the foot of the page, «نسخ» at 17.43, «المظهر» turns it dark at 18.97                                                             |
 | 19.8 to 21.8 | none               | the camera zooms 3.917 times into «صدقة جارية عن شروق», and the frame turns to the dark paper                                                 |
 | 21.8 to 26   | none               | the line is lifted out as type, the phone fades, the line brightens; the mark and «وِردي» at 22.6, wirdy.site at 23                            |
 
