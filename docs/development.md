@@ -41,6 +41,8 @@ The `promo:*` scripts make a promo film from `promo/<slug>/` (`<f>` is that fold
 
 Never run `bun run deploy`, `bun run visits:deploy`, or a `wrangler` command that changes the live site or the Worker, unless the owner asks for that deploy.
 
+Both deploys sign in with your own `wrangler login`. `.env` holds the visit reports' `CLOUDFLARE_API_TOKEN`, which may only read analytics, and Bun loads `.env` into every script and Wrangler reads it too, so a deploy that used it would fail. The two scripts unset it and give Wrangler an empty env file (`--env-file=/dev/null`). Any other `wrangler` command run from the repo needs the same.
+
 ## Scripts
 
 - Every script in `scripts/` is TypeScript that Bun runs directly. Each is an Effect program that ends with `run(program)` from `scripts/run.ts`. The verification scripts read and write a record through `scripts/verification/record.ts`, which decodes it before writing.
