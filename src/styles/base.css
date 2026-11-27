@@ -23,7 +23,7 @@ body {
 
 @supports (timeline-scope: --reading) {
   body {
-    timeline-scope: --reading;
+    timeline-scope: --reading, --cards;
   }
 }
 

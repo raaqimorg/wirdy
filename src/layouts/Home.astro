@@ -12,7 +12,7 @@ const { menu = true, ...paper } = Astro.props;
 ---
 
 <Paper {...paper}>
-  <Bar menu={menu} />
+  <Bar menu={menu} home />
   <slot name="top" />
   <main class="container" id="main">
     <slot />

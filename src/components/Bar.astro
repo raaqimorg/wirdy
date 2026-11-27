@@ -8,16 +8,20 @@ import { SITE } from '../lib/site';
 interface Props {
   menu?: boolean | undefined;
   stage?: boolean | undefined;
+  home?: boolean | undefined;
 }
 
-const { menu = true, stage = false } = Astro.props;
+const { menu = true, stage = false, home = false } = Astro.props;
 const label = 'ابحث في الأذكار';
 ---
 
-<nav class:list={['bar', stage && 'bar--stage']} aria-label="التنقل">
+<nav class:list={['bar', stage && 'bar--stage', home && 'bar--home']} aria-label="التنقل">
   <div class="bar__inner container">
     <a class="bar__brand" href="/" aria-label={`${SITE.name}، الرئيسية`}>
-      <Mark inks={stage ? 'stage' : 'own'} />
+      <span class="bar__mark">
+        <Mark inks={stage ? 'stage' : 'own'} />
+        {home && <Mark inks="plain" class="bar__plain" />}
+      </span>
       <span class="bar__name">{SITE.name}</span>
     </a>
     {menu && <SectionMenu />}

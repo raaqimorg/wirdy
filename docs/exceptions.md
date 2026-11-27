@@ -20,6 +20,15 @@ A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and e
 - The listener is `passive`, so it never delays scrolling.
 - The ordinary way is the grey highlight: a flat flash on the link's box, not an iOS press.
 
+## An emblem's lit shape enters each time it comes into view
+
+On a page's banner and on the home page's cards, an emblem's one lit shape enters its own way over `--duration-enter` with `--spring` whenever at least half of the emblem is on screen: on load for what shows, and on scroll for what comes in. Once the emblem has left the screen entirely, the shape resets, so it enters again when the reader comes back. The owner asked for it, so the emblems feel alive and not only fade.
+
+- The ordinary way is CSS alone. A scroll-driven animation (`animation-timeline: view()`) ties the shape to the scroll position, so it never moves by itself: the owner saw it as a fade. A timed animation that starts on scroll needs `animation-trigger`, which Safari lacks.
+- The inline script in `src/layouts/Paper.astro` sets `data-emblems` on `<html>` before the first paint, then watches every `[data-live]` emblem with an `IntersectionObserver` and sets `data-shown` on it at half in view, and removes it at none. `src/styles/components/emblem.css` hides a lit shape that is not shown, and runs its entrance when it is.
+- With reduced motion, or without JavaScript, the script sets nothing, and every emblem shows whole and still.
+- The emblems in the section menu, in search, and on the «بقية الأقسام» cards stay still (`motion="still"`).
+
 ## A button switches between light and dark
 
 The site follows the device's mode. The «المظهر» button in every footer (`components/ThemeToggle.astro`) flips it, and `localStorage` keeps the choice under `theme`. The owner asked for it.

@@ -32,3 +32,10 @@
     container-type: inline-size;
   }
 }
+
+@supports (animation-timeline: view()) {
+  .card-grid--featured {
+    view-timeline: --cards block;
+    view-timeline-inset: calc(env(safe-area-inset-top) + var(--size-bar)) 0;
+  }
+}

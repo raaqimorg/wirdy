@@ -11,14 +11,9 @@ interface Props {
 
 const { tiles, variant, lead = true } = Astro.props;
 
-const ANIMATED = 3;
-const ANIMATED_WIDE = 6;
 const widths = widthsOf(tiles.length);
 
-const motionOf = (index: number) => {
-  if (variant !== 'featured' || !lead || index >= ANIMATED_WIDE) return 'still';
-  return index < ANIMATED ? 'always' : 'wide-only';
-};
+const motion = variant === 'featured' && lead ? 'live' : 'still';
 const cardOf = (index: number) => {
   if (variant !== 'featured') return 'compact';
   return lead && index === 0 ? 'lead' : 'row';
@@ -29,7 +24,7 @@ const wide = (index: number) => variant === 'featured' && widths[index] === 'wid
 <ul class={`card-grid card-grid--${variant}`}>
   {tiles.map((tile, index) => (
     <li class:list={[wide(index) && 'card-grid__wide']}>
-      <OccasionCard tile={tile} variant={cardOf(index)} motion={motionOf(index)} />
+      <OccasionCard tile={tile} variant={cardOf(index)} motion={motion} />
     </li>
   ))}
 </ul>
