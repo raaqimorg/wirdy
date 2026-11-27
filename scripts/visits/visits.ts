@@ -16,9 +16,9 @@ export const sendVisits = (now: Date, forced: boolean) =>
     const names = yield* Config.option(Config.String('RECIPIENT_NAME'));
     const name = Option.flatMap(names, (given) => nameOf(given, Math.random()));
     const windows = windowsOf(now);
-    const totals = yield* visitsOf(analytics, [windows.halfHour, windows.day]);
-    const halfHour = Option.getOrElse(Array.get(totals, 0), () => 0);
+    const totals = yield* visitsOf(analytics, [windows.hour, windows.day]);
+    const hour = Option.getOrElse(Array.get(totals, 0), () => 0);
     const day = Option.getOrElse(Array.get(totals, 1), () => 0);
-    yield* sendMessage(chat, reportText(windows, halfHour, day, name), isSilent(halfHour, forced));
+    yield* sendMessage(chat, reportText(windows, hour, day, name), isSilent(hour, forced));
     yield* Console.log('sent');
   });

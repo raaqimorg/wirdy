@@ -30,8 +30,8 @@ The icon, card, and promo scripts need a Chromium browser (Brave, Chrome, Chromi
 | `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.       |
 | `bun run promo:render <f>` | Renders a promo film to `out/<slug>.mp4` (`--draft`: half).    |
 | `bun run promo:clip`       | Turns a simulator recording into a clip a film can seek.       |
-| `bun run visits`           | Sends the owner the visits of the last half hour on Telegram.  |
-| `bun run visits:deploy`    | Deploys the Worker that sends the visits every half hour.      |
+| `bun run visits`           | Sends the owner the visits of the last hour on Telegram.       |
+| `bun run visits:deploy`    | Deploys the Worker that sends the visits every hour.           |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
 
@@ -50,9 +50,9 @@ Never run `bun run deploy`, `bun run visits:deploy`, or a `wrangler` command tha
 
 The Worker `wirdy-visits` (`scripts/visits/worker.ts`, configured by `scripts/visits/wrangler.toml`) sends the owner the site's visits on Telegram. A Cron Trigger runs it. It reads Cloudflare's own count, so no page changes ([`exceptions.md`](exceptions.md#a-scheduled-job-sends-the-owner-the-visits)).
 
-- At minute 00 and 30 of every hour (the same minutes in Riyadh): the visits of the half hour up to the run, and of the day so far in Riyadh time. The run at Riyadh midnight gives the whole day, as yesterday. A half hour with no visits arrives silently.
-- Cloudflare's count lags a few minutes, so the last half hour can come up a little short. The day is counted again in every run, so the next report holds the missed visits.
-- `bun run visits --silent` sends the report from this machine, silently, for the last half hour.
+- At minute 00 of every hour: the visits of the hour up to the run, and of the day so far in Riyadh time. The run at Riyadh midnight gives the whole day, as yesterday. An hour with no visits arrives silently.
+- Cloudflare's count lags a few minutes, so the last hour can come up a little short. The day is counted again in every run, so the next report holds the missed visits.
+- `bun run visits --silent` sends the report from this machine, silently, for the last hour.
 - The secrets: `CLOUDFLARE_API_TOKEN` (Zone, Analytics, Read, for wirdy.site only), `CLOUDFLARE_ZONE_ID`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `RECIPIENT_NAME`, the names a report greets, separated by underscores, as in `الأولى_الثانية` (each report picks one at random, and a name may hold spaces). Set each on the Worker with `bunx wrangler secret put <NAME> --config scripts/visits/wrangler.toml`. To run a report locally, put them in `.env`, which git ignores.
 - The Worker logs no number. A failed run shows as an error in the Worker's logs (dashboard, Workers, `wirdy-visits`, Logs). No one is emailed.
 - To try the Worker locally, run `bunx wrangler dev --test-scheduled --config scripts/visits/wrangler.toml` with the secrets in `scripts/visits/.dev.vars`, then open `http://localhost:8787/__scheduled`. It sends a real message.
