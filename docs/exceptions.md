@@ -100,6 +100,15 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 - The ordinary way is an image library such as `sharp`: a native dependency for two scripts that run only when the mark or a card changes.
 - The cards draw the site's mark, colors, and emblems from `src/lib/`, in the site's fonts from `@fontsource`. The home card shows the mark, the name, and the domain beside a mosaic of the section colors and emblems. Each section card shows its title, count, and emblem on its color, like its page banner ([`branding/imagery.md`](branding/imagery.md#the-sharing-cards)).
 
+## Promo films render from HTML in a headless browser
+
+A promo film for X, TikTok, or Snapchat is one HTML page, `promo/<slug>/film.html`, timed by CSS animations. `scripts/promo/page.ts` opens it in the installed Brave or Chrome with `playwright-core`, adds the site's tokens, fonts, emblems, mark, and section colors, and seeks it to any frame. `scripts/promo/render.ts` screenshots every frame and pipes them to ffmpeg. The owner asked for it, so the films look and move like the site ([`branding/imagery.md`](branding/imagery.md#the-promo-films)).
+
+- The ordinary way is a video editor, or Remotion. An editor redraws the site by hand, and Remotion brings React and its own renderer. This reuses the site's own CSS, with no third party at render time.
+- `playwright-core` is a dev dependency. It drives the installed browser and downloads none. Plain Chromium cannot play H.264, so the page refuses it with a clear message.
+- The clips are recorded on an iPhone simulator with Argent, and `bun run promo:clip` makes every frame a key frame, so a seek lands on the exact frame.
+- `promo/*/clips/` and `promo/*/out/` are ignored. A film keeps `STORY.md`, `film.html`, and `post.md`, and is made again by recording its clips again.
+
 ## Search opens over the page, from a module script
 
 Every bar ends in a search icon (`components/Bar.astro`). A tap opens search over the page (`components/SearchSheet.astro`, a `<dialog>`). On a phone it fills the screen, and its first row takes the page color, because Safari keeps that color behind the clock. On a wide screen it is a centered panel over a dimmed page. Before typing, it lists six suggestions. Results update as the reader types, grouped by section, each under its emblem, name, and count. Arrow keys move between the field and the results. A tap on a result closes it and goes to the dhikr. `/`, ⌘K, or Ctrl+K opens it. On a wide screen an empty field shows «Esc», in the place the clear button takes once the reader types. The clear button is an eraser, not a cross, so it does not read as «إلغاء», which closes search beside it. The owner asked for it.

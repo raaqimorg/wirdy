@@ -8,7 +8,7 @@ The setup, the commands, the git hooks, and the generated files.
 2. Run `bun install`. It also turns on the git hooks in `.githooks/`.
 3. Run `bun run dev`, and open `http://localhost:4321`.
 
-The icon and card scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`.
+The icon, card, and promo scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`. The promo scripts also need [ffmpeg](https://ffmpeg.org) on `PATH`, and a browser that plays H.264 (Brave or Chrome, not plain Chromium).
 
 ## Commands
 
@@ -26,10 +26,16 @@ The icon and card scripts need a Chromium browser (Brave, Chrome, Chromium, or E
 | `bun run icons`            | Draws the favicons from `src/lib/mark.ts`.                     |
 | `bun run opengraph`        | Draws the cards of the home page and each section.             |
 | `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.         |
+| `bun run promo:check <f>`  | Names what in a promo film breaks its rules.                   |
+| `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.       |
+| `bun run promo:render <f>` | Renders a promo film to `out/<slug>.mp4` (`--draft`: half).    |
+| `bun run promo:clip`       | Turns a simulator recording into a clip a film can seek.       |
 | `bun run visits hourly`    | Sends the owner the visits of the last hour on Telegram.       |
 | `bun run visits morning`   | Sends the owner the visits of the day before on Telegram.      |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
+
+The `promo:*` scripts make a promo film from `promo/<slug>/` (`<f>` is that folder). The `making-a-promo` skill (`.claude/skills/making-a-promo/SKILL.md`) is the procedure, and its `template/` is the film to start from.
 
 Never run `bun run deploy`, or a `wrangler` command that changes the live site, unless the owner asks for that deploy.
 

@@ -12,7 +12,8 @@
 - `src/scripts/search.ts`: the search module behind the search sheet.
 - `src/scripts/service-worker.js`: the service worker. `src/lib/offline.ts` writes it into `dist/` after the build, with the fingerprint of every page ([`docs/exceptions.md`](docs/exceptions.md#a-service-worker-keeps-the-sections-on-the-device)).
 - `public/`: the generated icons and cards, and `_headers`. Run `bun run icons`, `bun run opengraph`, or `bun run opengraph:adhkar`. Never edit them by hand.
-- `scripts/`: the icon and card generators (headless Chromium), the verification scripts, the visit reports to Telegram (`visits/`), the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
+- `scripts/`: the icon and card generators (headless Chromium), the promo film scripts (`promo/`), the visit reports to Telegram (`visits/`), the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
+- `promo/<slug>/`: a promo film for social apps: `STORY.md`, `film.html`, and `post.md`. Its `clips/` and `out/` are ignored. The `making-a-promo` skill makes one ([`docs/branding/imagery.md`](docs/branding/imagery.md#the-promo-films)).
 - `verification/`: one JSON proof per proven dhikr, and `pending.json`, the adhkar not proven yet. The site does not read it ([`docs/content.md`](docs/content.md#the-proof)).
 - `docs/`: [`README.md`](docs/README.md) indexes every doc and says when to read it.
 
