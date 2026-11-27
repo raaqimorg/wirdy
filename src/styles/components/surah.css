@@ -63,12 +63,8 @@
 
 .surah__chevron {
   --icon-stroke: var(--stroke-icon-bold);
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .surah__chevron {
-    transition: rotate var(--duration-release) var(--spring);
-  }
+  transition: rotate var(--duration-release) var(--spring);
 }
 
 .surah__rest[open] .surah__chevron {

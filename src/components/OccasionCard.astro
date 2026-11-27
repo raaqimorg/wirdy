@@ -5,7 +5,7 @@ import type { Tile } from '../lib/collection';
 interface Props {
   tile: Tile;
   variant: 'lead' | 'row' | 'compact';
-  motion: 'always' | 'wide-only' | 'still';
+  motion: 'live' | 'still';
 }
 
 const { tile, variant, motion } = Astro.props;

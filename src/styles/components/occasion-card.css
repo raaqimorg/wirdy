@@ -12,6 +12,7 @@
   overflow: hidden;
   background: var(--color-panel);
   border-radius: var(--radius-large);
+  transition: transform var(--duration-release) var(--spring);
 }
 
 .occasion-card__stage {
@@ -63,18 +64,12 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .occasion-card__face {
-    transition: transform var(--duration-release) var(--spring);
-  }
-
-  .occasion-card:active .occasion-card__face {
-    transform: scale(0.97);
-    transition: transform var(--duration-press) var(--ease-out);
-  }
+.occasion-card:active .occasion-card__face {
+  transform: scale(0.97);
+  transition: transform var(--duration-press) var(--ease-out);
 }
 
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) {
   .occasion-card:hover .occasion-card__face {
     transform: scale(1.02);
     transition-duration: var(--duration-release);

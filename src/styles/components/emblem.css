@@ -2,15 +2,65 @@
   display: block;
   width: 100%;
   height: 100%;
-  animation: fade var(--duration-fade) var(--ease-out) both;
 }
 
-.emblem--still {
-  animation: none;
+.emblem [data-enter] {
+  --enter: emblem-grow;
+
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-@media (max-width: 63.99rem) {
-  .emblem--wide-only {
-    animation: none;
+.emblem [data-enter="up"] {
+  --enter: emblem-up;
+
+  transform-origin: bottom;
+}
+
+.emblem [data-enter="across"] {
+  --enter: emblem-across;
+
+  transform-origin: right;
+}
+
+.emblem [data-enter="turn"] {
+  --enter: emblem-turn;
+}
+
+:root[data-emblems] .emblem[data-live]:not([data-shown]) [data-enter] {
+  opacity: 0;
+}
+
+.emblem[data-shown] [data-enter] {
+  animation:
+    var(--enter) var(--duration-enter) var(--spring) both,
+    fade var(--duration-press) var(--ease-out) both;
+}
+
+.emblem[data-shown] [data-enter="fade"] {
+  animation: fade var(--duration-enter) var(--ease-out) both;
+}
+
+@keyframes emblem-grow {
+  from {
+    transform: scale(0.6);
+  }
+}
+
+@keyframes emblem-up {
+  from {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes emblem-across {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes emblem-turn {
+  from {
+    transform: rotate(26deg);
   }
 }

@@ -17,6 +17,7 @@ A sunflower from the front: a ring of 12 round petals around a round disc. A you
 
 - The disc takes the color of the first section, «الصباح والمساء», so the mark and the first card match.
 - On a colored bar (`<Mark inks="stage">`), the petals are eggshell and the disc black at 24%, so the shape holds on any section color.
+- On the home page's bar, once the cards reach it, the mark turns to `<Mark inks="plain">`: the petals in the text color (`currentColor`) and the disc black at 24%, the stage mark on the paper.
 - On a section's sharing card, the mark sits on an eggshell disc, in its own colors.
 - Never rotate, stretch, or outline the mark, change the petal count, or recolor one part alone.
 

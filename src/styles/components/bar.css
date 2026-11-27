@@ -32,6 +32,18 @@
   text-decoration: none;
 }
 
+.bar__mark {
+  display: grid;
+}
+
+.bar__mark > * {
+  grid-area: 1 / 1;
+}
+
+.bar__plain {
+  opacity: 0;
+}
+
 .bar__name {
   translate: 0 -0.13em;
 }
@@ -65,6 +77,39 @@
     animation-duration: auto;
     animation-timeline: --reading;
     animation-range: contain 0% contain var(--size-bar);
+  }
+
+  .bar--home .bar__name {
+    animation-timeline: --cards;
+    animation-range: exit-crossing 0% exit-crossing var(--size-bar);
+  }
+
+  .bar--home .bar__mark > * {
+    animation: bar-mark-own linear both;
+    animation-duration: auto;
+    animation-timeline: --cards;
+    animation-range: exit-crossing 0% exit-crossing var(--size-bar);
+  }
+
+  .bar--home .bar__mark > .bar__plain {
+    animation-name: bar-mark-plain;
+  }
+}
+
+@keyframes bar-mark-own {
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bar-mark-plain {
+  50%,
+  100% {
+    opacity: 1;
   }
 }
 

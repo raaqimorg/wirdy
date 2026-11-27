@@ -10,6 +10,7 @@
 .entry:target {
   background: var(--tone-wash);
   outline: var(--border-ring) solid var(--tone-text);
+  animation: entry-found calc(var(--duration-enter) * 3) var(--ease-out);
 }
 
 .entry__main {
@@ -241,22 +242,14 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .entry:target {
-    animation: entry-found calc(var(--duration-enter) * 3) var(--ease-out);
-  }
-}
-
 @keyframes entry-found {
   from {
     background: var(--tone-flash);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .entry__toggle svg {
-    transition: rotate var(--duration-release) var(--spring);
-  }
+.entry__toggle svg {
+  transition: rotate var(--duration-release) var(--spring);
 }
 
 @media (forced-colors: active) {

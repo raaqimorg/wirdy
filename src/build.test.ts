@@ -148,6 +148,10 @@ describe('built site', () => {
     );
   });
 
+  it('moves the same for every reader, whatever the device asks', () => {
+    expect(all + css).not.toContain('prefers-reduced-motion');
+  });
+
   it('opens the next page at once, with no transition to swallow a tap', () => {
     expect(all + css).not.toContain('view-transition');
   });
@@ -388,6 +392,42 @@ describe('built site', () => {
       PALETTE.petal,
       PALETTE.disc,
     ]);
+  });
+
+  it('lays the home mark over one in the bar ink, and no other bar', () => {
+    const home = barOf(html);
+    expect(home).toMatch(/<nav class="bar bar--home"/u);
+    const [colored, inked = ''] = home.match(/<svg class="mark[ "][\s\S]*?<\/svg>/gu)!;
+    expect(inked).toMatch(/^<svg class="mark bar__plain"/u);
+    expect(new Set([...inked.matchAll(/ fill="([^"]+)"/gu)].map(([, ink]) => ink))).toEqual(
+      new Set(['currentColor', PALETTE.shade])
+    );
+    expect(petals(inked)).toEqual(petals(colored));
+    for (const id of OCCASION_IDS) {
+      expect(barOf(own(id))).not.toMatch(/bar--home|bar__plain/u);
+    }
+  });
+
+  it('lets the emblem of every home card and every banner enter, and no other', () => {
+    const cards = [...html.matchAll(/<svg class="emblem occasion-card__emblem"[^>]*>/gu)];
+    expect(cards).toHaveLength(OCCASION_IDS.length + guidePages.length);
+    for (const [svg] of cards) expect(svg).toContain('data-live');
+    for (const id of [...OCCASION_IDS, ...guidePages]) {
+      const page = own(id);
+      const banner = page.match(/<header class="banner[\s\S]*?<\/header>/u)![0];
+      expect(banner).toMatch(/<svg class="emblem"[^>]*data-live/u);
+      expect(banner.match(/data-enter="/gu)).toHaveLength(1);
+      expect(page.match(/<svg [^>]*data-live/gu)).toHaveLength(1);
+    }
+  });
+
+  it('enters a lit shape each time its emblem is half in view, and resets it once out of view', () => {
+    expect(html).toMatch(/<script>[\s\S]*?root\.dataset\.emblems = ''[\s\S]*?<\/script>/u);
+    expect(html).toContain('threshold: [0, 0.5]');
+    expect(html).toContain('delete dataset.shown');
+    expect(css).toMatch(
+      /:root\[data-emblems\] \.emblem\[data-live\]:not\(\[data-shown\]\) \[data-enter\]\{opacity:0\}/u
+    );
   });
 
   it('switches between the morning and the evening form, and marks the one that shows', () => {
