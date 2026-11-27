@@ -1,0 +1,28 @@
+{
+  "data": {
+    "viewer": {
+      "zones": [
+        {
+          "countries": [
+            { "sum": { "visits": 133 }, "dimensions": { "clientCountryName": "SA" } },
+            { "sum": { "visits": 33 }, "dimensions": { "clientCountryName": "US" } }
+          ],
+          "pages": [
+            { "sum": { "visits": 154 }, "dimensions": { "clientRequestPath": "/" } },
+            { "sum": { "visits": 7 }, "dimensions": { "clientRequestPath": "/al-jumuah/" } }
+          ],
+          "fromX": [{ "sum": { "visits": 87 } }],
+          "posters": [{ "count": 22 }],
+          "missing": [
+            {
+              "count": 24,
+              "dimensions": { "clientRequestPath": "/apple-touch-icon-precomposed.png" }
+            }
+          ],
+          "failures": []
+        }
+      ]
+    }
+  },
+  "errors": null
+}
