@@ -85,7 +85,7 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 
 ## Each dhikr has a card, named by its fingerprint
 
-`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/tibb/` for each hadith (`hadithCardOf`), 2400 by 1260: 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
+`scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/<guide>/` for each hadith (`hadithCardOf`), 2400 by 1260: 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
 
 - A changed card gets a new name, so an app with the old image cached fetches the new one, and a test fails when a card was not redrawn. Run `bun run opengraph:adhkar`. It draws only changed cards.
 - Raise `TEMPLATE` in `src/lib/card.ts` when only the drawing changes.

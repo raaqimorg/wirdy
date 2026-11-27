@@ -1,0 +1,16 @@
+---
+import { Effect } from 'effect';
+import GuideHadithPage from '../../components/GuideHadithPage.astro';
+import { hadithsOf } from '../../lib/collection';
+import { slugOf } from '../../lib/permalink';
+
+export async function getStaticPaths() {
+  const list = await Effect.runPromise(hadithsOf('jumuah'));
+  return list.map((entry, index) => ({
+    params: { hadith: slugOf(entry.id) },
+    props: { entry, previous: list[index - 1], next: list[index + 1] },
+  }));
+}
+---
+
+<GuideHadithPage guide="jumuah" {...Astro.props} />

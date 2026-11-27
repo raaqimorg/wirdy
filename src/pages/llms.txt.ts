@@ -12,7 +12,7 @@ const llms = (site: URL | undefined) =>
 
 > The daily adhkar authentic from the Prophet ﷺ, each with its takhrij linked to dorar.net. A project of [${RAAQIM.name} (${RAAQIM.arabic})](${RAAQIM.url})
 
-Wirdy holds the adhkar of the morning, the evening, sleep, prayer, and the rest of the day, and the hadiths of الطب النبوي. A dhikr is in Sahih al-Bukhari or Sahih Muslim, or al-Albani grades it صحيح or حسن. Each dhikr has a page of its own with its text, its count, its moment, and its takhrij. The site is in Arabic, free, and has no ads or tracking
+Wirdy holds the adhkar of the morning, the evening, sleep, prayer, and the rest of the day, and two guides of hadiths: سنن الجمعة and الطب النبوي. A dhikr is in Sahih al-Bukhari or Sahih Muslim, or al-Albani grades it صحيح or حسن. Each dhikr has a page of its own with its text, its count, its moment, and its takhrij. The site is in Arabic, free, and has no ads or tracking
 
 ## Sections
 

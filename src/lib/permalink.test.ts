@@ -24,10 +24,10 @@ describe('the links of a dhikr', () => {
 
 describe('the links of a hadith of الطب النبوي', () => {
   it('has its own page under the section', () => {
-    expect(hadithPath('tadawaw')).toBe('/al-tibb-al-nabawi/tadawaw/');
+    expect(hadithPath('tibb', 'tadawaw')).toBe('/al-tibb-al-nabawi/tadawaw/');
   });
 
   it('has its place in the section page', () => {
-    expect(hadithAnchor('tadawaw')).toBe('/al-tibb-al-nabawi/#tadawaw');
+    expect(hadithAnchor('tibb', 'tadawaw')).toBe('/al-tibb-al-nabawi/#tadawaw');
   });
 });

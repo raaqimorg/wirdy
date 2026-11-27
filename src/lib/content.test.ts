@@ -8,7 +8,8 @@ import { GROUP_SLUGS } from './groups';
 import { OCCASION_IDS } from './occasions';
 import { dhikrPath, hadithPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
-import { dhikrSchema, STRICT, tibbSchema, type Dhikr } from './schema';
+import { dhikrSchema, hadithSchema, STRICT, type Dhikr } from './schema';
+import { GUIDE_IDS, type Guide } from './site';
 import { phrasesOf as phrasesEffect } from './phrases';
 import { FORMATS, posterFile, postersOf, themesOf } from './poster';
 import { fullTitle } from './title';
@@ -38,20 +39,24 @@ const entries = readdirSync(ROOT, { recursive: true, encoding: 'utf8' })
     };
   });
 
-const TIBB = join(process.cwd(), 'src/content/tibb');
+const hadiths = GUIDE_IDS.flatMap((guide) => {
+  const folder = join(process.cwd(), 'src/content', guide);
+  return readdirSync(folder, { encoding: 'utf8' })
+    .filter((path) => path.endsWith('.md'))
+    .toSorted()
+    .map((path) => {
+      const file = matter(readFileSync(join(folder, path), 'utf8'));
+      return {
+        guide,
+        path,
+        raw: file.data,
+        body: file.content,
+        data: Schema.decodeUnknownSync(hadithSchema, STRICT)(file.data),
+      };
+    });
+});
 
-const tibb = readdirSync(TIBB, { encoding: 'utf8' })
-  .filter((path) => path.endsWith('.md'))
-  .toSorted()
-  .map((path) => {
-    const file = matter(readFileSync(join(TIBB, path), 'utf8'));
-    return {
-      path,
-      raw: file.data,
-      body: file.content,
-      data: Schema.decodeUnknownSync(tibbSchema, STRICT)(file.data),
-    };
-  });
+const hadithsOf = (guide: Guide) => hadiths.filter((hadith) => hadith.guide === guide);
 
 const quran = entries.filter((entry) => entry.data.quran);
 const prose = entries.filter((entry) => !entry.data.quran);
@@ -76,7 +81,7 @@ describe('the adhkar collection', () => {
 describe('the group links', () => {
   const groups = new Set([
     ...entries.flatMap(({ data }) => data.group ?? []),
-    ...tibb.map(({ data }) => data.group),
+    ...hadiths.map(({ data }) => data.group),
   ]);
 
   it.each([...groups])('give %s a slug', (group) => {
@@ -220,26 +225,33 @@ it('reads every file under the adhkar folder', () => {
   expect(entries.map((entry) => relative(ROOT, join(ROOT, entry.path)))).toEqual(files.toSorted());
 });
 
-it('lists at least one hadith of الطب النبوي', () => {
-  expect(tibb.length).toBeGreaterThan(0);
-});
+describe.each(GUIDE_IDS)('the hadiths of %s', (guide) => {
+  it('number at least one', () => {
+    expect(hadithsOf(guide).length).toBeGreaterThan(0);
+  });
 
-it('gives each hadith of الطب النبوي its own order', () => {
-  const orders = tibb.map(({ data }) => data.order);
-  expect(new Set(orders).size).toBe(orders.length);
-});
+  it('each have their own order', () => {
+    const orders = hadithsOf(guide).map(({ data }) => data.order);
+    expect(new Set(orders).size).toBe(orders.length);
+  });
 
-it('gives the groups of الطب النبوي slugs that no hadith there has', () => {
-  const slugs = [...new Set(tibb.map(({ data }) => GROUP_SLUGS[data.group]))];
-  const hadith = new Set(tibb.map(({ path }) => slugOf(path.replace(/\.md$/u, ''))));
-  expect(slugs.filter((slug) => hadith.has(slug!))).toEqual([]);
+  it('each have their own title', () => {
+    const titles = hadithsOf(guide).map(({ data }) => data.title);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it('have group slugs that no hadith there has', () => {
+    const slugs = [...new Set(hadithsOf(guide).map(({ data }) => GROUP_SLUGS[data.group]))];
+    const own = new Set(hadithsOf(guide).map(({ path }) => slugOf(path.replace(/\.md$/u, ''))));
+    expect(slugs.filter((slug) => own.has(slug!))).toEqual([]);
+  });
 });
 
 const siteOf = (link: string) => new URL(link).hostname;
 
-describe.each(tibb)('tibb/$path', ({ path, raw, body, data }) => {
+describe.each(hadiths)('$guide/$path', ({ path, raw, body, data }) => {
   it('has valid frontmatter', () => {
-    expect(issuesOf(tibbSchema, raw)).toBeUndefined();
+    expect(issuesOf(hadithSchema, raw)).toBeUndefined();
   });
 
   it('starts its file name with its order', () => {
@@ -271,10 +283,10 @@ const pathOf = ({ path, data }: (typeof entries)[number]) =>
 describe('the permalinks', () => {
   const current = [
     ...entries.map((entry) => pathOf(entry)),
-    ...tibb.map(({ path }) => hadithPath(slugOf(path.replace(/\.md$/u, '')))),
+    ...hadiths.map(({ guide, path }) => hadithPath(guide, slugOf(path.replace(/\.md$/u, '')))),
   ];
 
-  it('gives each dhikr and each hadith of الطب النبوي its own link', () => {
+  it('gives each dhikr and each hadith its own link', () => {
     expect(new Set(current).size).toBe(current.length);
   });
 
@@ -293,11 +305,6 @@ describe('the permalinks', () => {
     const titles = entries.map((entry) => fullTitle(entry.data));
     expect(new Set(titles).size).toBe(titles.length);
   });
-
-  it('gives each hadith of الطب النبوي its own title', () => {
-    const titles = tibb.map(({ data }) => data.title);
-    expect(new Set(titles).size).toBe(titles.length);
-  });
 });
 
 describe('the posters', () => {
@@ -307,7 +314,9 @@ describe('the posters', () => {
         .filter((path) => path.endsWith('.png'))
         .map((path) => `posters/${path}`)
     : [];
-  const wanted = Effect.runSync(postersOf(entries, tibb)).flatMap((poster) =>
+  const wanted = Effect.runSync(
+    postersOf(entries, { jumuah: hadithsOf('jumuah'), tibb: hadithsOf('tibb') })
+  ).flatMap((poster) =>
     FORMATS.flatMap((format) => themesOf(format).map((theme) => posterFile(poster, format, theme)))
   );
 
@@ -329,8 +338,8 @@ describe('the sharing cards', () => {
     ...entries.map(({ path, body, data }) =>
       cardFile(cardOf(data, body), data.occasion, slugOf(path.replace(/\.md$/u, '')))
     ),
-    ...tibb.map(({ path, body, data }) =>
-      cardFile(hadithCardOf(data, body), 'tibb', slugOf(path.replace(/\.md$/u, '')))
+    ...hadiths.map(({ guide, path, body, data }) =>
+      cardFile(hadithCardOf(guide, data, body), guide, slugOf(path.replace(/\.md$/u, '')))
     ),
   ];
 

@@ -5,7 +5,7 @@ import { EMBLEMS } from './emblems';
 import { markSvg, PETALS } from './mark';
 import { OCCASIONS } from './occasions';
 import { PALETTE } from './palette';
-import { SITE, TIBB } from './site';
+import { GUIDE_IDS, GUIDES, SITE } from './site';
 import { hueAt } from './tone';
 
 const doc = (name: string) =>
@@ -63,13 +63,13 @@ describe('the color doc', () => {
     }
   );
 
-  it('says the heading and color of tibb that src/lib/site.ts holds', () => {
-    expect(colors.get('tibb')?.slice(0, 2)).toEqual([TIBB.heading, TIBB.color]);
+  it.each(GUIDE_IDS)('says the heading and color of %s that src/lib/site.ts holds', (id) => {
+    expect(colors.get(id)?.slice(0, 2)).toEqual([GUIDES[id].heading, GUIDES[id].color]);
   });
 
   it('lists every section, and no other', () => {
     const sections = [...colors.keys()].filter((key) => !(key in PALETTE));
-    expect(sections).toEqual([...OCCASIONS.map(({ id }) => id), 'tibb']);
+    expect(sections).toEqual([...OCCASIONS.map(({ id }) => id), ...GUIDE_IDS]);
   });
 });
 

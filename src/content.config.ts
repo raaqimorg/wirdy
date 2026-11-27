@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { Result, Schema } from 'effect';
-import { dhikrSchema, STRICT, tibbSchema } from './lib/schema';
+import { dhikrSchema, hadithSchema, STRICT } from './lib/schema';
 
 const fromEffect = <A>(schema: Schema.Decoder<A>) => {
   const decode = Schema.decodeUnknownResult(schema, STRICT);
@@ -19,9 +19,10 @@ const adhkar = defineCollection({
   schema: fromEffect(dhikrSchema),
 });
 
-const tibb = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/tibb' }),
-  schema: fromEffect(tibbSchema),
-});
+const guide = (folder: string) =>
+  defineCollection({
+    loader: glob({ pattern: '**/*.md', base: `./src/content/${folder}` }),
+    schema: fromEffect(hadithSchema),
+  });
 
-export const collections = { adhkar, tibb };
+export const collections = { adhkar, jumuah: guide('jumuah'), tibb: guide('tibb') };

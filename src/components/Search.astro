@@ -9,11 +9,11 @@ import SearchRow from './SearchRow.astro';
 import type { SearchRow as Row } from '../lib/collection';
 import type { EmblemName } from '../lib/emblems';
 import { OCCASIONS } from '../lib/occasions';
-import { TIBB } from '../lib/site';
+import { GUIDE_IDS, GUIDES } from '../lib/site';
 
 const sections: { id: EmblemName; heading: string; color: string }[] = [
   ...OCCASIONS,
-  { id: 'tibb', heading: TIBB.heading, color: TIBB.color },
+  ...GUIDE_IDS.map((id) => ({ id, heading: GUIDES[id].heading, color: GUIDES[id].color })),
 ];
 const tries = ['السفر', 'الاستخارة', 'الكرب', 'النوم', 'العافية', 'سيد الاستغفار'];
 const blank: Row = {

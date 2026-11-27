@@ -1,5 +1,6 @@
 import { Array, Option, Order, Schema } from 'effect';
 import { OCCASION_IDS } from './occasions';
+import { GUIDE_IDS } from './site';
 
 export const SEARCH_INDEX = '/search/index.json';
 
@@ -11,7 +12,7 @@ export const searchRowSchema = Schema.Struct({
   source: Schema.optionalKey(Schema.String),
   heading: Schema.String,
   color: Schema.String,
-  emblem: Schema.Literals([...OCCASION_IDS, 'tibb']),
+  emblem: Schema.Literals([...OCCASION_IDS, ...GUIDE_IDS]),
   group: Schema.optionalKey(Schema.String),
   quran: Schema.optionalKey(Schema.Boolean),
   href: Schema.String,

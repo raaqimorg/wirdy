@@ -7,8 +7,8 @@ import { markSvg } from './mark';
 import { OCCASIONS, sectionOf, type Occasion } from './occasions';
 import { PALETTE } from './palette';
 import { phrasesOf, type Phrase, type PhraseCountMismatch } from './phrases';
-import type { Dhikr, Tibb } from './schema';
-import { SITE, TIBB } from './site';
+import type { Dhikr, Hadith } from './schema';
+import { GUIDE_IDS, GUIDES, SITE, type Guide } from './site';
 import { takhrijLine } from './takhrij';
 import { eveningTitle } from './title';
 import { formOf, type Form, type MalformedMarker } from './variants';
@@ -184,7 +184,7 @@ export const occasionPostersOf = (
     (form) => adhkarPosterOf(occasion, entries, form)
   );
 
-export const tibbPosterOf = (entries: ReadonlyArray<Entry<Tibb>>): Poster => {
+export const hadithPosterOf = (guide: Guide, entries: ReadonlyArray<Entry<Hadith>>): Poster => {
   const items = entries
     .toSorted((one, other) => one.data.order - other.data.order)
     .map(({ data, body = '' }, index) => ({
@@ -201,25 +201,28 @@ export const tibbPosterOf = (entries: ReadonlyArray<Entry<Tibb>>): Poster => {
       source: takhrijLine(data.takhrij),
     }));
   return {
-    slug: TIBB.path.replaceAll('/', ''),
-    emblem: 'tibb',
+    slug: GUIDES[guide].path.replaceAll('/', ''),
+    emblem: guide,
     form: undefined,
-    heading: TIBB.title,
+    heading: GUIDES[guide].title,
     summary: `${hadithLabel(items.length)} مما صح عن النبي ﷺ، ومع كل مصدره`,
     promise: 'لا حديث هنا إلا ما صح عن النبي ﷺ، ومع كل درجته ومصدره',
-    color: TIBB.color,
-    path: TIBB.path,
+    color: GUIDES[guide].color,
+    path: GUIDES[guide].path,
     items,
   };
 };
 
 export const postersOf = (
   adhkar: ReadonlyArray<Entry<Dhikr>>,
-  tibb: ReadonlyArray<Entry<Tibb>>
+  hadiths: Readonly<Record<Guide, ReadonlyArray<Entry<Hadith>>>>
 ): Effect.Effect<ReadonlyArray<Poster>, MalformedMarker | PhraseCountMismatch> =>
   Effect.map(
     Effect.forEach(OCCASIONS, ({ id }) => occasionPostersOf(id, adhkar)),
-    (posters) => [...posters.flat(), tibbPosterOf(tibb)]
+    (posters) => [
+      ...posters.flat(),
+      ...GUIDE_IDS.map((guide) => hadithPosterOf(guide, hadiths[guide])),
+    ]
   );
 
 export type ThemeName = 'light' | 'dark';

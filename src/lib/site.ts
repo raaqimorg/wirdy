@@ -1,5 +1,6 @@
+import { Record } from 'effect';
 import { OCCASION_IDS } from './occasions';
-import { toneOf } from './tone';
+import { chromaOf, DEEP_LIGHTNESS, hexFromOklch, toneOf } from './tone';
 
 export const SITE = {
   name: 'وِردي',
@@ -28,9 +29,23 @@ export const RAAQIM = {
   email: 'contact@raaqim.org',
 } as const;
 
-export const TIBB = {
-  path: '/al-tibb-al-nabawi/',
-  heading: 'الطب النبوي',
-  title: 'الطب النبوي',
-  color: toneOf(80, OCCASION_IDS.length),
+export const GUIDES = {
+  jumuah: {
+    path: '/al-jumuah/',
+    heading: 'الجمعة',
+    title: 'سنن الجمعة',
+    topics: 'في فضل يوم الجمعة والغسل والتبكير والخطبة والصلاة وسورة الكهف وساعة الإجابة',
+    color: hexFromOklch(DEEP_LIGHTNESS, chromaOf(DEEP_LIGHTNESS), 115),
+  },
+  tibb: {
+    path: '/al-tibb-al-nabawi/',
+    heading: 'الطب النبوي',
+    title: 'الطب النبوي',
+    topics: 'في التداوي والعسل والحبة السوداء وماء زمزم والحجامة والرقية وحفظ الصحة',
+    color: toneOf(80, OCCASION_IDS.length),
+  },
 } as const;
+
+export type Guide = keyof typeof GUIDES;
+
+export const GUIDE_IDS: ReadonlyArray<Guide> = Record.keys(GUIDES);

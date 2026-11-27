@@ -40,7 +40,7 @@ Each section has three names in `src/lib/occasions.ts` ([`design-system.md`](../
 - `heading`: two words at most, for the top of its page and its card («عند النوم»).
 - `title`: with «أذكار», for the browser tab, search engines, the sharing cards, and the breadcrumbs («أذكار النوم»).
 
-«الطب النبوي» holds the sound hadiths on treatment and keeping well: `heading` and `title` «الطب النبوي». `src/lib/site.ts` holds its page.
+Two guides hold sound hadiths to read, not adhkar to say. «الجمعة» holds the sunan of Friday, from its virtue to what is forbidden on it: `heading` «الجمعة», `title` «سنن الجمعة». «الطب النبوي» holds the sound hadiths on treatment and keeping well: `heading` and `title` «الطب النبوي». `GUIDES` in `src/lib/site.ts` holds their pages.
 
 ## The voice
 

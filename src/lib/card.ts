@@ -7,8 +7,8 @@ import { fullLeadOf, REST, suwarOf } from './lead';
 import { markSvg } from './mark';
 import { OCCASIONS, sectionOf } from './occasions';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
-import type { Dhikr, Tibb } from './schema';
-import { SITE, TIBB } from './site';
+import type { Dhikr, Hadith } from './schema';
+import { GUIDES, SITE, type Guide } from './site';
 import { takhrijLine } from './takhrij';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
 
@@ -96,11 +96,11 @@ export const cardOf = (
     };
   });
 
-export const hadithCardOf = (data: Tibb, body: string): Card => {
+export const hadithCardOf = (guide: Guide, data: Hadith, body: string): Card => {
   const { text, cut } = excerptClauses(body.trim(), LIMIT);
   return {
-    heading: TIBB.title,
-    color: TIBB.color,
+    heading: GUIDES[guide].title,
+    color: GUIDES[guide].color,
     title: data.title,
     context: null,
     lead: `عن ${data.rawi}`,

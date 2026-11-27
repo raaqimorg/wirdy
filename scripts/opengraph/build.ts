@@ -10,8 +10,8 @@ import {
 import { markSvg } from '../../src/lib/mark.ts';
 import { listed, OCCASIONS } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
-import { readAdhkar, readTibb } from '../../src/lib/records.ts';
-import { SITE, TIBB } from '../../src/lib/site.ts';
+import { readAdhkar, readHadiths } from '../../src/lib/records.ts';
+import { GUIDE_IDS, GUIDES, SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
 import { run } from '../run.ts';
 import { amiri, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
@@ -77,7 +77,9 @@ body{display:grid;grid-template-columns:minmax(0,1fr) 452px;column-gap:48px;back
 const program = Effect.gen(function* () {
   const fs = yield* FileSystem.FileSystem;
   const adhkar = yield* readAdhkar;
-  const tibb = yield* readTibb;
+  const guides = yield* Effect.forEach(GUIDE_IDS, (id) =>
+    Effect.map(readHadiths(id), (entries) => ({ id, count: entries.length }))
+  );
   const sections: ReadonlyArray<SectionCard> = [
     ...OCCASIONS.map(({ id, title, color }) => ({
       id,
@@ -87,7 +89,12 @@ const program = Effect.gen(function* () {
         adhkar.filter(({ data }) => data.occasion === id && listed(data.mode)).length
       ),
     })),
-    { id: 'tibb', title: TIBB.title, color: TIBB.color, note: hadithLabel(tibb.length) },
+    ...guides.map(({ id, count }) => ({
+      id,
+      title: GUIDES[id].title,
+      color: GUIDES[id].color,
+      note: hadithLabel(count),
+    })),
   ];
   const cards = [
     { file: homeCardFile(), html: home },

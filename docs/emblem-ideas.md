@@ -1,6 +1,6 @@
 # Emblem ideas
 
-The 109 emblems drawn in November 2026 and not chosen, and eight retired, so any section can take one instead of starting from nothing. Each sits under the section it was drawn for, on that section's color, but belongs to none now: any of them fits any section whose content carries its meaning.
+The 126 emblems drawn in November 2026 and not chosen, and ten retired, so any section can take one instead of starting from nothing. Each sits under the section it was drawn for, on that section's color, but belongs to none now: any of them fits any section whose content carries its meaning.
 
 Each keeps the rules of the set: a 240-unit square, flat geometric shapes, black shade at low opacity, and one lit shape in full eggshell (`src/lib/palette.ts`). Each drawing is a still frame in `docs/emblem-ideas/`, and its shapes are the ones to draw again. The 68 of the second round are also in [`proposals/2026-11-27-emblems/index.html`](proposals/2026-11-27-emblems/index.html), with an Arabic caption each, on a page that tries any emblem on any section.
 
@@ -678,6 +678,126 @@ Rain in slanted strokes, with one lit drop. It was the emblem of «المطر و
 <img src="emblem-ideas/wind.svg" width="160" alt="">
 
 Three gusts that curl at their ends, the middle one lit. «اللهم إني أسألك خيرها».
+
+## الجمعة (`jumuah`)
+
+### The five hours
+
+<img src="emblem-ideas/five-hours.svg" width="160" alt="">
+
+«فكأنما قرب بدنة … فكأنما قرب بيضة». Five circles on the ground, from the largest to the smallest, the first lit: the hours of going early to the prayer, from the camel to the egg.
+
+Retired: the first emblem of الجمعة, which the owner called boring.
+
+### The twelve hours
+
+<img src="emblem-ideas/twelve-hours.svg" width="160" alt="">
+
+«فالتمسوها آخر ساعة بعد العصر». The twelve hours of Friday as a fan over the horizon, darkening toward evening, the last lit.
+
+Retired: the second emblem of الجمعة.
+
+### Draw near
+
+<img src="emblem-ideas/draw-near.svg" width="160" alt="">
+
+«احضروا الذكر وادنوا من الإمام». Rows as arcs around the minbar, the nearest lit.
+
+### The minbar
+
+<img src="emblem-ideas/the-minbar.svg" width="160" alt="">
+
+«يقرؤها كل يوم جمعة على المنبر إذا خطب الناس». A minbar of three steps, its seat lit.
+
+### The best of days
+
+<img src="emblem-ideas/best-of-days.svg" width="160" alt="">
+
+«خير يوم طلعت عليه الشمس يوم الجمعة». Seven suns on the horizon, the largest in the middle lit.
+
+### The light of the cave
+
+<img src="emblem-ideas/light-of-the-cave.svg" width="160" alt="">
+
+«أضاء له من النور ما بين الجمعتين». A dark mountain with a lit cave at its foot.
+
+### Others follow
+
+<img src="emblem-ideas/others-follow.svg" width="160" alt="">
+
+«فالناس لنا فيه تبع، اليهود غدا، والنصارى بعد غد». Three days in a row, Friday lit first, then Saturday and Sunday.
+
+### The perfume drop
+
+<img src="emblem-ideas/perfume-drop.svg" width="160" alt="">
+
+«أو يمس من طيب بيته». A round flask with one lit drop above it. The owner liked the idea and found the drop heavy, which led to the stopper.
+
+### Two garments
+
+<img src="emblem-ideas/two-garments.svg" width="160" alt="">
+
+«ما على أحدكم لو اشترى ثوبين ليوم الجمعة سوى ثوب مهنته». The work garment dark, and the Friday one beside it lit.
+
+### The first names
+
+<img src="emblem-ideas/the-first-names.svg" width="160" alt="">
+
+«يكتبون الأول فالأول». The angels' sheet of names, the first name lit, the fold at the foot.
+
+### Two khutbahs
+
+<img src="emblem-ideas/two-khutbahs.svg" width="160" alt="">
+
+«يخطب خطبتين يقعد بينهما». Two standing khutbahs, and the sitting between them lit.
+
+### The brief hour
+
+<img src="emblem-ideas/the-brief-hour.svg" width="160" alt="">
+
+«وأشار بيده يقللها». The circle of the day, with a short lit piece near its end.
+
+### The perfume shelf
+
+<img src="emblem-ideas/perfume-shelf.svg" width="160" alt="">
+
+«أو يمس من طيب بيته». Three bottles on a shelf, the round one in the middle lit with its drop.
+
+### The faceted bottle
+
+<img src="emblem-ideas/faceted-bottle.svg" width="160" alt="">
+
+«وأن يمس طيبا إن وجد». A faceted attar bottle whose stopper is a lit drop.
+
+### The censer
+
+<img src="emblem-ideas/the-censer.svg" width="160" alt="">
+
+«أو يمس من طيب بيته». A censer on its stand, its smoke rising lit.
+
+### Rising scent
+
+<img src="emblem-ideas/rising-scent.svg" width="160" alt="">
+
+«وأن يمس طيبا إن وجد». A round bottle with two lines of scent above it, the upper lit.
+
+### The lit face
+
+<img src="emblem-ideas/lit-face.svg" width="160" alt="">
+
+«وأن يمس طيبا إن وجد». A bottle of three faces, the light on one face only.
+
+### A thread of scent
+
+<img src="emblem-ideas/thread-of-scent.svg" width="160" alt="">
+
+«أو يمس من طيب بيته». An open round bottle, a thin lit thread of scent rising from it.
+
+### A thread of smoke
+
+<img src="emblem-ideas/thread-of-smoke.svg" width="160" alt="">
+
+«أو يمس من طيب بيته». A censer with a thin lit thread of smoke.
 
 ## الطب النبوي (`tibb`)
 

@@ -9,7 +9,7 @@ import { adhkarLabel } from './lib/arabic';
 import { homeCardFile } from './lib/card';
 import { ICON_VERSION, markSvg } from './lib/mark';
 import { PALETTE } from './lib/palette';
-import { RAAQIM, SITE, TIBB } from './lib/site';
+import { GUIDE_IDS, GUIDES, RAAQIM, SITE } from './lib/site';
 
 let html = '';
 let notFound = '';
@@ -23,10 +23,15 @@ const contentFiles = readdirSync(ADHKAR, { recursive: true, encoding: 'utf8' }).
   f.endsWith('.md')
 );
 const expected = contentFiles.length;
-const hadiths = readdirSync(join(process.cwd(), 'src/content/tibb'))
-  .filter((f) => f.endsWith('.md'))
-  .toSorted()
-  .map((f) => f.replace(/\.md$/u, '').replace(/^\d+-/u, ''));
+const guidePages = GUIDE_IDS.map((guide) => GUIDES[guide].path.slice(1, -1));
+const hadithsOf = (guide: (typeof GUIDE_IDS)[number]) =>
+  readdirSync(join(process.cwd(), 'src/content', guide))
+    .filter((f) => f.endsWith('.md'))
+    .toSorted()
+    .map((f) => f.replace(/\.md$/u, '').replace(/^\d+-/u, ''));
+const hadiths = GUIDE_IDS.flatMap((guide) =>
+  hadithsOf(guide).map((slug) => `${GUIDES[guide].path.slice(1)}${slug}`)
+);
 
 const countOf = (id: string) => contentFiles.filter((f) => f.startsWith(`${id}/`)).length;
 const graphOf = (page: string) =>
@@ -124,15 +129,18 @@ describe('built site', () => {
     }
   });
 
-  it('opens with a card for each occasion page and الطب النبوي', () => {
-    for (const id of OCCASION_IDS) {
+  it('opens with a card for each occasion page and each guide', () => {
+    for (const id of [...OCCASION_IDS, ...guidePages]) {
       expect(html).toMatch(cardTo(`/${id}/`));
     }
-    expect(html).toMatch(cardTo('/al-tibb-al-nabawi/'));
     expect(html).not.toContain('/ma-lam-yathbut/');
-    expect(html.match(/class="occasion-card /gu)).toHaveLength(OCCASION_IDS.length + 1);
+    expect(html.match(/class="occasion-card /gu)).toHaveLength(
+      OCCASION_IDS.length + guidePages.length
+    );
     expect(html.match(/occasion-card--lead/gu)).toHaveLength(1);
-    expect(html.match(/occasion-card--row/gu)).toHaveLength(OCCASION_IDS.length);
+    expect(html.match(/occasion-card--row/gu)).toHaveLength(
+      OCCASION_IDS.length + guidePages.length - 1
+    );
   });
 
   it('opens the next page at once, with no transition to swallow a tap', () => {
@@ -140,7 +148,11 @@ describe('built site', () => {
   });
 
   it('gives a page with a color its tone on the body, over a layer behind its top', () => {
-    for (const { id, color } of [...OCCASIONS, { id: 'al-tibb-al-nabawi', color: TIBB.color }]) {
+    const guides = GUIDE_IDS.map((guide, index) => ({
+      id: guidePages[index]!,
+      color: GUIDES[guide].color,
+    }));
+    for (const { id, color } of [...OCCASIONS, ...guides]) {
       expect(own(id)).toMatch(
         new RegExp(
           `<body class="tone" style="--tone: ${color}"> ?<a class="skip-link"[^<]*</a> ?<div class="page">`,
@@ -169,7 +181,7 @@ describe('built site', () => {
   });
 
   it('ends each list page with the other sections, never itself', () => {
-    const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'];
+    const sections = [...OCCASION_IDS, ...guidePages];
     for (const id of sections) {
       const page = own(id);
       const related = page.match(/<nav class="related container"[\s\S]*?<\/nav>/gu)!;
@@ -190,7 +202,7 @@ describe('built site', () => {
   });
 
   it('opens a menu of every section from an icon in the bar of each page but home and the 404 page, with no script', () => {
-    const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'];
+    const sections = [...OCCASION_IDS, ...guidePages];
     for (const path of [...sections, 'nawm/ayat-al-kursi']) {
       const bar = barOf(own(path));
       expect(bar).toMatch(
@@ -213,7 +225,7 @@ describe('built site', () => {
   });
 
   it('keeps one bar and one height at the top of every page', () => {
-    for (const path of ['nawm', 'nawm/ayat-al-kursi', 'al-tibb-al-nabawi']) {
+    for (const path of ['nawm', 'nawm/ayat-al-kursi', ...guidePages]) {
       const page = own(path);
       expect(page.match(/<nav class="bar[ "]/gu)).toHaveLength(1);
       expect(page.match(/<div class="banner__inner container">/gu)).toHaveLength(1);
@@ -221,7 +233,7 @@ describe('built site', () => {
     for (const path of ['nawm/ayat-al-kursi']) {
       expect(own(path)).toMatch(/<p class="banner__lede">[^<]+<\/p>/u);
     }
-    for (const path of ['nawm', 'al-tibb-al-nabawi']) {
+    for (const path of ['nawm', ...guidePages]) {
       expect(own(path)).not.toContain('class="banner__lede"');
     }
     expect(css).toMatch(/\.banner__inner\{[^}]*height:var\(--size-banner\)/u);
@@ -272,7 +284,7 @@ describe('built site', () => {
       html,
       notFound,
       ...Object.values(pages),
-      own('al-tibb-al-nabawi'),
+      ...guidePages.map((id) => own(id)),
       own('nawm/ayat-al-kursi'),
     ];
     for (const page of every) {
@@ -313,7 +325,7 @@ describe('built site', () => {
 
   it('gives a card only its named labels, in one order, each with one meaning', () => {
     const order = ['entry__name', 'entry__lead', 'entry__how', 'entry__rawi'];
-    const cards = [...Object.values(pages), own('al-tibb-al-nabawi')].flatMap((page) =>
+    const cards = [...Object.values(pages), ...guidePages.map((id) => own(id))].flatMap((page) =>
       [...page.matchAll(/<div class="entry__main">([\s\S]*?)<div class="entry__text">/gu)].map(
         (match) => match[1]!
       )
@@ -530,10 +542,9 @@ describe('built site', () => {
   });
 
   it('offers each section page its posters in every format and theme, each one shipped', () => {
-    const tibb = readFileSync(join(DIST, 'al-tibb-al-nabawi', 'index.html'), 'utf8');
     for (const [id, page] of [
       ...OCCASION_IDS.map((occasion) => [occasion, pages[occasion]!]),
-      ['tibb', tibb],
+      ...GUIDE_IDS.map((guide, index) => [guide, own(guidePages[index]!)]),
     ]) {
       const data = /data-posters="([^"]+)"/u.exec(page!)?.[1] ?? '{}';
       const times: Record<string, Record<string, [string, string]>> = JSON.parse(
@@ -550,10 +561,9 @@ describe('built site', () => {
   });
 
   it('gives each section page its own card, named by what it prints, the size of the home card', () => {
-    const tibb = readFileSync(join(DIST, 'al-tibb-al-nabawi', 'index.html'), 'utf8');
     for (const [id, page] of [
       ...OCCASION_IDS.map((occasion) => [occasion, pages[occasion]!]),
-      ['tibb', tibb],
+      ...GUIDE_IDS.map((guide, index) => [guide, own(guidePages[index]!)]),
     ]) {
       const url = metaOf(page!, 'property', 'og:image')!;
       expect(url).toMatch(
@@ -761,13 +771,15 @@ describe('built site', () => {
     for (const id of OCCASION_IDS) {
       expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
     }
-    expect(sitemap).toContain('<loc>https://wirdy.site/al-tibb-al-nabawi/</loc>');
+    for (const id of guidePages) {
+      expect(sitemap).toContain(`<loc>https://wirdy.site/${id}/</loc>`);
+    }
     expect(sitemap).not.toContain('ma-lam-yathbut');
-    for (const slug of hadiths) {
-      expect(sitemap).toContain(`<loc>https://wirdy.site/al-tibb-al-nabawi/${slug}/</loc>`);
+    for (const path of hadiths) {
+      expect(sitemap).toContain(`<loc>https://wirdy.site/${path}/</loc>`);
     }
     expect(sitemap.match(/<loc>/gu)).toHaveLength(
-      OCCASION_IDS.length + 2 + expected + hadiths.length
+      OCCASION_IDS.length + 1 + guidePages.length + expected + hadiths.length
     );
   });
 
@@ -777,7 +789,10 @@ describe('built site', () => {
     for (const { id, heading } of OCCASIONS) {
       expect(llms).toContain(`- [${heading}](https://wirdy.site/${id}/): `);
     }
-    expect(llms).toContain(`- [${TIBB.heading}](https://wirdy.site/al-tibb-al-nabawi/): `);
+    for (const guide of GUIDE_IDS) {
+      const { heading, path } = GUIDES[guide];
+      expect(llms).toContain(`- [${heading}](https://wirdy.site${path}): `);
+    }
     expect(llms).toContain(`(${RAAQIM.url})`);
     expect(llms).toContain(`(${RAAQIM.url}/llms.txt)`);
     expect(llms).toContain(`(${SITE.repo})`);
@@ -815,7 +830,7 @@ describe('built site', () => {
 
   it('writes the words of the interface with no tashkil, but the name وِردي', () => {
     const marked = /[\u064B-\u0652\u0670]/u;
-    const sections = [...OCCASION_IDS, 'al-tibb-al-nabawi'].map((id) => own(id));
+    const sections = [...OCCASION_IDS, ...guidePages].map((id) => own(id));
     const found = [html, notFound, ...sections].flatMap((page) =>
       page
         .replace(/<head>[\s\S]*?<\/head>/u, '')
@@ -896,32 +911,35 @@ describe('built site', () => {
     expect(images.size).toBe(expected);
   });
 
-  it('gives each hadith of الطب النبوي a page with breadcrumbs, its place, and its neighbours', () => {
-    const list = own('al-tibb-al-nabawi');
-    for (const [index, slug] of hadiths.entries()) {
-      const path = `/al-tibb-al-nabawi/${slug}/`;
-      const page = own(path);
-      expect(page).toContain(`<link rel="canonical" href="https://wirdy.site${path}">`);
-      expect(page.match(/<h1[ >]/gu)).toHaveLength(1);
-      expect(page.match(/<li class="entry entry--single"/gu)).toHaveLength(1);
-      expect(page).toContain(`href="/al-tibb-al-nabawi/#${slug}"`);
-      const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
-      expect((crumbs['itemListElement'] as { item: string }[]).map(({ item }) => item)).toEqual([
-        'https://wirdy.site/',
-        'https://wirdy.site/al-tibb-al-nabawi/',
-        `https://wirdy.site${path}`,
-      ]);
-      const links = [
-        ...page.match(/<nav class="neighbours"[\s\S]*?<\/nav>/u)![0].matchAll(/href="([^"]+)"/gu),
-      ].map((link) => link[1]);
-      expect(links).toEqual(
-        [hadiths[index - 1], hadiths[index + 1]]
-          .filter(Boolean)
-          .map((other) => `/al-tibb-al-nabawi/${other!}/`)
-      );
-      expect(list).toContain(`<a href="${path}" data-hover="line" aria-label="صفحة الحديث: `);
+  it.each(GUIDE_IDS)(
+    'gives each hadith of %s a page with breadcrumbs, its place, and its neighbours',
+    (guide) => {
+      const base = GUIDES[guide].path;
+      const list = own(base.slice(1, -1));
+      const slugs = hadithsOf(guide);
+      for (const [index, slug] of slugs.entries()) {
+        const path = `${base}${slug}/`;
+        const page = own(path);
+        expect(page).toContain(`<link rel="canonical" href="https://wirdy.site${path}">`);
+        expect(page.match(/<h1[ >]/gu)).toHaveLength(1);
+        expect(page.match(/<li class="entry entry--single"/gu)).toHaveLength(1);
+        expect(page).toContain(`href="${base}#${slug}"`);
+        const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
+        expect((crumbs['itemListElement'] as { item: string }[]).map(({ item }) => item)).toEqual([
+          'https://wirdy.site/',
+          `https://wirdy.site${base}`,
+          `https://wirdy.site${path}`,
+        ]);
+        const links = [
+          ...page.match(/<nav class="neighbours"[\s\S]*?<\/nav>/u)![0].matchAll(/href="([^"]+)"/gu),
+        ].map((link) => link[1]);
+        expect(links).toEqual(
+          [slugs[index - 1], slugs[index + 1]].filter(Boolean).map((other) => `${base}${other!}/`)
+        );
+        expect(list).toContain(`<a href="${path}" data-hover="line" aria-label="صفحة الحديث: `);
+      }
     }
-  });
+  );
 
   it('leads from the top of every page past the bar to its content', () => {
     const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
@@ -936,7 +954,7 @@ describe('built site', () => {
   });
 
   it('marks the way back from a dhikr or a hadith as the trail of the page', () => {
-    for (const path of ['nawm/ayat-al-kursi', `al-tibb-al-nabawi/${hadiths[0]!}`]) {
+    for (const path of ['nawm/ayat-al-kursi', hadiths[0]!]) {
       expect(own(path)).toMatch(
         /<nav class="banner__kicker" aria-label="مسار الصفحة">\s*<a class="banner__up"/u
       );
@@ -1230,16 +1248,13 @@ describe('built site', () => {
   });
 
   it('opens search over every page, from one index that holds every dhikr and hadith', () => {
-    const tibb = readdirSync(join(process.cwd(), 'src/content/tibb')).filter((f) =>
-      f.endsWith('.md')
-    );
     expect(existsSync(join(DIST, 'bahth'))).toBe(false);
     const indexes = new Set<string>();
     for (const page of [
       html,
       notFound,
       ...Object.values(pages),
-      own('al-tibb-al-nabawi'),
+      ...guidePages.map((id) => own(id)),
       own('nawm/ayat-al-kursi'),
     ]) {
       expect(barOf(page)).toMatch(
@@ -1256,7 +1271,7 @@ describe('built site', () => {
     expect([...indexes]).toEqual(['/search/index.json']);
     const [index] = [...indexes];
     const rows: { href: string }[] = JSON.parse(readFileSync(join(DIST, index!), 'utf8'));
-    expect(rows).toHaveLength(expected + tibb.length);
+    expect(rows).toHaveLength(expected + hadiths.length);
     const hrefs = rows.map(({ href }) => href);
     expect(new Set(hrefs).size).toBe(hrefs.length);
     for (const href of hrefs) {
@@ -1277,7 +1292,7 @@ describe('built site', () => {
     const sections = [...html.matchAll(/<a class="occasion-card [^"]*" href="(\/[^"]*)"/gu)].map(
       ([, href]) => href
     );
-    expect(sections).toHaveLength(OCCASION_IDS.length + 1);
+    expect(sections).toHaveLength(OCCASION_IDS.length + guidePages.length);
     const bundle = readdirSync(join(DIST, '_astro'))
       .map((file) => `/_astro/${file}`)
       .toSorted();

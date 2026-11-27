@@ -126,6 +126,19 @@ export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   العافية: 'al-afiyah-wa-al-sihhah',
   'الطعام والشراب': 'al-taam-wa-al-sharab',
   'العدوى والأوبئة': 'al-adwa-wa-al-awbiah',
+  'فضل يوم الجمعة': 'fadl-yawm-al-jumuah',
+  'حكم الجمعة': 'hukm-al-jumuah',
+  'ليلتها وفجرها': 'laylatuha-wa-fajruha',
+  'الغسل والطيب': 'al-ghusl-wa-al-tib',
+  'ثياب الجمعة': 'thiyab-al-jumuah',
+  'التبكير إليها': 'al-tabkir',
+  'في المسجد': 'fi-al-masjid',
+  الخطبة: 'al-khutbah',
+  الإنصات: 'al-insat',
+  'صلاة الجمعة': 'salat-al-jumuah',
+  'بعد صلاة الجمعة': 'bad-salat-al-jumuah',
+  'في سائر يومها': 'fi-sair-yawmiha',
+  'ساعة الإجابة': 'saat-al-ijabah',
 };
 
 export const groupId = (group: string): Effect.Effect<string, UnknownGroup> =>

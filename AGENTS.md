@@ -1,11 +1,11 @@
 # Wirdy Agent Guidelines
 
-[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of sixteen occasions in three bands, a page per occasion, a page per dhikr, and a page of الطب النبوي with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device. A Cloudflare Worker on a cron sends the owner the visits.
+[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of sixteen occasions in three bands, a page per occasion, a page per dhikr, and two guides of hadiths, سنن الجمعة and الطب النبوي, each with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device. A Cloudflare Worker on a cron sends the owner the visits.
 
 ## Layout
 
 - `src/content/adhkar/<occasion>/`: one Markdown file per dhikr. The frontmatter holds the count, the occasion, the takhrij, and optional fields; the body is the text. [`docs/content.md`](docs/content.md) is the standard.
-- `src/content/tibb/`: the hadiths of الطب النبوي, one file each, on one page and a page per hadith ([`docs/content.md`](docs/content.md#الطب-النبوي)).
+- `src/content/jumuah/` and `src/content/tibb/`: the guides, the hadiths of سنن الجمعة and of الطب النبوي, one file each, on one page and a page per hadith ([`docs/content.md`](docs/content.md#the-guides)). `GUIDES` in `src/lib/site.ts` holds their pages.
 - `src/lib/`: one topic per file, each with a test beside it (`content.test.ts` covers `schema.ts`, the build test covers `collection.ts`, `proofs.test.ts` covers `records.ts`). The proofs are `proof.ts`, `matching.ts`, `fingerprint.ts`, `verification.ts`, `baseline.ts`, and `records.ts`.
 - `src/components/`, `src/layouts/`, `src/styles/`: the design system ([`docs/design-system.md`](docs/design-system.md)).
 - `src/pages/`: the routes, the search index (`search/index.json.ts`), the offline page (`bila-ittisal.astro`), and the `robots.txt`, `sitemap.xml`, `llms.txt`, and `site.webmanifest` endpoints.
