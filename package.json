@@ -42,6 +42,7 @@
     "promo:render": "bun scripts/promo/render.ts",
     "promo:sheet": "bun scripts/promo/sheet.ts",
     "visits": "bun scripts/visits/send.ts",
+    "visits:deploy": "wrangler deploy --config scripts/visits/wrangler.toml",
     "deploy": "bun run ci && wrangler pages deploy"
   },
   "dependencies": {

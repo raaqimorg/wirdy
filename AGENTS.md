@@ -1,6 +1,6 @@
 # Wirdy Agent Guidelines
 
-[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of sixteen occasions in three bands, a page per occasion, a page per dhikr, and a page of الطب النبوي with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device.
+[wirdy.site](https://wirdy.site) (وِردي) is a static Arabic site of the daily adhkar authentic from the Prophet ﷺ: a home page of sixteen occasions in three bands, a page per occasion, a page per dhikr, and a page of الطب النبوي with a page per hadith. Search opens over any page. Each dhikr shows its takhrij, linked to dorar.net. Astro builds it, and Cloudflare Pages serves it: no server, no client framework, a small inline script per page, one module script for search, and a service worker that keeps the sections on the device. A Cloudflare Worker on a cron sends the owner the visits.
 
 ## Layout
 
@@ -12,7 +12,7 @@
 - `src/scripts/search.ts`: the search module behind the search sheet.
 - `src/scripts/service-worker.js`: the service worker. `src/lib/offline.ts` writes it into `dist/` after the build, with the fingerprint of every page ([`docs/exceptions.md`](docs/exceptions.md#a-service-worker-keeps-the-sections-on-the-device)).
 - `public/`: the generated icons and cards, and `_headers`. Run `bun run icons`, `bun run opengraph`, or `bun run opengraph:adhkar`. Never edit them by hand.
-- `scripts/`: the icon and card generators (headless Chromium), the promo film scripts (`promo/`), the visit reports to Telegram (`visits/`), the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
+- `scripts/`: the icon and card generators (headless Chromium), the promo film scripts (`promo/`), the visit reports to Telegram (`visits/`, also the Cron Worker, with its own `wrangler.toml`), the git guards (`check/`), and `run.ts`, which runs each script as an Effect program.
 - `promo/<slug>/`: a promo film for social apps: `STORY.md`, `film.html`, and `post.md`. Its `clips/` and `out/` are ignored. The `making-a-promo` skill makes one ([`docs/branding/imagery.md`](docs/branding/imagery.md#the-promo-films)).
 - `verification/`: one JSON proof per proven dhikr, and `pending.json`, the adhkar not proven yet. The site does not read it ([`docs/content.md`](docs/content.md#the-proof)).
 - `docs/`: [`README.md`](docs/README.md) indexes every doc and says when to read it.
@@ -32,7 +32,7 @@ bun run verification # the proven adhkar, and what the others lack (add an id fo
 - Never add a dhikr, or change its text, count, or ruling, from memory. Cite a dorar.net page you opened in this session, or two agreeing pages on two other sites you opened in this session ([`docs/content.md`](docs/content.md#what-goes-in)). Use the `verifying-a-dhikr` skill.
 - Never add or refresh an entry in `verification/pending.json`. It only shrinks. Never write a source text in a record by hand: capture it from its page.
 - Never add a dhikr that al-Albani grades ضعيف or worse, even when another scholar accepts it.
-- Never deploy unless the user asks for that deploy: `bun run deploy`, or any `wrangler` command that changes the live site. One approval covers one deploy.
+- Never deploy unless the user asks for that deploy: `bun run deploy`, `bun run visits:deploy`, or any `wrangler` command that changes the live site or the Worker. One approval covers one deploy.
 - Never start subagents, workflows, or other multi-agent tooling unless the user asks in that request.
 - Code has no comments ([`docs/code-conventions.md`](docs/code-conventions.md#comments)).
 - No em-dashes anywhere: code, docs, commits, or chat. Use a period, a comma, or parentheses.

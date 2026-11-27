@@ -159,11 +159,14 @@ The home page, the sections its cards open, and search open at once, and with no
 
 ## A scheduled job sends the owner the visits
 
-`.github/workflows/visits.yml` runs `scripts/visits/send.ts` every hour and every morning. It reads the visits from Cloudflare's GraphQL Analytics API and sends them to the owner's Telegram group ([`development.md`](development.md#the-visit-reports)). The owner asked for it, to see that people read.
+A Cloudflare Worker, `scripts/visits/worker.ts`, runs on a Cron Trigger every half hour. It reads the visits from Cloudflare's GraphQL Analytics API and sends them to the owner's Telegram group ([`development.md`](development.md#the-visit-reports)). The owner asked for it, to see that people read.
 
 - The ordinary way is a web analytics script in each page. It would make a third-party request and track readers, which `docs/branding/identity.md` refuses. Cloudflare counts the visits at its edge anyway, so the pages stay as they are.
 - A beacon to a Pages Function would add a script to every page and a server to a static site.
-- The job keeps no state. Each run asks Cloudflare again, so a run that GitHub drops or delays changes nothing after it. The hour reported is fixed by the clock, and a retry of a Telegram send never happens, so nothing is sent twice.
+- The Worker serves no request: it has no `fetch` handler and no URL (`workers_dev` and `preview_urls` are off). Pages has no schedule of its own, so the Worker is a second deploy beside the site.
+- It ran on a GitHub Actions schedule before. GitHub dropped and delayed runs, and turned the schedule off after 60 days with no commit.
+- The job keeps no state. Each run asks Cloudflare again, so a run that is dropped or delayed changes nothing after it. The half hour reported is fixed by the run's scheduled time, and a retry of a Telegram send never happens, so nothing is sent twice.
+- `.dev.vars` holds the secrets for `wrangler dev`, and `.gitignore` keeps it out of git.
 - Every window is at most one day back. The free plan keeps 31.
 
 ## The palette reads the tokens
