@@ -44,9 +44,9 @@ Never run `bun run deploy`, or a `wrangler` command that changes the live site, 
 
 `.github/workflows/visits.yml` sends the owner the site's visits on Telegram. It reads Cloudflare's own count, so no page changes ([`exceptions.md`](exceptions.md#a-scheduled-job-sends-the-owner-the-visits)).
 
-- At minute 41 of every hour: the visits of the last whole hour, and of the day so far in Riyadh time. An hour with no visits arrives silently.
+- At minute 41 of every hour: the visits of the whole hour before that minute 41, and of the day so far in Riyadh time. A run that starts late, even past the next hour, still reports that hour. An hour with no visits arrives silently.
 - At 07:07 in Riyadh: the visits of the day before, and a question about the adhkar.
-- A manual run (Actions, Visits, Run workflow) sends the hourly report silently.
+- A manual run (Actions, Visits, Run workflow) sends the hourly report silently, for the hour the last minute 41 reported.
 - The secrets: `CLOUDFLARE_API_TOKEN` (Zone, Analytics, Read, for wirdy.site only), `CLOUDFLARE_ZONE_ID`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `RECIPIENT_NAME`, the names a report greets, separated by underscores, as in `الأولى_الثانية` (each report picks one at random, and a name may hold spaces). To run a report locally, put them in `.env`, which git ignores.
 - The job logs no number. A failed run exits with 1, and GitHub emails the owner.
 - GitHub turns off a schedule after 60 days with no commit. When the reports stop, turn it on again in Actions, Visits.

@@ -15,20 +15,26 @@ const first = Option.some('الأولى');
 
 describe('hourlyWindowsOf', () => {
   test('reports the last whole hour and the Riyadh day up to it', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T11:17:00Z'))).toEqual({
+    expect(hourlyWindowsOf(at('2026-11-26T11:41:00Z'))).toEqual({
       hour: span('2026-11-26T10:00:00Z', '2026-11-26T11:00:00Z'),
       day: span('2026-11-25T21:00:00Z', '2026-11-26T11:00:00Z'),
     });
   });
 
   test('reports the same hour from a late run', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T11:50:00Z'))).toEqual(
-      hourlyWindowsOf(at('2026-11-26T11:17:00Z'))
+    expect(hourlyWindowsOf(at('2026-11-26T11:59:00Z'))).toEqual(
+      hourlyWindowsOf(at('2026-11-26T11:41:00Z'))
+    );
+  });
+
+  test('reports the same hour from a run late past the next hour', () => {
+    expect(hourlyWindowsOf(at('2026-11-26T12:20:00Z'))).toEqual(
+      hourlyWindowsOf(at('2026-11-26T11:41:00Z'))
     );
   });
 
   test('reports the whole day before from the run after Riyadh midnight', () => {
-    expect(hourlyWindowsOf(at('2026-11-26T21:17:00Z'))).toEqual({
+    expect(hourlyWindowsOf(at('2026-11-26T21:41:00Z'))).toEqual({
       hour: span('2026-11-26T20:00:00Z', '2026-11-26T21:00:00Z'),
       day: span('2026-11-25T21:00:00Z', '2026-11-26T21:00:00Z'),
     });
@@ -71,53 +77,53 @@ describe('nameOf', () => {
 
 describe('hourlyText', () => {
   test('gives the last hour and today so far', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 18, 342, first)).toBe(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 18, 342, first)).toBe(
       '<b>الأولى</b> 🌻\n\n<b>١٨ ذاكرا</b> في آخر ساعة، و<b>٣٤٢</b> اليوم\nكتب الله أجرك\n\nهنيئا لك هذا الأجر'
     );
   });
 
   test('names one and two in words', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 9, first)).toContain(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 9, first)).toContain(
       '<b>ذاكر واحد</b> في آخر ساعة، و<b>٩</b> اليوم'
     );
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 2, 9, first)).toContain(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 2, 9, first)).toContain(
       '<b>ذاكران</b> في آخر ساعة، و<b>٩</b> اليوم'
     );
   });
 
   test('counts today in full after a quiet hour', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:17:00Z')), 0, 6, first)).toContain(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T00:41:00Z')), 0, 6, first)).toContain(
       '<b>لا أحد</b> في آخر ساعة، و<b>٦ ذاكرين</b> اليوم'
     );
   });
 
   test('says no one for a quiet day', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T22:17:00Z')), 0, 0, first)).toContain(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T22:41:00Z')), 0, 0, first)).toContain(
       '<b>لا أحد</b> في آخر ساعة، و<b>لا أحد</b> اليوم'
     );
   });
 
   test('calls the total of a finished day yesterday', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:17:00Z')), 3, 412, first)).toContain(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T21:41:00Z')), 3, 412, first)).toContain(
       '<b>٣ ذاكرين</b> في آخر ساعة، و<b>٤١٢</b> أمس'
     );
   });
 
   test('uses the site name when no name is set', () => {
-    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.none())).toMatch(
+    expect(hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 2, Option.none())).toMatch(
       /^<b>وردي<\/b> 🌻/u
     );
   });
 
   test('escapes a name that looks like markup', () => {
     expect(
-      hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 1, 2, Option.some('<i>&'))
+      hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 1, 2, Option.some('<i>&'))
     ).toContain('<b>&lt;i&gt;&amp;</b>');
   });
 
   test('carries no diacritics', () => {
     expect(
-      hourlyText(hourlyWindowsOf(at('2026-11-26T11:17:00Z')), 18, 342, Option.none())
+      hourlyText(hourlyWindowsOf(at('2026-11-26T11:41:00Z')), 18, 342, Option.none())
     ).not.toMatch(/[\u064B-\u0652]/u);
   });
 });

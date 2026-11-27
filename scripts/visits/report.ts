@@ -6,11 +6,12 @@ export type Window = { readonly from: Date; readonly to: Date };
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 const RIYADH = 3 * HOUR;
+const HOURLY_MINUTE = 41 * 60_000;
 
 const riyadhMidnightOf = (time: number) => Math.floor((time + RIYADH) / DAY) * DAY - RIYADH;
 
 export function hourlyWindowsOf(now: Date): { readonly hour: Window; readonly day: Window } {
-  const to = Math.floor(now.getTime() / HOUR) * HOUR;
+  const to = Math.floor((now.getTime() - HOURLY_MINUTE) / HOUR) * HOUR;
   const from = to - HOUR;
   return {
     hour: { from: new Date(from), to: new Date(to) },
