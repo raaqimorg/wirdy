@@ -61,7 +61,7 @@
   background: linear-gradient(
     to top,
     var(--color-panel) var(--size-sheet-floor),
-    var(--color-scrim) var(--size-sheet-floor)
+    transparent var(--size-sheet-floor)
   );
 }
 
