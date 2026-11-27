@@ -22,10 +22,27 @@ export type Totals = {
 
 export type Tally = { readonly key: string; readonly count: number };
 
+export const SOURCE_IDS = [
+  'X',
+  'Instagram',
+  'Snapchat',
+  'TikTok',
+  'Facebook',
+  'Threads',
+  'Google',
+  'LinkedIn',
+  'Telegram',
+  'Pinterest',
+] as const;
+
+export type SourceId = (typeof SOURCE_IDS)[number];
+
+export type SourceTally = { readonly id: SourceId; readonly count: number };
+
 export type Details = {
   readonly countries: ReadonlyArray<Tally>;
   readonly pages: ReadonlyArray<Tally>;
-  readonly fromX: number;
+  readonly sources: ReadonlyArray<SourceTally>;
   readonly posters: number;
   readonly missing: ReadonlyArray<Tally>;
   readonly failures: number;
@@ -86,18 +103,39 @@ const COUNTRY_NAMES: Readonly<Record<string, string>> = {
   US: 'أمريكا',
   GB: 'بريطانيا',
   HK: 'هونغ كونغ',
+  MO: 'ماكاو',
   PS: 'فلسطين',
+  MM: 'ميانمار',
+  CD: 'الكونغو الديمقراطية',
+  CG: 'الكونغو',
+  CF: 'أفريقيا الوسطى',
+  DO: 'الدومينيكان',
 };
 
 const REGIONS = new Intl.DisplayNames(['ar'], { type: 'region', fallback: 'none' });
 
-export function countryLabel(code: string): string {
+const isCountryCode = (code: string) =>
+  /^[A-Z]{2}$/u.test(code) && !/^(?:AA|Q[M-Z]|X[A-Z]|ZZ)$/u.test(code);
+
+export function countryLabel(code: string): Option.Option<string> {
   const known = Option.fromUndefinedOr(COUNTRY_NAMES[code]);
-  const named = /^[A-Z]{2}$/u.test(code)
+  return isCountryCode(code)
     ? Option.orElse(known, () => Option.fromUndefinedOr(REGIONS.of(code)))
     : known;
-  return Option.getOrElse(named, () => 'بلد غير معروف');
 }
+
+const SOURCE_NAMES: Readonly<Record<SourceId, string>> = {
+  X: 'إكس',
+  Instagram: 'إنستغرام',
+  Snapchat: 'سناب شات',
+  TikTok: 'تيك توك',
+  Facebook: 'فيسبوك',
+  Threads: 'ثريدز',
+  Google: 'تطبيق جوجل',
+  LinkedIn: 'لينكد إن',
+  Telegram: 'تيليجرام',
+  Pinterest: 'بنترست',
+};
 
 const PAGE_NAMES: ReadonlyMap<string, string> = new Map([
   ...OCCASION_IDS.map((id): [string, string] => [id, sectionOf(id).heading]),
@@ -117,7 +155,8 @@ export function pageLabel(path: string): Option.Option<string> {
 
 const topOf = (
   tallies: ReadonlyArray<Tally>,
-  label: (key: string) => Option.Option<string>
+  label: (key: string) => Option.Option<string>,
+  limit: number
 ): ReadonlyArray<Tally> => {
   const named = Array.getSomes(
     tallies.map((tally) =>
@@ -132,14 +171,21 @@ const topOf = (
   return [...sums]
     .map(([key, count]): Tally => ({ key, count }))
     .toSorted((one, other) => other.count - one.count)
-    .slice(0, 3);
+    .slice(0, limit);
 };
 
-const listLine = (mark: string, tallies: ReadonlyArray<Tally>) =>
-  tallies.length === 0
+const withOthers = (shown: ReadonlyArray<Tally>, total: number, others: string) => {
+  const rest = total - shown.reduce((sum, tally) => sum + tally.count, 0);
+  return rest > 0 ? [...shown, { key: others, count: rest }] : shown;
+};
+
+const listLine = (mark: string, shown: ReadonlyArray<Tally>, total: number, others: string) =>
+  shown.length === 0
     ? Option.none()
     : Option.some(
-        `${mark} ${tallies.map((tally) => `${escaped(tally.key)} ${toArabicDigits(tally.count)}`).join('، ')}`
+        `${mark} ${withOthers(shown, total, others)
+          .map((tally) => `${escaped(tally.key)} ${toArabicDigits(tally.count)}`)
+          .join('، ')}`
       );
 
 const arrowOf = (now: number, before: number) => {
@@ -161,16 +207,16 @@ export function sourceLine(visits: number, fromX: number): Option.Option<string>
   return Option.some('كلهم من إكس');
 }
 
-const summaryLines = (details: Details) =>
+const TOP = 3;
+
+const sourcesOf = (details: Details): ReadonlyArray<Tally> =>
+  details.sources.map((source): Tally => ({ key: SOURCE_NAMES[source.id], count: source.count }));
+
+const summaryLines = (details: Details, day: number) =>
   Array.getSomes([
-    listLine(
-      '🌍',
-      topOf(details.countries, (code) => Option.some(countryLabel(code)))
-    ),
-    listLine('🚪', topOf(details.pages, pageLabel)),
-    details.fromX > 0
-      ? Option.some(`🔗 من إكس: ${rememberersLabel(details.fromX)}`)
-      : Option.none(),
+    listLine('🌍', topOf(details.countries, countryLabel, TOP), day, 'بلدان أخرى'),
+    listLine('🚪', topOf(details.pages, pageLabel, TOP), day, 'صفحات أخرى'),
+    listLine('🔗', topOf(sourcesOf(details), Option.some, SOURCE_IDS.length), day, 'مصادر أخرى'),
     details.posters > 0
       ? Option.some(`🖼 فتح الملصق ${timesAccusativeLabel(details.posters)}`)
       : Option.none(),
@@ -195,7 +241,12 @@ export function reportText(
         comparisonLine(totals.hour, totals.hourBefore, 'أمس في مثل هذه الساعة'),
         sourceLine(totals.hour, totals.hourFromX),
       ]);
-  const summary = finished ? Option.match(details, { onNone: () => [], onSome: summaryLines }) : [];
+  const summary = finished
+    ? Option.match(details, {
+        onNone: () => [],
+        onSome: (given) => summaryLines(given, totals.day),
+      })
+    : [];
   const blocks = [
     `${bold(title)} 🌻`,
     [counts, ...notes].join('\n'),

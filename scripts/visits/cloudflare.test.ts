@@ -61,6 +61,14 @@ describe('detailsQueryOf', () => {
     );
   });
 
+  test('asks the readers of each app by the name of its browser', () => {
+    expect(query).toContain(' fromX: httpRequestsAdaptiveGroups(limit: 1, filter: {');
+    expect(query).toContain(
+      '{ OR: [{ userAgent_like: "%musical_ly%" }, { userAgent_like: "%BytedanceWebview%" }, { userAgent_like: "%TikTok%" }] }'
+    );
+    expect(query).toContain(' fromPinterest: httpRequestsAdaptiveGroups(limit: 1, filter: {');
+  });
+
   test('asks the missing pages of readers, and leaves out scans for files the site never had', () => {
     expect(query).toContain('edgeResponseStatus: 404');
     expect(query).toContain('{ clientRequestPath_notlike: "%.php%" }');
@@ -126,7 +134,18 @@ describe('decodeDetails', () => {
         { key: '/', count: 154 },
         { key: '/al-jumuah/', count: 7 },
       ],
-      fromX: 87,
+      sources: [
+        { id: 'X', count: 87 },
+        { id: 'Instagram', count: 9 },
+        { id: 'Snapchat', count: 0 },
+        { id: 'TikTok', count: 0 },
+        { id: 'Facebook', count: 0 },
+        { id: 'Threads', count: 0 },
+        { id: 'Google', count: 0 },
+        { id: 'LinkedIn', count: 0 },
+        { id: 'Telegram', count: 0 },
+        { id: 'Pinterest', count: 0 },
+      ],
       posters: 22,
       missing: [{ key: '/apple-touch-icon-precomposed.png', count: 24 }],
       failures: 0,

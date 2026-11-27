@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { Option } from 'effect';
 import {
+  SOURCE_IDS,
   alertText,
   countryLabel,
   isFinished,
@@ -34,7 +35,7 @@ const totalsOf = (given: Partial<Totals>): Totals => ({
 const detailsOf = (given: Partial<Details>): Details => ({
   countries: [],
   pages: [],
-  fromX: 0,
+  sources: [],
   posters: 0,
   missing: [],
   failures: 0,
@@ -127,21 +128,26 @@ describe('timesAccusativeLabel', () => {
 });
 
 describe('countryLabel', () => {
-  test('gives the short name readers say', () => {
-    expect(countryLabel('SA')).toBe('السعودية');
-    expect(countryLabel('US')).toBe('أمريكا');
-    expect(countryLabel('PS')).toBe('فلسطين');
+  test.each([
+    ['SA', 'السعودية'],
+    ['US', 'أمريكا'],
+    ['PS', 'فلسطين'],
+    ['MM', 'ميانمار'],
+    ['CD', 'الكونغو الديمقراطية'],
+  ])('gives %s the short name readers say, %s', (code, name) => {
+    expect(Option.getOrNull(countryLabel(code))).toBe(name);
   });
 
   test('names any other country in Arabic', () => {
-    expect(countryLabel('EG')).toBe('مصر');
+    expect(Option.getOrNull(countryLabel('EG'))).toBe('مصر');
   });
 
-  test('says unknown for a code Cloudflare gives without a country', () => {
-    expect(countryLabel('XX')).toBe('بلد غير معروف');
-    expect(countryLabel('T1')).toBe('بلد غير معروف');
-    expect(countryLabel('')).toBe('بلد غير معروف');
-  });
+  test.each(['XX', 'T1', 'XA', 'ZZ', 'QO', '', 'sa'])(
+    'names no country for %p, a code Cloudflare gives without one',
+    (code) => {
+      expect(Option.isNone(countryLabel(code))).toBe(true);
+    }
+  );
 });
 
 describe('pageLabel', () => {
@@ -262,7 +268,11 @@ describe('reportText', () => {
         { key: '/taam/', count: 3 },
         { key: '/taam/bismillah/', count: 2 },
       ],
-      fromX: 87,
+      sources: [
+        { id: 'X', count: 87 },
+        { id: 'Instagram', count: 9 },
+        { id: 'Snapchat', count: 0 },
+      ],
       posters: 22,
     });
     expect(
@@ -279,9 +289,9 @@ describe('reportText', () => {
         '<b>٣ ذاكرين</b> في آخر ساعة، و<b>٢٢٤</b> أمس',
         '↓ أول أمس: ٣٠١ ذاكر',
         '',
-        '🌍 السعودية ١٣٣، أمريكا ٣٣، سنغافورة ١٢',
-        '🚪 الرئيسية ١٥٤، سنن الجمعة ٧، الطعام والشراب ٥',
-        '🔗 من إكس: ٨٧ ذاكرا',
+        '🌍 السعودية ١٣٣، أمريكا ٣٣، سنغافورة ١٢، بلدان أخرى ٤٦',
+        '🚪 الرئيسية ١٥٤، سنن الجمعة ٧، الطعام والشراب ٥، صفحات أخرى ٥٨',
+        '🔗 إكس ٨٧، إنستغرام ٩، مصادر أخرى ١٢٨',
         '🖼 فتح الملصق ٢٢ مرة',
         'كتب الله أجرك',
         '',
@@ -290,8 +300,46 @@ describe('reportText', () => {
     );
   });
 
+  test('counts a country it cannot name with the others', () => {
+    const details = detailsOf({
+      countries: [
+        { key: 'XX', count: 3 },
+        { key: 'SA', count: 2 },
+      ],
+    });
+    expect(reportText(midnight, totalsOf({ day: 5 }), Option.some(details), first)).toContain(
+      '\n🌍 السعودية ٢، بلدان أخرى ٣\n'
+    );
+  });
+
+  test('adds no others when every reader is named', () => {
+    const details = detailsOf({ countries: [{ key: 'SA', count: 5 }] });
+    expect(reportText(midnight, totalsOf({ day: 5 }), Option.some(details), first)).toContain(
+      '\n🌍 السعودية ٥\n'
+    );
+  });
+
+  test('names every app with readers, not only the first three', () => {
+    const details = detailsOf({
+      sources: [
+        { id: 'X', count: 4 },
+        { id: 'Snapchat', count: 3 },
+        { id: 'TikTok', count: 2 },
+        { id: 'Telegram', count: 1 },
+      ],
+    });
+    expect(reportText(midnight, totalsOf({ day: 10 }), Option.some(details), first)).toContain(
+      '\n🔗 إكس ٤، سناب شات ٣، تيك توك ٢، تيليجرام ١\n'
+    );
+  });
+
   test('leaves out each empty part of the summary', () => {
-    const details = detailsOf({ posters: 2, pages: [{ key: '/wp-login.php', count: 9 }] });
+    const details = detailsOf({
+      posters: 2,
+      pages: [{ key: '/wp-login.php', count: 9 }],
+      countries: [{ key: 'XX', count: 5 }],
+      sources: [{ id: 'X', count: 0 }],
+    });
     const text = reportText(midnight, totalsOf({ day: 5 }), Option.some(details), first);
     expect(text).toContain('\n\n🖼 فتح الملصق مرتين\nكتب الله أجرك');
     expect(text).not.toContain('🌍');
@@ -306,7 +354,7 @@ describe('reportText', () => {
   });
 
   test('gives the summary only at midnight', () => {
-    const details = detailsOf({ fromX: 4 });
+    const details = detailsOf({ sources: [{ id: 'X', count: 4 }] });
     expect(reportText(noon, totalsOf({ hour: 4 }), Option.some(details), first)).not.toContain(
       '🔗'
     );
@@ -325,7 +373,12 @@ describe('reportText', () => {
   });
 
   test('carries no diacritics', () => {
-    const details = detailsOf({ countries: [{ key: 'EG', count: 3 }], fromX: 2, posters: 3 });
+    const details = detailsOf({
+      countries: [{ key: 'EG', count: 3 }],
+      pages: [{ key: '/', count: 3 }],
+      sources: SOURCE_IDS.map((id) => ({ id, count: 1 })),
+      posters: 3,
+    });
     expect(
       reportText(midnight, totalsOf({ hour: 18, day: 342 }), Option.some(details), Option.none())
     ).not.toMatch(/[ً-ْ]/u);
