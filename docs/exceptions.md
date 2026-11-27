@@ -134,7 +134,7 @@ A promo film for X, TikTok, or Snapchat is one HTML page, `promo/<slug>/film.htm
 
 ## The bar's menus are modal dialogs the inline script opens
 
-The section menu and the poster menu are each a `<dialog>` (`data-sheet`), as search is. A tap on the bar's icon (`data-sheet-open`) opens it with `showModal()`, so while it is open the page behind takes no tap and no Tab. A tap outside it only closes it, and never reaches what lies under, as on Apple's sheets. Esc and the close icon (`data-sheet-close`) close it too. From `40rem` the dialog has no dim, but it is still modal. The owner asked for it, after a tap on the dimmed page closed the menu and also switched the morning and the evening.
+The section menu and the poster menu are each a `<dialog>` (`data-sheet`), as search is. A tap on the bar's icon (`data-sheet-open`) opens it with `showModal()`, so while it is open the page behind takes no tap and no Tab. A tap outside it only closes it, and never reaches what lies under, as on Apple's sheets. Esc and the close icon (`data-sheet-close`) close it too. The dialog dims nothing behind it, at any width, but it is still modal. The owner asked for it, after a tap on the page outside the menu closed it and also switched the morning and the evening, and later asked for no dim on a phone either: it darkened the bar and Safari's status bar above the sheet.
 
 - The ordinary way is a `popover` opened by `popovertarget`, with no script, which the menus were before. A popover never blocks the page: the tap that closes it goes through to the page.
 - Without JavaScript `<noscript>` in `src/layouts/Paper.astro` hides both icons, because nothing could open the menus.
@@ -144,16 +144,16 @@ The section menu and the poster menu are each a `<dialog>` (`data-sheet`), as se
 
 On a phone the section menu and the poster menu rise from the bottom edge as sheets of one height, `--size-sheet`, which fits the poster menu, and the head of each (`data-sheet-handle`) takes a drag. Down by 80 pixels closes either one. Up by 60 pixels grows the section menu (`data-expandable`) to the top of the screen, to show every section, and down shrinks it back. The poster menu fits, so it does not grow. The sheet follows the finger while it moves, then settles over `--duration-release`, or at once when the reader asks for less motion. The owner asked for it, to match the sheets of the owner's other app.
 
-- The ordinary way is a sheet that only opens and closes, with a close button and a tap on the dimmed page. Both stay: the drag is an extra, for a reader who expects a phone's sheet to move.
+- The ordinary way is a sheet that only opens and closes, with a close button and a tap outside it. Both stay: the drag is an extra, for a reader who expects a phone's sheet to move.
 - The inline script in `src/layouts/Paper.astro` listens to pointer events on the head. It ignores a mouse, a press on the close button, and any screen from `40rem`, where the menu opens under the bar and has no grabber. It sets the height and the `translate` while the finger moves, and `data-size="expanded"` once the sheet grows. A sheet that closes forgets its size.
 - The head has `touch-action: none`, so the page does not scroll under the drag. The body scrolls inside the panel and hides its scrollbar at every width, as the owner asked. It still scrolls with a finger, a wheel, a trackpad, or the keys.
 
-### The dim under a sheet ends in the sheet's color
+### The sheet's color goes on under Safari's toolbar
 
-On a phone the backdrop of each sheet is `--color-scrim`, except its lowest `--size-sheet-floor`, which is `--color-panel`. Safari on iOS 26 draws the page under its floating toolbar, below the edge a fixed sheet sits on, and there it shows only the backdrop: the sheet looked cut off above a grey band. The owner reported it from an iPhone.
+On a phone the backdrop of each sheet is clear, except its lowest `--size-sheet-floor`, which is `--color-panel`. Safari on iOS 26 draws the page under its floating toolbar, below the edge a fixed sheet sits on, and there it shows only the backdrop: the sheet looked cut off above a band of the page. The owner reported it from an iPhone, and asked that nothing above the sheet change color.
 
-- The ordinary way is a sheet that ends at the bottom edge over a uniform dim. Safari leaves no way to put the sheet itself under its toolbar: a fixed element, its shadow, and anything it overflows stop at that edge, and only the backdrop goes on.
-- The sheet covers the colored band everywhere but under Safari's toolbar, so on other browsers it shows only while a drag moves the sheet down.
+- The ordinary way is a sheet that ends at the bottom edge. Safari leaves no way to put the sheet itself under its toolbar: a fixed element, its shadow, and anything it overflows stop at that edge, and only the backdrop goes on.
+- The sheet covers the colored band everywhere but under Safari's toolbar, so on other browsers it shows only while a drag moves the sheet down. Safari's toolbar glass still tints what it covers.
 - Each dialog has `autofocus`, so `showModal()` focuses the sheet, not its close icon, and a tap opens it with no focus ring. The dialog draws no outline of its own. A first Tab still reaches the close icon.
 
 ## Search opens over the page, from a module script
