@@ -38,6 +38,8 @@
     "verification:absent": "bun scripts/verification/absent.ts",
     "verification:ruling": "bun scripts/verification/ruling.ts",
     "promo:check": "bun scripts/promo/check.ts",
+    "promo:clip": "bun scripts/promo/clip.ts",
+    "promo:render": "bun scripts/promo/render.ts",
     "promo:sheet": "bun scripts/promo/sheet.ts",
     "visits": "bun scripts/visits/send.ts",
     "deploy": "bun run ci && wrangler pages deploy"
