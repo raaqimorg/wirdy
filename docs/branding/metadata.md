@@ -4,14 +4,14 @@ What each page tells search engines and link previews: the title, the descriptio
 
 ## Each page
 
-| Page                         | Title                                  | Description                                           | Card        | Breadcrumbs                          | Indexed |
-| ---------------------------- | -------------------------------------- | ----------------------------------------------------- | ----------- | ------------------------------------ | ------- |
-| `/`                          | `tagline` \| وِردي                      | `description`                                         | Home        | None                                 | Yes     |
-| `/<id>/`                     | section `title` \| وِردي                | The title, the count, and what the page holds         | The section | وِردي › section `title`               | Yes     |
-| `/<id>/<slug>/`              | dhikr title \| section `title` \| وِردي | Its lead, its first words, count, virtue, and takhrij | The dhikr   | وِردي › section `title` › dhikr title | Yes     |
-| `/al-tibb-al-nabawi/`        | الطب النبوي \| وِردي                    | The count of its hadiths, and their topics            | The section | وِردي › الطب النبوي                   | Yes     |
-| `/al-tibb-al-nabawi/<slug>/` | hadith title \| الطب النبوي \| وِردي    | Its first words, its narrator, and its takhrij        | The hadith  | وِردي › الطب النبوي › hadith title    | Yes     |
-| 404                          | الصفحة غير موجودة \| وِردي              | A way back to the sections                            | Home        | None                                 | No      |
+| Page               | Title                                  | Description                                           | Card        | Breadcrumbs                          | Indexed |
+| ------------------ | -------------------------------------- | ----------------------------------------------------- | ----------- | ------------------------------------ | ------- |
+| `/`                | `tagline` \| وِردي                      | `description`                                         | Home        | None                                 | Yes     |
+| `/<id>/`           | section `title` \| وِردي                | The title, the count, and what the page holds         | The section | وِردي › section `title`               | Yes     |
+| `/<id>/<slug>/`    | dhikr title \| section `title` \| وِردي | Its lead, its first words, count, virtue, and takhrij | The dhikr   | وِردي › section `title` › dhikr title | Yes     |
+| `/<guide>/`        | guide `title` \| وِردي                  | The count of its hadiths, and their topics            | The section | وِردي › guide `title`                 | Yes     |
+| `/<guide>/<slug>/` | hadith title \| guide `title` \| وِردي  | Its first words, its narrator, and its takhrij        | The hadith  | وِردي › guide `title` › hadith title  | Yes     |
+| 404                | الصفحة غير موجودة \| وِردي              | A way back to the sections                            | Home        | None                                 | No      |
 
 The dhikr title is its `title` with its `context` in brackets (`fullTitle` in `src/lib/title.ts`).
 

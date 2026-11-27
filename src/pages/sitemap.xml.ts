@@ -2,20 +2,27 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { Effect } from 'effect';
 import { OCCASIONS } from '../lib/occasions';
-import { tibbEntries } from '../lib/collection';
+import { hadithsOf } from '../lib/collection';
 import { dhikrPath, hadithPath, slugOf } from '../lib/permalink';
-import { TIBB } from '../lib/site';
+import { GUIDE_IDS, GUIDES } from '../lib/site';
 
 const sitemap = (site: URL | undefined) =>
   Effect.map(
-    Effect.all([Effect.promise(() => getCollection('adhkar')), tibbEntries]),
-    ([adhkar, tibb]) => {
+    Effect.all([
+      Effect.promise(() => getCollection('adhkar')),
+      Effect.forEach(GUIDE_IDS, (guide) =>
+        Effect.map(hadithsOf(guide), (entries) => ({ guide, entries }))
+      ),
+    ]),
+    ([adhkar, guides]) => {
       const paths = [
         '/',
         ...OCCASIONS.map((occasion) => `/${occasion.id}/`),
         ...adhkar.map((entry) => dhikrPath(entry.data.occasion, slugOf(entry.id))),
-        TIBB.path,
-        ...tibb.map((entry) => hadithPath(slugOf(entry.id))),
+        ...guides.flatMap(({ guide, entries }) => [
+          GUIDES[guide].path,
+          ...entries.map((entry) => hadithPath(guide, slugOf(entry.id))),
+        ]),
       ];
       const urls = paths
         .map(

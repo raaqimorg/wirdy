@@ -4,9 +4,9 @@ import { adhkarLabel, hadithLabel } from './arabic';
 import type { EmblemName } from './emblems';
 import { foldOf, suwarOf } from './lead';
 import { listed, OCCASIONS, type Occasion } from './occasions';
-import { dhikrAnchor, slugOf } from './permalink';
+import { dhikrAnchor, hadithAnchor, slugOf } from './permalink';
 import type { Dhikr } from './schema';
-import { TIBB } from './site';
+import { GUIDE_IDS, GUIDES, type Guide } from './site';
 import type { SearchRow } from './search';
 import { fullTitle } from './title';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
@@ -14,7 +14,7 @@ import { formOf, hasVariants, type MalformedMarker } from './variants';
 export type { SearchRow } from './search';
 
 export type AdhkarEntry = CollectionEntry<'adhkar'>;
-export type TibbEntry = CollectionEntry<'tibb'>;
+export type HadithEntry = CollectionEntry<Guide>;
 
 export type Tile = {
   readonly id: EmblemName;
@@ -41,9 +41,23 @@ export const adhkarOf = (occasion: Occasion): Effect.Effect<ReadonlyArray<Adhkar
       )
   );
 
-export const tibbEntries: Effect.Effect<ReadonlyArray<TibbEntry>> = Effect.map(
-  Effect.promise(() => getCollection('tibb')),
-  (entries) => Array.sort(entries, byOrder)
+export const hadithsOf = (guide: Guide): Effect.Effect<ReadonlyArray<HadithEntry>> =>
+  Effect.map(
+    Effect.promise(() => getCollection(guide)),
+    (entries) => Array.sort(entries, byOrder)
+  );
+
+export const guideTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
+  GUIDE_IDS,
+  (id) =>
+    Effect.map(hadithsOf(id), (entries) => ({
+      id,
+      heading: GUIDES[id].heading,
+      color: GUIDES[id].color,
+      note: hadithLabel(entries.length),
+      href: GUIDES[id].path,
+    })),
+  { concurrency: 'unbounded' }
 );
 
 export const occasionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
@@ -60,19 +74,8 @@ export const occasionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.forEach(
 );
 
 export const sectionTiles: Effect.Effect<ReadonlyArray<Tile>> = Effect.map(
-  Effect.all([occasionTiles, tibbEntries]),
-  ([tiles, tibb]) => {
-    return [
-      ...tiles,
-      {
-        id: 'tibb',
-        heading: TIBB.heading,
-        color: TIBB.color,
-        note: hadithLabel(tibb.length),
-        href: TIBB.path,
-      },
-    ];
-  }
+  Effect.all([occasionTiles, guideTiles]),
+  ([occasions, guides]) => [...occasions, ...guides]
 );
 
 function shownAyat(data: Dhikr, text: string): string {
@@ -114,17 +117,21 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
         Effect.forEach(entries, (entry) => adhkarRow(occasion, entry))
       )
     );
-    const tibb = Array.map(yield* tibbEntries, ({ id, data, body }): SearchRow => ({
-      title: data.title,
-      words: bodyOf({ body }).trim(),
-      about: data.rawi,
-      source: data.takhrij.source,
-      heading: TIBB.heading,
-      color: TIBB.color,
-      emblem: 'tibb',
-      group: data.group,
-      href: `${TIBB.path}#${slugOf(id)}`,
-    }));
-    return [...adhkar.flat(), ...tibb];
+    const hadiths = yield* Effect.forEach(GUIDE_IDS, (guide) =>
+      Effect.map(hadithsOf(guide), (entries) =>
+        Array.map(entries, ({ id, data, body }): SearchRow => ({
+          title: data.title,
+          words: bodyOf({ body }).trim(),
+          about: data.rawi,
+          source: data.takhrij.source,
+          heading: GUIDES[guide].heading,
+          color: GUIDES[guide].color,
+          emblem: guide,
+          group: data.group,
+          href: hadithAnchor(guide, slugOf(id)),
+        }))
+      )
+    );
+    return [...adhkar.flat(), ...hadiths.flat()];
   }
 );

@@ -5,8 +5,8 @@ import type { EmblemName } from '../../src/lib/emblems.ts';
 import { markSvg } from '../../src/lib/mark.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import type { Phrase } from '../../src/lib/phrases.ts';
-import { readAdhkar, readTibb } from '../../src/lib/records.ts';
-import { SITE } from '../../src/lib/site.ts';
+import { readAdhkar, readHadiths } from '../../src/lib/records.ts';
+import { GUIDE_IDS, SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
 import { run } from '../run.ts';
 import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
@@ -112,13 +112,17 @@ const program = Effect.gen(function* () {
       file: cardFile(card, data.occasion, id.slice(data.occasion.length + 1)),
     }))
   );
-  const hadiths = (yield* readTibb).map(({ slug, data, body }) => {
-    const card = hadithCardOf(data, body);
-    return { card, occasion: 'tibb' as const, file: cardFile(card, 'tibb', slug) };
-  });
+  const hadiths = yield* Effect.forEach(GUIDE_IDS, (guide) =>
+    Effect.map(readHadiths(guide), (entries) =>
+      entries.map(({ slug, data, body }) => {
+        const card = hadithCardOf(guide, data, body);
+        return { card, occasion: guide, file: cardFile(card, guide, slug) };
+      })
+    )
+  );
   const entries: ReadonlyArray<{ card: Card; occasion: EmblemName; file: string }> = [
     ...adhkar,
-    ...hadiths,
+    ...hadiths.flat(),
   ];
 
   const wanted = new Set(entries.map(({ file }) => file));

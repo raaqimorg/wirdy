@@ -4,19 +4,21 @@ import Entry from './Entry.astro';
 import Icon from './Icon.astro';
 import { hadithCopyOf } from '../lib/copy';
 import { hadithPath } from '../lib/permalink';
-import type { Tibb } from '../lib/schema';
+import type { Hadith } from '../lib/schema';
+import type { Guide } from '../lib/site';
 import { isOpening } from '../lib/title';
 
 interface Props {
-  data: Tibb;
+  guide: Guide;
+  data: Hadith;
   body: string;
   slug: string;
   single?: boolean | undefined;
 }
 
-const { data, body, slug, single = false } = Astro.props;
+const { guide, data, body, slug, single = false } = Astro.props;
 const copy = hadithCopyOf(data, body);
-const path = hadithPath(slug);
+const path = hadithPath(guide, slug);
 ---
 
 <Entry

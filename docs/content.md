@@ -50,7 +50,7 @@ A section answers one question a reader has in the moment: where am I, what am I
 | `janaiz`      | الجنائز        |
 | `matar`       | المطر والريح   |
 
-«الطب النبوي» closes the list.
+The guides, «الجمعة» and «الطب النبوي», close the list ([The guides](#the-guides)).
 
 A dhikr of two occasions, such as آية الكرسي, has one file in each, with the takhrij of that occasion's hadith.
 
@@ -137,15 +137,31 @@ takhrij:
 
 A proof ends when what it proves changes. A change of order, title, group, form, ayat, or note ends nothing. `verification/pending.json` lists the adhkar not proven yet. It only shrinks: the tests refuse a dhikr that is neither proven nor pending, and a pending dhikr that changes.
 
-## الطب النبوي
+## The guides
 
-`src/content/tibb/` holds the hadiths of الطب النبوي: what the Prophet ﷺ said and did about treatment, healing, and keeping well (honey, black seed, Zamzam, ajwa dates, cupping, fever, ruqyah, contagion, eating and drinking). They show on one page, `/al-tibb-al-nabawi/`, under a heading for each `group`. Each also has a page of its own, `/al-tibb-al-nabawi/<slug>/`, with its place on the list (`/al-tibb-al-nabawi/#<slug>`), and the previous and next hadith. Its link is permanent like a dhikr's, and is in `src/lib/permalinks.json`. They are hadiths to read, not adhkar to say: no count, moment, copy button, or card of their own.
+A guide holds sound hadiths to read, not adhkar to say: no count, moment, or card of their own. `GUIDES` in `src/lib/site.ts` lists them, each with its folder in `src/content/`, its page, its color, and its emblem. They show after the occasions, «الجمعة» then «الطب النبوي».
+
+| Folder   | Heading     | Page                  |
+| -------- | ----------- | --------------------- |
+| `jumuah` | الجمعة      | `/al-jumuah/`         |
+| `tibb`   | الطب النبوي | `/al-tibb-al-nabawi/` |
+
+A guide shows on one page, under a heading for each `group`. Each hadith also has a page of its own, `<page><slug>/`, with its place on the list (`<page>#<slug>`), and the previous and next hadith. Its link is permanent like a dhikr's, and is in `src/lib/permalinks.json`.
 
 - The same rule lets a hadith in. The tests refuse a ruling of weakness.
 - `title`: a short name, such as «الحبة السوداء». `rawi`: the narrating Companion, in the genitive, since the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.
 - The body is the matn as the book gives it, cut from the page by script, from where the Companion's words start. Never shorten or join it by hand.
 - A hadith of only his ﷺ words has them alone, with no quotation marks, like a dhikr. A narration (an exchange, an act, or a narrator's gloss) keeps «» around his words, so the reader sees where they start.
-- The groups follow rule 4 of "The order of a page": الرقية, the reward of the sick, the principles of treatment, the remedies, then keeping well (العافية, الطعام والشراب) and contagion. In a group, the general hadith comes before the particular.
+- In a group, the general hadith comes before the particular.
 - `note` records a dispute over a ruling, with its source.
 - `takhrij.url` is the dorar.net page, or one of two other sources that agree, with `takhrij.also` the other. Two sources stand for dorar.net only when they are on two sites and each states the book, the number, and, for al-Albani, his ruling. sunnah.com prints his ruling on Abu Dawud and Mishkat al-Masabih, Shamela in its Sunan editions («[حكم الألباني]»), and usul.ai holds his own books, such as «صحيح وضعيف الجامع الصغير». A usul.ai page counts only for another book than the Shamela page, since both serve the Turath editions. The tests refuse a takhrij without dorar.net and without a second source on another site.
-- What is said over the sick (a pain, a visit, and the words of الرقية) is a dhikr in `marad`, «المرض والرقية». Do not copy it here. الطب النبوي keeps the hadiths about الرقية: its permission, its virtue, and its ruling.
+
+### الجمعة
+
+`src/content/jumuah/` holds the sunan of Friday. After its virtue and its ruling, the groups follow the day from its night to its sunset: the night and Fajr, الغسل and الطيب, the clothes, going early, the mosque, the khutbah, listening to it, the prayer, what follows it, what fills the rest of the day (سورة الكهف and the salawat), and last the hour of answer, whose latest time is the last hour after العصر. A phrase that only a weak narration gives stays out, such as «وليلة الجمعة» in «أكثروا الصلاة علي يوم الجمعة»: al-Albani holds the hadith sound without it (تمام المنة ٣٢٤). What is said on Friday is not copied into an occasion: the guide keeps the command, and the words of the salawat stay in `mutlaq`.
+
+### الطب النبوي
+
+`src/content/tibb/` holds what the Prophet ﷺ said and did about treatment, healing, and keeping well (honey, black seed, Zamzam, ajwa dates, cupping, fever, ruqyah, contagion, eating and drinking). The groups follow rule 4 of "The order of a page": الرقية, the reward of the sick, the principles of treatment, the remedies, then keeping well (العافية, الطعام والشراب) and contagion.
+
+What is said over the sick (a pain, a visit, and the words of الرقية) is a dhikr in `marad`, «المرض والرقية». Do not copy it here. الطب النبوي keeps the hadiths about الرقية: its permission, its virtue, and its ruling.

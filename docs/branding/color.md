@@ -49,9 +49,10 @@ The rule gives these now. A new section changes them all.
 | `marad`       | المرض والرقية  | `#674b76` | 313° |
 | `janaiz`      | الجنائز        | `#487649` | 145° |
 | `matar`       | المطر والريح   | `#4c5482` | 276° |
+| `jumuah`      | الجمعة         | `#575d28` | 115° |
 | `tibb`        | الطب النبوي    | `#836328` | 80°  |
 
-«الطب النبوي» takes the depth after the last hue on the arc, at the petals' hue (80°), the yellow the arc skips, so it sits apart from the adhkar and beside the mark.
+The two guides sit in the band the arc skips, so they move no occasion. «الطب النبوي» takes the depth after the last hue on the arc, at the petals' hue (80°), so it sits beside the mark. «الجمعة» takes the deep lightness at 115°, the moss green farthest from every other tone (0.063 in OKLab).
 
 ## Where the colors go
 

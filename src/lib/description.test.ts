@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from './card';
 import { descriptionOf, hadithDescriptionOf } from './description';
-import type { Tibb } from './schema';
+import type { Hadith } from './schema';
 
 const card: Card = {
   heading: 'أذكار الأحوال',
@@ -99,7 +99,7 @@ describe('descriptionOf', () => {
 
 describe('hadithDescriptionOf', () => {
   it('quotes the hadith, then its narrator and its takhrij', () => {
-    const hadith: Tibb = {
+    const hadith: Hadith = {
       title: 'ما أنزل الله داء إلا أنزل له شفاء',
       order: 1,
       group: 'مبادئ التداوي',

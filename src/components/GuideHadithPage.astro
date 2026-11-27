@@ -1,0 +1,64 @@
+---
+import DhikrActions from './DhikrActions.astro';
+import EntryList from './EntryList.astro';
+import Hadith from './Hadith.astro';
+import Neighbours from './Neighbours.astro';
+import Section from '../layouts/Section.astro';
+import { cardFile, hadithCardOf } from '../lib/card';
+import type { HadithEntry } from '../lib/collection';
+import { hadithCopyOf } from '../lib/copy';
+import { hadithDescriptionOf } from '../lib/description';
+import { hadithAnchor, hadithPath, slugOf } from '../lib/permalink';
+import { GUIDES, type Guide } from '../lib/site';
+
+interface Props {
+  guide: Guide;
+  entry: HadithEntry;
+  previous?: HadithEntry | undefined;
+  next?: HadithEntry | undefined;
+}
+
+const { guide, entry, previous, next } = Astro.props;
+const { title, heading, color } = GUIDES[guide];
+const { data, body = '' } = entry;
+const slug = slugOf(entry.id);
+const path = hadithPath(guide, slug);
+const card = hadithCardOf(guide, data, body);
+const image = `/${cardFile(card, guide, slug)}`;
+const links = [
+  { label: 'السابق', entry: previous },
+  { label: 'التالي', entry: next },
+].flatMap(({ label, entry: neighbour }) =>
+  neighbour === undefined
+    ? []
+    : [{ label, title: neighbour.data.title, href: hadithPath(guide, slugOf(neighbour.id)) }]
+);
+---
+
+<Section
+  title={`${data.title} | ${title}`}
+  description={hadithDescriptionOf(data, body)}
+  image={image}
+  faces={['naskh']}
+  crumbs={[
+    { name: title, path: GUIDES[guide].path },
+    { name: data.title, path },
+  ]}
+  emblem={guide}
+  color={color}
+  heading={data.title}
+  lede={data.group}
+  up={{ href: hadithAnchor(guide, slug), label: heading }}
+>
+  <EntryList variant="single">
+    <Hadith guide={guide} data={data} body={body} slug={slug} single />
+  </EntryList>
+  <DhikrActions
+    href={path}
+    title={data.title}
+    image={image}
+    file={`wirdy-${slug}.png`}
+    copy={hadithCopyOf(data, body)}
+  />
+  <Neighbours links={links} />
+</Section>

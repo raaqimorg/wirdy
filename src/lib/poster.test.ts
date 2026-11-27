@@ -7,10 +7,10 @@ import {
   posterDownload,
   posterFile,
   themesOf,
-  tibbPosterOf,
+  hadithPosterOf,
   type Format,
 } from './poster';
-import type { Dhikr, Tibb } from './schema';
+import type { Dhikr, Hadith } from './schema';
 
 const base: Dhikr = {
   title: 'سيد الاستغفار',
@@ -28,7 +28,7 @@ const base: Dhikr = {
   },
 };
 
-const hadith: Tibb = {
+const hadith: Hadith = {
   title: 'الحبة السوداء',
   order: 1,
   group: 'الأدوية',
@@ -115,9 +115,9 @@ describe('occasionPostersOf', () => {
   });
 });
 
-describe('tibbPosterOf', () => {
+describe('hadithPosterOf', () => {
   it('carries each hadith with its narrator and source, and no count', () => {
-    const poster = tibbPosterOf([{ data: hadith, body: 'في الحبة السوداء شفاء\n' }]);
+    const poster = hadithPosterOf('tibb', [{ data: hadith, body: 'في الحبة السوداء شفاء\n' }]);
     expect(poster.slug).toBe('al-tibb-al-nabawi');
     expect(poster.items[0]).toMatchObject({
       lead: 'عن أبي هريرة',

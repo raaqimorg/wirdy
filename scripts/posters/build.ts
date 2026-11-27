@@ -3,7 +3,7 @@ import { ChildProcess, ChildProcessSpawner } from 'effect/process';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { FORMATS, posterFile, postersOf, themesOf, type Format } from '../../src/lib/poster.ts';
-import { readAdhkar, readTibb } from '../../src/lib/records.ts';
+import { readAdhkar, readHadiths } from '../../src/lib/records.ts';
 import { browser } from '../chromium.ts';
 import { root } from '../opengraph/shared.ts';
 import { run } from '../run.ts';
@@ -88,7 +88,10 @@ const program = Effect.gen(function* () {
   const path = yield* Path.Path;
   const publicDir = path.join(root, 'public');
   const postersDir = path.join(publicDir, 'posters');
-  const posters = yield* postersOf(yield* readAdhkar, yield* readTibb);
+  const posters = yield* postersOf(yield* readAdhkar, {
+    jumuah: yield* readHadiths('jumuah'),
+    tibb: yield* readHadiths('tibb'),
+  });
   const entries = posters.flatMap((poster) =>
     FORMATS.flatMap((format) =>
       themesOf(format).map((theme) => ({

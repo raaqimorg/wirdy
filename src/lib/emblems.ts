@@ -1,5 +1,6 @@
 import { Array as Arr, Option } from 'effect';
 import type { Occasion } from './occasions';
+import type { Guide } from './site';
 import { PALETTE } from './palette';
 
 export type Enter = 'across' | 'fade' | 'grow' | 'turn' | 'up';
@@ -246,7 +247,15 @@ const cloud: ReadonlyArray<Shape> = [
   }),
 ];
 
-export type EmblemName = Occasion | 'tibb';
+const stopper: ReadonlyArray<Shape> = [
+  dark('path', { d: 'M120 122L168 166L120 222L72 166Z', ...shade(0.22) }),
+  dark('path', { d: 'M120 140L150 166L120 200L90 166Z', ...shade(0.14) }),
+  dark('rect', { x: 113, y: 98, width: 14, height: 28, ...shade(0.3) }),
+  dark('rect', { x: 104, y: 92, width: 32, height: 9, rx: 4, ...shade(0.3) }),
+  lit('path', 'up', { d: 'M120 10C129 38 132 64 120 90C108 64 111 38 120 10Z', ...egg() }),
+];
+
+export type EmblemName = Occasion | Guide;
 
 export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   'sabah-masaa': halves,
@@ -265,5 +274,6 @@ export const EMBLEMS: Readonly<Record<EmblemName, ReadonlyArray<Shape>>> = {
   marad: cure,
   janaiz: terms,
   matar: cloud,
+  jumuah: stopper,
   tibb: comb,
 };

@@ -3,12 +3,12 @@ import matter from 'gray-matter';
 import type { Entry } from './baseline';
 import { slugOf } from './permalink';
 import { decodeProof, type Proof } from './proof';
-import { decodeDhikr, decodeTibb, STRICT } from './schema';
+import { decodeDhikr, decodeHadith, STRICT } from './schema';
+import type { Guide } from './site';
 
 export const RECORDS = 'verification';
 export const PENDING = `${RECORDS}/pending.json`;
 const ADHKAR = 'src/content/adhkar';
-const TIBB = 'src/content/tibb';
 
 const pendingSchema = Schema.Record(Schema.String, Schema.String);
 
@@ -55,23 +55,25 @@ export const readAdhkar = Effect.gen(function* () {
   );
 });
 
-export const readTibb = Effect.gen(function* () {
-  const fs = yield* FileSystem.FileSystem;
-  const path = yield* Path.Path;
-  const files = yield* filesUnder(TIBB, '.md');
-  return yield* Effect.forEach(files, (file) =>
-    Effect.gen(function* () {
-      const { data: frontmatter, content } = matter(
-        yield* fs.readFileString(path.join(TIBB, file))
-      );
-      return {
-        slug: slugOf(file.slice(0, -3)),
-        data: yield* decodeTibb(frontmatter),
-        body: content,
-      };
-    })
-  );
-});
+export const readHadiths = (guide: Guide) =>
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem;
+    const path = yield* Path.Path;
+    const folder = `src/content/${guide}`;
+    const files = yield* filesUnder(folder, '.md');
+    return yield* Effect.forEach(files, (file) =>
+      Effect.gen(function* () {
+        const { data: frontmatter, content } = matter(
+          yield* fs.readFileString(path.join(folder, file))
+        );
+        return {
+          slug: slugOf(file.slice(0, -3)),
+          data: yield* decodeHadith(frontmatter),
+          body: content,
+        };
+      })
+    );
+  });
 
 export const readProofs = Effect.gen(function* () {
   const path = yield* Path.Path;

@@ -4,10 +4,12 @@ import Emblem from './Emblem.astro';
 import Icon from './Icon.astro';
 import { Effect } from 'effect';
 import { sectionTiles } from '../lib/collection';
+import { GUIDE_IDS, type Guide } from '../lib/site';
 
 const tiles = await Effect.runPromise(sectionTiles);
 const here = Astro.url.pathname;
-const groups = [tiles.filter(({ id }) => id !== 'tibb'), tiles.filter(({ id }) => id === 'tibb')];
+const isGuide = (id: string): id is Guide => GUIDE_IDS.some((guide) => guide === id);
+const groups = [tiles.filter(({ id }) => !isGuide(id)), tiles.filter(({ id }) => isGuide(id))];
 ---
 
 <div class="section-menu">

@@ -5,7 +5,7 @@ import { chromium, type Page } from 'playwright-core';
 import { EMBLEMS } from '../../src/lib/emblems.ts';
 import { markSvg } from '../../src/lib/mark.ts';
 import { OCCASION_IDS, sectionOf } from '../../src/lib/occasions.ts';
-import { TIBB } from '../../src/lib/site.ts';
+import { GUIDE_IDS, GUIDES } from '../../src/lib/site.ts';
 import { browser, NoBrowser } from '../chromium.ts';
 import { root } from '../opengraph/shared.ts';
 import { argumentsOf } from '../run.ts';
@@ -72,7 +72,7 @@ const DRAWINGS: Drawings = {
   marks: { own: markSvg('own'), stage: markSvg('stage') },
   tones: {
     ...Object.fromEntries(OCCASION_IDS.map((id) => [id, sectionOf(id).color])),
-    tibb: TIBB.color,
+    ...Object.fromEntries(GUIDE_IDS.map((id) => [id, GUIDES[id].color])),
   },
   load: LOAD,
 };

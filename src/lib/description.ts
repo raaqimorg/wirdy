@@ -2,7 +2,7 @@ import { Array, Option } from 'effect';
 import type { Card } from './card';
 import { excerptAyat, excerptClauses, excerptWords, letters } from './excerpt';
 import { phrasesLabel } from './phrases';
-import type { Tibb } from './schema';
+import type { Hadith } from './schema';
 import { takhrijLine } from './takhrij';
 
 const LENGTH = 200;
@@ -81,7 +81,7 @@ export function descriptionOf(card: Card, fadl?: string): string {
   );
 }
 
-export function hadithDescriptionOf(data: Tibb, body: string): string {
+export function hadithDescriptionOf(data: Hadith, body: string): string {
   return shortest((limit) =>
     sentences([clauses(body, false, limit), `عن ${data.rawi}`, takhrijLine(data.takhrij)])
   );

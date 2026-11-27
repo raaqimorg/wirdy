@@ -56,7 +56,7 @@ const sourceUrl = Schema.String.check(
   })
 );
 
-export const tibbSchema = Schema.Struct({
+export const hadithSchema = Schema.Struct({
   title: text,
   order: positive,
   group: text,
@@ -71,8 +71,8 @@ export const tibbSchema = Schema.Struct({
   note: Schema.optionalKey(text),
 });
 
-export type Tibb = typeof tibbSchema.Type;
+export type Hadith = typeof hadithSchema.Type;
 
 export const decodeDhikr = Schema.decodeUnknownEffect(dhikrSchema, STRICT);
 
-export const decodeTibb = Schema.decodeUnknownEffect(tibbSchema, STRICT);
+export const decodeHadith = Schema.decodeUnknownEffect(hadithSchema, STRICT);
