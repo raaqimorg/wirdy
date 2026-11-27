@@ -5,7 +5,8 @@ interface Props {
   row: SearchRow;
 }
 
-const { title, words, also, about, heading, color, emblem, group, quran, href } = Astro.props.row;
+const { title, words, also, about, source, heading, color, emblem, group, quran, href } =
+  Astro.props.row;
 ---
 
 <li
@@ -22,7 +23,13 @@ const { title, words, also, about, heading, color, emblem, group, quran, href } 
         {group ? `${heading}، ${group}` : heading}
       </span>
     </span>
-    <span class="search-row__words" data-search-words data-also={also} data-about={about}>
+    <span
+      class="search-row__words"
+      data-search-words
+      data-also={also}
+      data-about={about}
+      data-source={source}
+    >
       {words}
     </span>
   </a>

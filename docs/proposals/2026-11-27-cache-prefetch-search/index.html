@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wirdy Cache Audit</title>
+    <style>
+      :root {
+        --bg: #d6d6cd;
+        --surface: hsl(60 10% 92%);
+        --fg: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --line: hsl(200 30% 20% / 0.22);
+        --bad: #a3392b;
+        --warn: #8a5a12;
+        --ok: #2f6b57;
+        --code: hsl(60 8% 86%);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #060f13;
+          --surface: hsl(200 32% 15%);
+          --fg: hsl(55 62% 89%);
+          --muted: hsl(60 10% 72%);
+          --line: hsl(60 10% 82% / 0.18);
+          --bad: #f08a7a;
+          --warn: #e6b866;
+          --ok: #7fc7ab;
+          --code: hsl(200 30% 20%);
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 1.375rem;
+        margin: 2.5rem 0 0.5rem;
+      }
+      h3 {
+        font-size: 1.0625rem;
+        margin: 0 0 0.25rem;
+      }
+      p,
+      ul,
+      ol {
+        max-width: 48rem;
+        margin: 0.25rem 0 0.75rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      section {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 0 0.5rem;
+        margin-inline-end: 0.5rem;
+        vertical-align: 0.1em;
+      }
+      .bad {
+        color: var(--bad);
+      }
+      .warn {
+        color: var(--warn);
+      }
+      .ok {
+        color: var(--ok);
+      }
+      .scroll {
+        overflow-x: auto;
+        margin: 0.5rem 0 0.75rem;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 0.9375rem;
+        min-width: 32rem;
+      }
+      table.fit {
+        min-width: 0;
+      }
+      th,
+      td {
+        text-align: start;
+        vertical-align: top;
+        padding: 0.375rem 0.75rem 0.375rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        font-weight: 600;
+      }
+      td.num {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      code {
+        background: var(--code);
+        border-radius: 4px;
+        padding: 0 0.25rem;
+        font-size: 0.875em;
+      }
+      [lang='ar'] {
+        font-size: 1.05em;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 0.25rem 1rem;
+        margin: 0.5rem 0;
+      }
+      dt {
+        font-weight: 600;
+      }
+      dd {
+        margin: 0;
+      }
+      @media (max-width: 40rem) {
+        dl {
+          grid-template-columns: 1fr;
+        }
+        dd {
+          margin-bottom: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Cache, prefetch, and search audit</h1>
+      <p class="lead">
+        An audit of how wirdy.site caches, prefetches, and searches, on 2026-11-27, at
+        <code>bc7dcba</code> (the commit that is live). Each finding below was reproduced, not
+        inferred. Nothing here is built yet: each fix waits for your decision.
+      </p>
+
+      <section>
+        <h3>The short answer</h3>
+        <div class="scroll">
+          <table class="fit">
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Verdict</th>
+                <th>Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Caching</td>
+                <td>
+                  <span class="bad">One real stale-data bug</span>, and a design flaw that makes
+                  every content deploy drop every cached page.
+                </td>
+                <td>Fix C1 now (small). Then C2 and C3.</td>
+              </tr>
+              <tr>
+                <td>Prefetching</td>
+                <td>
+                  <span class="ok">Matches the goal.</span> The main pages and search are
+                  prefetched, the inner pages are not. There are no page images to prefetch.
+                </td>
+                <td>Add intent prefetch for inner pages (P1).</td>
+              </tr>
+              <tr>
+                <td>Search</td>
+                <td>
+                  <span class="warn"
+                    >Fast for real queries, slow on phones for one to three letters.</span
+                  >
+                  Three content fields are not searchable, and the fallback shows hundreds of
+                  unrelated rows.
+                </td>
+                <td>S1, then Q1 to Q3.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3>How it was tested</h3>
+        <ul>
+          <li>
+            <strong>Live headers:</strong> <code>curl</code> against wirdy.site. The live
+            <code>/</code> is byte-identical to a local build of <code>bc7dcba</code>.
+          </li>
+          <li>
+            <strong>Deploys:</strong> three local builds. A is <code>bc7dcba</code>. B changes the
+            CSS and the search index. C changes only the search index version (as any dhikr edit
+            does). A small Bun server serves them with the headers Cloudflare Pages sends: the
+            <code>_headers</code> rules, <code>max-age=0, must-revalidate</code> and no ETag on
+            HTML, a 308 to the trailing slash, and a 404 for a removed file (all checked live). An
+            endpoint switches the deploy, as <code>wrangler pages deploy</code> does.
+          </li>
+          <li>
+            <strong>Browser:</strong> Brave, headless, through <code>playwright-core</code> (a dev
+            dependency already), with a persistent profile so the service worker survives.
+          </li>
+          <li>
+            <strong>Phone speed:</strong> Chrome DevTools CPU throttling at 6x on a 390 by 844
+            viewport, as an approximation of a low-end Android phone. Not a real device.
+          </li>
+          <li>
+            <strong>Search quality:</strong> the real <code>match</code> and
+            <code>nearestOf</code> from <code>src/lib/search.ts</code>, run on the built index (285
+            rows) with 43 queries.
+          </li>
+        </ul>
+        <p>
+          Safari was not tested: Playwright's WebKit is not installed here, and Safari cannot be
+          driven headless. Each fix below works the same way in every browser.
+        </p>
+      </section>
+
+      <h2>1. Caching</h2>
+
+      <section>
+        <h3><span class="tag bad">Critical</span>C1. The Back button can pin an old page</h3>
+        <p>
+          The worker stores a page under its new fingerprint without checking the bytes. After a
+          deploy, a Back or Forward navigation lets the browser answer from its HTTP cache without
+          asking the server. The worker stores that old page under the new fingerprint. From then
+          on, that page is old on every visit, until a later deploy changes it again.
+        </p>
+        <p><strong>Reproduced</strong> (with and without the back-forward cache):</p>
+        <ol>
+          <li>
+            Deploy A. Open <code>/</code>, then <code>/sabah-masaa/ayat-al-kursi/</code>, then
+            <code>/nawm/</code>.
+          </li>
+          <li>Deploy B. Open <code>/salah/</code> and wait 5 s, so worker B takes over.</li>
+          <li>Press Back twice, to <code>/sabah-masaa/ayat-al-kursi/</code>.</li>
+        </ol>
+        <dl>
+          <dt>Server</dt>
+          <dd>Saw no request for that page after the deploy.</dd>
+          <dt>Worker cache</dt>
+          <dd>
+            Key <code>?v=58ff3c1e9bc194f5</code> (the B fingerprint) holds the A page (it links
+            <code>SiteFooter.BYberPoT.css</code>, which B does not have).
+          </dd>
+          <dt>Later</dt>
+          <dd>
+            A fresh visit in a new tab and a reload both show the A page. Search still worked only
+            because the old CSS and index were still in the HTTP cache. Without them, the page loads
+            with no styles and search fails, since the server answers 404.
+          </dd>
+        </dl>
+        <p>
+          <strong>Why it matters here:</strong> a corrected dhikr text can stay wrong on a reader's
+          phone for weeks, which is the exact risk you named.
+        </p>
+        <p><strong>Fix:</strong></p>
+        <ul>
+          <li>
+            In <code>keep()</code>, hash the page with
+            <code>crypto.subtle.digest('SHA-256')</code> and store it only when the first 16 hex
+            characters equal its fingerprint. On a mismatch, still show the response, but do not
+            store it, and fetch the page again in the background with
+            <code>cache: 'no-cache'</code>.
+          </li>
+          <li>
+            On <code>activate</code>, check the body of each kept page the same way, and delete a
+            mismatch. This also cleans any page already pinned on readers' phones today.
+          </li>
+          <li>A test in <code>offline.test.ts</code> for the check.</li>
+        </ul>
+        <p>
+          <strong>Trade-off:</strong> a SHA-256 of the largest page (217 KB, <code>/nawm/</code>)
+          takes 0.08 ms on this Mac (Web Crypto in Bun). A slow phone is perhaps 10 times slower,
+          still under 1 ms, on the worker thread. None other. About 20 lines in
+          <code>service-worker.js</code>.
+        </p>
+      </section>
+
+      <section>
+        <h3><span class="tag bad">High</span>C2. Any dhikr change drops every cached page</h3>
+        <p>
+          Every page holds the versioned path of the search index
+          (<code>data-search-index="/search/c887c2a3345b.json"</code>). Any change to any search row
+          (a text, a title, a <code>when</code>) renames the index, so it changes the bytes, and the
+          fingerprint, of every page.
+        </p>
+        <p>
+          <strong>Measured:</strong> build C changes only the index version. All 303 of 303 page
+          fingerprints change. The docs say "A deploy drops only the pages it changed". Today that
+          is true only for a CSS-free, content-free deploy.
+        </p>
+        <p>What each content deploy costs (21 commits touched content in the last 30 days):</p>
+        <ul>
+          <li>Every returning reader downloads the 18 main pages again: 192 KB (Brotli).</li>
+          <li>
+            Every inner page the reader opened is deleted. <strong>Reproduced:</strong> offline,
+            <code>/sabah-masaa/ayat-al-kursi/</code> opened before deploy C fails with
+            <code>net::ERR_FAILED</code> after it. The kept pages go from 19 to 18.
+          </li>
+        </ul>
+        <p><strong>Option A (recommended):</strong> one fixed index URL.</p>
+        <ul>
+          <li>
+            Serve the index at <code>/search/index.json</code> with
+            <code>Cache-Control: no-cache</code>. Cloudflare sends an ETag on non-HTML files and
+            answers 304 (checked live: <code>site.webmanifest</code> with
+            <code>If-None-Match</code> gives 304, 0 bytes).
+          </li>
+          <li>
+            The worker keeps the index under its content hash, which is already in the worker's
+            manifest, so a reader with the worker never asks the server.
+          </li>
+          <li>The pages no longer change when a dhikr changes. Only the changed pages drop.</li>
+        </ul>
+        <p>
+          <strong>Trade-off:</strong> a reader with no worker sends one conditional request (a 304
+          of a few hundred bytes) for the index on each page, 1 s after load, off the critical path.
+          Today that request does not happen, because the versioned file is cached for a year.
+        </p>
+        <p>
+          <strong>Option B:</strong> keep the versioned file, leave
+          <code>data-search-index</code> out of the fingerprint, and let the worker answer any
+          <code>/search/*.json</code> with the current index. Zero extra requests, but it is more
+          unusual code, and a fingerprint that ignores part of the page is easy to get wrong later.
+        </p>
+        <p>
+          A CSS or JavaScript change still drops every page. That is correct, because every page
+          links them, and it is rare.
+        </p>
+      </section>
+
+      <section>
+        <h3>
+          <span class="tag warn">Medium</span>C3. Offline, an unopened page shows the browser's
+          error
+        </h3>
+        <p>
+          <strong>Reproduced:</strong> offline, a dhikr page never opened gives
+          <code>net::ERR_FAILED</code>, the browser's own error page, with no way back to the site.
+        </p>
+        <p>
+          <strong>Fix:</strong> keep <code>404.html</code> (6 KB Brotli), or a small offline page
+          made from it, and serve it when a navigation fails. It has the bar, search, and the home
+          link.
+        </p>
+        <p><strong>Trade-off:</strong> one more page in the first prefetch.</p>
+        <p>
+          I do <em>not</em> recommend serving an older copy of a page offline. For this site, an old
+          text of a corrected dhikr is worse than a clear "not available offline".
+        </p>
+      </section>
+
+      <section>
+        <h3><span class="tag ok">Checked</span>What is right today</h3>
+        <ul>
+          <li>
+            <code>/_astro/*</code>, <code>/search/*</code>, <code>/offline/*</code>,
+            <code>/og/*</code>, and <code>/opengraph/*</code> are immutable for a year, and every
+            one has a content hash in its name (checked in <code>dist/</code>).
+          </li>
+          <li>
+            The icons are cached 7 days and the pages link them with
+            <code>?v=ICON_VERSION</code>.
+          </li>
+          <li>
+            <code>service-worker.js</code> is <code>no-cache</code> with an ETag: live answers
+            <code>cf-cache-status: REVALIDATED</code>.
+          </li>
+          <li>
+            HTML is <code>max-age=0, must-revalidate</code>, and a missing page is a 404 with
+            <code>no-store</code>.
+          </li>
+          <li>
+            The build is deterministic: the live home page equals a local build byte for byte.
+          </li>
+        </ul>
+        <h3>Tested and not a problem</h3>
+        <p>
+          <strong>An open tab during a deploy.</strong> I expected the new worker to delete the old
+          index before the old page asked for it. It did not happen: the page asked for the index at
+          1041 ms, and the new worker took over at 2067 ms (one run, local server, no network delay;
+          a real network only makes the new worker later). The old page loads all its fonts, CSS,
+          and JavaScript at once, so nothing late is lost. No change needed.
+        </p>
+        <h3>Not tested</h3>
+        <p>
+          Safari deletes the storage of a site, the worker's caches included, after 7 days of
+          browser use with no visit to that site. This is a WebKit policy, not a bug here. A reader
+          who adds the site to the home screen is exempt. It only means the first visit after a long
+          break downloads the main pages again.
+        </p>
+      </section>
+
+      <h2>2. Prefetching</h2>
+
+      <section>
+        <h3>What happens today (measured)</h3>
+        <p>
+          On the first visit, after <code>load</code>, the worker downloads these, once, then keeps
+          them:
+        </p>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>What</th>
+                <th>Files</th>
+                <th>Size (Brotli)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>The home page and the 17 pages its cards open</td>
+                <td class="num">18</td>
+                <td class="num">192 KB</td>
+              </tr>
+              <tr>
+                <td>Fonts (woff2)</td>
+                <td class="num">5</td>
+                <td class="num">280 KB</td>
+              </tr>
+              <tr>
+                <td>Search module, CSS, search index</td>
+                <td class="num">3</td>
+                <td class="num">60 KB</td>
+              </tr>
+              <tr>
+                <td><em>Not prefetched:</em> the inner pages</td>
+                <td class="num">285</td>
+                <td class="num">2.0 MB (median 7 KB)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Most of the fonts, the CSS, and the module are already in the HTTP cache from the page
+          itself, so the new network bytes are about 250 KB (the pages, the index, and the Quran
+          font when the first page does not use it), close to the 270 KB the docs give. This matches
+          your goal: the main pages and search are prefetched, the inner pages are not.
+        </p>
+        <h3>Images</h3>
+        <p>
+          <strong>No page has an image to prefetch.</strong> There is no <code>&lt;img&gt;</code> in
+          <code>dist/</code>. The emblems, the mark, and the icons are inline SVG (45 on the home
+          page). The only images are the share cards, 285 of them, 57 MB in all (about 200 KB each),
+          opened only by «الصورة» or a link preview. Prefetching them would cost a reader 57 MB.
+          Keep them out.
+        </p>
+        <p>
+          A small gap: <code>favicon.svg</code>, <code>icon-192.png</code>, and
+          <code>site.webmanifest</code> are not kept (9 KB). Offline, the tab has no icon. Add them
+          to the worker's files: harmless, but cosmetic.
+        </p>
+      </section>
+
+      <section>
+        <h3>
+          <span class="tag warn">Recommended</span>P1. Prefetch an inner page when the reader
+          reaches for it
+        </h3>
+        <p>
+          A tap on a dhikr or a hadith goes to the network: one round trip, plus the worker's start.
+          On a phone, a touch starts about 100 ms before the click. On a desktop, a hover starts
+          several hundred ms before it.
+        </p>
+        <p>
+          <strong>Proposal:</strong> on <code>touchstart</code>, <code>pointerdown</code>, or a 65
+          ms hover over a same-site link to a page the worker knows, the inline script posts the
+          path to the worker. The worker fetches it and keeps it (with the C1 check). The click then
+          opens it from the device.
+        </p>
+        <ul>
+          <li>Size: about 12 lines in <code>Paper.astro</code>, 10 in the worker.</li>
+          <li>
+            Cost: about 7 KB for a hover that does not end in a click. Nothing with Save-Data.
+          </li>
+          <li>It needs an entry in <code>exceptions.md</code>.</li>
+        </ul>
+        <p>
+          <strong>Normal way:</strong> Speculation Rules (<code
+            >&lt;script type="speculationrules"&gt;</code
+          >, <code>eagerness: "moderate"</code>). Zero JavaScript. But
+          <code>exceptions.md</code> records that only Chrome uses it (Brave turns it off, Safari
+          has none), so readers on Safari and Brave gain nothing. I recommend the worker message
+          because it works in every browser that has the worker.
+        </p>
+        <h3><span class="tag">Optional</span>P2. Keep the next and previous dhikr</h3>
+        <p>
+          On a dhikr page, when the browser is idle, keep the two neighbours, so a reader who walks
+          through a section never waits. 14 KB for each page opened.
+        </p>
+        <h3><span class="tag">Not recommended</span>Prefetch every inner page</h3>
+        <p>2 MB for each reader, and again after each deploy that changes them.</p>
+      </section>
+
+      <h2>3. Search</h2>
+
+      <section>
+        <h3>Speed (measured at 6x CPU throttling)</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Query</th>
+                <th>Rows shown</th>
+                <th>Handler</th>
+                <th>Keystroke to paint</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td lang="ar">ا</td>
+                <td class="num">302</td>
+                <td class="num">29 ms</td>
+                <td class="num bad">267 ms</td>
+              </tr>
+              <tr>
+                <td lang="ar">ال</td>
+                <td class="num">302</td>
+                <td class="num">47 ms</td>
+                <td class="num bad">211 ms</td>
+              </tr>
+              <tr>
+                <td lang="ar">الله</td>
+                <td class="num">237</td>
+                <td class="num">24 ms</td>
+                <td class="num warn">143 ms</td>
+              </tr>
+              <tr>
+                <td lang="ar">من قالها</td>
+                <td class="num">166</td>
+                <td class="num">17 ms</td>
+                <td class="num warn">122 ms</td>
+              </tr>
+              <tr>
+                <td lang="ar">النوم</td>
+                <td class="num">21</td>
+                <td class="num">6 ms</td>
+                <td class="num ok">49 ms</td>
+              </tr>
+              <tr>
+                <td lang="ar">سيد الاستغفار</td>
+                <td class="num">2</td>
+                <td class="num">2 ms</td>
+                <td class="num ok">12 ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The matching is fast (under 50 ms even for one letter). The cost is the browser laying out
+          200 to 300 visible rows. 200 ms is the upper limit of a "good" interaction in Google's INP
+          measure.
+        </p>
+        <p>
+          Also measured: filling the hidden list (1,710 elements) 1 s after load drops no frame over
+          50 ms, so it is not a problem. Evaluating the search module costs 100 to 133 ms of main
+          thread at first paint, on every page.
+        </p>
+      </section>
+
+      <section>
+        <h3><span class="tag warn">Recommended</span>S1. Lay out only the rows on screen</h3>
+        <p>
+          Add <code>content-visibility: auto</code> and a <code>contain-intrinsic-size</code> to a
+          result row. CSS only, so it is the normal way. If one letter is still over 200 ms, show
+          the first 40 rows and a «عرض كل النتائج (٢٣٧)» button.
+        </p>
+        <p>
+          <strong>Trade-off:</strong> the scroll bar can jump a little while rows lay out. The cap,
+          if needed, adds one tap to see every row.
+        </p>
+        <h3><span class="tag">Later</span>S2. Load the search module on intent</h3>
+        <p>
+          Import it on the first focus, hover, or tap of the search button, or when idle, and save
+          100 to 133 ms on every page. The pending tap in <code>Paper.astro</code> already covers a
+          tap before it loads. Measure after S1: it may not be worth the change.
+        </p>
+      </section>
+
+      <section>
+        <h3>Quality (the real index, 285 rows)</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Query</th>
+                <th>Today</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td lang="ar">من قالها</td>
+                <td>149 rows for «من»</td>
+                <td>«قالها» is in 10 <code>fadl</code> fields, which are not indexed</td>
+              </tr>
+              <tr>
+                <td lang="ar">غفرت له ذنوبه</td>
+                <td>249 rows for «له»</td>
+                <td><code>fadl</code> not indexed, and the fallback takes a word in every row</td>
+              </tr>
+              <tr>
+                <td lang="ar">حسبي الله</td>
+                <td>220 rows for «الله»</td>
+                <td>no dhikr has «حسبي»; the fallback shows almost the whole index</td>
+              </tr>
+              <tr>
+                <td lang="ar">البخاري</td>
+                <td>0</td>
+                <td>the takhrij source is not indexed</td>
+              </tr>
+              <tr>
+                <td lang="ar">صحيح مسلم</td>
+                <td>4 rows for «مسلم» (wrong ones)</td>
+                <td>the takhrij source is not indexed</td>
+              </tr>
+              <tr>
+                <td lang="ar">ابو هريرة</td>
+                <td>2 rows for «ابو» (wrong ones)</td>
+                <td>the <code>rawi</code> is not indexed, and it is stored as «أبي»</td>
+              </tr>
+              <tr>
+                <td lang="ar">يس</td>
+                <td>17 rows</td>
+                <td>a substring inside «ليست» and others</td>
+              </tr>
+              <tr>
+                <td lang="ar">المعوذتين</td>
+                <td>0</td>
+                <td>the rows say «المعوذات»</td>
+              </tr>
+              <tr>
+                <td lang="ar">سيد الاستغفار، الكرب، الحبة السوداء، قبل النوم</td>
+                <td class="ok">right</td>
+                <td>title and text matches work well</td>
+              </tr>
+              <tr>
+                <td lang="ar">رمضان، العيد، الرعد، الحسد، الصداع</td>
+                <td class="ok">0, correctly</td>
+                <td>no dhikr or hadith has these words</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3><span class="tag warn">Recommended</span>Q1. Index three more fields</h3>
+        <p>
+          Add <code>fadl</code> (76 adhkar), <code>rawi</code> (36 hadiths), and the takhrij
+          <code>source</code> (all 285) to each row, ranked below the title and the text, as
+          <code>about</code> is today. A reader can then find «من قالها», «البخاري», or a narrator.
+        </p>
+        <p>
+          <strong>Trade-off:</strong> 14.6 KB more raw text in the index (148 KB today), about 2 to
+          3 KB after Brotli. A source match can be noisy («مسلم» is in many sources), so the source
+          ranks last.
+        </p>
+        <h3><span class="tag warn">Recommended</span>Q2. A fallback that helps</h3>
+        <p>
+          When all the words find nothing, search shows the rows of the longest word that finds
+          something, even when that word is in almost every row («الله», «له», «من»). Instead:
+        </p>
+        <ul>
+          <li>Show the rows that match the most query words, best first.</li>
+          <li>Skip a word that is in more than 20% of the rows (about 57).</li>
+          <li>If nothing is left, say no result, and show the six suggestions.</li>
+        </ul>
+        <h3><span class="tag warn">Recommended</span>Q3. Short words match the start of a word</h3>
+        <p>
+          A query word of one or two letters matches only at the start of a word, after a prefix
+          such as و، ف، ب، ل، ال. A word of three letters or more still matches anywhere, so «بالله»
+          still finds «الله». «يس» stops matching «ليست».
+        </p>
+        <h3><span class="tag">Optional</span>Q4 to Q6</h3>
+        <ul>
+          <li>
+            <strong>Q4. Synonyms:</strong> «المعوذتين» to «المعوذات», «أبو» to «أبي» (for the
+            <code>rawi</code>), «الحسد» to «العين». Each must be checked against the content first,
+            as the short list asks.
+          </li>
+          <li>
+            <strong>Q5. Sections as results:</strong> typing «السفر» shows the page «أذكار السفر»
+            first. 18 rows more.
+          </li>
+          <li>
+            <strong>Q6. Ranking:</strong> a title that starts with the query comes first, then a
+            title that has it, then the text.
+          </li>
+        </ul>
+        <h3><span class="tag">Not recommended</span>Typo tolerance or a stemmer</h3>
+        <p>
+          <code>exceptions.md</code> records that a stemmer turned «اية الكرسي» from 3 results to
+          40. Fuzzy matching on Arabic roots has the same risk. Revisit only as a «هل تقصد» line
+          when a query finds nothing.
+        </p>
+      </section>
+
+      <h2>Order of work</h2>
+      <section>
+        <ol>
+          <li><strong>C1</strong>, alone, in one small pull request. It is the stale-data bug.</li>
+          <li>
+            <strong>C2</strong> (option A) and <strong>C3</strong>, in one pull request on the
+            worker.
+          </li>
+          <li>
+            <strong>S1</strong>, then <strong>Q1</strong> to <strong>Q3</strong>, in one pull
+            request on search.
+          </li>
+          <li><strong>P1</strong>, then the optional items, if you want them.</li>
+        </ol>
+        <p>
+          Each change updates <code>docs/exceptions.md</code> in the same commit (the worker and
+          search entries), and runs <code>bun run ci</code>. None needs a deploy to test: the local
+          two-deploy setup above reproduces each case before and after.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

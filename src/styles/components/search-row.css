@@ -1,6 +1,8 @@
 .search-row {
   position: relative;
   background: var(--color-panel);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 6rem;
 }
 
 :not(.search-row) + .search-row,

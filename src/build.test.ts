@@ -1015,6 +1015,20 @@ describe('built site', () => {
     }
   });
 
+  it('ships an offline page that search engines skip and that leads to every kept section', () => {
+    const offline = readFileSync(join(DIST, 'bila-ittisal', 'index.html'), 'utf8');
+    expect(offline).toContain('<title>لا اتصال | وِردي</title>');
+    expect(offline).toContain('<meta name="robots" content="noindex">');
+    expect(offline).not.toContain('rel="canonical"');
+    expect(offline).toMatch(
+      /<h1 class="hero">\s*<span class="hero__words">\s*هذه الصفحة ليست على جهازك، <span class="hero__more">/u
+    );
+    for (const id of OCCASION_IDS) {
+      expect(offline).toMatch(cardTo(`/${id}/`));
+    }
+    expect(readFileSync(join(DIST, 'sitemap.xml'), 'utf8')).not.toContain('bila-ittisal');
+  });
+
   it('keeps what is named by its content for a year, and asks for a page again on each visit', () => {
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
     for (const path of ['/_astro/*', '/og/*']) {
@@ -1217,9 +1231,9 @@ describe('built site', () => {
         /<input class="search-field__input" type="search"[^>]*enterkeyhint="search"/u
       );
       expect(page).not.toMatch(/<input[^>]* name=/u);
-      indexes.add(page.match(/data-search-index="(\/search\/[0-9a-f]{12}\.json)"/u)![1]!);
+      indexes.add(page.match(/data-search-index="([^"]*)"/u)![1]!);
     }
-    expect(indexes.size).toBe(1);
+    expect([...indexes]).toEqual(['/search/index.json']);
     const [index] = [...indexes];
     const rows: { href: string }[] = JSON.parse(readFileSync(join(DIST, index!), 'utf8'));
     expect(rows).toHaveLength(expected + tibb.length);
@@ -1233,30 +1247,41 @@ describe('built site', () => {
       expect(hrefs).toContain(`/${file.replace(/\.md$/u, '').replace(/\/\d+-/u, '/#')}`);
     }
     const headers = readFileSync(join(DIST, '_headers'), 'utf8');
-    expect(headers).toContain('/search/*\n  Cache-Control: public, max-age=31536000, immutable');
+    expect(headers).toContain('/search/index.json\n  Cache-Control: no-cache\n');
+    expect(headers).not.toContain('/search/*');
     expect(own('nawm').match(/<dialog class="search-sheet search-sheet--stage"/gu)).toHaveLength(1);
   });
-  it('keeps the home page, its sections, and the search bundle on the device, and each other page once opened', () => {
+  it('keeps the home page, its sections, the offline page, and search on the device, and each other page once opened', () => {
     const worker = readFileSync(join(DIST, 'service-worker.js'), 'utf8');
     const manifest = JSON.parse(worker.match(/^self\.MANIFEST = (.*);\n/u)![1]!);
     const sections = [...html.matchAll(/<a class="occasion-card [^"]*" href="(\/[^"]*)"/gu)].map(
       ([, href]) => href
     );
     expect(sections).toHaveLength(OCCASION_IDS.length + 1);
-    const bundle = ['_astro', 'search']
-      .flatMap((folder) => readdirSync(join(DIST, folder)).map((file) => `/${folder}/${file}`))
+    const bundle = readdirSync(join(DIST, '_astro'))
+      .map((file) => `/_astro/${file}`)
       .toSorted();
     expect(manifest.files).toEqual(bundle);
-    expect(manifest.prefetch).toEqual(['/', ...sections, ...bundle]);
+    expect(manifest.index).toBe('/search/index.json');
+    expect(manifest.offline).toBe('/bila-ittisal/');
+    expect(manifest.prefetch).toEqual([
+      '/',
+      ...sections,
+      '/bila-ittisal/',
+      '/search/index.json',
+      ...bundle,
+    ]);
     expect(manifest.hashes).toMatch(/^\/offline\/[0-9a-f]{16}\.json$/u);
     expect(readdirSync(join(DIST, 'offline'))).toEqual([manifest.hashes.slice('/offline/'.length)]);
     const hashes = JSON.parse(readFileSync(join(DIST, manifest.hashes), 'utf8'));
     const shipped = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
       file.endsWith('index.html')
     );
-    expect(Object.keys(hashes)).toHaveLength(shipped.length);
-    for (const file of shipped) {
-      const path = `/${file.slice(0, -'index.html'.length)}`;
+    expect(Object.keys(hashes)).toHaveLength(shipped.length + 1);
+    for (const file of [...shipped, 'search/index.json']) {
+      const path = file.endsWith('index.html')
+        ? `/${file.slice(0, -'index.html'.length)}`
+        : `/${file}`;
       const bytes = readFileSync(join(DIST, file));
       expect(hashes[path]).toBe(createHash('sha256').update(bytes).digest('hex').slice(0, 16));
     }

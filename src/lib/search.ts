@@ -1,11 +1,14 @@
 import { Array, Option, Order, Schema } from 'effect';
 import { OCCASION_IDS } from './occasions';
 
+export const SEARCH_INDEX = '/search/index.json';
+
 export const searchRowSchema = Schema.Struct({
   title: Schema.String,
   words: Schema.String,
   also: Schema.optionalKey(Schema.String),
   about: Schema.optionalKey(Schema.String),
+  source: Schema.optionalKey(Schema.String),
   heading: Schema.String,
   color: Schema.String,
   emblem: Schema.Literals([...OCCASION_IDS, 'tibb']),
@@ -23,6 +26,7 @@ export type Row = {
   readonly words: Folded;
   readonly also: string;
   readonly about: string;
+  readonly source: string;
   readonly place: string;
 };
 
@@ -30,7 +34,7 @@ export type Range = readonly [number, number];
 
 export type Match = { readonly words: ReadonlyArray<string>; readonly hits: ReadonlyArray<number> };
 
-export type Nearest = { readonly word: string; readonly match: Match };
+export type Nearest = { readonly words: ReadonlyArray<string>; readonly match: Match };
 
 const DROP = /[ؐ-ًؚ-ٰٟۖ-ۭـ]/u;
 const FOLD: Readonly<Record<string, string>> = {
@@ -61,6 +65,8 @@ const SYNONYMS: Readonly<Record<string, ReadonlyArray<string>>> = {
   زواج: ['تزوج'],
   الزواج: ['تزوج'],
   عطس: ['العاطس'],
+  ابو: ['ابي'],
+  المعوذتين: ['المعوذات'],
 };
 
 export function fold(text: string): Folded {
@@ -80,6 +86,7 @@ export function rowOf(entry: {
   readonly words: string;
   readonly also?: string | undefined;
   readonly about?: string | undefined;
+  readonly source?: string | undefined;
   readonly place: string;
 }): Row {
   return {
@@ -87,20 +94,34 @@ export function rowOf(entry: {
     words: fold(entry.words),
     also: fold(entry.also ?? '').out,
     about: fold(entry.about ?? '').out,
+    source: fold(entry.source ?? '').out,
     place: fold(entry.place).out,
   };
 }
 
 const formsOf = (word: string): ReadonlyArray<string> => [word, ...(SYNONYMS[word] ?? [])];
 
-const has = (text: string, word: string) => formsOf(word).some((form) => text.includes(form));
+const SHORT = 2;
+const LETTER = /\p{L}/u;
+
+function placesOf(text: string, word: string): ReadonlyArray<number> {
+  const found: number[] = [];
+  for (let at = text.indexOf(word); at !== -1; at = text.indexOf(word, at + 1)) {
+    if (word.length > SHORT || at === 0 || !LETTER.test(text.charAt(at - 1))) found.push(at);
+  }
+  return found;
+}
+
+const has = (text: string, word: string) =>
+  formsOf(word).some((form) => placesOf(text, form).length > 0);
 
 function rankOf(row: Row, words: ReadonlyArray<string>): Option.Option<number> {
   let rank = 0;
   for (const word of words) {
     if (has(row.title.out, word)) continue;
     if (has(row.words.out, word) || has(row.also, word)) rank = Math.max(rank, 1);
-    else if (has(row.place, word) || has(row.about, word)) rank = 2;
+    else if (has(row.place, word) || has(row.about, word)) rank = Math.max(rank, 2);
+    else if (has(row.source, word)) rank = 3;
     else return Option.none();
   }
   return Option.some(rank);
@@ -130,16 +151,41 @@ export function match(rows: ReadonlyArray<Row>, query: string): Option.Option<Ma
   return Option.some({ words, hits: hitsOf(rows, words) });
 }
 
-const byLength = Order.mapInput(Order.flip(Order.Number), (word: string) => word.length);
+const COMMON = 0.2;
+
+type Partial = {
+  readonly index: number;
+  readonly present: ReadonlyArray<string>;
+  readonly rank: number;
+};
+
+const partialOf = (
+  row: Row,
+  index: number,
+  rare: ReadonlyArray<string>
+): Option.Option<Partial> => {
+  const present = rare.filter((word) => Option.isSome(rankOf(row, [word])));
+  return Option.map(rankOf(row, present), (rank) => ({ index, present, rank }));
+};
 
 export function nearestOf(rows: ReadonlyArray<Row>, query: string): Option.Option<Nearest> {
   const words = wordsOf(query);
   if (words.length < 2) return Option.none();
-  return Array.findFirst(Array.sort(words, byLength), (word) => {
-    const hits = hitsOf(rows, [word]);
-    return hits.length === 0
-      ? Option.none()
-      : Option.some({ word, match: { words: [word], hits } });
+  const rare = words.filter((word) => {
+    const hits = hitsOf(rows, [word]).length;
+    return hits > 0 && hits <= rows.length * COMMON;
+  });
+  const partial = rows.flatMap((row, index) => Option.toArray(partialOf(row, index, rare)));
+  const best = Math.max(0, ...partial.map(({ present }) => present.length));
+  if (best === 0) return Option.none();
+  const top = Array.sort(
+    partial.filter(({ present }) => present.length === best),
+    byRank
+  );
+  const shown = rare.filter((word) => top.some(({ present }) => present.includes(word)));
+  return Option.some({
+    words: shown,
+    match: { words: shown, hits: top.map(({ index }) => index) },
   });
 }
 
@@ -156,11 +202,7 @@ export function ranges(
   const found: Range[] = [];
   const original = (at: number) => Option.getOrElse(Array.get(folded.map, at), () => text.length);
   for (const word of words) {
-    for (
-      let at = folded.out.indexOf(word);
-      at !== -1;
-      at = folded.out.indexOf(word, at + word.length)
-    ) {
+    for (const at of placesOf(folded.out, word)) {
       found.push([original(at), original(at + word.length)]);
     }
   }

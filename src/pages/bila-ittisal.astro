@@ -1,0 +1,17 @@
+---
+import { Effect } from 'effect';
+import CardGrid from '../components/CardGrid.astro';
+import Hero from '../components/Hero.astro';
+import Home from '../layouts/Home.astro';
+import { sectionTiles } from '../lib/collection';
+import { SITE } from '../lib/site';
+
+const description = `هذه الصفحة ليست محفوظة على جهازك، ولا اتصال الآن. أقسام ${SITE.name} محفوظة، فاختر منها`;
+const words = 'هذه الصفحة ليست على جهازك،';
+const more = 'هذه الأقسام محفوظة على جهازك، فاختر منها، أو ابحث عن الذكر';
+---
+
+<Home title="لا اتصال" description={description} noindex faces={[]} menu={false}>
+  <Hero more={more}>{words}</Hero>
+  <CardGrid tiles={await Effect.runPromise(sectionTiles)} variant="featured" />
+</Home>

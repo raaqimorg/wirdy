@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Array, Effect, Option, Order } from 'effect';
 import { adhkarLabel, hadithLabel } from './arabic';
@@ -92,12 +91,13 @@ const adhkarRow = (
     const text = bodyOf({ body }).trim();
     const words = data.quran ? shownAyat(data, text) : yield* formOf(text, 'sabah');
     const also = hasVariants(text) ? Option.some(yield* formOf(text, 'masaa')) : Option.none();
-    const about = [data.when, data.how].filter((part) => part !== undefined).join(' ');
+    const about = [data.when, data.how, data.fadl].filter((part) => part !== undefined).join(' ');
     return {
       title: fullTitle(data),
       words,
       ...Option.match(also, { onNone: () => ({}), onSome: (evening) => ({ also: evening }) }),
       ...(about !== '' && { about }),
+      source: data.takhrij.source,
       heading: placeOf(section),
       color: section.color,
       emblem: section.id,
@@ -117,6 +117,8 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
     const tibb = Array.map(yield* tibbEntries, ({ id, data, body }): SearchRow => ({
       title: data.title,
       words: bodyOf({ body }).trim(),
+      about: data.rawi,
+      source: data.takhrij.source,
       heading: TIBB.heading,
       color: TIBB.color,
       emblem: 'tibb',
@@ -124,19 +126,5 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
       href: `${TIBB.path}#${slugOf(id)}`,
     }));
     return [...adhkar.flat(), ...tibb];
-  }
-);
-
-export type SearchIndex = {
-  readonly rows: ReadonlyArray<SearchRow>;
-  readonly version: string;
-  readonly path: string;
-};
-
-export const searchIndex: Effect.Effect<SearchIndex, MalformedMarker> = Effect.map(
-  searchRows,
-  (rows) => {
-    const version = createHash('sha256').update(JSON.stringify(rows)).digest('hex').slice(0, 12);
-    return { rows, version, path: `/search/${version}.json` };
   }
 );
