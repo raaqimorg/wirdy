@@ -11,7 +11,7 @@ import { timesLabel } from '../../lib/arabic';
 import { cardFile, cardOf } from '../../lib/card';
 import { copyOf } from '../../lib/copy';
 import { descriptionOf } from '../../lib/description';
-import { adhkarOf } from '../../lib/collection';
+import { adhkarCanonicals, adhkarOf } from '../../lib/collection';
 import { OCCASIONS, sectionOf } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
 import { eveningTitle, fullTitle } from '../../lib/title';
@@ -31,6 +31,7 @@ const { data, body = '' } = entry;
 const occasion = sectionOf(data.occasion);
 const slug = slugOf(entry.id);
 const path = dhikrPath(data.occasion, slug);
+const canonical = (await Effect.runPromise(adhkarCanonicals)).get(path);
 const card = Effect.runSync(cardOf(data, body));
 const image = `/${cardFile(card, data.occasion, slug)}`;
 const up = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
@@ -61,8 +62,9 @@ const links = [
 ---
 
 <Section
-  title={`${title} | ${occasion.title}`}
+  title={data.headline}
   description={description}
+  canonical={canonical}
   image={image}
   faces={data.quran ? ['quran'] : ['naskh']}
   crumbs={[

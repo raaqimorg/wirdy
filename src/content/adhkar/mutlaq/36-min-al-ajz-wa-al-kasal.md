@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أعوذ بك من العجز والكسل"
+headline: "اللهم إني أعوذ بك من العجز والكسل"
 occasion: "mutlaq"
 order: 36
 count: 1

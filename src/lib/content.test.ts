@@ -5,11 +5,11 @@ import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
 import { cardFile, cardOf as cardEffect, hadithCardOf } from './card';
 import { GROUP_SLUGS } from './groups';
-import { OCCASION_IDS } from './occasions';
+import { OCCASION_IDS, OCCASIONS } from './occasions';
 import { dhikrPath, hadithPath, slugOf } from './permalink';
 import permalinks from './permalinks.json';
 import { dhikrSchema, hadithSchema, STRICT, type Dhikr } from './schema';
-import { GUIDE_IDS, type Guide } from './site';
+import { GUIDE_IDS, GUIDES, type Guide } from './site';
 import { phrasesOf as phrasesEffect } from './phrases';
 import { FORMATS, posterFile, postersOf, themesOf } from './poster';
 import { fullTitle } from './title';
@@ -25,6 +25,7 @@ const issuesOf = (schema: Schema.Decoder<unknown>, raw: unknown) => {
 };
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
+const HEADLINE_LENGTH = 66;
 
 const entries = readdirSync(ROOT, { recursive: true, encoding: 'utf8' })
   .filter((path) => path.endsWith('.md'))
@@ -57,6 +58,12 @@ const hadiths = GUIDE_IDS.flatMap((guide) => {
 });
 
 const hadithsOf = (guide: Guide) => hadiths.filter((hadith) => hadith.guide === guide);
+const textsOf = (headline: string) =>
+  new Set(
+    entries
+      .filter(({ data }) => data.headline === headline)
+      .map(({ body }) => body.trim().replaceAll(/[ً-ْٰ]/gu, ''))
+  );
 
 const quran = entries.filter((entry) => entry.data.quran);
 const prose = entries.filter((entry) => !entry.data.quran);
@@ -304,6 +311,44 @@ describe('the permalinks', () => {
   it('gives each dhikr its own title, with its context', () => {
     const titles = entries.map((entry) => fullTitle(entry.data));
     expect(new Set(titles).size).toBe(titles.length);
+  });
+});
+
+describe('the headlines', () => {
+  const headlines = [
+    ...entries.map(({ data }) => data.headline),
+    ...hadiths.map(({ data }) => data.headline),
+  ];
+  const sections = [
+    ...OCCASIONS.map(({ title }) => title),
+    ...GUIDE_IDS.map((guide) => GUIDES[guide].title),
+  ];
+
+  it('gives each hadith its own', () => {
+    const own = hadiths.map(({ data }) => data.headline);
+    expect(new Set(own).size).toBe(own.length);
+  });
+
+  it('are shared only by adhkar of the same text', () => {
+    expect(headlines.filter((headline) => textsOf(headline).size > 1)).toEqual([]);
+  });
+
+  it('carry no time or place of the site', () => {
+    expect(
+      headlines.filter((headline) =>
+        /في الصباح والمساء|عند النوم|بعد الصلاة|^ذكر |^دعاء النوم/u.test(headline)
+      )
+    ).toEqual([]);
+  });
+
+  it('fit a search result', () => {
+    expect(headlines.filter((headline) => headline.length > HEADLINE_LENGTH)).toEqual([]);
+  });
+
+  it('name no section of the site', () => {
+    expect(
+      headlines.filter((headline) => sections.some((section) => headline.includes(section)))
+    ).toEqual([]);
   });
 });
 

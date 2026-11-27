@@ -1,5 +1,6 @@
 ---
 title: "اللهم باعد بيني وبين خطاياي"
+headline: "دعاء الاستفتاح: اللهم باعد بيني وبين خطاياي"
 occasion: "fi-al-salah"
 order: 2
 count: 1

@@ -10,6 +10,7 @@ const copy = (data: Dhikr, body: string) => {
 
 const base: Dhikr = {
   title: 'ذكر',
+  headline: 'ذكر',
   occasion: 'sabah-masaa',
   order: 1,
   count: 1,

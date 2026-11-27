@@ -74,6 +74,7 @@ The name is `<order>-<slug>.md`, such as `01-sayyid-al-istighfar.md`. The slug i
 ```markdown
 ---
 title: 'سيد الاستغفار'
+headline: 'سيد الاستغفار: اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك'
 occasion: 'sabah-masaa'
 order: 1
 count: 1
@@ -91,6 +92,7 @@ takhrij:
 
 - `title`: the short Arabic name, for the page, the link, and the card. Use the known name, such as «سيد الاستغفار», or the first words. It holds no place or time.
 - `context`: where or when it is said, such as «عند النوم». Add it only when the name is in more than one place, so each `title` with its `context` is unique. A heading shows it under the name, smaller and lighter. Plain text (the tab, a share, a link, a button label) joins them as «آية الكرسي (عند النوم)» (`fullTitle` in `src/lib/title.ts`). A title that names its place stays whole, such as «الدعاء بعد الأذان».
+- `headline`: the name of the page on its own, for the browser tab, search results, and shares, so a reader who searched for the dhikr sees only the dhikr. It is the dhikr's words, such as «باسمك اللهم أموت وأحيا». A name goes before the words only when the dhikr is known by it: its own name, such as «سيد الاستغفار» or «آية الكرسي», or the «دعاء» people search for, such as «دعاء دخول المسجد» or «دعاء السفر». It never names a section of the site, nor a time or place the page only belongs to («في الصباح والمساء», «عند النوم», «بعد الصلاة»). Its words come from the text, and a virtue only from `fadl`. At most 66 letters. Adhkar of the same text share one headline, and one canonical page ([Metadata](branding/metadata.md#each-page)).
 - `count`: the number the sound narration states, or 1.
 - `counts`: one number for each phrase, when the narration gives each its own, such as `[33, 33, 34]`. The phrases are the parts between «، ». Leave `count` at 1. The build fails when numbers and phrases differ.
 - `mode`: `sabah` or `masaa` for a dhikr of one time only, `both` otherwise.
@@ -150,6 +152,7 @@ A guide shows on one page, under a heading for each `group`. Each hadith also ha
 
 - The same rule lets a hadith in. The tests refuse a ruling of weakness.
 - `title`: a short name, such as «الحبة السوداء». `rawi`: the narrating Companion, in the genitive, since the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.
+- `headline`: the name of its page on its own, as for a dhikr: the words of the hadith, cut to the sentence a reader searches for, such as «إذا صلى أحدكم الجمعة فليصل بعدها أربعًا». A narration takes the words around his ﷺ saying when the saying alone means nothing. Unique.
 - The body is the matn as the book gives it, cut from the page by script, from where the Companion's words start. Never shorten or join it by hand.
 - A hadith of only his ﷺ words has them alone, with no quotation marks, like a dhikr. A narration (an exchange, an act, or a narrator's gloss) keeps «» around his words, so the reader sees where they start.
 - In a group, the general hadith comes before the particular.

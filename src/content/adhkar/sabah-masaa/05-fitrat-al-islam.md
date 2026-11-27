@@ -1,5 +1,6 @@
 ---
 title: "أصبحنا على فطرة الإسلام"
+headline: "أصبحنا على فطرة الإسلام، وكلمة الإخلاص"
 occasion: "sabah-masaa"
 order: 5
 count: 1

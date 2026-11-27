@@ -1,5 +1,6 @@
 ---
 title: "حمد العاطس"
+headline: "الحمد لله حمدًا كثيرًا طيبًا مباركًا فيه، مباركًا عليه"
 context: "في الصلاة"
 occasion: "fi-al-salah"
 order: 32

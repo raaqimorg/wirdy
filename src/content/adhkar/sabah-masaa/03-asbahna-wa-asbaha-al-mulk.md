@@ -1,5 +1,6 @@
 ---
 title: "أصبحنا وأصبح الملك لله"
+headline: "أصبحنا وأصبح الملك لله، والحمد لله"
 occasion: "sabah-masaa"
 order: 3
 count: 1

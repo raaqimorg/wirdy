@@ -1,5 +1,6 @@
 ---
 title: "يهديكم الله ويصلح بالكم"
+headline: "يهديكم الله ويصلح بالكم"
 occasion: "nas"
 order: 12
 count: 1

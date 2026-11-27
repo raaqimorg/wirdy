@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أسألك العافية"
+headline: "اللهم إني أسألك العافية في الدنيا والآخرة"
 occasion: "sabah-masaa"
 order: 9
 count: 1

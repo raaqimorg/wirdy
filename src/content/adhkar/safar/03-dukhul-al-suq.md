@@ -1,5 +1,6 @@
 ---
 title: "دعاء دخول السوق"
+headline: "دعاء دخول السوق: لا إله إلا الله وحده لا شريك له"
 occasion: "safar"
 order: 3
 count: 1

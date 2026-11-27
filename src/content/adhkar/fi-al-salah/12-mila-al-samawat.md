@@ -1,5 +1,6 @@
 ---
 title: "ربنا لك الحمد ملء السماوات"
+headline: "اللهم ربنا لك الحمد ملء السماوات وملء الأرض"
 occasion: "fi-al-salah"
 order: 12
 count: 1

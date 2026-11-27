@@ -1,5 +1,6 @@
 ---
 title: "سبحان ذي الجبروت والملكوت"
+headline: "سبحان ذي الجبروت والملكوت والكبرياء والعظمة"
 occasion: "fi-al-salah"
 order: 9
 count: 1

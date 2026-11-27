@@ -1,5 +1,6 @@
 ---
 title: "دعاء السفر"
+headline: "دعاء السفر: سبحان الذي سخر لنا هذا وما كنا له مقرنين"
 occasion: "safar"
 order: 9
 count: 1

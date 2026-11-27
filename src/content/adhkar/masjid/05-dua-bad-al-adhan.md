@@ -1,5 +1,6 @@
 ---
 title: "الدعاء بعد الأذان"
+headline: "الدعاء بعد الأذان: اللهم رب هذه الدعوة التامة"
 occasion: "masjid"
 order: 5
 count: 1

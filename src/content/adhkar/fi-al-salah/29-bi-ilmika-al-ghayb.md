@@ -1,5 +1,6 @@
 ---
 title: "اللهم بعلمك الغيب"
+headline: "اللهم بعلمك الغيب وقدرتك على الخلق"
 occasion: "fi-al-salah"
 order: 29
 count: 1

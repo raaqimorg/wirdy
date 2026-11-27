@@ -1,5 +1,6 @@
 ---
 title: "جزاك الله خيرًا"
+headline: "جزاك الله خيرًا"
 occasion: "nas"
 order: 3
 count: 1

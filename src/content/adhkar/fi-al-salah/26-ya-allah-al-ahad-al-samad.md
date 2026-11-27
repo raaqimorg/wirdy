@@ -1,5 +1,6 @@
 ---
 title: "يا الله الأحد الصمد"
+headline: "اللهم إني أسألك يا الله الأحد الصمد"
 occasion: "fi-al-salah"
 order: 26
 count: 1

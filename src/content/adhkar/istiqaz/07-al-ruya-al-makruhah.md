@@ -1,5 +1,6 @@
 ---
 title: "الاستعاذة من الرؤيا المكروهة"
+headline: "أعوذ بالله من الشيطان الرجيم"
 occasion: "istiqaz"
 order: 7
 count: 3

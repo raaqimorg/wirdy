@@ -1,5 +1,6 @@
 ---
 title: "دعاء يوم عرفة"
+headline: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد"
 occasion: "mawasim"
 order: 8
 count: 1

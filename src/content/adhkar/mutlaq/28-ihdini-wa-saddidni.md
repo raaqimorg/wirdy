@@ -1,5 +1,6 @@
 ---
 title: "اللهم اهدني وسددني"
+headline: "اللهم اهدني وسددني"
 occasion: "mutlaq"
 order: 28
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "رب قني عذابك"
+headline: "رب قني عذابك يوم تبعث عبادك"
 occasion: "salah"
 order: 16
 count: 1

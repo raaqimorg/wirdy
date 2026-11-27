@@ -1,5 +1,6 @@
 ---
 title: "التحيات لله"
+headline: "التشهد: التحيات لله والصلوات والطيبات"
 occasion: "fi-al-salah"
 order: 21
 count: 1

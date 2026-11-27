@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أسألك الجنة"
+headline: "اللهم إني أسألك الجنة، وأعوذ بك من النار"
 occasion: "fi-al-salah"
 order: 25
 count: 1

@@ -21,6 +21,7 @@ export const FORMS = [1, 2, 3, 4] as const;
 
 export const dhikrSchema = Schema.Struct({
   title: text,
+  headline: text,
   context: Schema.optionalKey(text),
   occasion: Schema.Literals(OCCASION_IDS),
   order: positive,
@@ -58,6 +59,7 @@ const sourceUrl = Schema.String.check(
 
 export const hadithSchema = Schema.Struct({
   title: text,
+  headline: text,
   order: positive,
   group: text,
   rawi: text,

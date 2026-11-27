@@ -1,5 +1,6 @@
 ---
 title: "رضيت بالله ربًّا"
+headline: "رضيت بالله ربًّا، وبالإسلام دينًا، وبمحمد نبيًّا"
 context: "في الصباح"
 occasion: "sabah-masaa"
 order: 6

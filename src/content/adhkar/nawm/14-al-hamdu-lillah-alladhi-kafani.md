@@ -1,5 +1,6 @@
 ---
 title: "الحمد لله الذي كفاني وآواني"
+headline: "الحمد لله الذي كفاني وآواني"
 occasion: "nawm"
 order: 14
 count: 1

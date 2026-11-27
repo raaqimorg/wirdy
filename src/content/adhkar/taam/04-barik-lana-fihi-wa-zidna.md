@@ -1,5 +1,6 @@
 ---
 title: "اللهم بارك لنا فيه وزدنا منه"
+headline: "اللهم بارك لنا فيه، وزدنا منه"
 occasion: "taam"
 order: 4
 count: 1

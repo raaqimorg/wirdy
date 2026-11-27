@@ -1,5 +1,6 @@
 ---
 title: "الله أكبر كبيرًا"
+headline: "دعاء الاستفتاح: الله أكبر كبيرًا، والحمد لله كثيرًا"
 occasion: "fi-al-salah"
 order: 31
 count: 1

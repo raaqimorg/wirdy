@@ -1,5 +1,6 @@
 ---
 title: "اللهم لك ركعت"
+headline: "اللهم لك ركعت، وبك آمنت، ولك أسلمت"
 occasion: "fi-al-salah"
 order: 6
 count: 1

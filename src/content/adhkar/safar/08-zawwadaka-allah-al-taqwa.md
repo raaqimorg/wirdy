@@ -1,5 +1,6 @@
 ---
 title: "زوّدك الله التقوى"
+headline: "زودك الله التقوى، وغفر ذنبك، ويسر لك الخير"
 occasion: "safar"
 order: 8
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "تلقين المحتضر"
+headline: "لا إله إلا الله"
 occasion: "janaiz"
 order: 3
 count: 1

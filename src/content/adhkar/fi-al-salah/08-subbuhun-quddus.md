@@ -1,5 +1,6 @@
 ---
 title: "سبوح قدوس"
+headline: "سبوح قدوس، رب الملائكة والروح"
 occasion: "fi-al-salah"
 order: 8
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "من تعارّ من الليل"
+headline: "لا إله إلا الله… الحمد لله، وسبحان الله… اللهم اغفر لي"
 occasion: "istiqaz"
 order: 4
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "حسبنا الله ونعم الوكيل"
+headline: "حسبنا الله ونعم الوكيل"
 occasion: "hamm"
 order: 12
 count: 1

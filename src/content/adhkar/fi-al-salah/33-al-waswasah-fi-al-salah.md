@@ -1,5 +1,6 @@
 ---
 title: "التعوذ من الوسوسة في الصلاة"
+headline: "أعوذ بالله من الشيطان الرجيم"
 occasion: "fi-al-salah"
 order: 33
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "اللهم لا سهل إلا ما جعلته سهلًا"
+headline: "اللهم لا سهل إلا ما جعلته سهلًا"
 occasion: "mutlaq"
 order: 23
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "آية الكرسي"
+headline: "آية الكرسي: الله لا إله إلا هو الحي القيوم"
 context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 1

@@ -1,5 +1,6 @@
 ---
 title: "سورة الكافرون"
+headline: "سورة الكافرون: قل يا أيها الكافرون"
 occasion: "nawm"
 order: 17
 count: 1

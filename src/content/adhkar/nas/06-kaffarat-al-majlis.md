@@ -1,5 +1,6 @@
 ---
 title: "كفارة المجلس"
+headline: "سبحانك اللهم وبحمدك، أشهد أن لا إله إلا أنت"
 occasion: "nas"
 order: 6
 count: 1

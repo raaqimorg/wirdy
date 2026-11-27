@@ -1,5 +1,6 @@
 ---
 title: "بسم الله وعلى سنة رسول الله"
+headline: "بسم الله، وعلى سنة رسول الله"
 occasion: "janaiz"
 order: 11
 count: 1

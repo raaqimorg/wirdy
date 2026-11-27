@@ -7,6 +7,7 @@ const suwarOf = (data: Dhikr, text: string) => Option.getOrNull(suwarOption(data
 
 const base: Dhikr = {
   title: 'ذكر',
+  headline: 'ذكر',
   occasion: 'nawm',
   order: 1,
   count: 1,

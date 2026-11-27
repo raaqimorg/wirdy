@@ -1,5 +1,6 @@
 ---
 title: "أعوذ بكلمات الله التامات"
+headline: "أعوذ بكلمات الله التامات من شر ما خلق"
 occasion: "safar"
 order: 11
 count: 1

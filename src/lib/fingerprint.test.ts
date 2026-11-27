@@ -7,6 +7,7 @@ const BODY = 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ';
 
 const dhikr: Dhikr = {
   title: 'سبحان الله وبحمده',
+  headline: 'سبحان الله وبحمده',
   occasion: 'sabah-masaa',
   order: 16,
   count: 100,

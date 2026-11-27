@@ -1,5 +1,6 @@
 ---
 title: "اللهم لا مانع لما أعطيت"
+headline: "اللهم لا مانع لما أعطيت، ولا معطي لما منعت"
 occasion: "salah"
 order: 4
 count: 1

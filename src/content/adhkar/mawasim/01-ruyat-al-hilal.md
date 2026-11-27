@@ -1,5 +1,6 @@
 ---
 title: "دعاء رؤية الهلال"
+headline: "دعاء رؤية الهلال: اللهم أهله علينا باليمن والإيمان"
 occasion: "mawasim"
 order: 1
 count: 1

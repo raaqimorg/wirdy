@@ -1,5 +1,6 @@
 ---
 title: "اللهم اغفر لحينا وميتنا"
+headline: "دعاء صلاة الجنازة: اللهم اغفر لحينا وميتنا"
 occasion: "janaiz"
 order: 9
 count: 1

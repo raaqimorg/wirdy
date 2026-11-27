@@ -1,5 +1,6 @@
 ---
 title: "الحمد لله على كل حال"
+headline: "الحمد لله على كل حال"
 context: "للعاطس"
 occasion: "nas"
 order: 10

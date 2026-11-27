@@ -1,5 +1,6 @@
 ---
 title: "اللهم لك سجدت"
+headline: "اللهم لك سجدت، وبك آمنت، ولك أسلمت"
 occasion: "fi-al-salah"
 order: 15
 count: 1

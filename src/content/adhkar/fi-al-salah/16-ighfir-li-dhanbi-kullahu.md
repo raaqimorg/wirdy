@@ -1,5 +1,6 @@
 ---
 title: "اللهم اغفر لي ذنبي كله"
+headline: "اللهم اغفر لي ذنبي كله، دقه وجله"
 occasion: "fi-al-salah"
 order: 16
 count: 1

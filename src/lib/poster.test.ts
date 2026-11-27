@@ -14,6 +14,7 @@ import type { Dhikr, Hadith } from './schema';
 
 const base: Dhikr = {
   title: 'سيد الاستغفار',
+  headline: 'سيد الاستغفار',
   occasion: 'sabah-masaa',
   order: 1,
   count: 1,
@@ -30,6 +31,7 @@ const base: Dhikr = {
 
 const hadith: Hadith = {
   title: 'الحبة السوداء',
+  headline: 'الحبة السوداء',
   order: 1,
   group: 'الأدوية',
   rawi: 'أبي هريرة',

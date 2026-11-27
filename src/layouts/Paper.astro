@@ -18,6 +18,7 @@ interface Props {
   image?: string | undefined;
   imageSize?: [width: number, height: number] | undefined;
   crumbs?: { name: string; path: string }[] | undefined;
+  canonical?: string | undefined;
   noindex?: boolean | undefined;
   faces?: ('naskh' | 'quran')[] | undefined;
   tone?: string | undefined;
@@ -29,6 +30,7 @@ const {
   image = `/${homeCardFile()}`,
   imageSize: [imageWidth, imageHeight] = [2400, 1260],
   crumbs = [],
+  canonical = Astro.url.pathname,
   noindex = false,
   faces = ['naskh'],
   tone,
@@ -39,7 +41,7 @@ const preloads = [plex400, plex500, plex700, ...faces.map((face) => FACES[face])
 const siteName = SITE.name;
 const title = `${topic} | ${siteName}`;
 
-const pageUrl = new URL(Astro.url.pathname, Astro.site);
+const pageUrl = new URL(canonical, Astro.site);
 const ogImage = new URL(image, Astro.site);
 const siteUrl = new URL('/', Astro.site).href;
 const siteId = new URL('/#website', Astro.site).href;
@@ -116,7 +118,7 @@ const structuredData = {
     <meta name="theme-color" content={PALETTE.paper} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={pageUrl.href} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
     <meta property="og:locale" content="ar_AR" />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={title} />

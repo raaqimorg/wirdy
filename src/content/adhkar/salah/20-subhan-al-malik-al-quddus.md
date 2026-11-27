@@ -1,5 +1,6 @@
 ---
 title: "سبحان الملك القدوس"
+headline: "سبحان الملك القدوس"
 occasion: "salah"
 order: 20
 count: 3

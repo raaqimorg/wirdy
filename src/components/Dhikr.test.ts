@@ -8,6 +8,7 @@ type Extra = { heading?: 'h2' | 'h3' | 'h4'; single?: boolean };
 
 const base: DhikrData = {
   title: 'سيد الاستغفار',
+  headline: 'سيد الاستغفار',
   occasion: 'sabah-masaa',
   order: 1,
   count: 1,

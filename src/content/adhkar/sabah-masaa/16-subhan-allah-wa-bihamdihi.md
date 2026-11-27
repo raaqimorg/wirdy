@@ -1,5 +1,6 @@
 ---
 title: "سبحان الله وبحمده"
+headline: "سبحان الله وبحمده"
 context: "في الصباح والمساء"
 occasion: "sabah-masaa"
 order: 16

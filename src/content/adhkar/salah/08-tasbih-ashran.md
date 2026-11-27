@@ -1,5 +1,6 @@
 ---
 title: "التسبيح عشرًا"
+headline: "سبحان الله، والحمد لله، والله أكبر"
 occasion: "salah"
 order: 8
 count: 1

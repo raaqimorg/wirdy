@@ -1,5 +1,6 @@
 ---
 title: "رب اغفر لي، وتب عليّ"
+headline: "رب اغفر لي، وتب علي، إنك أنت التواب الرحيم"
 occasion: "mutlaq"
 order: 15
 count: 100

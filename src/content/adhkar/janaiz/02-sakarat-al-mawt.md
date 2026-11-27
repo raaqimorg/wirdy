@@ -1,5 +1,6 @@
 ---
 title: "إن للموت سكرات"
+headline: "لا إله إلا الله، إن للموت سكرات"
 occasion: "janaiz"
 order: 2
 count: 1

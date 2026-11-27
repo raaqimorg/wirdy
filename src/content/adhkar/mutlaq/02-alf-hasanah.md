@@ -1,5 +1,6 @@
 ---
 title: "سبحان الله مئة مرة"
+headline: "سبحان الله"
 occasion: "mutlaq"
 order: 2
 count: 100

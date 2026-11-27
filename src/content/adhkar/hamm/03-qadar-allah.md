@@ -1,5 +1,6 @@
 ---
 title: "قدر الله وما شاء فعل"
+headline: "قدر الله وما شاء فعل"
 occasion: "hamm"
 order: 3
 count: 1

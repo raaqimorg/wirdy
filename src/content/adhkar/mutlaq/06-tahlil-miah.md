@@ -1,5 +1,6 @@
 ---
 title: "التهليل مئة مرة"
+headline: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد"
 occasion: "mutlaq"
 order: 6
 count: 100

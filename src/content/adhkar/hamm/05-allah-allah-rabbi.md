@@ -1,5 +1,6 @@
 ---
 title: "الله الله ربي"
+headline: "الله الله ربي، لا أشرك به شيئًا"
 occasion: "hamm"
 order: 5
 count: 1

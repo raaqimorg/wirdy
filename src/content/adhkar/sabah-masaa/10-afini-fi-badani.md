@@ -1,5 +1,6 @@
 ---
 title: "اللهم عافني في بدني"
+headline: "اللهم عافني في بدني، اللهم عافني في سمعي"
 occasion: "sabah-masaa"
 order: 10
 count: 3

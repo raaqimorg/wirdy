@@ -1,5 +1,6 @@
 ---
 title: "إجابة المؤذن"
+headline: "لا حول ولا قوة إلا بالله"
 occasion: "masjid"
 order: 1
 count: 1

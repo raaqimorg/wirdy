@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أعوذ بك من الهم والحزن"
+headline: "اللهم إني أعوذ بك من الهم والحزن"
 occasion: "mutlaq"
 order: 33
 count: 1

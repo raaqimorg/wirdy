@@ -1,5 +1,6 @@
 ---
 title: "سمع سامع بحمد الله"
+headline: "سمع سامع بحمد الله وحسن بلائه علينا"
 occasion: "safar"
 order: 12
 count: 1

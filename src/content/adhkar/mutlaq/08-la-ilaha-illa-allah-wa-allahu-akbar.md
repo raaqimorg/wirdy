@@ -1,5 +1,6 @@
 ---
 title: "لا إله إلا الله والله أكبر"
+headline: "لا إله إلا الله والله أكبر"
 occasion: "mutlaq"
 order: 8
 count: 1

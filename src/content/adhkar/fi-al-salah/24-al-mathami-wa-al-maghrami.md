@@ -1,5 +1,6 @@
 ---
 title: "اللهم إني أعوذ بك من المأثم والمغرم"
+headline: "اللهم إني أعوذ بك من المأثم والمغرم"
 occasion: "fi-al-salah"
 order: 24
 count: 1

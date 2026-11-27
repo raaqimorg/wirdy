@@ -1,5 +1,6 @@
 ---
 title: "الدعاء للمتزوج"
+headline: "بارك الله لك، وبارك عليك، وجمع بينكما في خير"
 occasion: "bayt"
 order: 8
 count: 1

@@ -1,5 +1,6 @@
 ---
 title: "أعوذ بك أن أضل أو أُضل"
+headline: "اللهم أعوذ بك أن أضل أو أضل، أو أزل أو أزل"
 occasion: "safar"
 order: 2
 count: 1
