@@ -2,7 +2,7 @@ name: Visits
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "41 * * * *"
     - cron: "7 4 * * *"
   workflow_dispatch:
 
