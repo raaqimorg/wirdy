@@ -13,11 +13,23 @@ const groups = [tiles.filter(({ id }) => !isGuide(id)), tiles.filter(({ id }) =>
 ---
 
 <div class="section-menu">
-  <Button variant="icon" class="section-menu__button" popovertarget="sections" aria-label="الأقسام">
+  <Button
+    variant="icon"
+    class="section-menu__button"
+    aria-label="الأقسام"
+    data-sheet-open="sections"
+  >
     <Icon name="sections" />
   </Button>
-  <div class="section-menu__panel" id="sections" popover>
-    <ul>
+  <dialog class="section-menu__panel" id="sections" aria-label="الأقسام" data-sheet data-expandable>
+    <div class="section-menu__head" data-sheet-handle>
+      <span class="section-menu__grabber" aria-hidden="true" />
+      <p class="section-menu__title">الأقسام</p>
+      <Button variant="icon" class="section-menu__close" aria-label="إغلاق" data-sheet-close>
+        <Icon name="close" />
+      </Button>
+    </div>
+    <ul class="section-menu__body">
       {groups.map((group) => (
         <li class="section-menu__group">
           <ul>
@@ -42,5 +54,5 @@ const groups = [tiles.filter(({ id }) => !isGuide(id)), tiles.filter(({ id }) =>
         </li>
       ))}
     </ul>
-  </div>
+  </dialog>
 </div>

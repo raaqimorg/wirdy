@@ -13,11 +13,9 @@ import {
 
 interface Props {
   posters: ReadonlyArray<Poster>;
-  title: string;
-  path: string;
 }
 
-const { posters, title, path } = Astro.props;
+const { posters } = Astro.props;
 
 const files = Object.fromEntries(
   posters.map((poster) => [
@@ -42,81 +40,75 @@ const themes: ReadonlyArray<ThemeName> = ['light', 'dark'];
     <Button
       variant="icon"
       class="poster-menu__button"
-      popovertarget="posters"
       aria-label="صورة للمشاركة"
+      data-sheet-open="posters"
     >
       <Icon name="share" />
     </Button>
-    <div class="poster-menu__panel" id="posters" popover>
-      <a
-        class="poster-menu__save"
-        href={`/${posterFile(first, story, 'light')}`}
-        download={posterDownload(first, story, 'light')}
-        data-poster-save
-        data-hover="fill"
-      >
-        <span class="poster-menu__text">
-          <span data-label>حفظ الصورة</span>
-          <span class="poster-menu__choice" data-poster-choice>
-            {`${story.title}، ${THEME_TITLES.light}`}
-          </span>
-        </span>
-        <Icon name="save" class="poster-menu__icon icon--idle" />
-        <Icon name="check" class="poster-menu__icon icon--done" />
-      </a>
-      <p class="poster-menu__heading" id="poster-format">
-        الشكل
-      </p>
-      <div class="poster-menu__group" role="radiogroup" aria-labelledby="poster-format">
-        {FORMATS.map((format) => (
-          <button
-            class="poster-menu__option"
-            type="button"
-            aria-checked={format === story ? 'true' : 'false'}
-            role="radio"
-            data-poster-format={format.name}
-            data-title={format.title}
-            data-hover="fill"
-          >
-            <Icon name="check" class="poster-menu__check" />
-            <span class="poster-menu__name">{format.title}</span>
-            <span class={`poster-menu__shape poster-menu__shape--${format.name}`} />
-          </button>
-        ))}
+    <dialog class="poster-menu__panel" id="posters" aria-label="صورة للمشاركة" data-sheet>
+      <div class="poster-menu__head" data-sheet-handle>
+        <span class="poster-menu__grabber" aria-hidden="true" />
+        <p class="poster-menu__title">صورة للمشاركة</p>
+        <Button variant="icon" class="poster-menu__close" aria-label="إغلاق" data-sheet-close>
+          <Icon name="close" />
+        </Button>
       </div>
-      <p class="poster-menu__heading" id="poster-theme">
-        اللون
-      </p>
-      <div class="poster-menu__group" role="radiogroup" aria-labelledby="poster-theme">
-        {themes.map((theme) => (
-          <button
-            class="poster-menu__option"
-            type="button"
-            aria-checked={theme === 'light' ? 'true' : 'false'}
-            role="radio"
-            data-poster-theme={theme}
-            data-title={THEME_TITLES[theme]}
-            data-hover="fill"
-          >
-            <Icon name="check" class="poster-menu__check" />
-            <span class="poster-menu__name">
-              {THEME_TITLES[theme]}
-              {theme === 'dark' && <span class="poster-menu__note">الطباعة فاتحة دائما</span>}
-            </span>
-          </button>
-        ))}
+      <div class="poster-menu__body">
+        <p class="poster-menu__heading" id="poster-format">
+          الشكل
+        </p>
+        <div class="poster-menu__group" role="radiogroup" aria-labelledby="poster-format">
+          {FORMATS.map((format) => (
+            <button
+              class="poster-menu__option"
+              type="button"
+              aria-checked={format === story ? 'true' : 'false'}
+              role="radio"
+              data-poster-format={format.name}
+              data-hover="fill"
+            >
+              <Icon name="check" class="poster-menu__check" />
+              <span class="poster-menu__name">{format.title}</span>
+              <span class={`poster-menu__shape poster-menu__shape--${format.name}`} />
+            </button>
+          ))}
+        </div>
+        <p class="poster-menu__heading" id="poster-theme">
+          اللون
+        </p>
+        <div class="poster-menu__group" role="radiogroup" aria-labelledby="poster-theme">
+          {themes.map((theme) => (
+            <button
+              class="poster-menu__option"
+              type="button"
+              aria-checked={theme === 'light' ? 'true' : 'false'}
+              role="radio"
+              data-poster-theme={theme}
+              data-hover="fill"
+            >
+              <Icon name="check" class="poster-menu__check" />
+              <span class="poster-menu__name">
+                {THEME_TITLES[theme]}
+                {theme === 'dark' && <span class="poster-menu__note">الطباعة فاتحة دائما</span>}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
-      <p class="poster-menu__foot">
+      <div class="poster-menu__foot">
         <span class="visually-hidden" role="status" data-status />
-        <a class="poster-menu__link" href={path} data-share-title={title} data-hover="fill">
-          <span class="poster-menu__text" data-label>
-            مشاركة رابط الصفحة
-          </span>
-          <Icon name="link" class="poster-menu__icon icon--idle" />
+        <a
+          class="poster-menu__save"
+          href={`/${posterFile(first, story, 'light')}`}
+          download={posterDownload(first, story, 'light')}
+          data-poster-save
+          data-hover="fill"
+        >
+          <Icon name="save" class="poster-menu__icon icon--idle" />
           <Icon name="check" class="poster-menu__icon icon--done" />
-          <Icon name="alert" class="poster-menu__icon icon--fail" />
+          <span data-label>حفظ الصورة</span>
         </a>
-      </p>
-    </div>
+      </div>
+    </dialog>
   </div>
 )}

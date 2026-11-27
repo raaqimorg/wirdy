@@ -206,15 +206,15 @@ describe('built site', () => {
     );
   });
 
-  it('opens a menu of every section from an icon in the bar of each page but home and the 404 page, with no script', () => {
+  it('opens a menu of every section from an icon in the bar of each page but home and the 404 page', () => {
     const sections = [...OCCASION_IDS, ...guidePages];
     for (const path of [...sections, 'nawm/ayat-al-kursi']) {
       const bar = barOf(own(path));
       expect(bar).toMatch(
-        /<button type="button" popovertarget="sections" aria-label="الأقسام" class="button button--icon section-menu__button">\s*<svg class="icon/u
+        /<button type="button" aria-label="الأقسام" data-sheet-open="sections" class="button button--icon section-menu__button">\s*<svg class="icon/u
       );
       const panel = bar.match(
-        /<div class="section-menu__panel" id="sections" popover>[\s\S]*?<\/div>/u
+        /<dialog class="section-menu__panel" id="sections" aria-label="الأقسام" data-sheet data-expandable>[\s\S]*?<\/dialog>/u
       )![0];
       const links = [
         ...panel.matchAll(/<a class="section-menu__link[^"]*" href="([^"]+)"[^>]*>/gu),
@@ -225,8 +225,7 @@ describe('built site', () => {
     }
     expect(barOf(html)).not.toContain('section-menu');
     expect(barOf(notFound)).not.toContain('section-menu');
-    expect(css).toMatch(/@supports selector\(:popover-open\)/u);
-    expect(css).toMatch(/\.section-menu__panel::backdrop\{display:none/u);
+    expect(css).toMatch(/\.section-menu__panel::backdrop\{background:0 0\}/u);
   });
 
   it('keeps one bar and one height at the top of every page', () => {
@@ -274,7 +273,7 @@ describe('built site', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
     expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\('theme'\)[\s\S]*?<\/script>/u);
     expect(head).toMatch(
-      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
+      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\],\s*\[data-sheet-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
     );
   });
 
@@ -585,6 +584,46 @@ describe('built site', () => {
         files: id === 'sabah-masaa' ? 18 : 9,
         missing: [],
       });
+    }
+  });
+
+  it('lets Tab reach every row of the poster menu, with one row checked in each group', () => {
+    for (const [id, page] of [
+      ...OCCASION_IDS.map((occasion) => [occasion, pages[occasion]!]),
+      ...GUIDE_IDS.map((guide, index) => [guide, own(guidePages[index]!)]),
+    ]) {
+      const groups = [...page!.matchAll(/role="radiogroup"[^>]*>([\s\S]*?)<\/div>/gu)];
+      const rows = groups.map(([, group]) =>
+        [...group!.matchAll(/<button[^>]*>/gu)].map(([tag]) => tag)
+      );
+      expect({ id, groups: rows.length }).toEqual({ id, groups: 2 });
+      for (const row of rows.flat()) expect(row).not.toContain('tabindex');
+      expect({
+        id,
+        checked: rows.map(
+          (group) => group.filter((tag) => tag.includes('aria-checked="true"')).length
+        ),
+      }).toEqual({ id, checked: [1, 1] });
+    }
+  });
+
+  it('heads each menu of the bar with its title and a button that closes it, lets only the section menu grow, and ends the poster menu in its save button alone', () => {
+    for (const occasion of OCCASION_IDS) {
+      const page = pages[occasion]!;
+      for (const [id, title, grows] of [
+        ['sections', 'الأقسام', ' data-expandable'],
+        ['posters', 'صورة للمشاركة', ''],
+      ]) {
+        expect(page).toMatch(
+          new RegExp(
+            `<dialog class="[\\w-]+__panel" id="${id}" aria-label="${title}" data-sheet${grows}><div class="[\\w-]+__head" data-sheet-handle>[\\s\\S]*?__title">${title}</p><button type="button" aria-label="إغلاق" data-sheet-close`,
+            'u'
+          )
+        );
+      }
+      expect(page).toMatch(
+        /<div class="poster-menu__foot"><span[^>]*><\/span><a class="poster-menu__save"[^>]*>(?:<svg[\s\S]*?<\/svg>)+<span data-label>حفظ الصورة<\/span><\/a><\/div>/u
+      );
     }
   });
 

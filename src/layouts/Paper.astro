@@ -326,8 +326,15 @@ const structuredData = {
         const ready = new Map();
         function pick(option) {
           const group = option.parentElement.children;
-          for (let i = 0; i < group.length; i += 1)
+          for (let i = 0; i < group.length; i += 1) {
             group[i].setAttribute('aria-checked', String(group[i] === option));
+          }
+        }
+        function check(option) {
+          const menu = option.closest('[data-poster-menu]');
+          pick(option);
+          if (option.dataset.posterTheme) menu.dataset.chosen = '';
+          posterOf(menu);
         }
         function posterOf(menu) {
           const format = menu.querySelector('[data-poster-format][aria-checked="true"]');
@@ -342,8 +349,6 @@ const structuredData = {
           const link = menu.querySelector('[data-poster-save]');
           link.href = href;
           link.download = name;
-          const choice = menu.querySelector('[data-poster-choice]');
-          choice.textContent = `${format.dataset.title}، ${theme.dataset.title}`;
           if (!sharesFiles || fetched.has(href)) return;
           fetched.add(href);
           fetch(href)
@@ -360,26 +365,16 @@ const structuredData = {
               }
             );
         }
-        document.addEventListener(
-          'toggle',
-          function (event) {
-            const menu = event.target.closest && event.target.closest('[data-poster-menu]');
-            if (!menu || event.newState !== 'open') return;
-            if (menu.dataset.chosen === undefined)
-              pick(menu.querySelector(`[data-poster-theme="${current()}"]`));
-            posterOf(menu);
-          },
-          true
-        );
+        function prepare(menu) {
+          if (menu.dataset.chosen === undefined)
+            pick(menu.querySelector(`[data-poster-theme="${current()}"]`));
+          posterOf(menu);
+        }
         document.addEventListener('click', function (event) {
           const menu = event.target.closest('[data-poster-menu]');
           if (!menu) return;
           const option = event.target.closest('[data-poster-format], [data-poster-theme]');
-          if (option && !option.disabled) {
-            pick(option);
-            if (option.dataset.posterTheme) menu.dataset.chosen = '';
-            posterOf(menu);
-          }
+          if (option && !option.disabled) check(option);
           const link = event.target.closest('[data-poster-save]');
           if (!link) return;
           posterOf(menu);
@@ -395,6 +390,106 @@ const structuredData = {
             }
           );
         });
+
+        const wide = matchMedia('(min-width: 40rem)');
+        const tallest = 'calc(100dvh - env(safe-area-inset-top) - var(--space-3))';
+        let drag = null;
+        function rest(sheet) {
+          sheet.style.removeProperty('translate');
+          sheet.style.removeProperty('max-height');
+          sheet.style.removeProperty('height');
+          sheet.toggleAttribute('data-dragging', false);
+        }
+        document.addEventListener('pointerdown', function (event) {
+          const handle = event.target.closest('[data-sheet-handle]');
+          if (!handle || event.pointerType === 'mouse' || wide.matches) return;
+          if (event.target.closest('button')) return;
+          const sheet = handle.closest('[data-sheet]');
+          const height = sheet.offsetHeight;
+          const expanded = sheet.dataset.size === 'expanded';
+          const natural = Number(sheet.dataset.natural) || height;
+          drag = {
+            sheet: sheet,
+            start: event.clientY,
+            height: height,
+            natural: natural,
+            expanded: expanded,
+            expandable: sheet.dataset.expandable !== undefined,
+            shrinkable: expanded ? Math.max(0, height - natural) : 0,
+            offset: 0,
+          };
+          sheet.dataset.dragging = '';
+          handle.setPointerCapture(event.pointerId);
+        });
+        document.addEventListener('pointermove', function (event) {
+          if (!drag) return;
+          drag.offset = event.clientY - drag.start;
+          const style = drag.sheet.style;
+          if (drag.offset < 0) {
+            style.translate = '';
+            if (!drag.expandable) return;
+            style.maxHeight = 'none';
+            style.height = `min(${drag.height - drag.offset}px, ${tallest})`;
+            return;
+          }
+          const shrink = Math.min(drag.offset, drag.shrinkable);
+          style.height = shrink ? `${drag.height - shrink}px` : '';
+          style.translate = `0 ${drag.offset - shrink}px`;
+        });
+        function settle() {
+          if (!drag) return;
+          const { sheet, offset, height, natural, expanded, expandable, shrinkable } = drag;
+          drag = null;
+          if (offset - shrinkable >= 80) {
+            sheet.close();
+            rest(sheet);
+            return;
+          }
+          rest(sheet);
+          if (expanded && offset > 0 && offset >= Math.min(80, shrinkable)) {
+            sheet.style.height = `${natural}px`;
+            delete sheet.dataset.size;
+          } else if (expandable && !expanded && offset <= -60) {
+            sheet.dataset.natural = String(height);
+            sheet.dataset.size = 'expanded';
+          }
+        }
+        document.addEventListener('pointerup', settle);
+        document.addEventListener('pointercancel', settle);
+        function outside(event, box) {
+          return (
+            event.clientX < box.left ||
+            event.clientX > box.right ||
+            event.clientY < box.top ||
+            event.clientY > box.bottom
+          );
+        }
+        document.addEventListener('click', function (event) {
+          const opener = event.target.closest('[data-sheet-open]');
+          if (opener) {
+            const sheet = document.querySelector(`#${opener.dataset.sheetOpen}`);
+            sheet.showModal();
+            const menu = sheet.closest('[data-poster-menu]');
+            if (menu) prepare(menu);
+            return;
+          }
+          const sheet = event.target.closest('[data-sheet]');
+          if (!sheet) return;
+          if (event.target.closest('[data-sheet-close]')) sheet.close();
+          else if (event.target === sheet && outside(event, sheet.getBoundingClientRect()))
+            sheet.close();
+        });
+        document.addEventListener(
+          'close',
+          function (event) {
+            const sheet = event.target;
+            if (sheet.dataset.sheet === undefined) return;
+            rest(sheet);
+            delete sheet.dataset.size;
+            delete sheet.dataset.natural;
+          },
+          true
+        );
       })();
     </script>
     {import.meta.env.PROD ? (
@@ -423,7 +518,8 @@ const structuredData = {
         [data-theme-toggle],
         [data-wird-switch],
         [data-copy],
-        [data-search-open] {
+        [data-search-open],
+        [data-sheet-open] {
           display: none !important;
         }
       </style>
