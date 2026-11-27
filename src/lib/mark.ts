@@ -3,12 +3,13 @@ import { PALETTE } from './palette';
 import { ringPoints } from './ring';
 
 export const PETALS = ringPoints(12, 32, 21.5);
+export const PETAL_RADIUS = 6.4;
 
 export function markSvg(inks: 'own' | 'stage' = 'own'): string {
   const stage = inks === 'stage';
   const petals = PETALS.map(
     ({ cx, cy }) =>
-      `<circle cx="${cx}" cy="${cy}" r="6.4" fill="${stage ? PALETTE.eggshell : PALETTE.petal}"/>`
+      `<circle cx="${cx}" cy="${cy}" r="${PETAL_RADIUS}" fill="${stage ? PALETTE.eggshell : PALETTE.petal}"/>`
   ).join('');
   const disc = stage
     ? `<circle cx="32" cy="32" r="12.5" fill="${PALETTE.shade}" fill-opacity="0.24"/>`
