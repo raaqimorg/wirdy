@@ -66,6 +66,30 @@ describe('descriptionOf', () => {
     expect(descriptionOf(tasbih)).toBe('عند الكرب. سبحان الله ٣٣ مرة. صحيح البخاري (٦٣٤٦)');
   });
 
+  it('cuts one long آية between words, without a pause mark before the cut', () => {
+    const ayah = Array.from({ length: 30 }, (_, index) => `كَلِمَةٌ${String(index)} ۚ`).join(' ');
+    const quran = { ...card, lead: '', quran: true, blocks: [[ayah]] };
+    const description = descriptionOf(quran);
+    expect(description).toMatch(/^«كَلِمَةٌ0 .*…»/u);
+    expect(description).not.toMatch(/ۚ\s*…/u);
+    expect(description).not.toContain('كَلِمَةٌ29');
+  });
+
+  it('shortens the words until the whole description fits in 200 characters', () => {
+    const fadl = 'غفرت له ذنوبه وإن كانت مثل زبد البحر، وكان له عدل عشر رقاب';
+    const description = descriptionOf({ ...card, blocks: [[long.join(' ')]] }, fadl);
+    expect(description.length).toBeLessThanOrEqual(200);
+    expect(description).toContain(`. ${fadl}. صحيح البخاري (٦٣٤٦)`);
+  });
+
+  it('cuts a long list of counted phrases at a phrase, with no full stop after the cut', () => {
+    const phrases = long.map((text) => ({ text, count: 3 }));
+    const description = descriptionOf({ ...card, phrases }, 'كفته');
+    expect(description.length).toBeLessThanOrEqual(200);
+    expect(description).toContain(`عند الكرب. ${long[0] ?? ''} ٣ مرات`);
+    expect(description).toContain('… كفته. صحيح البخاري (٦٣٤٦)');
+  });
+
   it('carries the count and the virtue after the words', () => {
     expect(descriptionOf({ ...card, count: '٣ مرات' }, 'كفته')).toBe(
       'عند الكرب. «لا إله إلا الله العظيم الحليم، لا إله إلا الله رب العرش العظيم». ٣ مرات. كفته. صحيح البخاري (٦٣٤٦)'

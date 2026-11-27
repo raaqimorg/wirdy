@@ -23,4 +23,10 @@ describe('phrasesLabel', () => {
       'سبحان الله ١٠ مرات، والله أكبر ٣٣ مرة'
     );
   });
+
+  it('gives no count to a phrase said once', () => {
+    expect(phrasesLabel(Effect.runSync(phrasesOf('بسم الله، الحمد لله', [1, 3])))).toBe(
+      'بسم الله، الحمد لله ٣ مرات'
+    );
+  });
 });

@@ -510,6 +510,20 @@ describe('built site', () => {
     expect(html).toMatch(new RegExp(`<meta property="og:image:height" content="${height}"`, 'u'));
   });
 
+  it('keeps every description within 200 characters, so a preview cuts little of it', () => {
+    const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
+      file.endsWith('.html')
+    );
+    for (const file of files) {
+      const page = readFileSync(join(DIST, file), 'utf8');
+      const description = unescaped(metaOf(page, 'name', 'description')!);
+      expect({ file, length: description.length }).toEqual({
+        file,
+        length: Math.min(description.length, 200),
+      });
+    }
+  });
+
   it('says the same title, description, and card in every tag of every head', () => {
     const files = readdirSync(DIST, { recursive: true, encoding: 'utf8' }).filter((file) =>
       file.endsWith('.html')
