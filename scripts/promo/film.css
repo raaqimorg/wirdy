@@ -35,7 +35,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   gap: 40px;
-  padding: 320px 192px 704px 120px;
+  padding: 320px 120px 704px;
   background: var(--color-paper);
   opacity: 0;
   animation:
@@ -77,14 +77,20 @@ body {
 
 .film__screen {
   --screen: 360px;
+  --bezel: calc(var(--screen) * 16 / 402);
 
   display: grid;
   flex: none;
   place-items: center;
+  box-sizing: content-box;
   width: var(--screen);
   aspect-ratio: 1206 / 2622;
   overflow: hidden;
-  border-radius: calc(var(--screen) * 55 / 402);
+  border: var(--bezel) solid black;
+  border-radius: calc(var(--screen) * 55 / 402 + var(--bezel));
+  box-shadow:
+    0 0 0 calc(var(--bezel) / 4) color-mix(in oklab, black, white 40%),
+    0 48px 96px -24px rgb(0 0 0 / 0.35);
   background: var(--color-panel);
   object-fit: cover;
   object-position: top;
