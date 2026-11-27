@@ -3,7 +3,7 @@ import { markSvg } from '../../src/lib/mark.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import type { Format, Poster, PosterItem, ThemeName } from '../../src/lib/poster.ts';
 import { SITE } from '../../src/lib/site.ts';
-import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin } from '../opengraph/shared.ts';
+import { emblemSvg, hafs, naskh, plexArabic, plexLatin } from '../opengraph/shared.ts';
 
 const ENTITIES: Readonly<Record<string, string>> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
 
@@ -31,12 +31,12 @@ const theme = ({ color }: Poster, name: ThemeName) => {
   return `--panel:${panel};--ink:${ink};--muted:${muted};--line:${line};--tone:${tone};--tone-text:${toneText};`;
 };
 
-const wordsOf = ({ suwar, rest, phrases, words }: PosterItem) => {
+const wordsOf = ({ suwar, from, rest, phrases, words }: PosterItem) => {
   if (suwar.length > 0) {
     const ayat = suwar
       .map(
-        (surah) =>
-          `<p>﴿ ${surah.map((ayah) => escape(ayah)).join(' <i>۝</i> ')}${rest === '' ? ' ﴾' : ' …'}</p>`
+        (surah, index) =>
+          `<p><i>﴿</i>${surah.map((ayah, i) => `${escape(ayah)}<i class="end">۝${toArabicDigits((from[index] ?? 1) + i)}</i>`).join(' ')}${rest === '' ? '<i>﴾</i>' : ' …'}</p>`
       )
       .join('');
     return `<div class="words quran">${ayat}</div>${rest === '' ? '' : `<p class="rest">وتتمتها في <span class="site">${escape(rest)}</span></p>`}`;
@@ -73,8 +73,8 @@ export const pageOf = (poster: Poster, format: Format, name: ThemeName) => {
 ${plexArabic(500)}
 ${plexArabic(700)}
 ${plexLatin(500)}
-${amiri()}
-${amiriQuran()}
+${naskh()}
+${hafs()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${width}px;height:${height}px;overflow:hidden}
 body{${theme(poster, name)}display:flex;flex-direction:column;font-family:"Plex",sans-serif;font-weight:500;color:var(--ink);background:var(--panel);-webkit-font-smoothing:antialiased}
@@ -99,9 +99,10 @@ h2:not(:first-child){margin-top:.5em}
 .choice{flex:none;font-size:.85em;color:var(--tone-text)}
 .times{flex:none;font-size:.9em;padding:0 .6em .1em;border-radius:99px;color:${PALETTE.eggshell};background:var(--tone)}
 .lead{font-size:.46em;line-height:1.45;color:var(--tone-text)}
-.words{font-family:"Amiri";line-height:1.9}
-.words.quran{font-family:"Amiri Quran";line-height:2.1}
-.words i{font-style:normal;color:var(--muted);margin:0 .15em}
+.words{font-family:"Naskh";line-height:1.9}
+.words.quran{line-height:2.1}
+.words i{font-style:normal;color:var(--tone-text)}
+.words i.end{font-family:"Hafs";margin-inline-start:.15em}
 .words p+p{margin-top:.35em}
 .phrase{display:flex;align-items:center;gap:.5em}
 .phrase+.phrase{margin-top:0!important}

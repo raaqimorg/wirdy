@@ -9,7 +9,7 @@ import { readAdhkar, readHadiths } from '../../src/lib/records.ts';
 import { GUIDE_IDS, SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
 import { run } from '../run.ts';
-import { amiri, amiriQuran, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
+import { emblemSvg, hafs, naskh, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -18,9 +18,12 @@ const ENTITIES: Readonly<Record<string, string>> = { '&': '&amp;', '<': '&lt;', 
 
 const escape = (text: string) => text.replaceAll(/[&<>]/gu, (c) => ENTITIES[c] ?? c);
 
-const ayatOf = (blocks: Card['blocks']) =>
+const ayatOf = ({ blocks, from }: Card) =>
   blocks
-    .map((ayat) => `<p>﴿ ${ayat.map((ayah) => escape(ayah)).join(' <i>۝</i> ')} ﴾</p>`)
+    .map(
+      (ayat, surah) =>
+        `<p><i>﴿</i>${ayat.map((ayah, i) => `${escape(ayah)}<i class="end">۝${toArabicDigits((from[surah] ?? 1) + i)}</i>`).join(' ')}<i>﴾</i></p>`
+    )
     .join('');
 
 const phrasesRows = (phrases: ReadonlyArray<Phrase>) =>
@@ -32,7 +35,7 @@ const phrasesRows = (phrases: ReadonlyArray<Phrase>) =>
     .join('');
 
 const textOf = (card: Card) => {
-  if (card.quran) return ayatOf(card.blocks);
+  if (card.quran) return ayatOf(card);
   if (card.phrases) return phrasesRows(card.phrases);
   return `<p>${escape(card.blocks[0]?.[0] ?? '')}${card.cut ? ' …' : ''}</p>`;
 };
@@ -49,8 +52,8 @@ const page = (
 ${plexArabic(500)}
 ${plexArabic(700)}
 ${plexLatin(500)}
-${amiri()}
-${amiriQuran()}
+${naskh()}
+${hafs()}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
 body.unfit{outline:12px solid red;outline-offset:-12px}
@@ -66,8 +69,9 @@ body{--tone:${card.color};--tone-text:color-mix(in oklab,var(--tone),${PALETTE.i
 .main{flex:1;min-height:0;display:flex;flex-direction:column;padding:22px 56px 0}
 .lead{font-size:28px;font-weight:700;line-height:1.5;color:var(--tone-text)}
 .box{flex:1;min-height:0;display:flex;align-items:center}
-.text{width:100%;font-family:"${card.quran ? 'Amiri Quran' : 'Amiri'}";line-height:${leading(card)};text-wrap:balance}
-.text i{font-style:normal;color:${PALETTE.inkMuted}}
+.text{width:100%;font-family:"Naskh";line-height:${leading(card)};text-wrap:balance}
+.text i{font-style:normal;color:var(--tone-text)}
+.text i.end{font-family:"Hafs";margin-inline-start:.15em}
 .phrase{display:flex;align-items:center;justify-content:space-between;gap:28px}
 .phrase b{flex:none;min-width:max(84px,1.4em);padding:.1em .4em .22em;font:700 max(28px,.5em)/1.35 "Plex";text-align:center;color:${PALETTE.eggshell};background:var(--tone);border-radius:99px}
 .evening{font-size:max(32px,min(.6em,44px));line-height:1.7;color:${PALETTE.inkMuted}}

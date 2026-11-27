@@ -13,7 +13,7 @@ import { takhrijLine } from './takhrij';
 import { eveningTitle } from './title';
 import { formOf, type Form, type MalformedMarker } from './variants';
 
-export const POSTER_TEMPLATE = 2;
+export const POSTER_TEMPLATE = 3;
 
 export type FormatName = 'story' | 'portrait' | 'square' | 'landscape' | 'print';
 
@@ -70,6 +70,7 @@ export type PosterItem = {
   readonly lead: string;
   readonly times: string;
   readonly suwar: ReadonlyArray<ReadonlyArray<string>>;
+  readonly from: ReadonlyArray<number>;
   readonly rest: string;
   readonly phrases: ReadonlyArray<Phrase>;
   readonly words: string;
@@ -112,9 +113,11 @@ const suwarOf = (text: string): ReadonlyArray<ReadonlyArray<string>> =>
 
 const quranOf = (data: Dhikr, text: string, path: string) => {
   const whole = suwarOf(text);
-  if (data.ayat !== 'fold' || text.length <= LONG) return { suwar: whole, rest: '' };
+  const from = data.from ?? [];
+  if (data.ayat !== 'fold' || text.length <= LONG) return { suwar: whole, from, rest: '' };
   return {
     suwar: whole.map((ayat) => (Array.isReadonlyArrayNonEmpty(ayat) ? foldOf(ayat).shown : ayat)),
+    from,
     rest: `${SITE.domain}${path}`,
   };
 };
@@ -139,7 +142,7 @@ const itemOf = (
       choice: data.form === undefined ? '' : formLabel(data.form),
       lead: [data.when, data.how].filter((part) => part !== undefined).join('. '),
       times: data.count > 1 ? timesLabel(data.count) : '',
-      ...(data.quran ? quranOf(data, text, path) : { suwar: [], rest: '' }),
+      ...(data.quran ? quranOf(data, text, path) : { suwar: [], from: [], rest: '' }),
       phrases: data.counts === undefined ? [] : yield* phrasesOf(words, data.counts),
       words,
       source: `${takhrijLine(data.takhrij)}${data.quran ? QURAN_SOURCE : ''}`,
@@ -195,6 +198,7 @@ export const hadithPosterOf = (guide: Guide, entries: ReadonlyArray<Entry<Hadith
       lead: `عن ${data.rawi}`,
       times: '',
       suwar: [],
+      from: [],
       rest: '',
       phrases: [],
       words: body.trim(),
