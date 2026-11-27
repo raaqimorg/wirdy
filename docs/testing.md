@@ -4,11 +4,11 @@ What to test, where a test goes, and which suite runs it. Read it before you wri
 
 ## The suites
 
-| Suite   | Command                | Runner | What it covers                                                   |
-| ------- | ---------------------- | ------ | ---------------------------------------------------------------- |
-| Unit    | `bun run test`         | Vitest | `src/**/*.test.ts`: functions, content, proofs, a component      |
-| Scripts | `bun run test:scripts` | Bun    | `scripts/**/*.test.ts`: the git guards and the image gallery     |
-| Build   | `bun run test:build`   | Vitest | `src/build.test.ts`: builds the site and checks the shipped HTML |
+| Suite   | Command                | Runner | What it covers                                                                    |
+| ------- | ---------------------- | ------ | --------------------------------------------------------------------------------- |
+| Unit    | `bun run test`         | Vitest | `src/**/*.test.ts`: functions, content, proofs, a component                       |
+| Scripts | `bun run test:scripts` | Bun    | `scripts/**/*.test.ts`: the git guards, the image gallery, promo, and drift rules |
+| Build   | `bun run test:build`   | Vitest | `src/build.test.ts`: builds the site and checks the shipped HTML                  |
 
 - `bun run ci` runs all three after the format, lint, and type checks. GitHub Actions runs `bun run ci`.
 - The `pre-push` hook runs `bun run lint` and `bun run test`.

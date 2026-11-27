@@ -123,6 +123,15 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 - The ordinary way is an image library such as `sharp`: a native dependency for two scripts that run only when the mark or a card changes.
 - The cards draw the site's mark, colors, and emblems from `src/lib/`, in the site's fonts. The home card sets the name large on the paper, with the mark, the tagline, and the domain, and nothing else. Each section card shows its title, count, and emblem on its color, like its page banner ([`branding/imagery.md`](branding/imagery.md#the-sharing-cards)).
 
+## A census reads the built pages in two headless browsers
+
+`bun run drift` (`scripts/drift/`) builds the site, serves `dist/` from a small Bun server, and opens each state in `states.ts` in Chromium and in WebKit with `playwright-core`, at four widths and in both modes. In each it reads the computed style of every visible element, resolves each token in the page, and lists the values that match none. It saves a screenshot of each, and `drift:check` lists only what changed. The owner asked for it, so the rendered pages never drift from the design system.
+
+- The ordinary way is a visual test runner, such as Playwright Test with `toHaveScreenshot`, or a hosted service. Playwright Test brings its own runner beside Vitest and Bun, and keeps its baselines in git. This keeps the screenshots out of git, in `.drift/`, and is one Effect script like the others.
+- WebKit is Playwright's build, installed once with `bunx playwright-core install webkit`, because Safari cannot be driven headless. Chromium is the installed browser, as for the cards.
+- The census reads computed values, so a value written as a `calc` of tokens that lands off the scale (`calc((var(--size-touch) - var(--size-icon-bar)) / -2)`) is listed too. A value equal to a token, or to its negative, passes. A color passes when it equals a color token in its `.tone`, the element's own color, or a `PALETTE` color (the emblems draw in them).
+- Each state runs in a new context with service workers blocked, a fixed clock (09:00 in Riyadh), and finished animations, so two runs of the same build match.
+
 ## Promo films render from HTML in a headless browser
 
 A promo film for X, TikTok, or Snapchat is one HTML page, `promo/<slug>/film.html`, timed by CSS animations. `scripts/promo/page.ts` opens it in the installed Brave or Chrome with `playwright-core`, adds the site's tokens, fonts, emblems, mark, and section colors, and seeks it to any frame. `scripts/promo/render.ts` screenshots every frame and pipes them to ffmpeg. The owner asked for it, so the films look and move like the site ([`branding/imagery.md`](branding/imagery.md#the-promo-films)).

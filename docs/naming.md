@@ -18,7 +18,7 @@ The names of folders, files, functions, types, constants, tests, and scripts. Re
 - `src/pages/`: the routes. Astro maps each file to a URL.
 - `src/styles/`: the tokens, the base styles, and `components/`, one stylesheet per component.
 - `src/scripts/`: the search module script and the service worker.
-- `scripts/<topic>/`: the Bun scripts (`check`, `gallery`, `icons`, `opengraph`, `posters`, `verification`).
+- `scripts/<topic>/`: the Bun scripts (`check`, `drift`, `gallery`, `icons`, `opengraph`, `posters`, `promo`, `verification`, `visits`).
 - `src/lib/fixtures/`: the saved pages the tests read.
 
 ## Files

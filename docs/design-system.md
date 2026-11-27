@@ -147,7 +147,8 @@ The focus ring is one rule in `base.css`: two pixels of `--ring-color` (ink by d
 
 ## What checks it
 
-- `stylelint` (`.stylelintrc.json`) refuses a raw color, spacing, corner, line height, weight, or duration outside `tokens.css`, any `px`, a physical direction (`margin-top`, not `margin-block-start`), a class of another shape, `!important`, and any other breakpoint.
+- `stylelint` (`.stylelintrc.json`) refuses a raw color, spacing, corner, type size, line, line height, weight, or duration outside `tokens.css`, any `px`, a physical direction (`margin-top`, not `margin-block-start`), a class of another shape, `!important`, and any other breakpoint. A spacing, a corner, or a type size takes no unit at all (`em`, `%`, `lh`, `vw` included), only a token, `0`, or a `calc` of tokens. A color takes no color function (`oklch`, `color-mix`, and the rest) and no name. `styles.test.ts` proves each refusal. The three values that break it carry a `stylelint-disable` with their reason: the visually hidden box in `utilities.css`, the padding of a plain foot row in `entry.css`, and the gap before ۝ in `surah.css`.
+- `bun run drift` reads the computed styles of every page in each state, in Chromium and WebKit, at four widths and in both modes, and lists each value that resolves to no token ([`development.md`](development.md#commands)). `bun run drift:check` lists what a change moved on screen.
 - `prettier` with `prettier-plugin-astro` formats the Astro files, because oxfmt does not.
 - `src/styles/styles.test.ts` checks that each token is defined and used, that the dark values and the palette match, and that each stylesheet styles only its own component.
 - `src/build.test.ts` checks that the classes in the pages and in the CSS are the same.

@@ -31,6 +31,8 @@
     "opengraph": "bun scripts/opengraph/build.ts",
     "opengraph:adhkar": "bun scripts/opengraph/adhkar.ts",
     "posters": "bun scripts/posters/build.ts",
+    "drift": "bun scripts/drift/capture.ts",
+    "drift:check": "bun scripts/drift/capture.ts --check",
     "icons": "bun scripts/icons/build.ts",
     "verification": "bun scripts/verification/status.ts",
     "verification:import": "bun scripts/verification/import.ts",

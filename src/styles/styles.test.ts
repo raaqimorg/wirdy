@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import stylelint from 'stylelint';
 import { describe, expect, it } from 'vitest';
 import { PALETTE } from '../lib/palette';
 import {
@@ -193,5 +194,45 @@ describe('the component styles', () => {
     const names = [...css.matchAll(/\.([a-z][\w-]*)/gu)].map(([, name]) => name!);
     const own = new RegExp(`^${block}(__|--|$)`, 'u');
     expect(names.filter((name) => !own.test(name))).toEqual([]);
+  });
+});
+
+const lintErrorsOf = async (code: string) => {
+  const { results } = await stylelint.lint({
+    code,
+    codeFilename: join(STYLES, 'components', 'badge.css'),
+    configFile: join(process.cwd(), '.stylelintrc.json'),
+  });
+  return results.flatMap(({ warnings }) => warnings.map(({ rule }) => rule));
+};
+
+describe('the style lint', () => {
+  it.each([
+    ['a raw color', '.badge { color: oklch(0.5 0.1 80); }'],
+    ['a hex color', '.badge { background: #fff; }'],
+    ['a named color', '.badge { border-color: white; }'],
+    ['a spacing in em', '.badge { margin-inline: 0.5em; }'],
+    ['a spacing in percent', '.badge { padding-block: 2%; }'],
+    ['a spacing in pixels', '.badge { gap: 3px; }'],
+    ['a type size in em', '.badge { font-size: 0.9em; }'],
+    ['a type size by keyword', '.badge { font-size: small; }'],
+    ['a corner on one side', '.badge { border-start-start-radius: 4px; }'],
+    ['a corner in percent', '.badge { border-radius: 50%; }'],
+    ['a line by keyword', '.badge { border-width: thin; }'],
+  ])('refuses %s outside the tokens', async (_, code) => {
+    expect(await lintErrorsOf(code)).not.toEqual([]);
+  });
+
+  it('accepts the tokens and zero', async () => {
+    const code = [
+      '.badge {',
+      '  margin: 0 calc(var(--space-2) * -1);',
+      '  border-radius: var(--radius-full);',
+      '  font-size: var(--text-small);',
+      '  color: var(--color-ink);',
+      '}',
+      '',
+    ].join('\n');
+    expect(await lintErrorsOf(code)).toEqual([]);
   });
 });

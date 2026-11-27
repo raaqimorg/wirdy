@@ -29,6 +29,7 @@
 }
 
 .surah__ayah-end {
+  /* stylelint-disable-next-line declaration-property-unit-disallowed-list -- the gap before ۝ follows the size of the آية */
   margin-inline-start: 0.15em;
   font-family: var(--font-ayah-end);
 }
