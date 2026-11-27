@@ -4,7 +4,7 @@
 
 «أذكار يومك في مكان، ومع كل ذكر مصدره. افتح wirdy.site.»
 
-The viewer already reads adhkar from a booklet or another app. The film shows what is different: one page for each occasion, the morning and evening forms, and the source under every dhikr. The owner cut the search scene from the first cut, then asked for a longer walk: the sections menu, a group, a dhikr page, copy, the image, the theme, and the footer's «صدقة جارية عن شروق».
+The viewer already reads adhkar from a booklet or another app. The film shows what is different: one page for each occasion, the morning and evening forms, and the source under every dhikr. The owner cut the search scene from the first cut, then asked for a longer walk: the sections menu, a group, a dhikr page, copy, the image, the theme, and the footer's «صدقة جارية عن شروق». The third cut dropped the call to action and most titles, made every change move, and ends by zooming into the footer's line and lifting it out as the last frame.
 
 ## The storylines
 
@@ -16,22 +16,16 @@ The viewer already reads adhkar from a booklet or another app. The film shows wh
 
 ## The spec
 
-Silent, 1080 by 1920, 28.6 seconds, light, centered, the screen in its phone frame (`--screen: 520px`). Scenes dissolve over 0.4 s. Footage from the live site, opened from its home screen icon on an iPhone 17 Pro simulator, the status bar at 9:41. Titles carry no tashkil; only «وِردي» keeps its kasra.
+Silent, 1080 by 1920, 30 seconds, light until the theme turns, centered. One continuous shot: one scene, one phone (`--screen: 520px`) that never moves until the end, and four general titles that take turns above it, each entering from the right over a second and leaving to the left. The screens show the steps; no title names a tap, and there is no call to action. Footage from the live site, opened from its home screen icon on an iPhone 17 Pro simulator, the status bar at 9:41. Titles carry no tashkil; only «وِردي» keeps its kasra.
 
-| Seconds      | Title              | Screen                                                                           |
-| ------------ | ------------------ | -------------------------------------------------------------------------------- |
-| 0 to 2.6     | أذكار يومك في مكان | `journey` (all scenes to 18.6 play it from 6.8 s): the home page, a scroll       |
-| 2.6 to 4.2   | افتح أي قسم        | a tap on «الصباح والمساء»                                                        |
-| 4.2 to 5.7   | الصباح أو المساء   | a tap on «المساء», the sun turns                                                 |
-| 5.7 to 9     | لكل ذكر تخريجه     | scroll to the foot of آية الكرسي, open «التخريج»: «صحّحه الألباني»                 |
-| 9 to 12.9    | انتقل بين الأقسام   | back to the top, the sections menu, «عند النوم»                                  |
-| 12.9 to 15.6 | وبين المجموعات     | the group «عند الفراش», open «التخريج»: «صحيح البخاري (٦٣٢٠)»                    |
-| 15.6 to 17.2 | لكل ذكر صفحته      | «صفحة الذكر»: باسمك رب وضعت جنبي                                                 |
-| 17.2 to 18.6 | نصا أو صورة        | a tap on «نسخ», then on «الصورة»                                                 |
-| 18.6 to 21.2 | نصا أو صورة        | `dhikr.png` (the page at 25.4 s of `journey`), and `card.png` grows over it      |
-| 21.2 to 23.9 | نهارا أو ليلا       | `footer` from 3.2 s: scroll to the footer, «المظهر» turns the page dark          |
-| 23.9 to 26   | صدقة جارية عن شروق | the dark footer; 76 px, faded in, its line box kept at 88 px × `--leading-tight` |
-| 26 to 28.6   | احفظه في شاشتك     | the end card: the mark and «وِردي», then wirdy.site                               |
+| Seconds      | Title              | Screen                                                                                                                                            |
+| ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0 to 5.2     | أذكار يومك في مكان | `journey` from 6.8 s: the home page, a tap on «الصباح والمساء», a tap on «المساء»                                                                 |
+| 5.8 to 15.4  | مع كل ذكر تخريجه   | «التخريج» of آية الكرسي, the sections menu, «عند النوم», «عند الفراش» and its «التخريج»                                                           |
+| 16 to 20.2   | نصا أو صورة        | «صفحة الذكر», «نسخ», «الصورة»; at 18.6 `dhikr.png` (the same frame) replaces the clip, and `card.png` grows over the phone from 18.7 to 20.2      |
+| 20.8 to 23.4 | نهارا أو ليلا       | `footer` from 3.2 s crossfades in: scroll to the footer, «المظهر» turns the page dark at 22.9                                                     |
+| 23.8 to 25.8 | none               | the camera zooms 3.917 times into «صدقة جارية عن شروق», and the frame turns to the site's dark paper                                              |
+| 25.8 to 30   | none               | the line is lifted out as type where the zoom left it, the phone fades, the line brightens; the mark and «وِردي» grow in at 26.6, wirdy.site at 27 |
 
 `card.png` is the file «الصورة» downloads, fetched from the live site (`/og/nawm/bismika-rabbi-wadatu-janbi-524f5279.png`). In the installed app, «الصورة» opens iOS's file screen, so it is the last tap of its take and the film lays the real image over it.
 
@@ -39,9 +33,11 @@ Silent, 1080 by 1920, 28.6 seconds, light, centered, the screen in its phone fra
 
 From rendered frames (grayscale ink against the paper):
 
-- Every scene: the phone's black body at x 260 to 819 and y 452 to 1621, centered to the pixel. Each title's ink centered within 1 px.
+- The phone's black body at x 260 to 819 and y 452 to 1621 at every title, centered to the pixel. Each title's ink centered within 1 px.
 - The card: x 101 to 978, centered at 539.5, its middle at y 960.
-- The end card: the CTA, the mark with «وِردي», and the domain each within 1 px of the center; the group's ink from y 784 to 1136, its middle at 960. The mark and name row sits 4 px left by its ink, so `film__brand` moves it 4 px; this film's end group moves 4 px down.
+- The dedication in the footer: ink at x 417 to 787 and y 2215 to 2260 of the 1206 by 2622 clip, so the zoom turns about (280.3, 985.5) px of the phone's box.
+- At 25.79 s the zoomed line's ink is x 226 to 852, y 743 to 821; the typeset line's is x 226 to 853, y 743 to 821. Same size, same place, within 1 px.
+- The last frame: the line, the mark with «وِردي», and the domain each within 1 px of the center; their ink from y 743 to 1177, its middle at 960.0.
 
 ### The takes
 

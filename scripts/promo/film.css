@@ -13,6 +13,8 @@ body {
 }
 
 .film {
+  --glide: cubic-bezier(0.45, 0, 0.15, 1);
+
   position: relative;
   width: 1080px;
   height: 1920px;
@@ -65,6 +67,16 @@ body {
   text-align: center;
 }
 
+.film__titles {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.film__titles > * {
+  grid-area: 1 / 1;
+}
+
 .film__line {
   font-size: 88px;
   font-weight: var(--weight-bold);
@@ -84,6 +96,8 @@ body {
   --screen: 360px;
   --bezel: calc(var(--screen) * 16 / 402);
 
+  position: relative;
+  z-index: 1;
   display: grid;
   flex: none;
   place-items: center;
@@ -101,6 +115,10 @@ body {
   object-position: top;
 }
 
+.film__screen > * {
+  grid-area: 1 / 1;
+}
+
 .film__media {
   display: block;
   width: 100%;
@@ -113,6 +131,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 2;
   width: 880px;
   margin: -231px 0 0 -440px;
   border-radius: 24px;
@@ -124,6 +143,27 @@ body {
   border-color: var(--color-line);
   color: var(--color-ink-muted);
   font-size: 32px;
+  text-align: center;
+}
+
+.film__night {
+  --color-paper: #060f13;
+  --color-ink: hsl(55 62% 89%);
+  --color-ink-muted: hsl(60 10% 72%);
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.film__lift {
+  position: absolute;
+  inset-inline: 0;
+  color: var(--color-ink-muted);
+  font-size: 76px;
+  font-weight: var(--weight-regular);
   text-align: center;
 }
 
@@ -186,8 +226,59 @@ body {
 
 .film [data-motion="fade"] {
   animation-name: fade;
-  animation-duration: var(--duration-enter);
+  animation-duration: calc(var(--for, 0.5) * 1s);
   animation-timing-function: var(--ease-out);
+}
+
+.film [data-motion="title"] {
+  animation-name: film-enter, fade, film-leave;
+  animation-duration: 1s, 1s, 0.7s;
+  animation-timing-function: var(--spring), var(--ease-out), var(--ease-out);
+  animation-delay:
+    calc((var(--start) + var(--at, 0)) * 1s), calc((var(--start) + var(--at, 0)) * 1s),
+    calc((var(--start) + var(--out)) * 1s);
+  animation-fill-mode: both, both, forwards;
+}
+
+.film [data-motion="pop"] {
+  animation-name: film-grow, fade, film-drop;
+  animation-duration: 1s, 1s, 0.6s;
+  animation-timing-function: var(--spring), var(--ease-out), var(--ease-out);
+  animation-delay:
+    calc((var(--start) + var(--at, 0)) * 1s), calc((var(--start) + var(--at, 0)) * 1s),
+    calc((var(--start) + var(--out)) * 1s);
+  animation-fill-mode: both, both, forwards;
+}
+
+.film [data-motion="from"] {
+  animation-name: film-hide;
+  animation-duration: calc((var(--start) + var(--at, 0)) * 1s);
+  animation-delay: 0s;
+  animation-fill-mode: none;
+}
+
+.film [data-motion="until"] {
+  animation-name: film-hide;
+  animation-duration: 0s;
+  animation-delay: calc((var(--start) + var(--out)) * 1s);
+  animation-fill-mode: forwards;
+}
+
+.film [data-motion="zoom"] {
+  transform-origin: var(--focus, center);
+  animation-name: film-zoom, film-vanish;
+  animation-duration: calc(var(--for, 2) * 1s), 0.6s;
+  animation-timing-function: var(--glide), var(--ease-out);
+  animation-delay: calc((var(--start) + var(--at, 0)) * 1s), calc((var(--start) + var(--out)) * 1s);
+  animation-fill-mode: both, forwards;
+}
+
+.film [data-motion="lift"] {
+  animation-name: film-hide, film-brighten;
+  animation-duration: calc((var(--start) + var(--at, 0)) * 1s), 0.8s;
+  animation-timing-function: linear, var(--ease-out);
+  animation-delay: 0s, calc((var(--start) + var(--at, 0) + 0.4) * 1s);
+  animation-fill-mode: none, both;
 }
 
 .film [data-motion="push"] {
@@ -226,6 +317,53 @@ body {
 @keyframes film-enter {
   from {
     translate: 8% 0;
+  }
+}
+
+@keyframes film-leave {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  to {
+    opacity: 0;
+    translate: -6% 0;
+  }
+}
+
+@keyframes film-drop {
+  from {
+    opacity: 1;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+@keyframes film-vanish {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes film-zoom {
+  to {
+    translate: var(--zoom-x, 0) var(--zoom-y, 0);
+    scale: var(--zoom, 1);
+  }
+}
+
+@keyframes film-brighten {
+  to {
+    color: var(--color-ink);
   }
 }
 

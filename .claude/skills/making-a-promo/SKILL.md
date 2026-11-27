@@ -42,7 +42,7 @@ Argent saves a recording in `.argent/recordings/` of its project, which git igno
 Write `promo/<slug>/film.html`. It holds only the scenes; the scripts add the site's tokens, fonts, emblems, mark, and colors.
 
 - One `<main class="film" data-film data-duration="24">`. Add `data-theme="dark"` for a night film.
-- One `<section class="film__scene" style="--start: 4; --end: 8.5">` per scene, in seconds from the start of the film. A scene dissolves in over `--dissolve` (0.4 s; the first scene shows at once) and stays until the next has covered it. Its content is centered on the frame, both ways. `film__scene--tone` with `data-occasion="<id>"` puts it on that section's color. Give the title `--at: 0.2`, so it enters as the dissolve ends.
+- One `<section class="film__scene" style="--start: 4; --end: 8.5">` per scene, in seconds from the start of the film. A scene dissolves in over `--dissolve` (0.4 s; the first scene shows at once) and stays until the next has covered it. Its content is centered on the frame, both ways. `film__scene--tone` with `data-occasion="<id>"` puts it on that section's color. Give the title `--at: 0.2`, so it enters as the dissolve ends. A film of one walk through the site is better as one scene (below).
 - A title is `<div class="film__title">` of `<p class="film__line">` lines, `film__line--small` for the second. Wrap ﷺ in `<span class="film__salawat">`.
 - An element moves with `data-motion` and `style="--at: 0.4"`, seconds after its scene starts: `enter` (from the right, the way Arabic reads), `grow` (from 60%), `fade`, or `push` (to `--push`, 1.6 to 2, around `--focus`, such as `50% 30%`).
 - `<video class="film__screen" data-clip src="clips/search.mp4" data-start="6.5" muted>` plays a clip from second 6.5 of the film. To push into part of a clip without the phone growing over the title, put `<video class="film__media" data-clip ... data-motion="push">` inside a `<div class="film__screen">`: the frame holds still and the picture grows inside it. `<img class="film__screen" data-still src="clips/home.png">` shows a still. `--screen` sets the width of the phone screen, and the frame draws a black phone body around it.
@@ -51,7 +51,11 @@ Write `promo/<slug>/film.html`. It holds only the scenes; the scripts add the si
 - The end card is `film__end`: `film__brand` holding the mark and `<span class="film__name">وِردي</span>`, then `<span class="film__domain">wirdy.site</span>`. The mark and name row is moved 4 px right by `film__brand`, because the tail of «وِردي» reaches left of its box.
 - `<img class="film__card" src="clips/<file>.png" alt="" data-motion="grow">` lays an image the site makes (the file «الصورة» downloads, fetched from the live site) over the phone, centered on the frame.
 - Keep the phone in one place: every scene with a phone has the same title size and line box, so the stack centers the same way. A title set smaller keeps the 88 px line box (`line-height: calc(88px * var(--leading-tight))`). One 88 px title and a 520 px screen fill the safe zone from top to bottom.
-- Prefer one continuous take played across several scenes (each scene's `<video>` with the same `src` and `data-start`): the phone never jumps, and only the titles change.
+- Prefer one continuous shot: one scene for the whole film, one phone, and the titles taking turns above it. Stack the titles in `<div class="film__titles">`, each `data-motion="title"` with `--at` and `--out`: it enters from the right over a second and leaves to the left at `--out`. Leave half a second between one title's `--out` and the next one's `--at`. A title that shows at frame 0 takes `--at: -1`.
+- Inside a `<div class="film__screen">`, the clips and stills stack in one place as `film__media`: `data-motion="until"` hides one at `--out`, `from` shows one at `--at` without a fade, and `fade` crossfades over `--for` seconds. Hide a clip before it ends, or the check names it.
+- `data-motion="pop"` grows an image in at `--at` and drops it out at `--out`, for `film__card`.
+- `data-motion="zoom"` on the phone is the camera: from `--at` over `--for` seconds, it scales by `--zoom` around `--focus` (in px of the phone's box, the bezel counted) and moves that point by `--zoom-x` and `--zoom-y`; it eases in and out, which a camera needs to feel smooth, and fades the phone out at `--out`. Find the focus by measuring the line in the clip, and the scale by the ratio of its type on the phone to the type it becomes.
+- `<div class="film__night">` is the site's dark paper over the whole frame, under the phone; fade it in with the zoom when the film ends at night. A `<p class="film__lift" data-motion="lift">` inside it is a line of the screen lifted out as type: it shows at `--at`, under the phone, exactly where the zoom left that line, and brightens as the phone fades. Measure the zoomed line and the typeset line in the same frames and match them to the pixel.
 
 ## 6. The check
 
@@ -77,7 +81,9 @@ Write `promo/<slug>/post.md`: one caption for X, one for TikTok, one for Snapcha
 - No text under 28 px.
 - Text and the phone screen stay in the safe zone: 120 to 888 px across, 288 to 1248 px down; 120 to 780 px across below 840 px, where TikTok's buttons widen.
 - Titles enter from the right.
-- Motion is the site's: `--spring` to move, `--ease-out` to fade, nothing eases in, grow from 60%.
+- Motion is the site's: `--spring` to move, `--ease-out` to fade, grow from 60%. Only the camera eases in. Every change moves: no title, image, or screen appears or goes in a cut, but a still swapped for the identical frame of its clip.
+- Few titles, and general: three or four for a 30 second film, each held 4 seconds or more. The screens show the steps; a title never names a tap.
+- No call to action. The end is the site's own line, or the mark and `wirdy.site`.
 - The screen sits in its phone frame, centered, flat, never tilted in 3D, pushed to 1.6 to 2 times when one part is the point.
 - The end card: the mark and «وِردي» land in the last 10%, then `wirdy.site`, held 2 to 3 seconds.
 - No first line of «نقدّم لكم» or «تعرّف على». None of «الأفضل», «الأول», «ثوري», «بسهولة», «بضغطة زر» unless the film shows it.
