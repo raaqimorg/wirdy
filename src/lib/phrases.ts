@@ -24,5 +24,7 @@ export const phrasesOf = (
 };
 
 export function phrasesLabel(phrases: ReadonlyArray<Phrase>): string {
-  return phrases.map(({ text, count }) => `${text} ${timesLabel(count)}`).join('، ');
+  return phrases
+    .map(({ text, count }) => (count === 1 ? text : `${text} ${timesLabel(count)}`))
+    .join('، ');
 }

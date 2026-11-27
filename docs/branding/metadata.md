@@ -15,7 +15,7 @@ What each page tells search engines and link previews: the title, the descriptio
 
 The dhikr title is its `title` with its `context` in brackets (`fullTitle` in `src/lib/title.ts`).
 
-A dhikr or hadith description quotes its first words in «», so a search for the words finds the page (`src/lib/description.ts`). The words stop at a clause end near 110 letters, or between words when no clause ends in time, and a cut ends in «…». A قرآن quote keeps whole آيات, as the card does. A dhikr whose phrases each have a count gives them in the count instead.
+A dhikr or hadith description quotes its first words in «», so a search for the words finds the page (`src/lib/description.ts`). The words stop at a clause end near 110 letters, or between words when no clause ends in time, and a cut ends in «…». A قرآن quote keeps whole آيات, as the card does, and cuts a single long آية between words. A dhikr whose phrases each have a count gives them in the count instead, with no count for a phrase said once. No description passes 200 characters: when the whole runs longer, the words, or the counted phrases, are cut shorter, and the lead, the virtue, and the takhrij stay whole.
 
 On a dhikr or hadith page, the line over the title is the way back to its place in its section, in a `<nav>` named «مسار الصفحة». It is the visible trail: the bar's mark leads home, and the title is the page itself, so the name shows once.
 
