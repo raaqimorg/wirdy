@@ -1,9 +1,9 @@
 ---
-import naskh from '@fontsource/amiri/files/amiri-arabic-400-normal.woff2?url';
-import quran from '@fontsource/amiri-quran/files/amiri-quran-arabic-400-normal.woff2?url';
 import plex400 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url';
 import plex500 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2?url';
 import plex700 from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url';
+import quran from '../fonts/kfgqpc-hafs.ttf?url';
+import naskh from '../fonts/kfgqpc-naskh-regular.ttf?url';
 import '../styles/index.css';
 import SearchSheet from '../components/SearchSheet.astro';
 import SkipLink from '../components/SkipLink.astro';
@@ -99,7 +99,13 @@ const structuredData = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="google" content="notranslate" />
     {preloads.map((href) => (
-      <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+      <link
+        rel="preload"
+        href={href}
+        as="font"
+        type={href.endsWith('.ttf') ? 'font/ttf' : 'font/woff2'}
+        crossorigin
+      />
     ))}
     <title>{title}</title>
     <meta name="description" content={description} />

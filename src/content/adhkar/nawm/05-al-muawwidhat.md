@@ -8,6 +8,7 @@ count: 3
 mode: "both"
 quran: true
 ayat: "first"
+from: [1, 1, 1]
 how: "يجمع كفّيه فينفث فيهما ويقرأ، ثم يمسح بهما ما استطاع من جسده، يبدأ برأسه ووجهه"
 group: "القرآن"
 takhrij:

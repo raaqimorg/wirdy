@@ -7,6 +7,7 @@ order: 4
 count: 1
 mode: "both"
 quran: true
+from: [255]
 group: "القرآن"
 fadl: "لن يزال عليك من الله حافظ، ولا يقربك شيطان حتى تصبح"
 takhrij:

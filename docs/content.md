@@ -100,6 +100,7 @@ takhrij:
   - `all`, the default, shows every آية.
   - `first` shows the first آية of each سورة, for سور the reader knows by heart, such as المعوذات. The card adds «تقرأ إلى آخر السورة» («تقرأ كل سورة إلى آخرها» for more than one).
   - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one). A button, «أكمل القراءة، ٨ آيات», opens the rest in place: a `<details>`, no script, reading «طيّ» while open. Copy gives the آيات that show, with «وتتمة الآيات في الصفحة». The card shares its 250 letters among the سور, with the same line.
+- `from`: the number of the first آية of each سورة, in the order of the text, such as `[255]` or `[1, 1]`. Only قرآن files have it, and each needs it. The card ends each آية with its number. A test checks it, and each سورة's count of lines, against the Tanzil source of the proof.
 - `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only, not the manner, source, or virtue. The card shows it first, with the count.
 - `how`: the manner the narration gives, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.
 - `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with one `group` show under it. Use it for one situation in an occasion, or for alternatives. A page where every dhikr has a group opens with links to its groups.

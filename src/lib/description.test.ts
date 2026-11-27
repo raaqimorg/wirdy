@@ -11,6 +11,7 @@ const card: Card = {
   lead: 'عند الكرب',
   quran: false,
   blocks: [['لا إله إلا الله العظيم الحليم، لا إله إلا الله رب العرش العظيم.']],
+  from: [],
   evening: null,
   cut: false,
   count: null,

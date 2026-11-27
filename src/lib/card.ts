@@ -12,7 +12,7 @@ import { GUIDES, SITE, type Guide } from './site';
 import { takhrijLine } from './takhrij';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
 
-const TEMPLATE = 4;
+const TEMPLATE = 5;
 const SITE_TEMPLATE = 1;
 const HOME_TEMPLATE = 3;
 const LIMIT = 250;
@@ -26,6 +26,7 @@ export const cardSchema = Schema.Struct({
   lead: Schema.String,
   quran: Schema.Boolean,
   blocks: Schema.Array(Schema.Array(Schema.String)),
+  from: Schema.Array(Schema.Number),
   evening: Schema.NullOr(Schema.String),
   cut: Schema.Boolean,
   count: Schema.NullOr(Schema.String),
@@ -88,6 +89,7 @@ export const cardOf = (
       lead,
       quran: data.quran,
       blocks,
+      from: data.from ?? [],
       evening,
       cut,
       count: data.count > 1 ? timesLabel(data.count) : null,
@@ -106,6 +108,7 @@ export const hadithCardOf = (guide: Guide, data: Hadith, body: string): Card => 
     lead: `عن ${data.rawi}`,
     quran: false,
     blocks: [[text]],
+    from: [],
     evening: null,
     cut,
     count: null,

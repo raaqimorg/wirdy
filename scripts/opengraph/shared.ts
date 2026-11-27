@@ -15,8 +15,13 @@ const plex = (subset: string, weight: number, rule = '') =>
 
 export const plexArabic = (weight: number) => plex('arabic', weight);
 export const plexLatin = (weight: number) => plex('latin', weight, 'unicode-range:U+0000-00FF;');
-export const amiri = () => face('Amiri', 'amiri', 'arabic', 400);
-export const amiriQuran = () => face('Amiri Quran', 'amiri-quran', 'arabic', 400);
+const kfgqpc = (family: string, file: string) => {
+  const href = pathToFileURL(join(root, 'src', 'fonts', file)).href;
+  return `@font-face{font-family:"${family}";size-adjust:112%;src:url("${href}") format("truetype")}`;
+};
+
+export const naskh = () => kfgqpc('Naskh', 'kfgqpc-naskh-regular.ttf');
+export const hafs = () => kfgqpc('Hafs', 'kfgqpc-hafs.ttf');
 
 export const emblemSvg = (id: EmblemName) =>
   `<svg viewBox="0 0 240 240">${EMBLEMS[id]

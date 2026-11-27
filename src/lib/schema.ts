@@ -30,6 +30,7 @@ export const dhikrSchema = Schema.Struct({
   mode: withDefault(Schema.Literals(MODES), 'both'),
   quran: withDefault(Schema.Boolean, false),
   ayat: withDefault(Schema.Literals(['all', 'first', 'fold']), 'all'),
+  from: Schema.optionalKey(Schema.Array(positive).check(Schema.isMinLength(1))),
   when: Schema.optionalKey(text),
   how: Schema.optionalKey(text),
   group: Schema.optionalKey(text),

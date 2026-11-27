@@ -76,9 +76,11 @@ const stringsOf = (value: unknown): string[] => {
 
 const own = (path: string) => readFileSync(join(DIST, path, 'index.html'), 'utf8');
 const facesOf = (page: string) =>
-  [...page.matchAll(/<link rel="preload" href="\/_astro\/([a-z0-9-]+)-normal\./gu)].map(
-    ([, name]) => name!
-  );
+  [
+    ...page.matchAll(
+      /<link rel="preload" href="\/_astro\/([a-z0-9-]+?)(?:-normal)?\.[A-Za-z0-9_-]{8}\.(?:woff2|ttf)"/gu
+    ),
+  ].map(([, name]) => name!);
 
 const barOf = (page: string) => page.match(/<nav class="bar[ "][\s\S]*?<\/nav>/u)![0];
 const onlyAt = (mode: string) =>
@@ -1029,7 +1031,7 @@ describe('built site', () => {
           .replaceAll(/<details class="surah__rest">[\s\S]*?<\/details>/gu, '')
           .replaceAll(/<span class="badge[\s\S]*?<\/span>\s*<\/span>/gu, ' ')
           .replaceAll(/<span class="variant-text variant-text--masaa">[^<]*<\/span>/gu, '')
-          .replaceAll(/<(div|span) class="surah[^"]*">/gu, ' ');
+          .replaceAll(/<(div|span) class="surah[^"]*"[^>]*>/gu, ' ');
         const words = copied
           .split('\n\n')
           .slice(0, -1)
@@ -1106,19 +1108,19 @@ describe('built site', () => {
     }
     expect(headers.match(/^\/\*\n((?:  .*\n)+)/u)![1]).not.toContain('Cache-Control');
     for (const file of readdirSync(join(DIST, '_astro'))) {
-      expect(file).toMatch(/\.[A-Za-z0-9_-]{8}\.(css|woff2|js)$/u);
+      expect(file).toMatch(/\.[A-Za-z0-9_-]{8}\.(css|woff2|ttf|js)$/u);
     }
   });
 
   it('preloads the faces a page uses, and no others', () => {
     const ui = [400, 500, 700].map((weight) => `ibm-plex-sans-arabic-arabic-${weight}`);
-    const naskh = 'amiri-arabic-400';
-    const quran = 'amiri-quran-arabic-400';
+    const naskh = 'kfgqpc-naskh-regular';
+    const quran = 'kfgqpc-hafs';
     expect(facesOf(html)).toEqual([...ui, naskh]);
     expect(facesOf(notFound)).toEqual(ui);
     expect(facesOf(pages['hamm']!)).toEqual([...ui, naskh]);
     expect(facesOf(pages['nawm']!)).toEqual([...ui, naskh, quran]);
-    expect(facesOf(own('nawm/ayat-al-kursi'))).toEqual([...ui, quran]);
+    expect(facesOf(own('nawm/ayat-al-kursi'))).toEqual([...ui, naskh, quran]);
     expect(facesOf(own('hamm/al-karb'))).toEqual([...ui, naskh]);
   });
 
@@ -1169,9 +1171,12 @@ describe('built site', () => {
     expect(css).toMatch(/\.surah::?after[,{][^}]*content:"﴾"/u);
     expect(css).toMatch(/\.surah__ayat::?after[^{]*\{[^}]*content:"﴾"/u);
     expect(css).toMatch(/\.surah--fold::?after\{content:none/u);
-    expect(css).toMatch(/\.surah__ayah-end::?before\{[^}]*content:"۝"/u);
+    expect(css).toMatch(/\.surah__ayah-end::?before\{[^}]*content:attr\(data-ayah\)/u);
+    expect(all.match(/class="surah__ayah-end" data-ayah="۝[٠-٩]+"/gu)?.length).toBeGreaterThan(0);
+    expect(all).not.toMatch(/class="surah__ayah-end"(?! data-ayah="۝[٠-٩]+")/u);
     expect(css).not.toContain('۞');
-    expect(css).toMatch(/--font-quran:\s*"Amiri Quran",\s*"Amiri"/u);
+    expect(css).toMatch(/--font-quran:\s*"KFGQPC Naskh"/u);
+    expect(css).toMatch(/--font-ayah-end:\s*"KFGQPC Hafs"/u);
   });
 
   it('shows the first آية of each of المعوذات, and no more', () => {
@@ -1181,7 +1186,8 @@ describe('built site', () => {
       const card = cards.find((c) => c.includes('ٱلْفَلَقِ'))!;
       expect(card).toBeDefined();
       expect(card.match(/class="surah"/gu)).toHaveLength(3);
-      expect(card).not.toContain('surah__ayah-end');
+      expect(card.match(/class="surah__ayah-end" data-ayah="۝١"/gu)).toHaveLength(3);
+      expect(card).not.toContain('data-ayah="۝٢"');
       expect(card).not.toContain('ٱلْوَسْوَاسِ');
     }
   });
@@ -1237,11 +1243,13 @@ describe('built site', () => {
   });
 
   it('ships every face from this origin, once', () => {
-    const fonts = readdirSync(join(DIST, '_astro')).filter((f) => f.endsWith('.woff2'));
-    expect(fonts).toHaveLength(5);
-    expect(fonts.some((f) => /^amiri-quran-arabic-.*\.woff2$/u.test(f))).toBe(true);
-    expect(fonts.some((f) => /^amiri-arabic-.*\.woff2$/u.test(f))).toBe(true);
-    expect(fonts.some((f) => /^ibm-plex-sans-arabic-arabic-.*\.woff2$/u.test(f))).toBe(true);
+    const fonts = readdirSync(join(DIST, '_astro')).filter((f) => /\.(woff2|ttf)$/u.test(f));
+    expect(fonts).toHaveLength(6);
+    expect(fonts.filter((f) => /^ibm-plex-sans-arabic-arabic-.*\.woff2$/u.test(f))).toHaveLength(3);
+    expect(
+      fonts.filter((f) => /^kfgqpc-(naskh-regular|naskh-bold|hafs)\..*\.ttf$/u.test(f))
+    ).toHaveLength(3);
+    expect(fonts.filter((f) => f.startsWith('amiri'))).toEqual([]);
   });
 
   it('styles every class that a page uses, and uses every class that it styles', () => {

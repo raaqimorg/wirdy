@@ -7,6 +7,7 @@ order: 10
 count: 1
 mode: "both"
 quran: true
+from: [255]
 when: "دبر كل صلاة مكتوبة"
 group: "القرآن"
 fadl: "لم يمنعه من دخول الجنة إلا أن يموت"

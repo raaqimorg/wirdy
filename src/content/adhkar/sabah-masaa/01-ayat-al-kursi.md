@@ -7,6 +7,7 @@ order: 1
 count: 1
 mode: "both"
 quran: true
+from: [255]
 group: "القرآن"
 takhrij:
   grader: "الألباني"
