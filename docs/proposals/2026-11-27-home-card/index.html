@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wirdy Home Card</title>
+    <style>
+      :root {
+        --bg: #d6d6cd;
+        --surface: hsl(60 10% 92%);
+        --fg: hsl(200 50% 5%);
+        --muted: hsl(200 40% 22%);
+        --line: hsl(200 30% 20% / 0.22);
+        --rec: #2f6b57;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #060f13;
+          --surface: hsl(200 32% 15%);
+          --fg: hsl(55 62% 89%);
+          --muted: hsl(60 10% 72%);
+          --line: hsl(60 10% 82% / 0.18);
+          --rec: #7fc7ab;
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 1.125rem;
+        margin: 0 0 0.25rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      p {
+        margin: 0.25rem 0 0.75rem;
+        max-width: 46rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      .option {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1rem;
+        margin: 1.25rem 0;
+      }
+      .is-rec {
+        border: 2px solid var(--rec);
+      }
+      .rec {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--rec);
+        border: 1px solid var(--rec);
+        border-radius: 99px;
+        padding: 0 0.5rem;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+      .previews {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.75rem;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        font-size: 0.8125rem;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+      .thumb {
+        width: 300px;
+      }
+      .square {
+        width: 158px;
+        height: 158px;
+        object-fit: cover;
+        object-position: center;
+      }
+      ul {
+        max-width: 46rem;
+        padding-inline-start: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>The home sharing card</h1>
+      <p class="lead">
+        Six ways to draw the card a link to the home page shows, each with the drawings removed and
+        only the 17 section colors kept. Each is rendered by the same headless browser and fonts as
+        the real cards, at 1200 by 630. Today's card is at the end: it still lays 17 colors out as a
+        3 by 3 mosaic, so the extra tiles push «وِردي» to the bottom edge, where it is cut.
+      </p>
+      <h2>Why E</h2>
+      <ul>
+        <li>
+          A link preview is small: the name has to read at 300 px wide. E, D, and B keep «وِردي»
+          large and alone.
+        </li>
+        <li>
+          Some apps crop the card to a square from the middle. Measured on each image: E and D keep
+          the whole name and the mark; B cuts the end of «وِردي», C keeps only tiles and loses the
+          brand, and A and F cut the name.
+        </li>
+        <li>
+          E gives the colors the whole card, so it is the most colorful at a glance, and the paper
+          card in the middle repeats how every page sits on its section color.
+        </li>
+        <li>
+          D is the calmest choice if the owner prefers less color; B ties the colors to the one arc
+          of hues they come from, but the ring around the sunflower repeats its round shape.
+        </li>
+      </ul>
+      <article class="option is-rec" id="field">
+        <h2>E. A field of colors behind a paper card <span class="rec">Recommended</span></h2>
+        <p>
+          The 17 colors fill the whole image as vertical bands, and the brand sits on a rounded
+          paper card in the middle, the way a page sits on its section color.
+        </p>
+        <img
+          class="full"
+          src="field.png"
+          alt="E. A field of colors behind a paper card"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="field.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="field.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="palette">
+        <h2>D. One quiet row of colors</h2>
+        <p>
+          The brand alone at the centre, large, with the 17 colors as one row of small rounded
+          squares under it, like a palette. The calmest of the six.
+        </p>
+        <img
+          class="full"
+          src="palette.png"
+          alt="D. One quiet row of colors"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="palette.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="palette.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="ring">
+        <h2>B. A ring of colors around the mark</h2>
+        <p>
+          The colors come from one arc of hues, so they are drawn as a ring, each section an equal
+          arc, with the sunflower at its centre and the name beside it.
+        </p>
+        <img
+          class="full"
+          src="ring.png"
+          alt="B. A ring of colors around the mark"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="ring.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="ring.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="bands">
+        <h2>C. The three bands of the home page</h2>
+        <p>
+          Three rows of rounded tiles in the order and grouping of the home page (8, 4, and 5
+          sections), under the brand. It previews the page the link opens.
+        </p>
+        <img
+          class="full"
+          src="bands.png"
+          alt="C. The three bands of the home page"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="bands.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="bands.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="grid">
+        <h2>F. A grid with the brand in it</h2>
+        <p>
+          A 6 by 3 grid of rounded tiles: 17 colors and one paper tile that holds the mark, beside
+          the name. Closest to today, without the drawings.
+        </p>
+        <img
+          class="full"
+          src="grid.png"
+          alt="F. A grid with the brand in it"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="grid.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="grid.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="stripes">
+        <h2>A. Stripes in hue order</h2>
+        <p>
+          The brand on paper on one half, the 17 section colors as full-height stripes on the other,
+          ordered by hue so they read as one spectrum.
+        </p>
+        <img
+          class="full"
+          src="stripes.png"
+          alt="A. Stripes in hue order"
+          width="1200"
+          height="630"
+        />
+        <div class="previews">
+          <figure>
+            <img class="thumb" src="stripes.png" alt="" />
+            <figcaption>As a link preview, 300 px wide</figcaption>
+          </figure>
+          <figure>
+            <img class="square" src="stripes.png" alt="" />
+            <figcaption>Cropped to a square, as some apps show it</figcaption>
+          </figure>
+        </div>
+      </article>
+      <article class="option" id="today">
+        <h2>Today</h2>
+        <p>The card on the live site, for comparison.</p>
+        <img class="full" src="today.png" alt="Today's home card" width="1200" height="630" />
+      </article>
+    </main>
+  </body>
+</html>
