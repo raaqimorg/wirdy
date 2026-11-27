@@ -35,7 +35,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   gap: 40px;
-  padding: 288px 192px 672px 120px;
+  padding: 320px 192px 704px 120px;
   background: var(--color-paper);
   opacity: 0;
   animation:
