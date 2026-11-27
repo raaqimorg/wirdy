@@ -70,10 +70,8 @@
   aspect-ratio: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .banner--turns .banner__graphic {
-    transition: transform var(--duration-enter) var(--spring);
-  }
+.banner--turns .banner__graphic {
+  transition: transform var(--duration-enter) var(--spring);
 }
 
 :root[data-wird="m"] .banner--turns .banner__graphic {

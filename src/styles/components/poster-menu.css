@@ -20,6 +20,11 @@
   border-start-start-radius: var(--radius-xlarge);
   border-start-end-radius: var(--radius-xlarge);
   box-shadow: var(--shadow-menu);
+  transition:
+    opacity var(--duration-fade) var(--ease-out),
+    translate var(--duration-release) var(--ease-out),
+    height var(--duration-release) var(--ease-out),
+    scale var(--duration-fade) var(--ease-out);
 }
 
 .poster-menu__panel[open] {
@@ -34,16 +39,6 @@
 .poster-menu__panel[data-size="expanded"] {
   height: calc(100dvh - env(safe-area-inset-top) - var(--space-3));
   max-height: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .poster-menu__panel {
-    transition:
-      opacity var(--duration-fade) var(--ease-out),
-      translate var(--duration-release) var(--ease-out),
-      height var(--duration-release) var(--ease-out),
-      scale var(--duration-fade) var(--ease-out);
-  }
 }
 
 .poster-menu__panel[data-dragging] {

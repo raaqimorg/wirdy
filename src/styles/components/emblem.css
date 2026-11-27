@@ -27,20 +27,18 @@
   --enter: emblem-turn;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  :root[data-emblems] .emblem[data-live]:not([data-shown]) [data-enter] {
-    opacity: 0;
-  }
+:root[data-emblems] .emblem[data-live]:not([data-shown]) [data-enter] {
+  opacity: 0;
+}
 
-  .emblem[data-shown] [data-enter] {
-    animation:
-      var(--enter) var(--duration-enter) var(--spring) both,
-      fade var(--duration-press) var(--ease-out) both;
-  }
+.emblem[data-shown] [data-enter] {
+  animation:
+    var(--enter) var(--duration-enter) var(--spring) both,
+    fade var(--duration-press) var(--ease-out) both;
+}
 
-  .emblem[data-shown] [data-enter="fade"] {
-    animation: fade var(--duration-enter) var(--ease-out) both;
-  }
+.emblem[data-shown] [data-enter="fade"] {
+  animation: fade var(--duration-enter) var(--ease-out) both;
 }
 
 @keyframes emblem-grow {

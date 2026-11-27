@@ -20,13 +20,21 @@ A pressed card shrinks to 97% (`src/styles/components/occasion-card.css`), and e
 - The listener is `passive`, so it never delays scrolling.
 - The ordinary way is the grey highlight: a flat flash on the link's box, not an iOS press.
 
+## The motion ignores the device's reduce motion setting
+
+The site moves the same for every reader: the emblems, the cards, the menus, the sun, and the chevrons. No rule sits under `prefers-reduced-motion`, and the inline script does not read it. The owner chose it, so the site keeps one feel on a device set to reduce motion too.
+
+- The ordinary way is to drop or soften motion when the device asks, as Apple's apps do: a dissolve in place of a move. WCAG 2.3.3 (level AAA) asks for a way to turn off motion that an interaction such as a scroll starts.
+- The motion stays small and short, 500 ms at most for a move, and nothing loops, flashes, or moves the page itself.
+- The build test refuses `prefers-reduced-motion` in the shipped CSS and pages, so it does not creep back into one component alone.
+
 ## An emblem's lit shape enters each time it comes into view
 
 On a page's banner and on the home page's cards, an emblem's one lit shape enters its own way over `--duration-enter` with `--spring` whenever at least half of the emblem is on screen: on load for what shows, and on scroll for what comes in. Once the emblem has left the screen entirely, the shape resets, so it enters again when the reader comes back. The owner asked for it, so the emblems feel alive and not only fade.
 
 - The ordinary way is CSS alone. A scroll-driven animation (`animation-timeline: view()`) ties the shape to the scroll position, so it never moves by itself: the owner saw it as a fade. A timed animation that starts on scroll needs `animation-trigger`, which Safari lacks.
 - The inline script in `src/layouts/Paper.astro` sets `data-emblems` on `<html>` before the first paint, then watches every `[data-live]` emblem with an `IntersectionObserver` and sets `data-shown` on it at half in view, and removes it at none. `src/styles/components/emblem.css` hides a lit shape that is not shown, and runs its entrance when it is.
-- With reduced motion, or without JavaScript, the script sets nothing, and every emblem shows whole and still.
+- Without JavaScript the script sets nothing, and every emblem shows whole and still. A device set to reduce motion still sees the entrance, as it sees all the site's motion ([`code-conventions.md`](code-conventions.md#motion)).
 - The emblems in the section menu, in search, and on the «بقية الأقسام» cards stay still (`motion="still"`).
 
 ## A button switches between light and dark
@@ -160,7 +168,7 @@ The section menu and the poster menu are each a `<dialog>` (`data-sheet`), as se
 
 ### A drag closes the sheets on a phone, and grows the section menu
 
-On a phone the section menu and the poster menu rise from the bottom edge as sheets of one height, `--size-sheet`, which fits the poster menu, and the head of each (`data-sheet-handle`) takes a drag. Down by 80 pixels closes either one. Up by 60 pixels grows the section menu (`data-expandable`) to the top of the screen, to show every section, and down shrinks it back. The poster menu fits, so it does not grow. The sheet follows the finger while it moves, then settles over `--duration-release`, or at once when the reader asks for less motion. The owner asked for it, to match the sheets of the owner's other app.
+On a phone the section menu and the poster menu rise from the bottom edge as sheets of one height, `--size-sheet`, which fits the poster menu, and the head of each (`data-sheet-handle`) takes a drag. Down by 80 pixels closes either one. Up by 60 pixels grows the section menu (`data-expandable`) to the top of the screen, to show every section, and down shrinks it back. The poster menu fits, so it does not grow. The sheet follows the finger while it moves, then settles over `--duration-release`. The owner asked for it, to match the sheets of the owner's other app.
 
 - The ordinary way is a sheet that only opens and closes, with a close button and a tap outside it. Both stay: the drag is an extra, for a reader who expects a phone's sheet to move.
 - The inline script in `src/layouts/Paper.astro` listens to pointer events on the head. It ignores a mouse, a press on the close button, and any screen from `40rem`, where the menu opens under the bar and has no grabber. It sets the height and the `translate` while the finger moves, and `data-size="expanded"` once the sheet grows. A sheet that closes forgets its size.

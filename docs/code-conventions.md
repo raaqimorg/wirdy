@@ -40,7 +40,7 @@ Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with 
 
 - Animate only `transform` and `opacity`, in CSS. No motion library.
 - Four durations: 100 ms for a press, 200 ms for a fade, 300 ms for a release or a hover, and 500 ms for an entrance. Move with `--spring`, Apple's bounceless spring as CSS `linear()`. Fade with `--ease-out`. The page fade is linear, to keep pace with Safari's status bar fade.
-- Motion is opt-in: it is written under `prefers-reduced-motion: no-preference`, so a rule that forgets reduced motion shows none.
+- Every reader sees the same motion. The site does not read `prefers-reduced-motion`: the owner chose one feel for everyone, and the motion is small, short, and never loops ([`exceptions.md`](exceptions.md#the-motion-ignores-the-devices-reduce-motion-setting)). Write no rule under it.
 - Respond on the first frame. Never ease in or ease in-out: both start slowly.
 - Grow a shape from 60%, not from nothing (Apple's Replace for SF Symbols).
 - Move only what is lit. An emblem's dark shapes stay still, and its one lit shape enters its own way (`enter` in `src/lib/emblems.ts`) over 500 ms with `--spring`: it grows from 60%, rises from its base, draws across from the right, or turns 26°, as it fades in over 100 ms, so the movement shows. The spiral of «كل وقت» only fades, over 500 ms.
@@ -50,7 +50,6 @@ Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with 
 - Any other control answers by its shape ([`design-system.md`](design-system.md#states)): a fill tints, text underlines, an icon dims. A press answers at once, with no transition.
 - The morning and evening sun turns half a circle when the form changes: its lit half above in the morning, below in the evening.
 - The section menu grows from the bar, 94% to full size, as it fades in.
-- With reduced motion the emblems show whole and still, the sun and the menu change at once, and nothing scales or moves. Hover still brightens, so the pointer gets an answer.
 - On a long page a line under the bar grows from where the first group meets the bar to where the closing line meets the bottom of the screen (`components/ReadingProgress.astro`): a CSS view timeline on the groups and the closing line, so no script, and no line in a browser without them. `timeline-scope` on `body` lends the timeline to the bar, which draws the line under itself, so the line moves with the bar when a page bounces past its end. As the line starts, «وِردي» in the bar fades and wipes into the sunflower over the bar's height of scroll, on the same timeline, so the bar keeps only the mark while the reader reads, and the name comes back at the top. The home page has no reading line, but its bar does the same over the bar's height of scroll from where the cards meet the bar (a view timeline on the card grid, `--cards`), and its sunflower turns from its own colors to the bar's text color, white at night and ink by day, so it matches the eggshell mark of a section's bar. The new petals fade in over the first half, then the old disc fades out, so the mark never thins as it changes.
 - A page opens at once, with no cross-page view transition. During one, Safari drops every tap for about 150 ms after the page shows, so a reader had to tap «الرئيسية» or the search icon twice.
 

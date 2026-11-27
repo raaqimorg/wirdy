@@ -26,11 +26,9 @@
   display: block;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  [data-copied="yes"] .icon--done,
-  [data-copied="no"] .icon--idle {
-    animation: icon-swap var(--duration-release) var(--spring);
-  }
+[data-copied="yes"] .icon--done,
+[data-copied="no"] .icon--idle {
+  animation: icon-swap var(--duration-release) var(--spring);
 }
 
 @keyframes icon-swap {

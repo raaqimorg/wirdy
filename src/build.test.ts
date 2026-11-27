@@ -148,6 +148,10 @@ describe('built site', () => {
     );
   });
 
+  it('moves the same for every reader, whatever the device asks', () => {
+    expect(all + css).not.toContain('prefers-reduced-motion');
+  });
+
   it('opens the next page at once, with no transition to swallow a tap', () => {
     expect(all + css).not.toContain('view-transition');
   });
@@ -418,9 +422,7 @@ describe('built site', () => {
   });
 
   it('enters a lit shape each time its emblem is half in view, and resets it once out of view', () => {
-    expect(html).toMatch(
-      /<script>[\s\S]*?prefers-reduced-motion: no-preference[\s\S]*?root\.dataset\.emblems = ''[\s\S]*?<\/script>/u
-    );
+    expect(html).toMatch(/<script>[\s\S]*?root\.dataset\.emblems = ''[\s\S]*?<\/script>/u);
     expect(html).toContain('threshold: [0, 0.5]');
     expect(html).toContain('delete dataset.shown');
     expect(css).toMatch(

@@ -185,10 +185,7 @@ const structuredData = {
           mark();
         });
         document.addEventListener('touchstart', function () {}, { passive: true });
-        if (
-          'IntersectionObserver' in window &&
-          matchMedia('(prefers-reduced-motion: no-preference)').matches
-        ) {
+        if ('IntersectionObserver' in window) {
           root.dataset.emblems = '';
           const emblems = new IntersectionObserver(
             function (entries) {
