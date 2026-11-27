@@ -5,7 +5,7 @@ import { EMBLEMS, type EmblemName } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
 import { fullLeadOf, REST, suwarOf } from './lead';
 import { markSvg } from './mark';
-import { OCCASIONS, sectionOf } from './occasions';
+import { sectionOf } from './occasions';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
 import type { Dhikr, Hadith } from './schema';
 import { GUIDES, SITE, type Guide } from './site';
@@ -14,7 +14,7 @@ import { formOf, hasVariants, type MalformedMarker } from './variants';
 
 const TEMPLATE = 4;
 const SITE_TEMPLATE = 1;
-const HOME_TEMPLATE = 2;
+const HOME_TEMPLATE = 3;
 const LIMIT = 250;
 const EVENING_LIMIT = 90;
 
@@ -131,22 +131,12 @@ export type SectionCard = {
 const fingerprint = (value: unknown): string =>
   createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 8);
 
-export const HOME_SWATCHES: ReadonlyArray<{ readonly id: EmblemName; readonly color: string }> =
-  OCCASIONS.map(({ id, color }) => ({ id, color }));
-
 export function sectionCardFile(card: SectionCard): string {
   const print = fingerprint([SITE_TEMPLATE, card, EMBLEMS[card.id], markSvg('stage')]);
   return `opengraph/${card.id}-${print}.png`;
 }
 
 export function homeCardFile(): string {
-  const print = fingerprint([
-    HOME_TEMPLATE,
-    SITE.name,
-    SITE.domain,
-    SITE.promise,
-    HOME_SWATCHES.map(({ id, color }) => [id, color, EMBLEMS[id]]),
-    markSvg(),
-  ]);
+  const print = fingerprint([HOME_TEMPLATE, SITE.name, SITE.domain, SITE.tagline, markSvg()]);
   return `opengraph/home-${print}.png`;
 }

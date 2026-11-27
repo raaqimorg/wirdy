@@ -1,20 +1,15 @@
 import { join } from 'node:path';
 import { Console, Effect, FileSystem } from 'effect';
 import { adhkarLabel, hadithLabel } from '../../src/lib/arabic.ts';
-import {
-  HOME_SWATCHES,
-  homeCardFile,
-  sectionCardFile,
-  type SectionCard,
-} from '../../src/lib/card.ts';
-import { markSvg } from '../../src/lib/mark.ts';
+import { homeCardFile, sectionCardFile, type SectionCard } from '../../src/lib/card.ts';
+import { markSvg, PETAL_RADIUS, PETALS } from '../../src/lib/mark.ts';
 import { listed, OCCASIONS } from '../../src/lib/occasions.ts';
 import { PALETTE } from '../../src/lib/palette.ts';
 import { readAdhkar, readHadiths } from '../../src/lib/records.ts';
 import { GUIDE_IDS, GUIDES, SITE } from '../../src/lib/site.ts';
 import { screenshot } from '../chromium.ts';
 import { run } from '../run.ts';
-import { amiri, emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
+import { emblemSvg, plexArabic, plexLatin, root } from './shared.ts';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -23,7 +18,15 @@ const SAFE_Y = 56;
 const NAME = 1.333 / 1.75;
 const GAP = 0.5 / 1.75;
 const LIFT = 0.2;
-const MARK_HOME = 96;
+const HOME_X = SAFE_X * 2;
+const HOME_Y = SAFE_Y * 2;
+const MARK_HOME = 64;
+const NAME_HOME = 300;
+const TAG_HOME = 32;
+const DOMAIN_HOME = 22;
+const NAME_INK = { right: 0.0345, top: 0.2879 };
+const TAG_INK = { right: -0.0078, baseline: 0.8359, descent: 0.3047 };
+const DOMAIN_INK = { left: 0.0227, baseline: 0.8409 };
 const MARK_SECTION = 64;
 
 const outDir = process.argv[2] ?? join(root, 'public');
@@ -37,24 +40,26 @@ html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
 body{font-family:"Plex",sans-serif;font-weight:500;padding:${SAFE_Y}px ${SAFE_X}px}
 .domain{direction:ltr;font-size:24px;letter-spacing:.01em}`;
 
+const markInset =
+  (MARK_HOME *
+    (Math.min(...PETALS.flatMap(({ cx, cy }) => [Number(cx), Number(cy)])) - PETAL_RADIUS)) /
+  64;
+
+const baseline = HEIGHT - HOME_Y - TAG_INK.descent * TAG_HOME;
+
 const home = `${head}
-${amiri()}
-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) ${HEIGHT}px repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));padding:0;background:${PALETTE.paper};color:${PALETTE.ink}}
-.side{grid-column:3;grid-row:1 / -1;display:flex;flex-direction:column;justify-content:center;padding:${SAFE_Y}px ${SAFE_X}px}
-.brand{display:flex;align-items:center;gap:${MARK_HOME * GAP}px}
-.brand svg{width:${MARK_HOME}px;height:${MARK_HOME}px}
-.name{font-size:${MARK_HOME * NAME}px;font-weight:700;line-height:1;translate:0 -${LIFT}em}
-.promise{margin-top:40px;font-size:34px;font-weight:700;line-height:1.5}
-.salawat{font-family:"Amiri",serif;font-weight:400}
-.more{color:${PALETTE.inkFaint};font-weight:500}
-.domain{align-self:flex-start;margin-top:28px;color:${PALETTE.inkMuted}}
-.tile{display:grid;place-items:center;background:var(--tone)}
-.tile svg{width:82%;height:82%}
+body{position:relative;padding:0;background:${PALETTE.paper};color:${PALETTE.ink}}
+.mark{position:absolute;left:${HOME_X - markInset}px;top:${HOME_Y - markInset}px;width:${MARK_HOME}px;height:${MARK_HOME}px}
+.mark svg{display:block;width:100%;height:100%}
+.name,.tag,.domain{position:absolute;line-height:1}
+.name{right:${HOME_X - NAME_INK.right * NAME_HOME}px;top:${HOME_Y - NAME_INK.top * NAME_HOME}px;font-size:${NAME_HOME}px;font-weight:700}
+.tag{right:${HOME_X - TAG_INK.right * TAG_HOME}px;top:${baseline - TAG_INK.baseline * TAG_HOME}px;font-size:${TAG_HOME}px;color:${PALETTE.inkMuted}}
+.domain{left:${HOME_X - DOMAIN_INK.left * DOMAIN_HOME}px;top:${baseline - DOMAIN_INK.baseline * DOMAIN_HOME}px;font-size:${DOMAIN_HOME}px;color:${PALETTE.inkFaint}}
 </style></head><body>
-<div class="side"><div class="brand">${markSvg()}<span class="name">${SITE.name}</span></div>
-<p class="promise">${SITE.promise.before}&nbsp;<span class="salawat">ﷺ</span>${SITE.promise.after} <span class="more">${SITE.promise.more}</span></p>
-<span class="domain">${SITE.domain}</span></div>
-${HOME_SWATCHES.map(({ id, color }) => `<span class="tile" style="--tone:${color}">${emblemSvg(id)}</span>`).join('')}
+<div class="mark">${markSvg()}</div>
+<p class="name">${SITE.name}</p>
+<p class="tag">${SITE.tagline}</p>
+<span class="domain">${SITE.domain}</span>
 </body></html>`;
 
 const section = ({ id, title, color, note }: SectionCard) => `${head}

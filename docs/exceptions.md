@@ -112,7 +112,7 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 `scripts/icons/build.ts` and `scripts/opengraph/build.ts` render HTML in a local Chromium browser (`scripts/chromium.ts`) and save screenshots. `scripts/icons/build.ts` also writes `favicon.ico` by hand (a short header and a list of PNGs) and `favicon.svg` from `src/lib/mark.ts`, so the header mark and the favicon cannot drift.
 
 - The ordinary way is an image library such as `sharp`: a native dependency for two scripts that run only when the mark or a card changes.
-- The cards draw the site's mark, colors, and emblems from `src/lib/`, in the site's fonts from `@fontsource`. The home card shows the mark, the name, the home sentence, and the domain in its centre square, so a square crop keeps them, between the 16 home sections in their colors and emblems. Each section card shows its title, count, and emblem on its color, like its page banner ([`branding/imagery.md`](branding/imagery.md#the-sharing-cards)).
+- The cards draw the site's mark, colors, and emblems from `src/lib/`, in the site's fonts from `@fontsource`. The home card sets the name large on the paper, with the mark, the tagline, and the domain, and nothing else. Each section card shows its title, count, and emblem on its color, like its page banner ([`branding/imagery.md`](branding/imagery.md#the-sharing-cards)).
 
 ## Promo films render from HTML in a headless browser
 
