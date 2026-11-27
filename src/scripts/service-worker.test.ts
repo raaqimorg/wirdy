@@ -127,9 +127,17 @@ function worker(built: Built, answer: Answer) {
     const entries = [...store.entries()].filter(([url]) => new URL(url).pathname === path);
     return Promise.all(entries.map(([, response]) => response.clone().text()));
   };
+  const message = async (data: unknown) => {
+    listeners.get('message')?.({
+      data,
+      waitUntil: (work: Promise<unknown>) => pending.push(work),
+    });
+    await settle();
+  };
   return {
     install,
     request,
+    message,
     keptText,
     requested,
     offline: () => {
@@ -164,6 +172,32 @@ describe('the service worker', () => {
     sw.requested.length = 0;
     expect(await sw.request('/search/index.json', 'cors')).toBe('[]');
     expect(sw.requested).toEqual([]);
+  });
+
+  it('keeps a page the reader reaches for, so the tap opens it with no request', async () => {
+    const sw = worker(site('new'), none);
+    await sw.message({ keep: AYAT });
+    expect(await sw.keptText(AYAT)).toEqual(['new']);
+    sw.requested.length = 0;
+    expect(await sw.request(AYAT)).toBe('new');
+    expect(sw.requested).toEqual([]);
+  });
+
+  it('downloads a page once when the tap comes while it is still being kept', async () => {
+    const sw = worker(site('new'), none);
+    const reaching = sw.message({ keep: AYAT });
+    const opened = sw.request(AYAT);
+    await reaching;
+    expect(await opened).toBe('new');
+    expect(sw.requested.filter((path) => path === AYAT)).toHaveLength(1);
+  });
+
+  it('keeps nothing for a path it has no fingerprint for', async () => {
+    const sw = worker(site('new'), none);
+    await sw.message({ keep: '/elsewhere/' });
+    await sw.message('/nawm/');
+    expect(sw.requested).not.toContain('/elsewhere/');
+    expect(sw.requested).not.toContain('/nawm/');
   });
 
   it('opens a kept page offline, and the offline page for any other', async () => {

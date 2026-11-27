@@ -2,6 +2,7 @@ const MANIFEST = self.MANIFEST;
 const KEPT = 'kept';
 const FILES = 'files';
 const files = new Set([...MANIFEST.files, MANIFEST.hashes]);
+const fetching = new Map();
 let hashing;
 
 function storable(response) {
@@ -60,10 +61,36 @@ async function refresh(cache, hashes, path) {
   return response;
 }
 
+function warming(cache, hashes, path) {
+  const key = keyOf(hashes, path);
+  if (!fetching.has(key))
+    fetching.set(
+      key,
+      refresh(cache, hashes, path).finally(() => {
+        fetching.delete(key);
+      })
+    );
+  return fetching.get(key);
+}
+
+async function warm(path) {
+  const hashes = await hashesOf();
+  if (!Object.hasOwn(hashes, path) || self.navigator.connection?.saveData) return;
+  const cache = await caches.open(KEPT);
+  if (await cache.match(keyOf(hashes, path))) return;
+  await warming(cache, hashes, path);
+}
+
 async function kept(hashes, path, request, later) {
   const cache = await caches.open(KEPT);
-  const hit = await cache.match(keyOf(hashes, path));
+  const key = keyOf(hashes, path);
+  const hit = await cache.match(key);
   if (hit) return hit;
+  if (fetching.has(key)) {
+    await fetching.get(key).catch(() => null);
+    const warmed = await cache.match(key);
+    if (warmed) return warmed;
+  }
   const response = await fetch(request);
   if (!(await store(cache, hashes, path, response)) && response.ok)
     later(refresh(cache, hashes, path).catch(() => null));
@@ -140,6 +167,11 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(prune().then(() => self.clients.claim()));
+});
+
+self.addEventListener('message', (event) => {
+  const path = event.data?.keep;
+  if (typeof path === 'string') event.waitUntil(warm(path).catch(() => null));
 });
 
 self.addEventListener('fetch', (event) => {

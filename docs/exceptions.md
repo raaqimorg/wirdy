@@ -155,6 +155,15 @@ The home page, the sections its cards open, and search open at once, and with no
 - To turn it off on the live site, remove the registration from `src/layouts/Paper.astro`, and ship a `service-worker.js` that deletes every cache and calls `self.registration.unregister()`.
 - Without JavaScript, or in a browser with no service workers, the site works as before.
 
+## A press or a hover keeps the page a link opens
+
+When a reader presses a link to a page of the site, or holds the mouse on it for 65 ms, the inline script in `src/layouts/Paper.astro` posts its path to the service worker (`{ keep: path }`). The worker downloads the page, checks its fingerprint, and keeps it, so the click opens it from the device. The owner asked for a fast site.
+
+- The ordinary way is Speculation Rules (`<script type="speculationrules">`). Only Chrome uses them: Brave turns them off, and Safari has none.
+- A tap starts about 100 ms before its click. With 150 ms per request and a 100 ms press, the next dhikr's page arrived at 65 ms instead of 192 ms, and was ready at 95 ms instead of 233 ms (median of 10, measured on 2026-11-27). A 30 ms press still gains (140 ms instead of 180 ms), because the click waits for the download already under way instead of starting another. A hover gives 21 ms.
+- The worker keeps only a path it has a fingerprint for, never with Save-Data, and each path once per page. A press that does not end in a click costs one page, about 7 KB.
+- Without JavaScript, or with no worker yet, nothing is posted and the link works as before.
+
 ## The proofs are JSON files in git
 
 `verification/` holds a record for each proven dhikr. The tests read them; the site does not. The owner asked for saved proofs, so a check never starts from zero.

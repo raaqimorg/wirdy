@@ -177,6 +177,24 @@ const structuredData = {
           mark();
         });
         document.addEventListener('touchstart', function () {}, { passive: true });
+        const warmed = {};
+        function warm(event) {
+          const link = event.target.closest && event.target.closest('a[href^="/"]');
+          const worker = navigator.serviceWorker && navigator.serviceWorker.controller;
+          if (!link || !worker || link.pathname === location.pathname || warmed[link.pathname])
+            return;
+          warmed[link.pathname] = true;
+          worker.postMessage({ keep: link.pathname }); // oxlint-disable-line unicorn/require-post-message-target-origin -- a service worker's postMessage takes no target origin
+        }
+        let hovering;
+        document.addEventListener('pointerdown', warm, { passive: true });
+        document.addEventListener('pointerover', function (event) {
+          clearTimeout(hovering);
+          if (event.pointerType === 'mouse')
+            hovering = setTimeout(function () {
+              warm(event);
+            }, 65);
+        });
         document.addEventListener('click', function (event) {
           if (root.dataset.searchReady === undefined && event.target.closest('[data-search-open]'))
             root.dataset.searchPending = '';
