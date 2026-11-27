@@ -127,6 +127,14 @@ body {
   object-position: top;
 }
 
+.film__take {
+  display: grid;
+}
+
+.film__take > * {
+  grid-area: 1 / 1;
+}
+
 .film__card {
   position: absolute;
   top: 50%;
@@ -262,6 +270,14 @@ body {
   animation-duration: 0s;
   animation-delay: calc((var(--start) + var(--out)) * 1s);
   animation-fill-mode: forwards;
+}
+
+.film [data-motion="cover"] {
+  animation-name: film-hide, film-vanish;
+  animation-duration: calc((var(--start) + var(--at, 0)) * 1s), calc(var(--for, 0.35) * 1s);
+  animation-timing-function: linear, var(--ease-out);
+  animation-delay: 0s, calc((var(--start) + var(--at, 0)) * 1s);
+  animation-fill-mode: none, forwards;
 }
 
 .film [data-motion="zoom"] {
