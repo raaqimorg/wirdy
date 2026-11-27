@@ -130,7 +130,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-paper: #060f13;
     --color-panel: hsl(200 32% 15%);
     --color-ink: hsl(55 62% 89%);
@@ -141,6 +141,24 @@
     --tone-lift: 3%;
     --tone-ink: 45%;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-paper: #060f13;
+  --color-panel: hsl(200 32% 15%);
+  --color-ink: hsl(55 62% 89%);
+  --color-ink-muted: hsl(60 10% 72%);
+  --color-ink-faint: hsl(200 14% 57%);
+  --color-line: hsl(60 10% 82% / 0.3);
+  --tone-shade: 10%;
+  --tone-lift: 3%;
+  --tone-ink: 45%;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 .tone {

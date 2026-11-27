@@ -1,12 +1,15 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
 import { SITE } from '../lib/site';
 ---
 
 <footer class="site-footer">
   <p class="site-footer__line">صدقة جارية عن شروق</p>
   <p class="site-footer__tools">
+    <ThemeToggle />
+    <span aria-hidden="true">·</span>
     <a class="site-footer__link" href={SITE.repo} rel="noopener" data-link="text">
-      المصدر على GitHub
+      قتهب
     </a>
   </p>
 </footer>

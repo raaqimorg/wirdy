@@ -1,8 +1,8 @@
 .section-bands__band {
-  margin-top: var(--space-10);
+  margin-block-start: var(--space-10);
 }
 
 .section-bands__title {
-  margin-bottom: var(--space-4);
+  margin-block-end: var(--space-4);
   font-size: var(--text-title-1);
 }

@@ -242,16 +242,21 @@ describe('built site', () => {
     );
   });
 
-  it('follows the dark mode of the device, and hides the buttons without script', () => {
+  it('applies a saved theme before the first paint, and hides the buttons without script', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
-    expect(head).not.toContain("'theme'");
-    expect(html).not.toContain('data-theme');
+    expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\('theme'\)[\s\S]*?<\/script>/u);
     expect(head).toMatch(
-      /<noscript><style>\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
+      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
     );
   });
 
-  it('puts the GitHub link in the footer of every page, as quiet text that names what it opens', () => {
+  it('forgets a saved theme once it matches the device again, and says whether dark is on', () => {
+    const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
+    expect(head).toMatch(/<script>[\s\S]*?localStorage\.removeItem\('theme'\)[\s\S]*?<\/script>/u);
+    expect(head).toMatch(/<script>[\s\S]*?setAttribute\('aria-pressed'[\s\S]*?<\/script>/u);
+  });
+
+  it('puts the theme button and the GitHub link in the footer of every page, as quiet text', () => {
     const every = [
       html,
       notFound,
@@ -263,8 +268,9 @@ describe('built site', () => {
       const footer = page.match(/<footer class="site-footer">[\s\S]*?<\/footer>/u)![0];
       const tools = footer.match(/<p class="site-footer__tools">([\s\S]*?)<\/p>/u)![1]!;
       expect(tools.replaceAll(/\s+/gu, ' ').trim()).toBe(
-        '<a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener" data-link="text">المصدر على GitHub</a>'
+        '<button type="button" aria-pressed="false" data-theme-toggle="true" class="button button--text theme-toggle"> المظهر </button><span aria-hidden="true">·</span><a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener" data-link="text">قتهب</a>'
       );
+      expect(page.split('data-theme-toggle=').length - 1).toBe(1);
       expect(page.split('href="https://github.com/raaqimorg/wirdy"').length - 1).toBe(1);
       expect(page).not.toContain(
         '<svg class="icon icon--line" viewBox="0 0 24 24" stroke-width="2"'

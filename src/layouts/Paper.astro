@@ -182,6 +182,47 @@ const structuredData = {
             root.dataset.searchPending = '';
         });
 
+        const metas = document.querySelectorAll('meta[name="theme-color"]');
+        const paper = {};
+        for (let i = 0; i < metas.length; i += 1)
+          paper[metas[i].media ? 'dark' : 'light'] = metas[i].content;
+        const device = matchMedia('(prefers-color-scheme: dark)');
+        function deviceTheme() {
+          return device.matches ? 'dark' : 'light';
+        }
+        function current() {
+          return root.dataset.theme || deviceTheme();
+        }
+        function apply(theme) {
+          if (theme) root.dataset.theme = theme;
+          else delete root.dataset.theme;
+          for (let j = 0; j < metas.length; j += 1) {
+            metas[j].content = paper[theme || (metas[j].media ? 'dark' : 'light')];
+          }
+        }
+        function announce() {
+          const buttons = document.querySelectorAll('[data-theme-toggle]');
+          for (let k = 0; k < buttons.length; k += 1)
+            buttons[k].setAttribute('aria-pressed', String(current() === 'dark'));
+        }
+        try {
+          const saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') apply(saved);
+        } catch (error) {}
+        document.addEventListener('DOMContentLoaded', announce);
+        device.addEventListener('change', announce);
+        document.addEventListener('click', function (event) {
+          if (!event.target.closest('[data-theme-toggle]')) return;
+          const next = current() === 'dark' ? 'light' : 'dark';
+          const follow = next === deviceTheme();
+          apply(follow ? null : next);
+          try {
+            if (follow) localStorage.removeItem('theme');
+            else localStorage.setItem('theme', next);
+          } catch (error) {}
+          announce();
+        });
+
         const resetting = new WeakMap();
         function answer(button, words, state) {
           say(button, words);
@@ -275,6 +316,7 @@ const structuredData = {
     )}
     <noscript>
       <style>
+        [data-theme-toggle],
         [data-wird-switch],
         [data-copy],
         [data-search-open] {
