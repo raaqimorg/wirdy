@@ -182,59 +182,25 @@ const structuredData = {
             root.dataset.searchPending = '';
         });
 
-        const metas = document.querySelectorAll('meta[name="theme-color"]');
-        const paper = {};
-        for (let i = 0; i < metas.length; i += 1)
-          paper[metas[i].media ? 'dark' : 'light'] = metas[i].content;
-        const device = matchMedia('(prefers-color-scheme: dark)');
-        function deviceTheme() {
-          return device.matches ? 'dark' : 'light';
-        }
-        function current() {
-          return root.dataset.theme || deviceTheme();
-        }
-        function apply(theme) {
-          if (theme) root.dataset.theme = theme;
-          else delete root.dataset.theme;
-          for (let j = 0; j < metas.length; j += 1) {
-            metas[j].content = paper[theme || (metas[j].media ? 'dark' : 'light')];
-          }
-        }
-        function announce() {
-          const buttons = document.querySelectorAll('[data-theme-toggle]');
-          for (let k = 0; k < buttons.length; k += 1)
-            buttons[k].setAttribute('aria-pressed', String(current() === 'dark'));
-        }
-        try {
-          const saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') apply(saved);
-        } catch (error) {}
-        document.addEventListener('DOMContentLoaded', announce);
-        device.addEventListener('change', announce);
-        document.addEventListener('click', function (event) {
-          if (!event.target.closest('[data-theme-toggle]')) return;
-          const next = current() === 'dark' ? 'light' : 'dark';
-          const follow = next === deviceTheme();
-          apply(follow ? null : next);
-          try {
-            if (follow) localStorage.removeItem('theme');
-            else localStorage.setItem('theme', next);
-          } catch (error) {}
-          announce();
-        });
-
         const resetting = new WeakMap();
-        function copied(button, words) {
+        function answer(button, words, state) {
           say(button, words);
           const { dataset } = button;
-          dataset.copied = 'yes';
+          const label = button.querySelector('[data-label]');
+          if (label && dataset.rest === undefined) dataset.rest = label.textContent;
+          if (label) label.textContent = words;
+          dataset.copied = state;
           clearTimeout(resetting.get(button));
           resetting.set(
             button,
             setTimeout(function () {
               dataset.copied = 'no';
-            }, 1200)
+              if (label) label.textContent = dataset.rest;
+            }, 2500)
           );
+        }
+        function copied(button, words) {
+          answer(button, words, 'yes');
         }
         function say(from, words) {
           const said = from.parentElement.querySelector('[data-status]');
@@ -262,7 +228,7 @@ const structuredData = {
                 return copied(copy, 'نُسخ الذكر');
               },
               function () {
-                say(copy, 'تعذّر النسخ');
+                answer(copy, 'تعذّر النسخ', 'failed');
               }
             );
           }
@@ -309,7 +275,6 @@ const structuredData = {
     )}
     <noscript>
       <style>
-        [data-theme-toggle],
         [data-wird-switch],
         [data-copy],
         [data-search-open] {

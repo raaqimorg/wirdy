@@ -1,15 +1,20 @@
 ---
 interface Props {
-  variant?: 'plain' | 'primary' | undefined;
+  variant?: 'plain' | 'primary' | 'text' | 'icon' | undefined;
   href?: string | undefined;
+  class?: string | undefined;
   [attribute: string]: unknown;
 }
 
-const { variant = 'plain', href, ...rest } = Astro.props;
+const { variant = 'plain', href, class: extra, ...rest } = Astro.props;
 const Tag = href ? 'a' : 'button';
-const classes = variant === 'primary' ? 'button button--primary' : 'button';
 ---
 
-<Tag class={classes} href={href} type={href ? undefined : 'button'} {...rest}>
+<Tag
+  class:list={['button', variant !== 'plain' && `button--${variant}`, extra]}
+  href={href}
+  type={href ? undefined : 'button'}
+  {...rest}
+>
   <slot />
 </Tag>

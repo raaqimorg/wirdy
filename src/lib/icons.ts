@@ -1,4 +1,5 @@
 export type IconName =
+  | 'alert'
   | 'back'
   | 'check'
   | 'chevron'
@@ -12,28 +13,23 @@ export type IconName =
   | 'share';
 
 type Icon = {
-  readonly size: number;
-  readonly stroke?: number;
   readonly paths: ReadonlyArray<string>;
 };
 
+export const ICON_GRID = 24;
+
 export const ICONS: Readonly<Record<IconName, Icon>> = {
-  back: { size: 12, stroke: 1.6, paths: ['M4.5 2.5L8 6l-3.5 3.5'] },
-  chevron: { size: 12, stroke: 1.6, paths: ['M2.5 4.5L6 8l3.5-3.5'] },
-  check: { size: 12, stroke: 1.6, paths: ['M2 6.5l2.5 2.5L10 3'] },
+  alert: { paths: ['M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18z', 'M12 7.5v5', 'M12 16.25v.01'] },
+  back: { paths: ['M9 5L16 12l-7 7'] },
+  chevron: { paths: ['M5 9L12 16l7-7'] },
+  check: { paths: ['M4 13l5 5L20 6'] },
   erase: {
-    size: 24,
-    stroke: 2.2,
     paths: ['M14 4l6 6-9 9-6-6z', 'M8.5 9.5l6 6', 'M13 20h7'],
   },
   search: {
-    size: 24,
-    stroke: 2.2,
     paths: ['M18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0z', 'M20 20l-4-4'],
   },
   sections: {
-    size: 24,
-    stroke: 2.2,
     paths: [
       'M5.5 4h3A1.5 1.5 0 0 1 10 5.5v3A1.5 1.5 0 0 1 8.5 10h-3A1.5 1.5 0 0 1 4 8.5v-3A1.5 1.5 0 0 1 5.5 4z',
       'M15.5 4h3A1.5 1.5 0 0 1 20 5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 14 8.5v-3A1.5 1.5 0 0 1 15.5 4z',
@@ -41,9 +37,9 @@ export const ICONS: Readonly<Record<IconName, Icon>> = {
       'M15.5 14h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5v-3a1.5 1.5 0 0 1 1.5-1.5z',
     ],
   },
-  out: { size: 12, stroke: 1.6, paths: ['M9.5 9.5l-7-7M2.5 8V2.5H8'] },
-  copy: { size: 12, stroke: 1.6, paths: ['M4.5 4.5h6v6h-6z', 'M7.5 2V1.5h-6v6H2'] },
-  open: { size: 12, stroke: 1.6, paths: ['M7.5 2.5L4 6l3.5 3.5'] },
-  share: { size: 12, stroke: 1.6, paths: ['M6 7.5v-6M3.5 3.5L6 1l2.5 2.5M2 6.5V11h8V6.5'] },
-  save: { size: 12, stroke: 1.6, paths: ['M6 1v6M3.5 5L6 7.5 8.5 5M2 8v3h8V8'] },
+  out: { paths: ['M19 19l-14-14M5 16V5H16'] },
+  copy: { paths: ['M9 9h12v12h-12z', 'M15 4V3h-12v12H4'] },
+  open: { paths: ['M15 5L8 12l7 7'] },
+  share: { paths: ['M12 15v-12M7 7L12 2l5 5M4 13V22h16V13'] },
+  save: { paths: ['M12 2v12M7 10L12 15 17 10M4 16v6h16V16'] },
 };

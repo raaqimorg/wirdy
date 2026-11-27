@@ -113,7 +113,7 @@ describe('Dhikr', () => {
     expect(html).toContain('<div class="surah surah--fold">');
     expect(html.match(/<details class="surah__rest">/gu)).toHaveLength(1);
     expect(html).toContain(
-      `<summary class="surah__more"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">طيّ</span><svg class="icon icon--line surah__chevron"`
+      `<summary class="surah__more"><span class="surah__closed">أكمل القراءة · ${ayatLabel(3)}</span><span class="surah__opened">إخفاء</span><svg class="icon icon--line surah__chevron"`
     );
     expect(html.split('<details')[0]!.match(new RegExp(ayah, 'gu'))).toHaveLength(2);
     expect(
@@ -152,22 +152,17 @@ describe('Dhikr', () => {
     expect(html).toContain('<p class="entry__lead">في المساء</p>');
   });
 
-  it('leads with the count as a ring of beads, before its unit', async () => {
+  it('leads with the count in words, with nothing drawn that looks like a button', async () => {
     const html = await render({ ...base, count: 3 }, 'سبحان الله');
-    const ring = html.match(
-      /<svg class="bead-ring"[^>]*aria-hidden="true">([\s\S]*?)<\/svg>\s*<p class="entry__lead">\s*<span class="visually-hidden">\s*٣\s*<\/span>\s*مرات\s*<\/p>/u
-    );
-    expect(ring).not.toBeNull();
-    expect((ring?.[1] ?? '').match(/<circle cx=/gu)).toHaveLength(3);
-    expect(ring?.[1] ?? '').toContain('>٣</text>');
+    expect(html).toMatch(/<p class="entry__lead">\s*<span>\s*٣\s*<\/span>\s*مرات\s*<\/p>/u);
+    expect(html).not.toContain('bead-ring');
+    expect(html).not.toContain('<svg class="bead');
   });
 
-  it('writes a count above ten inside a full ring', async () => {
+  it('writes a count above ten in its lead line', async () => {
     const html = await render({ ...base, count: 100 }, 'سبحان الله');
-    const ring =
-      html.match(/<svg class="bead-ring bead-ring--full"[^>]*>([\s\S]*?)<\/svg>/u)?.[1] ?? '';
-    expect(ring).toContain('>١٠٠</text>');
-    expect(ring.match(/<circle cx=/gu)).toBeNull();
+    expect(leadOf(html)).toBe('١٠٠ مرة');
+    expect(html).not.toContain('bead-ring');
   });
 
   it('links the تخريج with its source and its ruling', async () => {
@@ -199,7 +194,6 @@ describe('Dhikr', () => {
       'بِسْمِ اللَّهِ'
     );
     const order = [
-      '<svg class="bead-ring"',
       '<p class="entry__lead">',
       '<p class="entry__how">متوضئًا</p>',
       '<div class="entry__text">',
@@ -213,15 +207,12 @@ describe('Dhikr', () => {
     expect(order).toEqual(order.toSorted((a, b) => a - b));
   });
 
-  it('shows each phrase with its own count, read aloud in full', async () => {
+  it('shows each phrase with its own count in words, in one column', async () => {
     const html = await render({ ...base, counts: [33, 10] }, 'سبحان الله، والله أكبر');
     expect(html.match(/class="phrase"/gu)).toHaveLength(2);
-    expect(html).toMatch(
-      /<span aria-hidden="true">٣٣<\/span>\s*<span class="visually-hidden">٣٣ مرة<\/span>/u
-    );
-    expect(html).toMatch(
-      /<span aria-hidden="true">١٠<\/span>\s*<span class="visually-hidden">١٠ مرات<\/span>/u
-    );
+    expect(html).toMatch(/<li class="entry entry--phrases"/u);
+    expect(html).toContain('<span class="badge badge--count">٣٣ مرة</span>');
+    expect(html).toContain('<span class="badge badge--count">١٠ مرات</span>');
   });
 
   it('refuses counts that do not match its phrases', async () => {
@@ -247,11 +238,12 @@ describe('Dhikr', () => {
     expect(html).not.toContain('data-copy');
   });
 
-  it('folds its takhrij and buttons under one line in a list, and keeps them open on its own page', async () => {
+  it('folds its takhrij under one line in a list, keeps its buttons in view, and keeps all open on its own page', async () => {
     const listed = await render(base, 'سبحان الله', { heading: 'h3' });
     expect(listed).toMatch(
-      /<details class="entry__more">\s*<summary class="entry__toggle">[\s\S]*?التخريج والمزيد[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?data-copy=/u
+      /<details class="entry__more">\s*<summary class="entry__toggle">[\s\S]*?التخريج[\s\S]*?<\/summary>\s*<div class="entry__side">[\s\S]*?class="takhrij"[\s\S]*?<\/details>\s*<div class="entry__side">\s*<div class="entry__acts">[\s\S]*?data-copy=/u
     );
+    expect(listed).not.toContain('التخريج والمزيد');
     expect(listed).not.toMatch(/<details class="entry__more" open/u);
     const alone = await render(base, 'سبحان الله', { single: true });
     expect(alone).not.toContain('entry__more');
@@ -290,10 +282,10 @@ describe('Dhikr', () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toContain('<li class="entry" id="sayyid-al-istighfar">');
     expect(html).toMatch(
-      /<button class="entry__act" type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)">[\s\S]*?<span class="entry__act-label">نسخ<\/span>/u
+      /<button type="button" aria-label="نسخ: سيد الاستغفار" data-copy="سبحان الله\n\nصحيح البخاري \(١\)" class="button button--text entry__act">[\s\S]*?<span data-label>نسخ<\/span>/u
     );
     expect(html).toMatch(
-      /<a class="entry__act" href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار">\s*<span class="entry__act-label">صفحة الذكر<\/span>/u
+      /<a href="\/sabah-masaa\/sayyid-al-istighfar\/" aria-label="صفحة الذكر: سيد الاستغفار" class="button button--text entry__act">\s*<span>صفحة الذكر<\/span>/u
     );
     expect(html).not.toContain('data-share-title');
   });
@@ -305,13 +297,13 @@ describe('Dhikr', () => {
     expect(await render(base, 'سبحان الله')).not.toContain('data-copy-masaa');
   });
 
-  it('says that it was copied to a screen reader only, and turns its icon into a check', async () => {
+  it('says whether it was copied, on its button and to a screen reader, with an icon for each outcome', async () => {
     const html = await render(base, 'سبحان الله');
     expect(html).toMatch(
-      /<span class="visually-hidden" role="status" data-status><\/span>\s*<button class="entry__act"/u
+      /<span class="visually-hidden" role="status" data-status><\/span>\s*<button type="button" aria-label="نسخ: سيد الاستغفار"/u
     );
     expect(html).toMatch(
-      /class="icon icon--line icon--idle"[\s\S]*?class="icon icon--line icon--done"/u
+      /class="icon icon--line icon--idle"[\s\S]*?class="icon icon--line icon--done"[\s\S]*?class="icon icon--line icon--fail"[\s\S]*?<span data-label>نسخ<\/span>/u
     );
   });
 });

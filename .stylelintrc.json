@@ -15,15 +15,36 @@
       }
     ],
     "declaration-no-important": true,
+    "property-disallowed-list": [
+      "margin-left",
+      "margin-right",
+      "padding-left",
+      "padding-right",
+      "border-left",
+      "border-right",
+      "left",
+      "right",
+      "margin-top",
+      "margin-bottom",
+      "padding-top",
+      "padding-bottom",
+      "border-top",
+      "border-bottom",
+      "top",
+      "bottom"
+    ],
     "declaration-property-unit-disallowed-list": {
       "/^(margin|padding|gap|row-gap|column-gap|inset|top|bottom|left|right|scroll-margin|scroll-padding)/": [
         "rem",
         "px"
       ],
-      "/(width|height|size|radius|basis|offset|thickness)$/": ["rem", "px"],
-      "/^(border|outline|font|flex|grid|text)/": ["rem", "px"],
       "/^(transition|animation)(-duration|-delay)?$/": ["ms", "s"],
-      "/^--/": ["rem", "px", "ms", "s"]
+      "/^--/": ["rem", "px", "ms", "s"],
+      "/(radius|offset|thickness)$/": ["rem", "px"],
+      "/(width|height|size|basis)$/": ["px"],
+      "/^(border|outline|font|flex|text)/": ["rem", "px"],
+      "/^grid-template/": ["px"],
+      "/^grid-(?!template)/": ["rem", "px"]
     },
     "declaration-property-value-disallowed-list": {
       "/^(line-height|font-weight|z-index)$/": ["/^[0-9]/", "/^(bold|normal|bolder|lighter)$/"],
@@ -35,7 +56,7 @@
     "hue-degree-notation": null,
     "import-notation": "string",
     "media-feature-name-value-allowed-list": {
-      "min-width": ["64rem"],
+      "min-width": ["40rem", "64rem"],
       "max-width": ["40rem", "63.99rem"]
     },
     "media-feature-range-notation": "prefix",

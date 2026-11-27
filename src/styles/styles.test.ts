@@ -31,10 +31,7 @@ const tokens = read('tokens.css');
 
 const declarations = (block: string) =>
   [...block.matchAll(/(--[\w-]+): ([^;]+);/gu)].map(([, name, value]) => `${name}: ${value}`);
-const dark = {
-  device: tokens.match(/:root:not\(\[data-theme="light"\]\) \{([^}]*)\}/u)![1]!,
-  chosen: tokens.match(/:root\[data-theme="dark"\] \{([^}]*)\}/u)![1]!,
-};
+const dark = tokens.match(/@media \(prefers-color-scheme: dark\) \{\s*:root \{([^}]*)\}/u)![1]!;
 const light = tokens.match(/^:root \{([\s\S]*?)^\}/mu)![1]!;
 
 describe('the tokens', () => {
@@ -52,13 +49,9 @@ describe('the tokens', () => {
     ).toEqual([]);
   });
 
-  it('are the same in the dark mode of the device and in a chosen dark mode', () => {
-    expect(declarations(dark.device)).toEqual(declarations(dark.chosen));
-  });
-
   it('change in the dark only where the light has a value', () => {
     const names = declarations(light).map((line) => line.split(':')[0]);
-    for (const line of declarations(dark.chosen)) expect(names).toContain(line.split(':')[0]);
+    for (const line of declarations(dark)) expect(names).toContain(line.split(':')[0]);
   });
 
   it('match the palette that the scripts and the metadata use', () => {
@@ -67,12 +60,12 @@ describe('the tokens', () => {
     expect(light).toContain(`--color-eggshell: ${PALETTE.eggshell};`);
     expect(light).toContain(`--color-ink: ${PALETTE.ink};`);
     expect(light).toContain(`--color-ink-muted: ${PALETTE.inkMuted};`);
-    expect(dark.chosen).toContain(`--color-paper: ${PALETTE.paperDark};`);
+    expect(dark).toContain(`--color-paper: ${PALETTE.paperDark};`);
   });
 
   it('darken the tones at night by the same share as the tone rule', () => {
     expect(light).toContain('--tone-shade: 0%;');
-    expect(dark.chosen).toContain(`--tone-shade: ${Math.round((1 - NIGHT) * 100)}%;`);
+    expect(dark).toContain(`--tone-shade: ${Math.round((1 - NIGHT) * 100)}%;`);
   });
 });
 

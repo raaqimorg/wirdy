@@ -9,7 +9,7 @@ interface Props {
 const { href, text } = Astro.props;
 ---
 
-<a class="takhrij" href={href} rel="noopener">
+<a class="takhrij" href={href} rel="noopener" data-link="text">
   <span class="takhrij__text">{text}</span>
   <Icon name="out" />
 </a>

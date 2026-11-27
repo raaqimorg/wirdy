@@ -5,7 +5,7 @@
 @supports (animation-timeline: scroll()) {
   .reading-progress {
     position: fixed;
-    top: calc(env(safe-area-inset-top) + var(--size-bar));
+    inset-block-start: calc(env(safe-area-inset-top) + var(--size-bar));
     inset-inline: 0;
     z-index: var(--layer-bar);
     display: block;

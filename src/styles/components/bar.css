@@ -1,8 +1,8 @@
 .bar {
   position: sticky;
-  top: 0;
+  inset-block-start: 0;
   z-index: var(--layer-bar);
-  padding-top: env(safe-area-inset-top);
+  padding-block-start: env(safe-area-inset-top);
   background: var(--color-paper);
 }
 
@@ -18,6 +18,8 @@
 }
 
 .bar__brand {
+  --ring-color: currentColor;
+
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -29,36 +31,13 @@
 }
 
 .bar__name {
-  translate: 0 calc(var(--space-lift-brand) * -1);
+  translate: 0 -0.13em;
 }
 
 .bar__search {
+  --ring-color: currentColor;
+  --ring-offset: var(--ring-inset);
   --icon-size: var(--size-icon-bar);
-  --icon-drop: 0;
 
-  display: grid;
-  place-items: center;
-  width: var(--size-touch);
-  height: var(--size-touch);
   margin-inline-end: calc((var(--size-touch) - var(--size-icon-bar)) / -2);
-  padding: 0;
-  color: inherit;
-  background: none;
-  border: 0;
-  border-radius: var(--radius-focus);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.bar__search:active {
-  opacity: var(--opacity-pressed);
-}
-
-.bar__brand:focus-visible,
-.bar__search:focus-visible {
-  outline-color: currentColor;
-}
-
-.bar__search:focus-visible {
-  outline-offset: var(--ring-inset);
 }

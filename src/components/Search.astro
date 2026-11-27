@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 import Emblem from './Emblem.astro';
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
@@ -31,9 +32,9 @@ const blank: Row = {
     <section class="search__recent" hidden data-search-recent>
       <div class="search__recent-head">
         <h2 class="search__subtitle">آخر ما فتحت</h2>
-        <button class="search__forget" type="button" data-search-forget>
+        <Button variant="text" class="search__forget" data-search-forget>
           مسح السجل
-        </button>
+        </Button>
       </div>
       <ul class="search__list" data-search-recent-list></ul>
     </section>
@@ -44,7 +45,7 @@ const blank: Row = {
           <li>
             <button class="search__try" type="button" data-search-try>
               <Icon name="search" />
-              <span class="search__try-word">{word}</span>
+              <span>{word}</span>
             </button>
           </li>
         ))}

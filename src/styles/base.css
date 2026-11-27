@@ -6,6 +6,7 @@
 
 html {
   scrollbar-gutter: stable;
+  scroll-padding-top: calc(env(safe-area-inset-top) + var(--size-bar) + var(--space-3));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -16,7 +17,7 @@ body {
   color: var(--color-ink);
   font-family: var(--font-ui);
   font-size: var(--text-body);
-  line-height: var(--leading-body);
+  line-height: var(--leading-snug);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -49,21 +50,43 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-:is(a, button):focus-visible {
-  outline: var(--border-ring) solid var(--color-ink);
-  outline-offset: var(--ring-gap);
+:is(a, button, summary):focus-visible {
+  outline: var(--border-ring) solid var(--ring-color, var(--color-ink));
+  outline-offset: var(--ring-offset, var(--ring-gap));
 }
 
-:where(a, button):focus-visible {
-  border-radius: var(--radius-focus);
+:where(a, button, summary):focus-visible {
+  border-radius: var(--radius-small);
 }
 
-:where(a:active) {
-  opacity: var(--opacity-pressed);
+@media (hover: hover) {
+  :where(a, button, summary):hover {
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+:where(a, button, summary):active {
+  box-shadow: var(--shadow-pressed);
 }
 
 @keyframes fade {
   from {
     opacity: 0;
   }
+}
+
+@media (hover: hover) {
+  [data-link="text"]:hover {
+    box-shadow: none;
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: var(--underline-gap-wide);
+  }
+}
+
+[data-link="text"]:active {
+  box-shadow: none;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-gap-wide);
 }

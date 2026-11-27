@@ -20,12 +20,14 @@ const { href, title, image, file, copy } = Astro.props;
   <Button href={href} variant="primary" data-share-title={title}>
     <Icon name="share" class="icon--idle" />
     <Icon name="check" class="icon--done" />
-    مشاركة
+    <Icon name="alert" class="icon--fail" />
+    <span data-label>مشاركة</span>
   </Button>
   <Button data-copy={copy.sabah} data-copy-masaa={Option.getOrUndefined(copy.masaa)}>
     <Icon name="copy" class="icon--idle" />
     <Icon name="check" class="icon--done" />
-    نسخ
+    <Icon name="alert" class="icon--fail" />
+    <span data-label>نسخ</span>
   </Button>
   <Button href={image} download={file}>
     <Icon name="save" />

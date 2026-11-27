@@ -1,5 +1,5 @@
 ---
-import BeadRing from './BeadRing.astro';
+import Button from './Button.astro';
 import Entry from './Entry.astro';
 import Icon from './Icon.astro';
 import Phrase from './Phrase.astro';
@@ -56,14 +56,10 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
   single={single}
   nested={nested}
   kind={data.quran ? 'quran' : undefined}
+  phrases={phrases.length > 0}
   time={single || data.mode === 'both' ? undefined : data.mode}
 >
-  {data.count > 1 && <BeadRing slot="count" count={data.count} />}
-  {data.count > 2 && (
-    <span slot="number" class="visually-hidden">
-      {`${toArabicDigits(data.count)}\u00a0`}
-    </span>
-  )}
+  {data.count > 2 && <span slot="number">{`${toArabicDigits(data.count)}\u00a0`}</span>}
   <Fragment>
     {folds.map(({ shown, rest }) => (
       <Surah ayat={shown} rest={rest} />
@@ -76,21 +72,22 @@ const opening = isOpening(data.title, Effect.runSync(formOf(text, 'sabah')));
   {!single && (
     <div slot="actions" class="entry__acts">
       <span class="visually-hidden" role="status" data-status />
-      <button
+      <Button
+        variant="text"
         class="entry__act"
-        type="button"
         aria-label={`نسخ: ${title}`}
         data-copy={copy.sabah}
         data-copy-masaa={Option.getOrUndefined(copy.masaa)}
       >
         <Icon name="copy" class="icon--idle" />
         <Icon name="check" class="icon--done" />
-        <span class="entry__act-label">نسخ</span>
-      </button>
-      <a class="entry__act" href={path} aria-label={`صفحة الذكر: ${title}`}>
-        <span class="entry__act-label">صفحة الذكر</span>
+        <Icon name="alert" class="icon--fail" />
+        <span data-label>نسخ</span>
+      </Button>
+      <Button variant="text" class="entry__act" href={path} aria-label={`صفحة الذكر: ${title}`}>
+        <span>صفحة الذكر</span>
         <Icon name="open" />
-      </a>
+      </Button>
     </div>
   )}
 </Entry>

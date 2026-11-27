@@ -1,4 +1,5 @@
 ---
+import Button from './Button.astro';
 import Icon from './Icon.astro';
 import Mark from './Mark.astro';
 import SectionMenu from './SectionMenu.astro';
@@ -20,8 +21,8 @@ const label = 'ابحث في الأذكار';
       <span class="bar__name">{SITE.name}</span>
     </a>
     {menu && <SectionMenu />}
-    <button class="bar__search" type="button" aria-label={label} data-search-open>
+    <Button variant="icon" class="bar__search" aria-label={label} data-search-open>
       <Icon name="search" />
-    </button>
+    </Button>
   </div>
 </nav>

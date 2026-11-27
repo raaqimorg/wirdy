@@ -175,7 +175,7 @@ describe('built site', () => {
     expect(css).toMatch(/\.card-grid--compact\{[^}]*display:flex/u);
     expect(css).toMatch(/\.card-grid--compact>li\{flex:/u);
     expect(css).toMatch(
-      /\.occasion-card--compact \.occasion-card__stage\{[^}]*height:calc\(\(100cqi - 3 \* var\(--space-5\)\) \/ 6\)/u
+      /\.occasion-card--compact \.occasion-card__stage\{[^}]*height:calc\(\(100cqi - 3 \* var\(--space-6\)\) \/ 6\)/u
     );
   });
 
@@ -184,7 +184,7 @@ describe('built site', () => {
     for (const path of [...sections, 'nawm/ayat-al-kursi']) {
       const bar = barOf(own(path));
       expect(bar).toMatch(
-        /<button class="section-menu__button" type="button" popovertarget="sections" aria-label="الأقسام">\s*<svg class="icon/u
+        /<button type="button" popovertarget="sections" aria-label="الأقسام" class="button button--icon section-menu__button">\s*<svg class="icon/u
       );
       const panel = bar.match(
         /<div class="section-menu__panel" id="sections" popover>[\s\S]*?<\/div>/u
@@ -242,21 +242,16 @@ describe('built site', () => {
     );
   });
 
-  it('applies a saved theme before the first paint, and hides the buttons without script', () => {
+  it('follows the dark mode of the device, and hides the buttons without script', () => {
     const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
-    expect(head).toMatch(/<script>[\s\S]*?localStorage\.getItem\('theme'\)[\s\S]*?<\/script>/u);
+    expect(head).not.toContain("'theme'");
+    expect(html).not.toContain('data-theme');
     expect(head).toMatch(
-      /<noscript><style>\s*\[data-theme-toggle\],\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
+      /<noscript><style>\s*\[data-wird-switch\],\s*\[data-copy\],\s*\[data-search-open\]\s*\{\s*display: none !important;\s*\}\s*<\/style><\/noscript>/u
     );
   });
 
-  it('forgets a saved theme once it matches the device again, and says whether dark is on', () => {
-    const head = html.match(/<head>([\s\S]*?)<\/head>/u)![1]!;
-    expect(head).toMatch(/<script>[\s\S]*?localStorage\.removeItem\('theme'\)[\s\S]*?<\/script>/u);
-    expect(head).toMatch(/<script>[\s\S]*?setAttribute\('aria-pressed'[\s\S]*?<\/script>/u);
-  });
-
-  it('puts the theme button and the GitHub link in the footer of every page, as quiet text', () => {
+  it('puts the GitHub link in the footer of every page, as quiet text that names what it opens', () => {
     const every = [
       html,
       notFound,
@@ -268,9 +263,8 @@ describe('built site', () => {
       const footer = page.match(/<footer class="site-footer">[\s\S]*?<\/footer>/u)![0];
       const tools = footer.match(/<p class="site-footer__tools">([\s\S]*?)<\/p>/u)![1]!;
       expect(tools.replaceAll(/\s+/gu, ' ').trim()).toBe(
-        '<button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>المظهر</button><span aria-hidden="true">·</span><a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener">قتهب</a>'
+        '<a class="site-footer__link" href="https://github.com/raaqimorg/wirdy" rel="noopener" data-link="text">المصدر على GitHub</a>'
       );
-      expect(page.split('data-theme-toggle>').length - 1).toBe(1);
       expect(page.split('href="https://github.com/raaqimorg/wirdy"').length - 1).toBe(1);
       expect(page).not.toContain(
         '<svg class="icon icon--line" viewBox="0 0 24 24" stroke-width="2"'
@@ -281,7 +275,7 @@ describe('built site', () => {
 
   it('names the section over the title of a dhikr, as the way back to its place', () => {
     expect(own('nawm/ayat-al-kursi')).toMatch(
-      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi">\s*<svg[\s\S]*?<span class="banner__up-label">عند النوم<\/span>/u
+      /<a class="banner__up" href="\/nawm\/#ayat-al-kursi">\s*<svg[\s\S]*?<span>عند النوم<\/span>/u
     );
   });
 
@@ -289,7 +283,7 @@ describe('built site', () => {
     for (const file of contentFiles) {
       const path = file.replace(/\.md$/u, '').replace(/\/\d+-/u, '/');
       const top = own(path).match(/<header class="banner[\s\S]*?<\/header>/u)![0];
-      const up = top.match(/<span class="banner__up-label">([^<]+)</u)![1];
+      const up = top.match(/<a class="banner__up"[^>]*>\s*<svg[\s\S]*?<span>([^<]+)</u)![1];
       const lede = top.match(/<p class="banner__lede">([^<]+)</u)![1];
       expect(`${path}: ${lede}`).not.toBe(`${path}: ${up}`);
     }
@@ -354,9 +348,7 @@ describe('built site', () => {
     const page = pages['salah']!;
     expect(page.match(/<li class="choices__item"/gu)).toHaveLength(4);
     expect(page).toContain('تكفي واحدة منها');
-    const counts = page.match(
-      /<span class="badge badge--count">\s*<span aria-hidden="true">[٠-٩]+/gu
-    )!;
+    const counts = page.match(/<span class="badge badge--count">\s*[٠-٩]+/gu)!;
     expect(counts.map((c) => c.match(/[٠-٩]+$/u)![0]).join(' ')).toBe(
       '٣٣ ٣٣ ٣٣ ٣٣ ٣٣ ٣٤ ١٠ ١٠ ١٠ ٢٥ ٢٥ ٢٥ ٢٥'
     );
@@ -740,9 +732,9 @@ describe('built site', () => {
       expect(page.match(/data-share-title=/gu)).toHaveLength(1);
       expect(page.match(/ data-copy=/gu)).toHaveLength(1);
       expect(page.match(/ data-status/gu)).toHaveLength(1);
-      expect(page).toMatch(/<a class="button" href="\/og\/[^"]+" download="wirdy-/u);
+      expect(page).toMatch(/<a href="\/og\/[^"]+" download="wirdy-[^"]+" class="button">/u);
       expect(pages[occasion!]).toMatch(
-        new RegExp(`<a class="entry__act" href="/${slug}/" aria-label="صفحة الذكر: `, 'u')
+        new RegExp(`<a href="/${slug}/" aria-label="صفحة الذكر: `, 'u')
       );
       expect(pages[occasion!]).toContain(`id="${name}"`);
     }
@@ -772,7 +764,7 @@ describe('built site', () => {
           .filter(Boolean)
           .map((other) => `/al-tibb-al-nabawi/${other!}/`)
       );
-      expect(list).toContain(`<a class="entry__act" href="${path}" aria-label="صفحة الحديث: `);
+      expect(list).toContain(`<a href="${path}" aria-label="صفحة الحديث: `);
     }
   });
 
@@ -858,7 +850,9 @@ describe('built site', () => {
 
   it('marks the shared dhikr without script, clear of the bar', () => {
     expect(css).toMatch(/\.entry:target[^{]*\{[^}]*outline:/u);
-    expect(css).toMatch(/\.entry\{[^}]*scroll-margin-top:var\(--space-16\)/u);
+    expect(css).toMatch(
+      /html\{[^}]*scroll-padding-top:calc\(env\(safe-area-inset-top\) \+ var\(--size-bar\)/u
+    );
   });
 
   it('leaves out sitemap dates that would only repeat the build date', () => {
@@ -1074,7 +1068,7 @@ describe('built site', () => {
       own('nawm/ayat-al-kursi'),
     ]) {
       expect(barOf(page)).toMatch(
-        /<button class="bar__search" type="button" aria-label="ابحث في الأذكار" data-search-open>/u
+        /<button type="button" aria-label="ابحث في الأذكار" data-search-open="true" class="button button--icon bar__search">/u
       );
       expect(page).not.toContain('href="/bahth/"');
       expect(page.match(/<dialog class="search-sheet[^"]*"[^>]*>/gu)).toHaveLength(1);

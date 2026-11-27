@@ -3,32 +3,36 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: var(--space-track);
   background: var(--color-track);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-large);
 }
 
 .wird-switch__option {
+  --ring-offset: var(--ring-inset);
+
   display: grid;
+  position: relative;
   place-items: center;
-  min-height: var(--size-touch);
-  padding-bottom: var(--space-lift);
-  border-radius: calc(var(--radius-card) - var(--space-track));
+  min-height: calc(var(--size-control) - var(--space-track) * 2);
+  border-radius: calc(var(--radius-large) - var(--space-track));
   font-size: var(--text-note);
   font-weight: var(--weight-medium);
   text-decoration: none;
 }
 
-.wird-switch__option:focus-visible {
-  outline-offset: var(--ring-inset);
+.wird-switch__option::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--space-track) * -1) 0;
 }
 
 :root:not([data-wird="m"]) .wird-switch__option[data-wird-form="s"],
 :root[data-wird="m"] .wird-switch__option[data-wird-form="m"] {
-  background: var(--color-thumb);
-  box-shadow: var(--shadow-thumb);
+  color: var(--color-eggshell);
+  background: var(--tone-select);
   font-weight: var(--weight-bold);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 40rem) {
   .wird-switch {
     width: var(--size-menu);
   }
