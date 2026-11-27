@@ -83,9 +83,50 @@ describe('match', () => {
     expect(match(said, 'دخول المسجد')!.hits).toEqual([0]);
   });
 
+  it('finds a narrator named in the genitive, and the two last سور by their common name', () => {
+    const said = [
+      rowOf({ title: 'الرقى', words: '', about: 'أبي سعيد الخدري وأبي هريرة', place: '' }),
+      rowOf({ title: 'المعوذات', words: '', place: '' }),
+    ];
+    expect(match(said, 'أبو هريرة')!.hits).toEqual([0]);
+    expect(match(said, 'المعوذتين')!.hits).toEqual([1]);
+  });
+
   it('finds the same rows for a query with or without the word دعاء', () => {
     const arabic = [rowOf({ title: 'النوم', words: 'باسمك', place: '' })];
     expect(match(arabic, 'دعاء النوم')!.hits).toEqual(match(arabic, 'النوم')!.hits);
+  });
+
+  it('finds a dhikr by its virtue, narrator, or source, after its words', () => {
+    const said = [
+      rowOf({
+        title: 'سيد',
+        words: 'اللهم',
+        about: 'من قالها دخل الجنة',
+        place: '',
+        source: 'صحيح البخاري ٦٣٠٦',
+      }),
+      rowOf({
+        title: 'الرقى',
+        words: 'كنا نرقي',
+        about: 'عوف بن مالك',
+        place: '',
+        source: 'صحيح مسلم ٢٢٠٠',
+      }),
+      rowOf({ title: 'البخاري', words: '', place: '' }),
+    ];
+    expect(match(said, 'من قالها')!.hits).toEqual([0]);
+    expect(match(said, 'عوف')!.hits).toEqual([1]);
+    expect(match(said, 'البخاري')!.hits).toEqual([2, 0]);
+  });
+
+  it('matches a word of one or two letters only at the start of a word', () => {
+    const short = [
+      rowOf({ title: 'ليست', words: '', place: '' }),
+      rowOf({ title: 'يسر', words: '', place: '' }),
+    ];
+    expect(match(short, 'يس')!.hits).toEqual([1]);
+    expect(match(short, 'يسر')!.hits).toEqual([1]);
   });
 
   it('folds the query as it folds the rows', () => {
@@ -99,14 +140,29 @@ describe('match', () => {
 describe('nearestOf', () => {
   const rows = [
     rowOf({ title: 'افتح', words: 'اللهم افتح لي', place: 'المسجد' }),
-    rowOf({ title: 'السوق', words: 'من دخل السوق', place: '' }),
+    rowOf({ title: 'السوق', words: 'اللهم من دخل السوق', place: '' }),
+    rowOf({ title: 'الباب', words: 'اللهم افتح الباب في السوق', place: '' }),
+    rowOf({ title: 'الصباح', words: 'اللهم بك أصبحنا', place: '' }),
+    rowOf({ title: 'المساء', words: 'اللهم بك أمسينا', place: '' }),
+    rowOf({ title: 'النوم', words: 'باسمك اللهم أموت', place: '' }),
+    ...['الطعام', 'السفر', 'المطر', 'الريح', 'الهم', 'المرض'].map((title) =>
+      rowOf({ title, words: 'اللهم', place: '' })
+    ),
   ];
 
-  it('falls back to the longest word that finds something', () => {
+  it('shows the rows of the words that find something, when no row has them all', () => {
     expect(Option.getOrNull(nearestOf(rows, 'نسيت المسجد'))).toEqual({
-      word: 'المسجد',
+      words: ['المسجد'],
       match: { words: ['المسجد'], hits: [0] },
     });
+  });
+
+  it('shows only the rows that have the most of the words', () => {
+    expect(Option.getOrNull(nearestOf(rows, 'افتح السوق نسيت'))?.match.hits).toEqual([2]);
+  });
+
+  it('skips a word that is in most rows, so it offers nothing rather than every row', () => {
+    expect(Option.isNone(nearestOf(rows, 'اللهم حسبي'))).toBe(true);
   });
 
   it('has nothing to offer for a single word', () => {
@@ -126,10 +182,14 @@ describe('ranges', () => {
   });
 
   it('merges matches that touch', () => {
-    expect(ranges('abcdef', fold('abcdef'), ['bc', 'cd', 'f'])).toEqual([
-      [1, 4],
-      [5, 6],
+    expect(ranges('abcdefgh ij', fold('abcdefgh ij'), ['bcd', 'cde', 'ij'])).toEqual([
+      [1, 5],
+      [9, 11],
     ]);
+  });
+
+  it('marks a word of one or two letters only at the start of a word', () => {
+    expect(ranges('ليست يسر', fold('ليست يسر'), ['يس'])).toEqual([[5, 7]]);
   });
 });
 

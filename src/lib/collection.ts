@@ -91,12 +91,13 @@ const adhkarRow = (
     const text = bodyOf({ body }).trim();
     const words = data.quran ? shownAyat(data, text) : yield* formOf(text, 'sabah');
     const also = hasVariants(text) ? Option.some(yield* formOf(text, 'masaa')) : Option.none();
-    const about = [data.when, data.how].filter((part) => part !== undefined).join(' ');
+    const about = [data.when, data.how, data.fadl].filter((part) => part !== undefined).join(' ');
     return {
       title: fullTitle(data),
       words,
       ...Option.match(also, { onNone: () => ({}), onSome: (evening) => ({ also: evening }) }),
       ...(about !== '' && { about }),
+      source: data.takhrij.source,
       heading: placeOf(section),
       color: section.color,
       emblem: section.id,
@@ -116,6 +117,8 @@ export const searchRows: Effect.Effect<ReadonlyArray<SearchRow>, MalformedMarker
     const tibb = Array.map(yield* tibbEntries, ({ id, data, body }): SearchRow => ({
       title: data.title,
       words: bodyOf({ body }).trim(),
+      about: data.rawi,
+      source: data.takhrij.source,
       heading: TIBB.heading,
       color: TIBB.color,
       emblem: 'tibb',

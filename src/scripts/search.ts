@@ -79,6 +79,8 @@ export const fillRow = (
     else words.dataset['also'] = row.also;
     if (row.about === undefined) delete words.dataset['about'];
     else words.dataset['about'] = row.about;
+    if (row.source === undefined) delete words.dataset['source'];
+    else words.dataset['source'] = row.source;
     (yield* part(item, 'where', HTMLElement)).textContent =
       row.group === undefined ? row.heading : `${row.heading}، ${row.group}`;
     return item;
@@ -183,6 +185,7 @@ const entryOf = (item: HTMLElement): Effect.Effect<Entry, MissingElement> =>
         ...text,
         also: words.dataset['also'],
         about: words.dataset['about'],
+        source: words.dataset['source'],
         place: textOf(place),
       }),
     };
@@ -279,7 +282,7 @@ export const mountSearch = (root: HTMLElement): Effect.Effect<void, MissingEleme
       note.hidden = Option.isNone(near);
       noteWord.textContent = Option.match(near, {
         onNone: () => '',
-        onSome: ({ word }) => typedOf(query, word),
+        onSome: ({ words: shown }) => shown.map((word) => typedOf(query, word)).join(' '),
       });
       list.hidden = hits.length === 0;
       status.textContent = hits.length > 0 ? resultsLabel(hits.length) : '';
