@@ -135,6 +135,20 @@ describe('Dhikr', () => {
     ).toHaveLength(3);
   });
 
+  it('names each folded سورة by its order, for a reader who hears the buttons', async () => {
+    const ayah = 'ب'.repeat(100);
+    const surah = [ayah, ayah, ayah, ayah, ayah].join('\n');
+    const html = await render({ ...base, quran: true, ayat: 'fold' }, `${surah}\n\n${surah}`);
+    const names = [
+      ...html.matchAll(/<span class="surah__closed">(.*?)<\/span><span class="surah__opened">/gu),
+    ].map(([, label]) => label!.replaceAll(/<[^>]*>/gu, ''));
+    expect(names).toEqual([
+      `أكمل القراءة، السورة الأولى، ${ayatLabel(3)}`,
+      `أكمل القراءة، السورة الثانية، ${ayatLabel(3)}`,
+    ]);
+    expect(html).toContain('<span class="visually-hidden">، السورة الثانية</span>');
+  });
+
   it('closes each آية with ۝ and its number, counting from its first', async () => {
     const html = await render({ ...base, quran: true, from: [7] }, 'أ\nب\nج\nد');
     expect(html.match(/class="surah"/gu)).toHaveLength(1);

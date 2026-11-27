@@ -31,6 +31,10 @@ describe('fold', () => {
   it('reads the Persian kaf and yeh as the Arabic letters', () => {
     expect(fold('کرسی').out).toBe('كرسي');
   });
+
+  it('reads Western digits as Arabic-Indic digits', () => {
+    expect(fold('0123456789').out).toBe('٠١٢٣٤٥٦٧٨٩');
+  });
 });
 
 describe('wordsOf', () => {

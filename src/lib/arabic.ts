@@ -22,15 +22,18 @@ export function hadithLabel(n: number): string {
   return `${toArabicDigits(n)} حديثا`;
 }
 
-const ORDINALS: Readonly<Record<(typeof FORMS)[number], string>> = {
-  1: 'الأولى',
-  2: 'الثانية',
-  3: 'الثالثة',
-  4: 'الرابعة',
-};
+const ORDINALS = ['الأولى', 'الثانية', 'الثالثة', 'الرابعة'] as const;
+
+function ordinalOf(n: number): string {
+  return ORDINALS[n - 1] ?? toArabicDigits(n);
+}
+
+export function surahLabel(n: number): string {
+  return `السورة ${ordinalOf(n)}`;
+}
 
 export function formLabel(n: (typeof FORMS)[number]): string {
-  return `الصيغة ${ORDINALS[n]}`;
+  return `الصيغة ${ordinalOf(n)}`;
 }
 
 export function timesUnit(n: number): string {

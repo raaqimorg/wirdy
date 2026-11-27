@@ -8,7 +8,7 @@ The setup, the commands, the git hooks, and the generated files.
 2. Run `bun install`. It also turns on the git hooks in `.githooks/`.
 3. Run `bun run dev`, and open `http://localhost:4321`.
 
-The icon, card, poster, and promo scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`. The promo scripts also need [ffmpeg](https://ffmpeg.org) on `PATH`, and a browser that plays H.264 (Brave or Chrome, not plain Chromium).
+The icon, card, poster, drift, and promo scripts need a Chromium browser (Brave, Chrome, Chromium, or Edge). Set `CHROME` to its path if it is not in `/Applications`. The promo scripts also need [ffmpeg](https://ffmpeg.org) on `PATH`, and a browser that plays H.264 (Brave or Chrome, not plain Chromium).
 
 ## Commands
 
@@ -27,6 +27,8 @@ The icon, card, poster, and promo scripts need a Chromium browser (Brave, Chrome
 | `bun run opengraph`        | Draws the cards of the home page and each section.                |
 | `bun run opengraph:adhkar` | Draws each missing dhikr card, and deletes stale ones.            |
 | `bun run posters`          | Draws each missing section poster, and deletes stale ones.        |
+| `bun run drift`            | Saves every page state as a baseline, and the census of drift.    |
+| `bun run drift:check`      | Captures the states again and lists what changed.                 |
 | `bun run gallery`          | Serves every image in `public/` on one page, at `localhost:4400`. |
 | `bun run promo:check <f>`  | Names what in a promo film breaks its rules.                      |
 | `bun run promo:sheet <f>`  | Draws a promo film's contact sheet into `out/sheet.png`.          |
@@ -36,6 +38,8 @@ The icon, card, poster, and promo scripts need a Chromium browser (Brave, Chrome
 | `bun run visits:deploy`    | Deploys the Worker that sends the visits every hour.              |
 
 The `verification:*` scripts write a dhikr's proof. The `verifying-a-dhikr` skill (`.claude/skills/verifying-a-dhikr/SKILL.md`) says when to run each.
+
+The `drift` scripts build the site, open every state in `scripts/drift/states.ts` in Chromium and WebKit, at 390, 820, 1180, and 1440 px, in light and dark, and save a screenshot of each into `.drift/` (ignored by git). `.drift/baseline/census.json` lists every computed font size, line height, color, border, spacing, and corner that resolves to no token, with the page, state, viewport, mode, and element. `drift:check` saves into `.drift/current/`, lists the screenshots that changed and the census values that came or went, and marks the changed pixels in `.drift/diff/`. Narrow a run with `--engine`, `--viewport`, `--mode`, or `--only <part of a state name>`, and skip the build with `--no-build`. WebKit is Playwright's build: install it once with `bunx playwright-core install webkit`.
 
 The `promo:*` scripts make a promo film from `promo/<slug>/` (`<f>` is that folder). The `making-a-promo` skill (`.claude/skills/making-a-promo/SKILL.md`) is the procedure, and its `template/` is the film to start from.
 

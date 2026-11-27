@@ -6,9 +6,10 @@ interface Props {
   ayat: ReadonlyArray<string>;
   rest?: ReadonlyArray<string> | undefined;
   from: number;
+  place?: string | undefined;
 }
 
-const { ayat, rest = [], from } = Astro.props;
+const { ayat, rest = [], from, place } = Astro.props;
 const folded = rest.length > 0;
 ---
 
@@ -23,8 +24,13 @@ const folded = rest.length > 0;
   {folded && (
     <details class="surah__rest">
       <summary class="surah__more" data-hover="fill">
-        <span class="surah__closed">{`أكمل القراءة، ${ayatLabel(rest.length)}`}</span>
-        <span class="surah__opened">إخفاء</span>
+        <span class="surah__closed">
+          أكمل القراءة{place && <span class="visually-hidden">{`، ${place}`}</span>}
+          {`، ${ayatLabel(rest.length)}`}
+        </span>
+        <span class="surah__opened">
+          إخفاء{place && <span class="visually-hidden">{`، ${place}`}</span>}
+        </span>
         <Icon name="chevron" class="surah__chevron" />
       </summary>
       <span class="surah__ayat">

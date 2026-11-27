@@ -132,6 +132,7 @@
 }
 
 .entry__row .entry__words {
+  /* stylelint-disable-next-line declaration-property-unit-disallowed-list -- a row of plain text is as tall as a link row */
   padding-block: calc((var(--size-touch) - 1lh) / 2);
   font-family: var(--font-naskh);
   font-size: var(--text-note);
@@ -255,5 +256,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .entry__toggle svg {
     transition: rotate var(--duration-release) var(--spring);
+  }
+}
+
+@media (forced-colors: active) {
+  .entry {
+    outline: var(--border-hairline) solid canvastext;
+    outline-offset: calc(var(--border-hairline) * -1);
   }
 }

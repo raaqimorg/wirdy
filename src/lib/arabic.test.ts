@@ -4,6 +4,7 @@ import {
   ayatLabel,
   resultsLabel,
   formLabel,
+  surahLabel,
   toArabicDigits,
   timesLabel,
   timesUnit,
@@ -26,6 +27,20 @@ describe('adhkarLabel', () => {
 
   it('uses the accusative singular above ten', () => {
     expect(adhkarLabel(14)).toBe('١٤ ذكرا');
+  });
+});
+
+describe('surahLabel', () => {
+  it('names a سورة of a dhikr by its order', () => {
+    expect([1, 2, 3].map((n) => surahLabel(n))).toEqual([
+      'السورة الأولى',
+      'السورة الثانية',
+      'السورة الثالثة',
+    ]);
+  });
+
+  it('writes the number past the fourth', () => {
+    expect(surahLabel(5)).toBe('السورة ٥');
   });
 });
 

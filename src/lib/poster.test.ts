@@ -11,6 +11,7 @@ import {
   type Format,
 } from './poster';
 import type { Dhikr, Hadith } from './schema';
+import { SITE } from './site';
 
 const base: Dhikr = {
   title: 'سيد الاستغفار',
@@ -99,6 +100,18 @@ describe('adhkarPosterOf', () => {
     );
     expect(long.items[0]?.rest).toBe('wirdy.site/nawm/');
     expect(long.items[0]?.suwar[0]?.[0]?.length).toBeLessThan(400 * 'آية طويلة '.length);
+  });
+});
+
+describe('the promise at the foot of a poster', () => {
+  it('ends as the home page ends it', () => {
+    const ending = `${SITE.promise.after} ${SITE.promise.more}`;
+    expect(posterOf([{ data: base, body: 'رضيت بالله ربا' }]).promise).toBe(
+      `${SITE.promise.before} ﷺ${ending}`
+    );
+    expect(
+      hadithPosterOf('tibb', [{ data: hadith, body: 'في الحبة السوداء شفاء\n' }]).promise
+    ).toMatch(new RegExp(`${ending}$`, 'u'));
   });
 });
 
