@@ -10,7 +10,7 @@ The code holds the values, and this folder says what they are and why. `src/lib/
 | [Logo](logo.md)             | The sunflower mark, the wordmark, and the icons drawn from them     | `src/lib/mark.ts`, `components/Mark.astro`, `public/` |
 | [Color](color.md)           | The paper, the ink, the mark, and the color of each section         | `src/lib/palette.ts`, `src/lib/tone.ts`, `tokens.css` |
 | [Typography](typography.md) | The three faces and where each one goes                             | `src/styles/fonts.css`, `tokens.css`                  |
-| [Imagery](imagery.md)       | The emblems of the sections and the sharing cards                   | `src/lib/emblems.ts`, `src/lib/card.ts`, `scripts/`   |
+| [Imagery](imagery.md)       | The emblems of the sections, the sharing cards, the promo films     | `src/lib/emblems.ts`, `src/lib/card.ts`, `scripts/`   |
 | [Metadata](metadata.md)     | Titles, descriptions, cards, breadcrumbs, the sitemap, the manifest | `src/layouts/Paper.astro`, `src/pages/`               |
 
 ## The rules in one place

@@ -10,3 +10,7 @@ dist/
 .claude/*
 !.claude/skills/
 /graft/
+/promo/*/clips/
+/promo/*/out/
+/.claude/skills/making-a-promo/template/out/
+/.argent/

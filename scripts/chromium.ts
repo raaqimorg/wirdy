@@ -25,7 +25,7 @@ type Shot = {
   readonly transparent?: boolean;
 };
 
-const browser = Effect.gen(function* () {
+export const browser = Effect.gen(function* () {
   const fs = yield* FileSystem.FileSystem;
   const found = yield* Effect.filter(
     Array.filter(BROWSERS, (path): path is string => path !== undefined),
