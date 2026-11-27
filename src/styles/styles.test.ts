@@ -146,6 +146,34 @@ describe('the tone text', () => {
   });
 });
 
+const faces = [...all.matchAll(/([^{}]+)\{[^{}]*font-family: var\(--font-([\w-]+)\)/gu)].map(
+  ([, selector, face]) => ({ selector: selector!.trim(), face: face! })
+);
+
+describe('the faces', () => {
+  it('set the content faces only on the words of a dhikr, a hadith, or the Quran', () => {
+    expect(
+      faces
+        .filter(({ face }) => face !== 'ui')
+        .map(({ selector }) => selector)
+        .toSorted()
+    ).toEqual(
+      [
+        '.entry--quran .entry__text',
+        '.entry__row .entry__words',
+        '.entry__text',
+        '.salawat',
+        '.search-row__words',
+        '.surah__ayah-end',
+      ].toSorted()
+    );
+  });
+
+  it('give everything else the interface face, from the body down', () => {
+    expect(faces.find(({ selector }) => selector === 'body')?.face).toBe('ui');
+  });
+});
+
 describe('the component styles', () => {
   it('are each imported once', () => {
     const imports = [...read('index.css').matchAll(/"\.\/components\/([\w-]+)\.css"/gu)];
