@@ -1,6 +1,7 @@
 ---
-title: "التسمية عند دخول الخلاء"
+title: "بسم الله"
 headline: "بسم الله"
+context: "عند دخول الخلاء"
 occasion: "bayt"
 order: 5
 count: 1

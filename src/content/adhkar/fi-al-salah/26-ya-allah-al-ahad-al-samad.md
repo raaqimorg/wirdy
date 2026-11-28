@@ -6,7 +6,6 @@ order: 26
 count: 1
 mode: "both"
 quran: false
-when: "وهو يتشهّد"
 group: "التشهد"
 fadl: "قد غُفر له، قد غُفر له"
 takhrij:

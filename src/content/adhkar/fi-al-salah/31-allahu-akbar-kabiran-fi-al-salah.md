@@ -6,7 +6,6 @@ order: 31
 count: 1
 mode: "both"
 quran: false
-when: "في الصلاة"
 group: "الاستفتاح"
 fadl: "عجبت لها، فُتحت لها أبواب السماء"
 takhrij:

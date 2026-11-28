@@ -90,7 +90,7 @@ takhrij:
 اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، ...
 ```
 
-- `title`: the short Arabic name, for the page, the link, and the card. Use the known name, such as «سيد الاستغفار», or the first words. It holds no place or time.
+- `title`: the short Arabic name, for the page, the link, and the card. Use the known name, such as «سيد الاستغفار», or the first words. It holds no place or time (a test refuses «عند», «بعد», «قبل», and «في الصلاة»), and never repeats the moment the card shows under it.
 - `context`: where or when it is said, such as «عند النوم». Add it only when the name is in more than one place, so each `title` with its `context` is unique. A heading shows it under the name, smaller and lighter. Plain text (the tab, a share, a link, a button label) joins them as «آية الكرسي (عند النوم)» (`fullTitle` in `src/lib/title.ts`). A title that names its place stays whole, such as «الدعاء بعد الأذان».
 - `headline`: the name of the page on its own, for the browser tab, search results, and shares, so a reader who searched for the dhikr sees only the dhikr. It is the dhikr's words, such as «باسمك اللهم أموت وأحيا». A name goes before the words only when the dhikr is known by it: its own name, such as «سيد الاستغفار» or «آية الكرسي», or the «دعاء» people search for, such as «دعاء دخول المسجد» or «دعاء السفر». It never names a section of the site, nor a time or place the page only belongs to («في الصباح والمساء», «عند النوم», «بعد الصلاة»). Its words come from the text, and a virtue only from `fadl`. At most 66 letters. Adhkar of the same text share one headline, and one canonical page ([Metadata](branding/metadata.md#each-page)).
 - `count`: the number the sound narration states, or 1.
@@ -101,7 +101,7 @@ takhrij:
   - `first` shows the first آية of each سورة, for سور the reader knows by heart, such as المعوذات. The card adds «تقرأ إلى آخر السورة» («تقرأ كل سورة إلى آخرها» for more than one).
   - `fold` is for a long سورة. Each سورة shows the whole آيات that fit 250 letters (at least one). A button, «أكمل القراءة، ٨ آيات», opens the rest in place: a `<details>`, no script, reading «طيّ» while open. Copy gives the آيات that show, with «وتتمة الآيات في الصفحة». The card shares its 250 letters among the سور, with the same line.
 - `from`: the number of the first آية of each سورة, in the order of the text, such as `[255]` or `[1, 1]`. Only قرآن files have it, and each needs it. The card ends each آية with its number. A test checks it, and each سورة's count of lines, against the Tanzil source of the proof.
-- `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading is enough. It names the moment only, not the manner, source, or virtue. The card shows it first, with the count.
+- `when`: a short Arabic cue for the moment, such as «عند الخروج من المنزل». Leave it out when the occasion heading or the `group` is enough, as «في السجود» under «السجود» (a test refuses one that is the `group`). It names the moment only, not the manner, source, or virtue. The card shows it first, with the count.
 - `how`: the manner the narration gives, such as «يضع يده اليمنى تحت خدّه». The card shows it on its own line, under the moment.
 - `group`: a short Arabic heading, such as «الطعام». Adhkar in a row with one `group` show under it. Use it for one situation in an occasion, or for alternatives. A page where every dhikr has a group opens with links to its groups.
 - `form`: the number of an alternative, from 1. Adhkar of one group and one `form` are said together, and one form is enough. The page shows them in one card, under «الصيغة الأولى» and so on, with «تكفي واحدة منها». Each keeps its own file, link, and page.
@@ -152,7 +152,7 @@ A guide holds sound hadiths to read, not adhkar to say: no count, moment, or car
 A guide shows on one page, under a heading for each `group`. Each hadith also has a page of its own, `<page><slug>/`, with its place on the list (`<page>#<slug>`), and the previous and next hadith. Its link is permanent like a dhikr's, and is in `src/lib/permalinks.json`.
 
 - The same rule lets a hadith in. The tests refuse a ruling of weakness.
-- `title`: a short name, such as «الحبة السوداء». `rawi`: the narrating Companion, in the genitive, since the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.
+- `title`: a short name of its topic, such as «الحبة السوداء», never words cut from the middle of a sentence («فكأنما قرب بدنة») unless the hadith opens with them. `rawi`: the narrating Companion, in the genitive, since the card reads «عن أبي هريرة». `group`: its heading, with a slug in `GROUP_SLUGS`.
 - `headline`: the name of its page on its own, as for a dhikr: the words of the hadith, cut to the sentence a reader searches for, such as «إذا صلى أحدكم الجمعة فليصل بعدها أربعًا». A narration takes the words around his ﷺ saying when the saying alone means nothing. Unique.
 - The body is the matn as the book gives it, cut from the page by script, from where the Companion's words start. Never shorten or join it by hand.
 - A hadith of only his ﷺ words has them alone, with no quotation marks, like a dhikr. A narration (an exchange, an act, or a narrator's gloss) keeps «» around his words, so the reader sees where they start.

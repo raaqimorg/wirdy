@@ -6,7 +6,6 @@ order: 7
 count: 1
 mode: "both"
 quran: false
-when: "في الركوع والسجود"
 group: "الركوع والسجود"
 takhrij:
   grader: "البخاري"

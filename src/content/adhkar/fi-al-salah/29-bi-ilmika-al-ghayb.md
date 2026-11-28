@@ -6,7 +6,6 @@ order: 29
 count: 1
 mode: "both"
 quran: false
-when: "يدعو به في صلاته"
 group: "الذكر والدعاء في الصلاة"
 takhrij:
   grader: "الألباني"

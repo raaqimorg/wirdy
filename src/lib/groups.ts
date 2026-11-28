@@ -71,7 +71,7 @@ export const GROUP_SLUGS: Readonly<Record<string, string>> = {
   'عند الفراش': 'ind-al-firash',
   'الحمد والتسبيح': 'al-hamd-wa-al-tasbih',
   'آخر ما يقال': 'akhir-ma-yuqal',
-  'عند الاستيقاظ': 'ind-al-istiqaz',
+  'أول اليقظة': 'ind-al-istiqaz',
   'ما يعرض في الليل': 'ma-yarid-fi-al-layl',
   التسبيح: 'al-tasbih',
   التهليل: 'al-tahlil',

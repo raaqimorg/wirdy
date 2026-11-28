@@ -6,7 +6,6 @@ order: 10
 count: 1
 mode: "both"
 quran: false
-when: "في الصلاة على الميت"
 group: "صلاة الجنازة"
 takhrij:
   grader: "الألباني"

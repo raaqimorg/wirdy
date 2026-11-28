@@ -6,7 +6,6 @@ order: 9
 count: 1
 mode: "both"
 quran: false
-when: "إذا أراد أن ينام"
 group: "عند الفراش"
 takhrij:
   grader: "البخاري"

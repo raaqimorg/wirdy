@@ -6,7 +6,6 @@ order: 6
 count: 1
 mode: "both"
 quran: false
-when: "إذا أوى إلى فراشه"
 how: "بعد أن ينفضه بداخلة إزاره"
 group: "عند الفراش"
 takhrij:

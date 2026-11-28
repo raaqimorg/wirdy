@@ -6,7 +6,6 @@ order: 5
 count: 1
 mode: "both"
 quran: false
-when: "في الركوع"
 group: "الركوع"
 takhrij:
   grader: "مسلم"

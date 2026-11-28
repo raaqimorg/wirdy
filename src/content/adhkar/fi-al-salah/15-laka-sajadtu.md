@@ -6,7 +6,6 @@ order: 15
 count: 1
 mode: "both"
 quran: false
-when: "إذا سجد"
 group: "السجود"
 takhrij:
   grader: "مسلم"

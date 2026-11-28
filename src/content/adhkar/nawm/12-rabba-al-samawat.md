@@ -6,7 +6,6 @@ order: 12
 count: 1
 mode: "both"
 quran: false
-when: "إذا أراد أن ينام"
 how: "مضطجعًا على شقه الأيمن"
 group: "عند الفراش"
 takhrij:

@@ -9,7 +9,7 @@ quran: true
 ayat: "fold"
 from: [190]
 when: "إذا استيقظ من الليل"
-group: "عند الاستيقاظ"
+group: "أول اليقظة"
 takhrij:
   grader: "مسلم"
   source: "صحيح مسلم ٧٦٣"

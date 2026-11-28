@@ -6,7 +6,6 @@ order: 1
 count: 1
 mode: "both"
 quran: false
-when: "إذا سلّم"
 group: "السلام"
 takhrij:
   grader: "الألباني"

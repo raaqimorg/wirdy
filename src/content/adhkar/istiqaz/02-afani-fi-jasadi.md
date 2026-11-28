@@ -6,8 +6,7 @@ order: 2
 count: 1
 mode: "both"
 quran: false
-when: "إذا استيقظ"
-group: "عند الاستيقاظ"
+group: "أول اليقظة"
 takhrij:
   grader: "الألباني"
   source: "صحيح الترمذي ٣٤٠١"

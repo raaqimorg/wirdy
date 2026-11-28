@@ -1,12 +1,11 @@
 ---
-title: "الاستغفار بعد السلام"
+title: "أستغفر الله"
 headline: "أستغفر الله"
 occasion: "salah"
 order: 1
 count: 3
 mode: "both"
 quran: false
-when: "إذا سلّم من الصلاة"
 group: "بعد السلام"
 takhrij:
   grader: "مسلم"
