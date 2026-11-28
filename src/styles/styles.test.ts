@@ -163,6 +163,122 @@ describe('the tone text', () => {
   });
 });
 
+const EGGSHELL = valueOf(light, '--color-eggshell');
+const alphaOf = (name: string) => Number(valueOf(tokens, name).match(/\/ ([\d.]+)\)/u)![1]);
+const channels = (hex: string) =>
+  [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+const over = (base: string, top: string, share: number) => {
+  const [under, above] = [channels(base), channels(top)];
+  return `#${under
+    .map((value, index) =>
+      Math.round(above[index]! * share + value * (1 - share))
+        .toString(16)
+        .padStart(2, '0')
+    )
+    .join('')}`;
+};
+const FILLS = [LIGHTNESS, DEEP_LIGHTNESS].flatMap((lightness) =>
+  [light, dark.chosen].flatMap((block) =>
+    HUES.map((hue) =>
+      mix(
+        hexFromOklch(lightness, chromaOf(lightness), hue),
+        '#000000',
+        shareOf(valueOf(block, '--tone-shade'))
+      )
+    )
+  )
+);
+
+const distance = (one: string, other: string) => {
+  const [first, second] = [oklabOf(one), oklabOf(other)];
+  return Math.hypot(...[0, 1, 2].map((index) => first[index]! - second[index]!));
+};
+
+describe('the states on the page', () => {
+  it.each([
+    ['by day', light, 'white'],
+    ['at night', dark.chosen, 'the ink'],
+  ])('lift a control on the page away from the page on hover %s, with %s', (_, block) => {
+    const paper = valueOf(block, '--color-paper').startsWith('#')
+      ? valueOf(block, '--color-paper')
+      : hexFromHsl(valueOf(block, '--color-paper'));
+    const panel = hexFromHsl(valueOf(block, '--color-panel'));
+    const ink = hexFromHsl(valueOf(block, '--color-ink'));
+    const lift = block === light ? '#ffffff' : over(panel, ink, 0.08);
+    expect(distance(lift, paper)).toBeGreaterThan(distance(panel, paper));
+  });
+
+  it('give the controls on the page the lift', () => {
+    for (const [block, opening] of [
+      ['group-index', '.group-index__link {'],
+      ['button', '.button {'],
+    ] as const) {
+      const sheet = read(`components/${block}.css`);
+      const rule = sheet.slice(sheet.indexOf(opening), sheet.indexOf('}', sheet.indexOf(opening)));
+      expect(rule).toContain('--fill-hover: var(--shadow-hover-lift);');
+    }
+  });
+
+  it('build each tint on a token, not currentColor, so a hover fades in Chromium', () => {
+    for (const name of ['--shadow-hover', '--shadow-pressed', '--shadow-hover-lift']) {
+      expect(valueOf(tokens, name)).not.toContain('currentColor');
+    }
+  });
+});
+
+describe('the separators of a list', () => {
+  it('start a suggestion separator at its text, past its icon', () => {
+    expect(read('components/search.css')).toContain(
+      'inset-inline: calc(var(--space-4) + var(--size-icon-large) + var(--space-3)) 0;'
+    );
+  });
+
+  it.each([
+    [
+      'search',
+      '.search__tries > :is(:hover, :active)::before,\n.search__tries > :is(:hover, :active) + *::before {\n  opacity: 0;',
+    ],
+    [
+      'search-row',
+      '.search-row:is(:hover, :active)::before,\n.search-row:is(:hover, :active) + .search-row::before {\n  opacity: 0;',
+    ],
+  ])('hide the two around a highlighted row in %s', (block, rule) => {
+    expect(read(`components/${block}.css`)).toContain(rule);
+  });
+});
+
+describe('the states on a tone', () => {
+  it('darken a control filled with the tone, so its cream text gains contrast on hover and press', () => {
+    for (const fill of FILLS) {
+      const rest = contrast(EGGSHELL, fill);
+      const hover = contrast(EGGSHELL, over(fill, '#000000', alphaOf('--shadow-hover-tone')));
+      const pressed = contrast(EGGSHELL, over(fill, '#000000', alphaOf('--shadow-pressed-tone')));
+      expect(hover).toBeGreaterThan(rest);
+      expect(pressed).toBeGreaterThan(hover);
+    }
+  });
+
+  it('give every control filled with the tone the dark layers', () => {
+    const filled = [
+      ['button', '.button--primary {'],
+      ['poster-menu', '.poster-menu__save {'],
+      ['wird-switch', ':root[data-wird="m"] .wird-switch__option[data-wird-form="m"] {'],
+    ] as const;
+    for (const [block, opening] of filled) {
+      const sheet = read(`components/${block}.css`);
+      const rule = sheet.slice(sheet.indexOf(opening), sheet.indexOf('}', sheet.indexOf(opening)));
+      expect(rule).toContain('--fill-hover: var(--shadow-hover-tone);');
+      expect(rule).toContain('--fill-pressed: var(--shadow-pressed-tone);');
+    }
+  });
+
+  it('keep a pressed icon on a tone at 3:1', () => {
+    const pressed = Number(valueOf(tokens, '--opacity-pressed'));
+    const weakest = Math.min(...FILLS.map((fill) => contrast(over(fill, EGGSHELL, pressed), fill)));
+    expect(weakest).toBeGreaterThanOrEqual(3);
+  });
+});
+
 const faces = [...all.matchAll(/([^{}]+)\{[^{}]*font-family: var\(--font-([\w-]+)\)/gu)].map(
   ([, selector, face]) => ({ selector: selector!.trim(), face: face! })
 );

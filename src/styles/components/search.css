@@ -46,8 +46,14 @@
   content: "";
   position: absolute;
   inset-block-start: 0;
-  inset-inline: var(--space-4) 0;
+  inset-inline: calc(var(--space-4) + var(--size-icon-large) + var(--space-3)) 0;
   border-block-start: var(--border-hairline) solid var(--color-line-soft);
+  transition: opacity var(--duration-release) var(--ease-out);
+}
+
+.search__tries > :is(:hover, :active)::before,
+.search__tries > :is(:hover, :active) + *::before {
+  opacity: 0;
 }
 
 .search__try {

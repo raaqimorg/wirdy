@@ -27,6 +27,9 @@
 
 :root:not([data-wird="m"]) .wird-switch__option[data-wird-form="s"],
 :root[data-wird="m"] .wird-switch__option[data-wird-form="m"] {
+  --fill-hover: var(--shadow-hover-tone);
+  --fill-pressed: var(--shadow-pressed-tone);
+
   color: var(--color-eggshell);
   background: var(--tone-select);
   font-weight: var(--weight-bold);

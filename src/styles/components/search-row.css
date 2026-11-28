@@ -23,6 +23,12 @@
   inset-block-start: 0;
   inset-inline: var(--space-4) 0;
   border-block-start: var(--border-hairline) solid var(--color-line-soft);
+  transition: opacity var(--duration-release) var(--ease-out);
+}
+
+.search-row:is(:hover, :active)::before,
+.search-row:is(:hover, :active) + .search-row::before {
+  opacity: 0;
 }
 
 .search-row__link {
