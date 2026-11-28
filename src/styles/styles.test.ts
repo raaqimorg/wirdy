@@ -191,6 +191,22 @@ describe('the faces', () => {
   });
 });
 
+describe('the banner', () => {
+  const banner = read('components/banner.css');
+
+  it('straightens its corners over twice their radius, ending as its edge reaches the bar', () => {
+    expect(banner).toContain(
+      'animation-timeline: view(block calc(env(safe-area-inset-top) + var(--size-bar)) 0);'
+    );
+    expect(banner).toContain(
+      'animation-range: exit calc(100% - var(--radius-large) * 2) exit 100%;'
+    );
+    expect(banner).toMatch(
+      /@keyframes banner-flatten \{\s*to \{\s*border-end-start-radius: 0;\s*border-end-end-radius: 0;/u
+    );
+  });
+});
+
 describe('the component styles', () => {
   it('are each imported once', () => {
     const imports = [...read('index.css').matchAll(/"\.\/components\/([\w-]+)\.css"/gu)];

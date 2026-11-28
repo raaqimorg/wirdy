@@ -110,6 +110,14 @@ An iPhone bounce at the top uncovers the area above the page, painted in the col
 - The home, search, and 404 pages have no color and no layer.
 - Safari on iOS 26 paints the status bar in the sticky bar's color only when the bar is solid with no `backdrop-filter`, so the bar is solid on every page.
 
+## The banner's corners straighten as they reach the bar
+
+A colored banner has round bottom corners, and the sticky bar above it is square. As the reader scrolls, the banner slides under the bar, and in its last 12 pixels the round corners hung under the bar's square edge as two small steps. Now `.banner--stage` (`src/styles/components/banner.css`) straightens its bottom corners over the last `--radius-large` × 2 before its edge reaches the bar, so its radius is always half the banner still in view, and the banner meets the bar as one straight edge. The owner asked for it, smooth.
+
+- The ordinary way is to leave it, or to give the bar the banner's round bottom corners. Round corners on the bar would show the page through them as it scrolls under, and would part from the reading line drawn along the bar's bottom edge.
+- It animates `border-radius`, not only `transform` and `opacity` ([`code-conventions.md`](code-conventions.md#motion)): no transform turns a round corner square. It is a scroll-driven animation (`animation-timeline: view()`, its top inset the bar's height), so it moves only with the scroll and costs nothing at rest.
+- A browser without scroll-driven animations keeps the round corners, as before.
+
 ## Each dhikr has a card, named by its fingerprint
 
 `scripts/opengraph/adhkar.ts` draws `public/og/<occasion>/<slug>-<fingerprint>.png` for each dhikr, and `public/og/<guide>/` for each hadith (`hadithCardOf`), 2400 by 1260: 1200 by 630 at twice the scale, so the text stays sharp on a phone and after a chat app compresses it. One card serves the link preview and the «الصورة» download. `src/lib/card.ts` decides what the card says and computes the fingerprint from it.
