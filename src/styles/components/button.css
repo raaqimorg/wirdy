@@ -1,5 +1,6 @@
 .button {
   --icon-stroke: var(--stroke-icon-bold);
+  --fill-hover: var(--shadow-hover-lift);
 
   display: flex;
   align-items: center;
@@ -21,6 +22,9 @@
 }
 
 .button--primary {
+  --fill-hover: var(--shadow-hover-tone);
+  --fill-pressed: var(--shadow-pressed-tone);
+
   color: var(--color-eggshell);
   background: var(--tone-fill);
 }

@@ -98,11 +98,14 @@
   --layer-bar: 5;
   --layer-skip: 6;
 
-  --shadow-hover: inset 0 0 0 100vmax color-mix(in oklab, currentColor, transparent 92%);
-  --shadow-pressed: inset 0 0 0 100vmax color-mix(in oklab, currentColor, transparent 82%);
+  --shadow-hover: inset 0 0 0 100vmax color-mix(in oklab, var(--color-ink), transparent 92%);
+  --shadow-pressed: inset 0 0 0 100vmax color-mix(in oklab, var(--color-ink), transparent 82%);
+  --shadow-hover-lift: inset 0 0 0 100vmax var(--color-brighten);
+  --shadow-hover-tone: inset 0 0 0 100vmax rgb(0 0 0 / 0.14);
+  --shadow-pressed-tone: inset 0 0 0 100vmax rgb(0 0 0 / 0.28);
   --opacity-quiet: 0.82;
-  --opacity-hover: 0.72;
-  --opacity-pressed: 0.56;
+  --opacity-hover: 0.82;
+  --opacity-pressed: 0.7;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --spring: linear(
     0,
@@ -148,6 +151,7 @@
     --tone-shade: 10%;
     --tone-lift: 3%;
     --tone-ink: 45%;
+    --shadow-hover-lift: var(--shadow-hover);
   }
 }
 
@@ -163,6 +167,7 @@
   --tone-shade: 10%;
   --tone-lift: 3%;
   --tone-ink: 45%;
+  --shadow-hover-lift: var(--shadow-hover);
 }
 
 :root[data-theme="light"] {

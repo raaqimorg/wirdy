@@ -175,6 +175,9 @@
 }
 
 .poster-menu__save {
+  --fill-hover: var(--shadow-hover-tone);
+  --fill-pressed: var(--shadow-pressed-tone);
+
   display: flex;
   justify-content: center;
   min-height: var(--size-control);

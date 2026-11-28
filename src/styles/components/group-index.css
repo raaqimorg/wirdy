@@ -18,6 +18,8 @@
 }
 
 .group-index__link {
+  --fill-hover: var(--shadow-hover-lift);
+
   display: inline-flex;
   align-items: center;
   min-height: var(--size-control);

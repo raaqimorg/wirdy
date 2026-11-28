@@ -38,7 +38,7 @@ oxlint (`.oxlintrc.json`), stylelint (`.stylelintrc.json`), oxfmt (`.oxfmtrc.jso
 
 Motion follows Apple (WWDC18 "Designing Fluid Interfaces", WWDC23 "Animate with springs").
 
-- Animate only `transform` and `opacity`, in CSS. No motion library.
+- Animate only `transform` and `opacity`, in CSS. No motion library. A state color is the one exception: a hover fades its tint (`box-shadow`) and its underline (`text-decoration-color`) as well as its dim, because a state that snaps reads as a flicker ([`design-system.md`](design-system.md#states)).
 - Four durations: 100 ms for a press, 200 ms for a fade, 300 ms for a release or a hover, and 500 ms for an entrance. Move with `--spring`, Apple's bounceless spring as CSS `linear()`. Fade with `--ease-out`. The page fade is linear, to keep pace with Safari's status bar fade.
 - Every reader sees the same motion. The site does not read `prefers-reduced-motion`: the owner chose one feel for everyone, and the motion is small, short, and never loops ([`exceptions.md`](exceptions.md#the-motion-ignores-the-devices-reduce-motion-setting)). Write no rule under it.
 - Respond on the first frame. Never ease in or ease in-out: both start slowly.

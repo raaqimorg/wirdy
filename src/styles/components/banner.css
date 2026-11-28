@@ -31,6 +31,8 @@
 
 .banner__up {
   --ring-color: currentColor;
+  --line-hover: currentColor;
+  --line-pressed: currentColor;
 
   position: relative;
   display: inline-flex;
