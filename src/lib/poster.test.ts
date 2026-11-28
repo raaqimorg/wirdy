@@ -103,6 +103,19 @@ describe('adhkarPosterOf', () => {
   });
 });
 
+describe('the name of a poster item', () => {
+  it('drops a name the text opens with, and keeps its number', () => {
+    const items = posterOf([
+      { data: { ...base, title: 'رضيت بالله ربا' }, body: 'رَضِيتُ بِاللَّهِ رَبًّا' },
+      { data: { ...base, order: 2 }, body: 'اللهم أنت ربي' },
+    ]).items;
+    expect(items.map(({ number, title }) => [number, title])).toEqual([
+      [1, ''],
+      [2, 'سيد الاستغفار'],
+    ]);
+  });
+});
+
 describe('the promise at the foot of a poster', () => {
   it('ends as the home page ends it', () => {
     const ending = `${SITE.promise.after} ${SITE.promise.more}`;

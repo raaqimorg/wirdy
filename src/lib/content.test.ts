@@ -26,6 +26,7 @@ const issuesOf = (schema: Schema.Decoder<unknown>, raw: unknown) => {
 
 const ROOT = join(process.cwd(), 'src/content/adhkar');
 const HEADLINE_LENGTH = 66;
+const bare = (words: string) => words.replace(/^(في|عند) /u, '');
 
 const entries = readdirSync(ROOT, { recursive: true, encoding: 'utf8' })
   .filter((path) => path.endsWith('.md'))
@@ -315,6 +316,25 @@ describe('the permalinks', () => {
   it('gives each dhikr its own title, with its context', () => {
     const titles = entries.map((entry) => fullTitle(entry.data));
     expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it('keeps the time and place out of a title, unless the place is its name', () => {
+    const named = new Set(['الدعاء بعد الأذان']);
+    expect(
+      entries
+        .map(({ data }) => data.title)
+        .filter((title) => !named.has(title))
+        .filter((title) => /(^| )(عند|بعد|قبل)( |$)|في الصلاة/u.test(title))
+    ).toEqual([]);
+  });
+
+  it('gives no moment that its group already says', () => {
+    expect(
+      entries
+        .filter(({ data }) => data.when !== undefined && data.group !== undefined)
+        .filter(({ data }) => bare(data.when ?? '') === bare(data.group ?? ''))
+        .map(({ path }) => path)
+    ).toEqual([]);
   });
 });
 

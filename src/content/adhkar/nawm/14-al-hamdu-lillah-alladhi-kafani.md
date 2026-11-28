@@ -6,7 +6,6 @@ order: 14
 count: 1
 mode: "both"
 quran: false
-when: "إذا أوى إلى فراشه"
 group: "الحمد والتسبيح"
 fadl: "فقد حمد الله بجميع محامد الخلق كلهم"
 takhrij:

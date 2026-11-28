@@ -1,12 +1,12 @@
 ---
-title: "بسم الله قبل الطعام"
+title: "بسم الله"
 headline: "بسم الله"
+context: "قبل الطعام"
 occasion: "taam"
 order: 1
 count: 1
 mode: "both"
 quran: false
-when: "قبل الطعام"
 group: "قبل الطعام"
 takhrij:
   grader: "الألباني"

@@ -6,7 +6,6 @@ order: 21
 count: 1
 mode: "both"
 quran: false
-when: "في التشهد"
 group: "التشهد"
 fadl: "فإنكم إذا فعلتم ذلك فقد سلّمتم على كل عبد لله صالح في السماء والأرض"
 takhrij:

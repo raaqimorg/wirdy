@@ -6,7 +6,6 @@ order: 23
 count: 1
 mode: "both"
 quran: false
-when: "إذا تشهّد"
 group: "التشهد"
 takhrij:
   grader: "مسلم"

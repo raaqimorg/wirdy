@@ -62,6 +62,7 @@ Each section has a poster: every dhikr of the page, or every hadith, in full, wi
 
 - A poster is the dhikr card at the size of a page: the band in the section's color with its emblem, title, and count, the mark, «وِردي», and `wirdy.site`; the words in columns under the group titles; and a foot that names the section's page. The words take the largest size that fills the frame, in as many columns as that needs, and the space between adhkar grows until the columns reach the foot.
 - A poster is drawn at three times its size and saved as a 256-color PNG, so a reader can zoom into the smallest takhrij and the file stays near a megabyte.
+- Each item has its number, and its name only when its words do not open with it (`isOpening`), as on a card.
 - «الصباح والمساء» has two posters, `sabah` and `masaa`, with each time's words, as the switch on the page gives them. The menu follows the switch.
 - Every format comes on two papers, «فاتح» (the day paper) and «داكن» (the night paper), except print, which is always on the day paper, because a dark page wastes ink. So a section has nine files, and «الصباح والمساء» eighteen. The menu starts on the paper the site is showing.
 - The Quran is in full, except a folded سورة longer than 3,000 letters (in «النوم», الإسراء والزمر and السجدة والملك), which shows the opening the page shows, then «وتتمتها في» and the page's address.

@@ -6,7 +6,6 @@ order: 7
 count: 1
 mode: "both"
 quran: false
-when: "إذا أخذ مضجعه من الليل"
 group: "عند الفراش"
 takhrij:
   grader: "الألباني"

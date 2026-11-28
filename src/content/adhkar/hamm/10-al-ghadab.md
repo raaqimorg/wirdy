@@ -1,12 +1,12 @@
 ---
-title: "الاستعاذة عند الغضب"
+title: "أعوذ بالله من الشيطان الرجيم"
 headline: "أعوذ بالله من الشيطان الرجيم"
+context: "عند الغضب"
 occasion: "hamm"
 order: 10
 count: 1
 mode: "both"
 quran: false
-when: "عند الغضب"
 group: "الغضب"
 fadl: "لذهب عنه ما يجد"
 takhrij:

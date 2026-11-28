@@ -8,7 +8,6 @@ mode: "both"
 quran: true
 ayat: "fold"
 from: [1, 1]
-when: "قبل أن ينام"
 group: "القرآن"
 takhrij:
   grader: "الألباني"

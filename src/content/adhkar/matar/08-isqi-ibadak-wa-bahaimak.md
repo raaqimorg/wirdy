@@ -6,7 +6,6 @@ order: 8
 count: 1
 mode: "both"
 quran: false
-when: "إذا استسقى"
 group: "الاستسقاء"
 takhrij:
   grader: "الألباني"

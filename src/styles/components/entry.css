@@ -186,6 +186,11 @@
   line-height: var(--leading-quran);
 }
 
+:root:not([data-wird="m"]) .entry--sabah :is(.entry__time, .entry__lead[data-time-only]),
+:root[data-wird="m"] .entry--masaa :is(.entry__time, .entry__lead[data-time-only]) {
+  display: none;
+}
+
 :root:not([data-wird="m"]) .entry--masaa:not(:target),
 :root[data-wird="m"] .entry--sabah:not(:target) {
   display: none;

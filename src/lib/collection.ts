@@ -8,7 +8,7 @@ import { canonicalPathsOf, dhikrAnchor, dhikrPath, hadithAnchor, slugOf } from '
 import type { Dhikr } from './schema';
 import { GUIDE_IDS, GUIDES, type Guide } from './site';
 import type { SearchRow } from './search';
-import { fullTitle } from './title';
+import { titleIn } from './title';
 import { formOf, hasVariants, type MalformedMarker } from './variants';
 
 export type { SearchRow } from './search';
@@ -94,9 +94,6 @@ function shownAyat(data: Dhikr, text: string): string {
   return suwar.flatMap((ayat) => (data.ayat === 'fold' ? foldOf(ayat).shown : ayat)).join(' ');
 }
 
-const placeOf = ({ heading, title }: { readonly heading: string; readonly title: string }) =>
-  title.includes(heading) ? title : `${title}، ${heading}`;
-
 const adhkarRow = (
   section: (typeof OCCASIONS)[number],
   { id, data, body }: AdhkarEntry
@@ -107,12 +104,12 @@ const adhkarRow = (
     const also = hasVariants(text) ? Option.some(yield* formOf(text, 'masaa')) : Option.none();
     const about = [data.when, data.how, data.fadl].filter((part) => part !== undefined).join(' ');
     return {
-      title: fullTitle(data),
+      title: titleIn(data, section.heading),
       words,
       ...Option.match(also, { onNone: () => ({}), onSome: (evening) => ({ also: evening }) }),
       ...(about !== '' && { about }),
       source: data.takhrij.source,
-      heading: placeOf(section),
+      heading: section.heading,
       color: section.color,
       emblem: section.id,
       ...(data.group !== undefined && { group: data.group }),

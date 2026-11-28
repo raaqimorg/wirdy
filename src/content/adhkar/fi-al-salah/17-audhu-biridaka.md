@@ -7,7 +7,6 @@ order: 17
 count: 1
 mode: "both"
 quran: false
-when: "وهو ساجد"
 group: "السجود"
 takhrij:
   grader: "الألباني"

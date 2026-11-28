@@ -6,7 +6,6 @@ order: 12
 count: 1
 mode: "both"
 quran: false
-when: "إذا سلّم من الصلاة"
 group: "أدعية بعد الصلاة"
 takhrij:
   grader: "الألباني"

@@ -10,7 +10,7 @@ import { phrasesOf, type Phrase, type PhraseCountMismatch } from './phrases';
 import type { Dhikr, Hadith } from './schema';
 import { GUIDE_IDS, GUIDES, SITE, type Guide } from './site';
 import { takhrijLine } from './takhrij';
-import { eveningTitle } from './title';
+import { eveningTitle, isOpening } from './title';
 import { formOf, type Form, type MalformedMarker } from './variants';
 
 export const POSTER_TEMPLATE = 4;
@@ -137,7 +137,7 @@ const itemOf = (
     const words = data.quran ? '' : yield* formOf(text, form);
     return {
       number: index + 1,
-      title,
+      title: isOpening(title, words) ? '' : title,
       group: data.group ?? '',
       choice: data.form === undefined ? '' : formLabel(data.form),
       lead: [data.when, data.how].filter((part) => part !== undefined).join('. '),
@@ -192,7 +192,7 @@ export const hadithPosterOf = (guide: Guide, entries: ReadonlyArray<Entry<Hadith
     .toSorted((one, other) => one.data.order - other.data.order)
     .map(({ data, body = '' }, index) => ({
       number: index + 1,
-      title: data.title,
+      title: isOpening(data.title, body) ? '' : data.title,
       group: data.group,
       choice: '',
       lead: `عن ${data.rawi}`,

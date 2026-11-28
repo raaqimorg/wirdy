@@ -3,7 +3,8 @@ import { Array, Effect, Option, Schema } from 'effect';
 import { timesLabel } from './arabic';
 import { EMBLEMS, type EmblemName } from './emblems';
 import { excerptAyat, excerptClauses, letters } from './excerpt';
-import { fullLeadOf, REST, suwarOf } from './lead';
+import { fullLeadOf, momentOf, REST, suwarOf } from './lead';
+import { contextIn } from './title';
 import { markSvg } from './mark';
 import { sectionOf } from './occasions';
 import { phrasesOf, type PhraseCountMismatch } from './phrases';
@@ -73,7 +74,8 @@ export const cardOf = (
 ): Effect.Effect<Card, MalformedMarker | PhraseCountMismatch> =>
   Effect.gen(function* () {
     const text = body.trim();
-    const { title: heading, color } = sectionOf(data.occasion);
+    const section = sectionOf(data.occasion);
+    const { title: heading, color } = section;
     const suwar = suwarOf(data, text);
     const { blocks, cut } = yield* bodyOf(data, text);
     const rest = Option.isSome(suwar) && cut ? [REST] : [];
@@ -85,7 +87,7 @@ export const cardOf = (
       heading,
       color,
       title: data.title,
-      context: data.context ?? null,
+      context: momentOf(data) === '' ? (contextIn(data, section.heading) ?? null) : null,
       lead,
       quran: data.quran,
       blocks,

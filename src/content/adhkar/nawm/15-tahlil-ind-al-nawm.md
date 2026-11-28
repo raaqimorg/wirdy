@@ -7,7 +7,6 @@ order: 15
 count: 1
 mode: "both"
 quran: false
-when: "حين يأوي إلى فراشه"
 group: "الحمد والتسبيح"
 fadl: "غُفرت له ذنوبه، أو قال: خطاياه، وإن كانت مثل زبد البحر"
 takhrij:

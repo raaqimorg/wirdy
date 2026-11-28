@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Takhrij from './Takhrij.astro';
+import { timeOf } from '../lib/lead';
 import type { Dhikr } from '../lib/schema';
 import { takhrijLine } from '../lib/takhrij';
 
@@ -39,6 +40,7 @@ const {
   phrases,
   time,
 } = Astro.props;
+const daytime = time === undefined ? undefined : timeOf(time);
 const Fold = single ? Fragment : 'details';
 const fold = single ? {} : { class: 'entry__more' };
 ---
@@ -64,11 +66,17 @@ const fold = single ? {} : { class: 'entry__more' };
         )}
       </Heading>
     )}
-    {(count || moment) && (
-      <p class="entry__lead">
+    {(count || moment || daytime) && (
+      <p class="entry__lead" data-time-only={!count && !moment ? '' : undefined}>
         {count && <span class="entry__count">{count}</span>}
         {count && moment && '، '}
         {moment}
+        {daytime && (
+          <span class="entry__time">
+            {(count || moment) && '، '}
+            {daytime}
+          </span>
+        )}
       </p>
     )}
     {how && <p class="entry__how">{how}</p>}

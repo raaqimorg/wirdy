@@ -1077,20 +1077,27 @@ describe('built site', () => {
   });
 
   it('shows the context of a dhikr under its name, and in parentheses in plain text', () => {
-    const page = own('sabah-masaa/kalimat-allah-at-tammat');
-    const full = 'أعوذ بكلمات الله التامات (في المساء)';
+    const page = own('fi-al-salah/audhu-biridaka');
+    const full = 'اللهم إني أعوذ برضاك (في السجود)';
     expect(page).toMatch(
-      /<h1 class="banner__title">\s*أعوذ بكلمات الله التامات\s*<\/h1>\s*<p class="banner__lede">في المساء/u
+      /<h1 class="banner__title">\s*اللهم إني أعوذ برضاك\s*<\/h1>\s*<p class="banner__lede">في السجود/u
     );
     expect(page).toContain(`data-share-title="${full}"`);
     const crumbs = graphOf(page).find((node) => node['@type'] === 'BreadcrumbList')!;
     expect((crumbs['itemListElement'] as { name: string }[]).at(-1)!.name).toBe(full);
-    expect(pages['sabah-masaa']).toContain(`aria-label="نسخ: ${full}"`);
-    expect(pages['sabah-masaa']).toContain(`aria-label="صفحة الذكر: ${full}"`);
-    expect(pages['sabah-masaa']).toContain(`<h3 class="visually-hidden">${full}</h3>`);
-    expect(own('sabah-masaa/ayat-al-kursi')).toMatch(
-      /<a class="neighbours__link"[^>]*>[\s\S]*?[^ >] <span class="neighbours__context">[^<]+<\/span>/u
+    expect(pages['fi-al-salah']).toContain(`aria-label="نسخ: ${full}"`);
+    expect(pages['fi-al-salah']).toContain(`aria-label="صفحة الذكر: ${full}"`);
+    expect(pages['fi-al-salah']).toContain(`<h3 class="visually-hidden">${full}</h3>`);
+    expect(own('fi-al-salah/ighfir-li-dhanbi-kullahu')).toMatch(
+      /<a class="neighbours__link"[^>]*>[\s\S]*?[^ >] <span class="neighbours__context">في السجود<\/span>/u
     );
+  });
+
+  it('puts the group under the name when the card already says the moment', () => {
+    expect(own('sabah-masaa/kalimat-allah-at-tammat')).toMatch(
+      /<h1 class="banner__title">\s*أعوذ بكلمات الله التامات\s*<\/h1>\s*<p class="banner__lede">الحفظ<\/p>/u
+    );
+    expect(own('sabah-masaa/ayat-al-kursi')).not.toContain('neighbours__context');
   });
 
   it('copies each dhikr as it shows, with its takhrij last', () => {

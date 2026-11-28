@@ -7,7 +7,6 @@ order: 19
 count: 1
 mode: "both"
 quran: false
-when: "بين السجدتين"
 group: "بين السجدتين"
 takhrij:
   grader: "الألباني"

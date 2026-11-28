@@ -6,7 +6,6 @@ order: 14
 count: 1
 mode: "both"
 quran: false
-when: "في السجود"
 group: "السجود"
 takhrij:
   grader: "مسلم"
