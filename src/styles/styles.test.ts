@@ -67,6 +67,11 @@ describe('the tokens', () => {
     for (const line of declarations(dark.chosen)) expect(names).toContain(line.split(':')[0]);
   });
 
+  it('give the poster papers in the poster menu the panel by day and by night', () => {
+    expect(valueOf(light, '--color-panel-day')).toBe(valueOf(light, '--color-panel'));
+    expect(valueOf(light, '--color-panel-night')).toBe(valueOf(dark.chosen, '--color-panel'));
+  });
+
   it('match the palette that the scripts and the metadata use', () => {
     expect(light).toContain(`--color-paper: ${PALETTE.paper};`);
     expect(light).toContain(`--color-panel: ${PALETTE.panel};`);

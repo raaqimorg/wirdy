@@ -3,6 +3,8 @@
 
   --color-paper: #d6d6cd;
   --color-panel: hsl(60 10% 92%);
+  --color-panel-day: hsl(60 10% 92%);
+  --color-panel-night: hsl(200 32% 15%);
   --color-ink: hsl(200 50% 5%);
   --color-ink-muted: hsl(200 40% 22%);
   --color-ink-faint: hsl(200 12% 35%);

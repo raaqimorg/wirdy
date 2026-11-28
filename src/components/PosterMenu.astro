@@ -68,8 +68,8 @@ const themes: ReadonlyArray<ThemeName> = ['light', 'dark'];
               data-hover="fill"
             >
               <Icon name="check" class="poster-menu__check" />
-              <span class="poster-menu__name">{format.title}</span>
               <span class={`poster-menu__shape poster-menu__shape--${format.name}`} />
+              <span class="poster-menu__name">{format.title}</span>
             </button>
           ))}
         </div>
@@ -87,6 +87,7 @@ const themes: ReadonlyArray<ThemeName> = ['light', 'dark'];
               data-hover="fill"
             >
               <Icon name="check" class="poster-menu__check" />
+              <span class={`poster-menu__swatch poster-menu__swatch--${theme}`} />
               <span class="poster-menu__name">
                 {THEME_TITLES[theme]}
                 {theme === 'dark' && <span class="poster-menu__note">الطباعة فاتحة دائما</span>}
