@@ -187,7 +187,7 @@
 
 .poster-menu__heading {
   margin-block: var(--space-3) var(--space-1);
-  padding-inline-start: calc(var(--space-3) * 3 + var(--size-icon-large) + var(--space-6));
+  padding-inline-start: calc(var(--space-3) * 2 + var(--size-icon-large));
   color: var(--color-ink-muted);
   font-size: var(--text-small);
   font-weight: var(--weight-medium);
@@ -229,7 +229,7 @@
 
 .poster-menu__shape {
   grid-column: 2;
-  justify-self: center;
+  justify-self: start;
   height: var(--size-icon-large);
   border: var(--border-ring) solid var(--color-ink-muted);
   border-radius: var(--radius-small);
@@ -237,7 +237,7 @@
 
 .poster-menu__swatch {
   grid-column: 2;
-  justify-self: center;
+  justify-self: start;
   width: var(--size-icon-large);
   height: var(--size-icon-large);
   border: var(--border-hairline) solid var(--color-line);
