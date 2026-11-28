@@ -1,6 +1,6 @@
 import { Effect, Option } from 'effect';
 import { describe, expect, it } from 'vitest';
-import { eveningTitle as eveningEffect, fullTitle, isOpening } from './title';
+import { eveningTitle as eveningEffect, fullTitle, isOpening, titleIn } from './title';
 
 const eveningTitle = (title: string, body: string) =>
   Option.getOrNull(Effect.runSync(eveningEffect(title, body)));
@@ -41,5 +41,31 @@ describe('isOpening', () => {
 
   it('knows a name that says what the text is about', () => {
     expect(isOpening('تداووا', 'أَتَيْتُ النَّبِيَّ ﷺ')).toBe(false);
+  });
+
+  it.each(['سبحان الله وبحمده مئة مرة', 'سبحان الله وبحمده عشرًا', 'سبحان الله وبحمده عشر مرات'])(
+    'reads past the count that ends a name: %s',
+    (title) => {
+      expect(isOpening(title, 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ')).toBe(true);
+    }
+  );
+
+  it('keeps a name whose words the text does not open with, count or not', () => {
+    expect(isOpening('التهليل عشرًا', 'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ')).toBe(false);
+  });
+});
+
+describe('titleIn', () => {
+  it('drops a context that names the section the reader is already in', () => {
+    expect(titleIn({ title: 'آية الكرسي', context: 'عند النوم' }, 'عند النوم')).toBe('آية الكرسي');
+    expect(titleIn({ title: 'آية الكرسي', context: 'في الصباح والمساء' }, 'الصباح والمساء')).toBe(
+      'آية الكرسي'
+    );
+  });
+
+  it('keeps a context that says more than the section', () => {
+    expect(titleIn({ title: 'رب اغفر لي', context: 'بين السجدتين' }, 'أثناء الصلاة')).toBe(
+      'رب اغفر لي (بين السجدتين)'
+    );
   });
 });

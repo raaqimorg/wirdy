@@ -192,7 +192,22 @@ describe('Dhikr', () => {
     const html = await render({ ...base, mode: 'masaa' }, 'سبحان الله');
     expect(html).toContain('entry--masaa');
     expect(html).not.toContain('entry--sabah');
-    expect(html).toContain('<p class="entry__lead">في المساء</p>');
+    expect(html).toMatch(
+      /<p class="entry__lead" data-time-only>\s*<span class="entry__time">\s*في المساء\s*<\/span>\s*<\/p>/u
+    );
+  });
+
+  it('puts the time after the count on a list, so the switch can hide it alone', async () => {
+    const html = await render({ ...base, mode: 'sabah', count: 3 }, 'سبحان الله');
+    expect(html).toMatch(
+      /<span class="entry__count">٣ مرات<\/span>\s*<span class="entry__time">\s*،\s*في الصباح\s*<\/span>/u
+    );
+  });
+
+  it('names the time in plain words on the page of the dhikr', async () => {
+    const html = await render({ ...base, mode: 'sabah' }, 'سبحان الله', { single: true });
+    expect(html).toContain('<p class="entry__lead">في الصباح</p>');
+    expect(html).not.toContain('entry__time');
   });
 
   it('leads with the count in words, with nothing drawn that looks like a button', async () => {

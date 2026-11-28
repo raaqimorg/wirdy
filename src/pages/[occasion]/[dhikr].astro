@@ -7,14 +7,14 @@ import Neighbours from '../../components/Neighbours.astro';
 import PageTools from '../../components/PageTools.astro';
 import WirdSwitch from '../../components/WirdSwitch.astro';
 import Section from '../../layouts/Section.astro';
-import { timesLabel } from '../../lib/arabic';
 import { cardFile, cardOf } from '../../lib/card';
 import { copyOf } from '../../lib/copy';
+import { momentOf } from '../../lib/lead';
 import { descriptionOf } from '../../lib/description';
 import { adhkarCanonicals, adhkarOf } from '../../lib/collection';
 import { OCCASIONS, sectionOf } from '../../lib/occasions';
 import { dhikrAnchor, dhikrPath, slugOf } from '../../lib/permalink';
-import { eveningTitle, fullTitle } from '../../lib/title';
+import { contextIn, eveningTitle, fullTitle } from '../../lib/title';
 
 export async function getStaticPaths() {
   const lists = await Effect.runPromise(Effect.forEach(OCCASIONS, ({ id }) => adhkarOf(id)));
@@ -36,11 +36,10 @@ const card = Effect.runSync(cardOf(data, body));
 const image = `/${cardFile(card, data.occasion, slug)}`;
 const up = { href: dhikrAnchor(data.occasion, slug), label: occasion.heading };
 const title = fullTitle(data);
-const times = data.count > 1 ? timesLabel(data.count) : undefined;
-const context = data.context?.includes(occasion.heading) ? undefined : data.context;
-const named = [context, data.group].find((part) => part !== undefined && part !== occasion.heading);
-const parts = [named, times].filter((part) => part !== undefined);
-const lede = parts.length === 0 ? occasion.title : parts.join('، ');
+const context = momentOf(data) === '' ? contextIn(data, occasion.heading) : undefined;
+const lede =
+  [context, data.group].find((part) => part !== undefined && part !== occasion.heading) ??
+  occasion.title;
 const evening = Effect.runSync(eveningTitle(data.title, body));
 
 const description = descriptionOf(card, data.fadl);
@@ -54,7 +53,7 @@ const links = [
         {
           label,
           title: neighbour.data.title,
-          context: neighbour.data.context,
+          context: contextIn(neighbour.data, occasion.heading),
           href: dhikrPath(data.occasion, slugOf(neighbour.id)),
         },
       ]

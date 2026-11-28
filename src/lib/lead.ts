@@ -36,6 +36,8 @@ export function foldOf(ayat: Ayat): { readonly shown: Ayat; readonly rest: Reado
   return { shown, rest: ayat.slice(shown.length) };
 }
 
+export const timeOf = (mode: Mode): string | undefined => Option.getOrUndefined(TIME[mode]);
+
 const present = (value: string | undefined): Option.Option<string> =>
   Option.filter(Option.fromUndefinedOr(value), (text) => text !== '');
 

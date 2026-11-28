@@ -10,8 +10,10 @@ const lettersOf = (text: string): string =>
     .replaceAll(/\s+/gu, ' ')
     .trim();
 
+const COUNT_TAIL = /\s+(مئة مرة|مائة مرة|عشرًا|عشرا|عشر مرات)$/u;
+
 export const isOpening = (title: string, text: string): boolean => {
-  const name = lettersOf(title);
+  const name = lettersOf(title.replace(COUNT_TAIL, ''));
   const opening = lettersOf(text)
     .split(' ')
     .slice(0, name.split(' ').length + 2)
@@ -28,6 +30,22 @@ export function fullTitle({
 }): string {
   return context === undefined ? title : `${title} (${context})`;
 }
+
+export function contextIn(
+  { context }: { readonly context?: string | undefined },
+  heading: string
+): string | undefined {
+  return context?.includes(heading) === true ? undefined : context;
+}
+
+export function titleIn(
+  data: { readonly title: string; readonly context?: string | undefined },
+  heading: string
+): string {
+  return fullTitle({ title: data.title, ...optional(contextIn(data, heading)) });
+}
+
+const optional = (context: string | undefined) => (context === undefined ? {} : { context });
 
 const openingOf = (
   text: string,
