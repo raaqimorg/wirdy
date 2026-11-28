@@ -32,6 +32,10 @@
   flex-direction: column;
 }
 
+:root:has(.section-menu__panel[open]) {
+  overflow: hidden;
+}
+
 .section-menu__panel:focus {
   outline: none;
 }
